@@ -5,9 +5,11 @@
  */
 package vs.time.kkv.connector.MainlPannels;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.Utils.KKVTreeTable.JTreeTable;
+import vs.time.kkv.models.VS_STAGE;
 
 /**
  *
@@ -17,33 +19,21 @@ public class PracticaTab extends javax.swing.JPanel {
 
   MainForm mainForm;
   JTreeTable treeTable = null;
+  public VS_STAGE stage = null;
   
   /**
    * Creates new form PracticaTableTab
    */
-  public PracticaTab(MainForm main) {
+  public PracticaTab(MainForm main, VS_STAGE _stage) {
+    this.stage = _stage;
     initComponents();    
     this.mainForm =main;
+    //topPanel.setVisible(false);
     
     treeTable = new JTreeTable(new PracticaTableAdapter(this));
     jScrollPane1.add(treeTable);
     jScrollPane1.setViewportView(treeTable);
-    
-    /*JTable t = new JTable();
-    jScrollPane1.add(t);
-    t.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-        {null, null, null, null},
-        {null, null, null, null},
-        {null, null, null, null},
-        {null, null, null, null}
-      },
-      new String [] {
-        "Title 1", "Title 2", "Title 3", "Title 4"
-      }
-    ));
-    jScrollPane1.setViewportView(t);*/
-    
+           
   }
 
   /**
@@ -56,18 +46,52 @@ public class PracticaTab extends javax.swing.JPanel {
   private void initComponents() {
 
     topPanel = new javax.swing.JPanel();
+    butStartRace = new javax.swing.JButton();
+    butRemoveSatge = new javax.swing.JButton();
+    butConfig = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     javax.swing.JTable table = new javax.swing.JTable();
+
+    butStartRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_add.png"))); // NOI18N
+    butStartRace.setText("Start Race");
+
+    butRemoveSatge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/remove.png"))); // NOI18N
+    butRemoveSatge.setText("Delete Satage");
+    butRemoveSatge.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butRemoveSatgeActionPerformed(evt);
+      }
+    });
+
+    butConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/options.png"))); // NOI18N
+    butConfig.setText("Config");
+    butConfig.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butConfigActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
+      .addGroup(topPanelLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(butStartRace)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(butConfig)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butRemoveSatge)
+        .addContainerGap())
     );
     topPanelLayout.setVerticalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 37, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
+        .addGap(8, 8, 8)
+        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butStartRace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     table.setModel(new javax.swing.table.DefaultTableModel(
@@ -93,12 +117,33 @@ public class PracticaTab extends javax.swing.JPanel {
       .addGroup(layout.createSequentialGroup()
         .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
+  private void butRemoveSatgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRemoveSatgeActionPerformed
+    // TODO add your handling code here:
+    int res = JOptionPane.showConfirmDialog(this, "Do you want to delete '"+stage.CAPTION+"' Stage?", "Delete Stage", JOptionPane.YES_NO_OPTION);
+    if (res == JOptionPane.YES_OPTION) {
+      try{
+        VS_STAGE.dbControl.delete(mainForm.con, stage);
+        mainForm.setActiveRace(mainForm.activeRace);
+      }catch(Exception e){
+        mainForm.toLog(e);
+      }  
+    }
+  }//GEN-LAST:event_butRemoveSatgeActionPerformed
+
+  private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
+    // TODO add your handling code here:
+    NewTabForm.init(mainForm, stage).setVisible(true);
+  }//GEN-LAST:event_butConfigActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton butConfig;
+  private javax.swing.JButton butRemoveSatge;
+  private javax.swing.JButton butStartRace;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables

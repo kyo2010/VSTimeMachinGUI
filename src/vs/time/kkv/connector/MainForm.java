@@ -22,9 +22,21 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.DBControlSqlLite.Utils.TempFileWrite;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.Connection;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
@@ -32,7 +44,10 @@ import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.SpeekUtil;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.models.VS_BANDS;
+import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
+import vs.time.kkv.models.VS_REGISTRATION;
 
 /**
  *
@@ -40,33 +55,73 @@ import vs.time.kkv.models.VS_RACE;
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver {
 
-  public final static String[] PILOT_TYPES = new String[]{"None-PRO","PRO","Freestyle"};
-  
+  public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};
+
+  public String[] getBands() {
+    String[] res = new String[0];
+    try {
+      List<VS_BANDS> bands = VS_BANDS.dbControl.getList(con, "1=1 ORDER BY POS");
+      res = new String[bands.size()];
+      int index = 0;
+      for (VS_BANDS band : bands) {
+        res[index] = band.NAME;
+        index++;
+      }
+    } catch (Exception e) {
+      toLog(e);
+    }
+    return res;
+  }
+
+  public static MainForm _mainForm = null;
+  public static void toLog(Exception e) {
+    if (_mainForm!=null)
+      _mainForm.log.writeFile(e);
+  }
+
   public VSTimeConnector vsTimeConnector = null;
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
-  public TempFileWrite error_log = new TempFileWrite("error.log");  
+  public TempFileWrite error_log = new TempFileWrite("error.log");
   public Connection con = null;
   public SpeekUtil speaker = new SpeekUtil();
   public VS_RACE activeRace = null;
   public RegistrationTab regForm = null;
   public int lastTranponderID = -1;
-  
-  public void setActiveRace(VS_RACE race){
+
+  public void setActiveRace(VS_RACE race) {
     activeRace = race;
     // Open Tabs
-    tabbedPanel.removeAll();
-    regForm = new RegistrationTab(MainForm.this);
-    tabbedPanel.add("Registration",regForm);
-    
-    PracticaTab p = new PracticaTab(this);
-    tabbedPanel.add("Practica",p);  
-    //tabbedPanel.set`
+    tabListenerEnabled = false;
+    tabbedPanel.removeAll();        
+
+    if (race != null) {
+      jmAddStageToRace.setVisible(true);
+      regForm = new RegistrationTab(MainForm.this);
+      tabbedPanel.add("Registration", regForm);
+
+      try {
+        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(con, "RACE_ID=? order by STAGE_NUM", race.RACE_ID);
+        for (VS_STAGE stage : stages) {
+          PracticaTab p = new PracticaTab(this, stage);
+          tabbedPanel.add(stage.CAPTION, p);
+          if (stage.IS_SELECTED==1) tabbedPanel.setSelectedComponent(p);
+        }    
+        tabListenerEnabled = true;
+      } catch (Exception e) {
+        toLog(e);
+      }
+    } else {
+      jmAddStageToRace.setVisible(false);
+    }                
   }
 
+  boolean tabListenerEnabled = false;
   /**
    * Creates new form MainForm
    */
   public MainForm(String caption) {
+    _mainForm = this;
     setTitle(caption);
     initComponents();
     setStateMenu(false);
@@ -80,31 +135,51 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         e.getWindow().dispose();
       }
     });
-    
-    ports.addItem("WLAN");
-   //new ArrayList<String>({ new String[]{"m1","m2"});
 
-    try{
+    ports.addItem("WLAN");
+    //new ArrayList<String>({ new String[]{"m1","m2"});
+
+    try {
       con = DBModelTest.getConnectionForTest();
-    }catch(Exception e){
+    } catch (Exception e) {
       error_log.writeFile(e);
-      JOptionPane.showMessageDialog(this, "Database file is not found. "+DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);  
-    }  
-    try{
+      JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    jmAddStageToRace.setVisible(false);
+    try {
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
-      if (race!=null) setActiveRace(race);
-    }catch(Exception e){
-    }  
+      if (race != null) {
+        setActiveRace(race);
+      }
+    } catch (Exception e) {
+    }
     
+    tabbedPanel.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        if (MainForm.this.activeRace!=null && tabListenerEnabled){
+          VS_STAGE.resetSelectedTab(con, MainForm.this.activeRace.RACE_ID);
+          try{
+            PracticaTab p = (PracticaTab)tabbedPanel.getSelectedComponent();
+            if (p.stage!=null){
+              p.stage.IS_SELECTED = 1;
+              VS_STAGE.dbControl.save(MainForm.this.con, p.stage);
+            }
+          }catch(Exception ex){}  
+        }  
+      }     
+    });
   }
-  
-  public void setStateMenu(boolean isConnected){
-    menuDisconnect.setEnabled(isConnected);    
-    menuParameters.setEnabled(isConnected);  
+
+  public void setStateMenu(boolean isConnected) {
+    menuDisconnect.setEnabled(isConnected);
+    menuParameters.setEnabled(isConnected);
     menuConnect.setEnabled(!isConnected);
     jPanel1.setVisible(!isConnected);
-    if (isConnected){
-      if (vsTimeConnector.WIFI) menuParameters.setEnabled(false);      
+    if (isConnected) {
+      if (vsTimeConnector.WIFI) {
+        menuParameters.setEnabled(false);
+      }
     }
   }
 
@@ -138,8 +213,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     menuAddUser = new javax.swing.JMenuItem();
     jMenuItem2 = new javax.swing.JMenuItem();
     menuRace = new javax.swing.JMenu();
-    miAddNewRace = new javax.swing.JMenuItem();
     miRaceList = new javax.swing.JMenuItem();
+    miAddNewRace = new javax.swing.JMenuItem();
+    jmAddStageToRace = new javax.swing.JMenuItem();
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -299,15 +375,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     menuRace.setText("Race");
 
-    miAddNewRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_user_registration.png"))); // NOI18N
-    miAddNewRace.setText("Add new Race");
-    miAddNewRace.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        miAddNewRaceActionPerformed(evt);
-      }
-    });
-    menuRace.add(miAddNewRace);
-
     miRaceList.setBackground(new java.awt.Color(24, 24, 24));
     miRaceList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_add.png"))); // NOI18N
     miRaceList.setText("Race List");
@@ -318,6 +385,24 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     menuRace.add(miRaceList);
+
+    miAddNewRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_user_registration.png"))); // NOI18N
+    miAddNewRace.setText("Add new Race");
+    miAddNewRace.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        miAddNewRaceActionPerformed(evt);
+      }
+    });
+    menuRace.add(miAddNewRace);
+
+    jmAddStageToRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/add.png"))); // NOI18N
+    jmAddStageToRace.setText("Add Stage to Race");
+    jmAddStageToRace.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jmAddStageToRaceActionPerformed(evt);
+      }
+    });
+    menuRace.add(jmAddStageToRace);
 
     jMenuBar1.add(menuRace);
 
@@ -352,10 +437,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }// </editor-fold>//GEN-END:initComponents
 
   private void menuParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuParametersActionPerformed
-    if (vsTimeConnector!=null && vsTimeConnector.connected){      
-      try{
-        VSTMParams form = VSTMParams.getInstanse(this);                
-      }catch(Exception e){
+    if (vsTimeConnector != null && vsTimeConnector.connected) {
+      try {
+        VSTMParams form = VSTMParams.getInstanse(this);
+      } catch (Exception e) {
       }
     }
   }//GEN-LAST:event_menuParametersActionPerformed
@@ -379,7 +464,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       jLabel3.setText("connecting to port " + port);
       vsTimeConnector = new VSTimeConnector(port);
       try {
-        vsTimeConnector.connect(this, WLANSetting.init(this).PORT_LISTING_INT,WLANSetting.init(this).PORT_SENDING_INT);        
+        vsTimeConnector.connect(this, WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
         setStateMenu(true);
       } catch (Exception e) {
         jLabel3.setText(e.toString());
@@ -394,7 +479,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (vsTimeConnector != null) {
       vsTimeConnector.disconnect();
     }
-    vsTimeConnector = null;    
+    vsTimeConnector = null;
     setStateMenu(false);
     jLabel3.setText("disconnected");
     speaker.speak("disconnected");
@@ -410,12 +495,19 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_menuAddUserActionPerformed
 
   private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-    UserList.init(this,null).setVisible(true);
+    UserList.init(this, null).setVisible(true);
   }//GEN-LAST:event_jMenuItem2ActionPerformed
 
   private void miAddNewRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddNewRaceActionPerformed
-    RaceControlForm.init(this,-1).setVisible(true);
+    RaceControlForm.init(this, -1).setVisible(true);
   }//GEN-LAST:event_miAddNewRaceActionPerformed
+
+  private void jmAddStageToRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAddStageToRaceActionPerformed
+    // TODO add your handling code here:
+    if (activeRace != null) {
+      NewTabForm.init(this, null).setVisible(true);
+    }
+  }//GEN-LAST:event_jmAddStageToRaceActionPerformed
 
   /**
    * @param args the command line arguments
@@ -423,7 +515,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static void main(String args[]) {
     /* Set the Nimbus look and feel */
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
      */
 
@@ -464,6 +556,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTable jTable1;
+  private javax.swing.JMenuItem jmAddStageToRace;
   private javax.swing.JMenuItem menuAddUser;
   private javax.swing.JMenuItem menuConnect;
   private javax.swing.JMenuItem menuDisconnect;
@@ -477,9 +570,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JTabbedPane tabbedPanel;
   // End of variables declaration//GEN-END:variables
 
-  public void setFormOnCenter(JFrame form){
+  public void setFormOnCenter(JFrame form) {
     Point p = this.getLocationOnScreen();
-    form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);    
+    form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
   }
 
   @Override
@@ -487,11 +580,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     boolean isPingCommand = false;
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
-    }                        
-    jLabel3.setText(data);
-    if (!isPingCommand) {          
-       System.out.print(data);          
-       log.writeFile(data, true);
     }
-  }  
+    jLabel3.setText(data);
+    if (!isPingCommand) {
+      System.out.print(data);
+      log.writeFile(data, true);
+    }
+  }
 }
