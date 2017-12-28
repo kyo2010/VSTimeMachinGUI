@@ -75,9 +75,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   public static MainForm _mainForm = null;
+
   public static void toLog(Exception e) {
-    if (_mainForm!=null)
+    if (_mainForm != null) {
       _mainForm.log.writeFile(e);
+    }
   }
 
   public VSTimeConnector vsTimeConnector = null;
@@ -93,7 +95,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     activeRace = race;
     // Open Tabs
     tabListenerEnabled = false;
-    tabbedPanel.removeAll();        
+    tabbedPanel.removeAll();
 
     if (race != null) {
       jmAddStageToRace.setVisible(true);
@@ -103,20 +105,23 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       try {
         List<VS_STAGE> stages = VS_STAGE.dbControl.getList(con, "RACE_ID=? order by STAGE_NUM", race.RACE_ID);
         for (VS_STAGE stage : stages) {
-          PracticaTab p = new PracticaTab(this, stage);
+          StageTab p = new StageTab(this, stage);
           tabbedPanel.add(stage.CAPTION, p);
-          if (stage.IS_SELECTED==1) tabbedPanel.setSelectedComponent(p);
-        }    
+          if (stage.IS_SELECTED == 1) {
+            tabbedPanel.setSelectedComponent(p);
+          }
+        }
         tabListenerEnabled = true;
       } catch (Exception e) {
         toLog(e);
       }
     } else {
       jmAddStageToRace.setVisible(false);
-    }                
+    }
   }
 
   boolean tabListenerEnabled = false;
+
   /**
    * Creates new form MainForm
    */
@@ -128,11 +133,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
-        if (vsTimeConnector != null) {
-          vsTimeConnector.disconnect();
+        int res = JOptionPane.showConfirmDialog(MainForm.this, "Do you want to close?", "Exit ?", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+          if (vsTimeConnector != null) {
+            vsTimeConnector.disconnect();
+          }
+          vsTimeConnector = null;
+          setVisible(false);
+          //e.getWindow().dispose();
+        }else{
+          
         }
-        vsTimeConnector = null;
-        e.getWindow().dispose();
       }
     });
 
@@ -153,21 +164,22 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     } catch (Exception e) {
     }
-    
+
     tabbedPanel.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {
-        if (MainForm.this.activeRace!=null && tabListenerEnabled){
+        if (MainForm.this.activeRace != null && tabListenerEnabled) {
           VS_STAGE.resetSelectedTab(con, MainForm.this.activeRace.RACE_ID);
-          try{
-            PracticaTab p = (PracticaTab)tabbedPanel.getSelectedComponent();
-            if (p.stage!=null){
+          try {
+            StageTab p = (StageTab) tabbedPanel.getSelectedComponent();
+            if (p.stage != null) {
               p.stage.IS_SELECTED = 1;
               VS_STAGE.dbControl.save(MainForm.this.con, p.stage);
             }
-          }catch(Exception ex){}  
-        }  
-      }     
+          } catch (Exception ex) {
+          }
+        }
+      }
     });
   }
 
@@ -238,7 +250,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jScrollPane1.setViewportView(jTable1);
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
     jPanel1.setName("topPanel"); // NOI18N
 
@@ -505,7 +517,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private void jmAddStageToRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAddStageToRaceActionPerformed
     // TODO add your handling code here:
     if (activeRace != null) {
-      NewTabForm.init(this, null).setVisible(true);
+      StageNewForm.init(this, null).setVisible(true);
     }
   }//GEN-LAST:event_jmAddStageToRaceActionPerformed
 

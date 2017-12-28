@@ -15,7 +15,7 @@ import vs.time.kkv.models.VS_STAGE;
  *
  * @author kyo
  */
-public class PracticaTab extends javax.swing.JPanel {
+public class StageTab extends javax.swing.JPanel {
 
   MainForm mainForm;
   JTreeTable treeTable = null;
@@ -24,13 +24,13 @@ public class PracticaTab extends javax.swing.JPanel {
   /**
    * Creates new form PracticaTableTab
    */
-  public PracticaTab(MainForm main, VS_STAGE _stage) {
+  public StageTab(MainForm main, VS_STAGE _stage) {
     this.stage = _stage;
     initComponents();    
     this.mainForm =main;
     //topPanel.setVisible(false);
     
-    treeTable = new JTreeTable(new PracticaTableAdapter(this));
+    treeTable = new JTreeTable(new StageTableAdapter(this));
     jScrollPane1.add(treeTable);
     jScrollPane1.setViewportView(treeTable);
            
@@ -136,7 +136,7 @@ public class PracticaTab extends javax.swing.JPanel {
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
     // TODO add your handling code here:
-    NewTabForm.init(mainForm, stage).setVisible(true);
+    StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
 

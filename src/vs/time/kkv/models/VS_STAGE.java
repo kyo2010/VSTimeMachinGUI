@@ -11,7 +11,7 @@ import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
 public class VS_STAGE {
   
-  public long ID;   //  NOT_DETECTED
+  public long ID = -1;   //  NOT_DETECTED
   public long RACE_ID;   //  NOT_DETECTED
   public int FLAG_BY_PYLOT_TYPE;
   public int STAGE_TYPE;

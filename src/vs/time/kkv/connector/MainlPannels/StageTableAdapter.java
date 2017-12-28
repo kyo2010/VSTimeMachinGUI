@@ -13,12 +13,12 @@ import vs.time.kkv.connector.Utils.KKVTreeTable.TreeTableModel;
  *
  * @author kyo
  */
-public class PracticaTableAdapter implements TreeTableModel { 
+public class StageTableAdapter implements TreeTableModel { 
   
   
-  PracticaTab tab;
+  StageTab tab;
   
-  public PracticaTableAdapter(PracticaTab tab){
+  public StageTableAdapter(StageTab tab){
     this.tab = tab;
   }
 

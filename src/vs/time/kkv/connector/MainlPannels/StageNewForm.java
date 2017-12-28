@@ -18,13 +18,14 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
+import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.models.VS_USERS;
 
 /**
  *
  * @author kyo
  */
-public class NewTabForm extends javax.swing.JFrame {
+public class StageNewForm extends javax.swing.JFrame {
 
   MainForm mainForm = null;
   int tabID = -1;
@@ -34,7 +35,7 @@ public class NewTabForm extends javax.swing.JFrame {
   /**
    * Creates new form UserControlForm
    */
-  private NewTabForm(MainForm mainForm) {
+  private StageNewForm(MainForm mainForm) {
     this.mainForm = mainForm;
     initComponents();
     channelControls.add(new ChannelControl(1, jlChannel1, jcbChannel1));
@@ -47,11 +48,11 @@ public class NewTabForm extends javax.swing.JFrame {
     channelControls.add(new ChannelControl(8, jlChannel8, jcbChannel8));
   }
 
-  private static NewTabForm form = null;
+  private static StageNewForm form = null;
 
-  public static NewTabForm init(MainForm mainForm, VS_STAGE stage) {
+  public static StageNewForm init(MainForm mainForm, VS_STAGE stage) {
     if (form == null) {
-      form = new NewTabForm(mainForm);
+      form = new StageNewForm(mainForm);
       if (mainForm != null) {
         mainForm.setFormOnCenter(form);
       }
@@ -90,6 +91,15 @@ public class NewTabForm extends javax.swing.JFrame {
         channelControls.get(index).box.setSelectedItem(channel);
         index++;
       }
+    }else{
+      String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
+      String[] channels = st_channels.split(";");
+      int index = 0;
+      for (String channel : channels) {
+        channelControls.get(index).box.setSelectedItem(channel);
+        index++;
+      }
+      jtCountOfPilots.setSelectedIndex(channels.length-1);
     }
   }
 
@@ -228,7 +238,7 @@ public class NewTabForm extends javax.swing.JFrame {
                   .addComponent(jLabel1))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jtLapsCount, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                  .addComponent(jtLapsCount)
                   .addComponent(jtCountOfPilots, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGap(0, 0, Short.MAX_VALUE))
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -410,15 +420,19 @@ public class NewTabForm extends javax.swing.JFrame {
       int count_of_pilots = jtCountOfPilots.getSelectedIndex() + 1;
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       String channels = "";
-      for (ChannelControl chc : channelControls) {
-        channels += chc.box.getSelectedItem().toString() + ";";
+      for (int index = 0; index<count_of_pilots; index++) {       
+        channels += channelControls.get(index).box.getSelectedItem().toString() + ";";
       }
       stage.CHANNELS = channels;
       stage.resetSelectedTab(mainForm.con,stage.RACE_ID);
       stage.IS_SELECTED = 1;
-      stage.dbControl.save(mainForm.con, stage);
+      if (stage.ID==-1)
+        stage.dbControl.insert(mainForm.con, stage);
+      else  
+        stage.dbControl.update(mainForm.con, stage);
       setVisible(false);
       mainForm.setActiveRace(mainForm.activeRace);
+      VS_SETTING.setParam(mainForm.con, "CHANNELS", channels);
     } catch (Exception e) {
       mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -435,7 +449,7 @@ public class NewTabForm extends javax.swing.JFrame {
       String text = jcbStageType.getSelectedItem().toString();
       int max = 1;
       try {
-        max = (int) VS_STAGE.dbControl.getMax(mainForm.con, "PRACTICA_NUM", "RACE_ID=?", mainForm.activeRace.RACE_ID) + 1;
+        max = (int) VS_STAGE.dbControl.getMax(mainForm.con, "STAGE_NUM", "RACE_ID=?", mainForm.activeRace.RACE_ID) + 1;
       } catch (Exception e) {
       }
       jtCaption.setText(text + max);
@@ -477,14 +491,26 @@ public class NewTabForm extends javax.swing.JFrame {
         }
       }
     } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(NewTabForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(StageNewForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(NewTabForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(StageNewForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(NewTabForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(StageNewForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(NewTabForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(StageNewForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
+    //</editor-fold>
     //</editor-fold>
     //</editor-fold>
     //</editor-fold>
@@ -493,7 +519,7 @@ public class NewTabForm extends javax.swing.JFrame {
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new NewTabForm(null).setVisible(true);
+        new StageNewForm(null).setVisible(true);
       }
     });
   }
