@@ -139,8 +139,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             vsTimeConnector.disconnect();
           }
           vsTimeConnector = null;
-          setVisible(false);
-          //e.getWindow().dispose();
+          MainForm.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          //setVisible(false);
+          //e.getWindow().dispose();          
         }else{
           
         }

@@ -208,6 +208,7 @@ public class RaceControlForm extends javax.swing.JFrame {
         VS_RACE.dbControl.update(mainForm.con,race);        
       } else { 
         VS_RACE.dbControl.insert(mainForm.con, race);
+        mainForm.setActiveRace(race);
       }  
       setVisible(false);
       RaceList.init(mainForm).refreshData();

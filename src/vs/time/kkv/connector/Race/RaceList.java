@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.models.VS_RACE;
+import vs.time.kkv.models.VS_STAGE;
 
 /**
  *
@@ -45,7 +46,7 @@ public class RaceList extends javax.swing.JFrame {
     raceModelTable = new RaceListModelTable(mainForm);
     jtUsers.setModel(raceModelTable);
 
-    jtUsers.getColumnModel().getColumn(2).setMaxWidth(180);
+    jtUsers.getColumnModel().getColumn(2).setMinWidth(300);
 
     popup = new JPopupMenu();
     JMenuItem miEdit = new JMenuItem("Edit");
@@ -65,7 +66,7 @@ public class RaceList extends javax.swing.JFrame {
         int row = jtUsers.getSelectedRow();
         VS_RACE race = raceModelTable.getRace(row);
         if (race != null) {
-          int res = JOptionPane.showConfirmDialog(RaceList.this, "Do you want to delete '"+race.RACE_NAME+"' Race?", "Delete Race", JOptionPane.YES_NO_OPTION);
+          int res = JOptionPane.showConfirmDialog(RaceList.this, "Do you want to delete '" + race.RACE_NAME + "' Race?", "Delete Race", JOptionPane.YES_NO_OPTION);
           if (res == JOptionPane.YES_OPTION) {
             try {
               VS_RACE.dbControl.delete(mainForm.con, race);
@@ -94,13 +95,21 @@ public class RaceList extends javax.swing.JFrame {
           if (e.getClickCount() == 2) {
             int row = jtUsers.getSelectedRow();
             VS_RACE race = raceModelTable.getRace(row);
-            if (race != null) {
-              VS_RACE.dbControl.execSql(mainForm.con, "UPDATE " + VS_RACE.dbControl.getTableAlias() + " SET IS_ACTIVE=0");
+
+            try {
+              if (race != null) {
+                VS_RACE.dbControl.execSql(mainForm.con, "UPDATE " + VS_RACE.dbControl.getTableAlias() + " SET IS_ACTIVE=0");
+              }
+              race.IS_ACTIVE = 1;
+              VS_RACE.dbControl.update(mainForm.con, race);
+            } catch (Exception ex) {
+              MainForm.toLog(ex);
             }
-            race.IS_ACTIVE = 1;
-            VS_RACE.dbControl.update(mainForm.con, race);
-            mainForm.setActiveRace(race);
+
             setVisible(false);
+
+            mainForm.setActiveRace(race);
+
             //raceModelTable.showEditDialog(row);          
             //JOptionPane.showMessageDialog(UserList.this, "Rows:"+jtUsers.getSelectedRow(), "Error", JOptionPane.ERROR_MESSAGE);
           }
@@ -279,7 +288,7 @@ public class RaceList extends javax.swing.JFrame {
   public static void main(String args[]) {
     /* Set the Nimbus look and feel */
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
      */
     try {
