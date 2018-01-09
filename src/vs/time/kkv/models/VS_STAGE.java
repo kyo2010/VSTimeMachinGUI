@@ -6,6 +6,11 @@ package vs.time.kkv.models;
 import KKV.DBControlSqlLite.*;
 import java.sql.Connection;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 import vs.time.kkv.connector.MainForm;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
@@ -23,6 +28,8 @@ public class VS_STAGE {
   public int LAPS;
   public int IS_GROUP_CREATED;
   public int IS_SELECTED;
+  
+  public Map<Integer,List<VS_STAGE_GROUPS>> groups = new HashMap<Integer,List<VS_STAGE_GROUPS>>();
   
   /** Constructor */ 
   public VS_STAGE() {
@@ -44,11 +51,28 @@ public class VS_STAGE {
   });
   
   public static void resetSelectedTab(Connection conn, long raceID){
-    try{
+    try{      
       dbControl.execSql(conn, "UPDATE "+dbControl.getTableAlias()+" SET IS_SELECTED=0 WHERE RACE_ID=?",raceID);
     }catch(Exception e){
       MainForm.toLog(e);              
     }    
+  }
+  
+  public void loadGroups(Connection conn){
+    try{
+      groups.clear();
+      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", ID);
+      for (VS_STAGE_GROUPS usr : users){
+        List<VS_STAGE_GROUPS> group = groups.get(usr.GROUP_NUM);
+        if (group==null){
+          group = new ArrayList<VS_STAGE_GROUPS>();
+          groups.put(usr.GROUP_NUM, group);
+        }
+        group.add(usr);
+      }      
+    }catch(Exception e){
+      MainForm.toLog(e);              
+    }
   }
   
 }

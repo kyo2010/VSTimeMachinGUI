@@ -11,6 +11,7 @@ public class VS_REGISTRATION {
   
   public long ID = -1;   //  NOT_DETECTED  
   public long VS_RACE_ID;   //  NOT_DETECTED
+  //public long USER_REG_ID;   //  NOT_DETECTED
   public long NUM;
   public int VS_TRANSPONDER;   //  NOT_DETECTED
   public String VS_USER_NAME;   //  NOT_DETECTED
@@ -26,6 +27,7 @@ public class VS_REGISTRATION {
     new DBModelField("ID").setDbFieldName("\"ID\"").setAutoIncrement(),
     new DBModelField("NUM").setDbFieldName("\"NUM\""),
     new DBModelField("VS_RACE_ID").setDbFieldName("\"VS_RACE_ID\""),
+    //new DBModelField("USER_REG_ID").setDbFieldName("\"USER_REG_ID\""),
     new DBModelField("VS_TRANSPONDER").setDbFieldName("\"VS_TRANSPONDER\""),
     new DBModelField("VS_USER_NAME").setDbFieldName("\"VS_USER_NAME\""),
     new DBModelField("IS_ACTIVE").setDbFieldName("\"IS_ACTIVE\""),

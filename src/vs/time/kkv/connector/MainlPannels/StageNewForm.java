@@ -80,6 +80,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
   public void prepareForm() {
     if (stage != null) {
+      butRecrateGropus.setVisible(true);
       jtCaption.setText(stage.CAPTION);
       jchGroupByPilotType.setSelected(stage.FLAG_BY_PYLOT_TYPE == 1);
       jtLapsCount.setText("" + stage.LAPS);
@@ -92,6 +93,7 @@ public class StageNewForm extends javax.swing.JFrame {
         index++;
       }
     }else{
+      butRecrateGropus.setVisible(false);
       String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
       String[] channels = st_channels.split(";");
       int index = 0;
@@ -143,6 +145,7 @@ public class StageNewForm extends javax.swing.JFrame {
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
+    butRecrateGropus = new javax.swing.JButton();
 
     setTitle("Add Stage");
     setResizable(false);
@@ -351,6 +354,13 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
+    butRecrateGropus.setText("Recreate Groups");
+    butRecrateGropus.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butRecrateGropusActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -358,6 +368,8 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(bSave)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butRecrateGropus)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
         .addContainerGap())
@@ -368,7 +380,8 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
-          .addComponent(bCancel))
+          .addComponent(bCancel)
+          .addComponent(butRecrateGropus))
         .addContainerGap())
     );
 
@@ -396,7 +409,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
   private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
     try {
-      if (stage == null) {
+      if (stage == null) {        
         stage = new VS_STAGE();
         stage.IS_GROUP_CREATED = 0;
         stage.RACE_ID = mainForm.activeRace.RACE_ID;
@@ -474,6 +487,20 @@ public class StageNewForm extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_jcbStageTypeActionPerformed
 
+  private void butRecrateGropusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRecrateGropusActionPerformed
+    // TODO add your handling code here:
+    try{
+      if (stage!=null && stage.ID!=-1){
+        stage.IS_GROUP_CREATED=0;
+        VS_STAGE.dbControl.update(mainForm.con, stage);
+        mainForm.setActiveRace(mainForm.activeRace);
+        setVisible(false);
+      }      
+    }catch(Exception e){
+      mainForm.toLog(e);
+    }
+  }//GEN-LAST:event_butRecrateGropusActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -528,6 +555,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel Caption;
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
+  private javax.swing.JButton butRecrateGropus;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;

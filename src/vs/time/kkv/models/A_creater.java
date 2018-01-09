@@ -29,8 +29,7 @@ public class A_creater {
       //generateClazz(con,"VS_BANDS","VS_BANDS","vs.time.kkv.models");
       //generateClazz(con,"LAST_BANDS","LAST_BANDS","vs.time.kkv.models");
       //generateClazz(con,"VS_PRACTICA","VS_PRACTICA","vs.time.kkv.models");
-      //generateClazz(con,"VS_PRACTICA_GROUPS","VS_PRACTICA_GROUPS","vs.time.kkv.models");
-      
+      //generateClazz(con,"VS_STAGE_GROUPS","VS_STAGE_GROUPS","vs.time.kkv.models");
       
     } catch (UserException ue) {
       System.out.println("Error : " + ue.error + " details : " + ue.details);

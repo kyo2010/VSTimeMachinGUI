@@ -8,6 +8,7 @@ package vs.time.kkv.connector.MainlPannels;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import vs.time.kkv.connector.Utils.KKVTreeTable.TreeTableModel;
+import vs.time.kkv.models.VS_STAGE;
 
 /**
  *
@@ -39,7 +40,14 @@ public class StageTableAdapter implements TreeTableModel {
 
   @Override
   public Object getValueAt(Object node, int column) {
-    return "Node:"+ ((String[]) node)[0]+" Value:"+column;
+    if (node instanceof VS_STAGE){
+      VS_STAGE stage = (VS_STAGE) node;
+      if (column==0)
+        return ((VS_STAGE) node).CAPTION;
+      else 
+        return "";
+    }
+    return "Group";
   }
 
   @Override
@@ -53,31 +61,53 @@ public class StageTableAdapter implements TreeTableModel {
 
   @Override
   public Object getRoot() {
-    return new String[]{"M1","M2"};
-  }
+    return tab.stage;
+  }    
 
   @Override
   public Object getChild(Object parent, int index) {
-    return null;
+    if (parent!=null && parent instanceof VS_STAGE){
+      VS_STAGE stage = (VS_STAGE) parent;
+      return stage.groups.get(index-1);
+    }   
+    //if (parent instanceof )
+    return "";
   }
 
   @Override
   public int getChildCount(Object parent) {
+    if (parent instanceof VS_STAGE){
+      VS_STAGE stage = (VS_STAGE) parent;
+      return stage.groups.size();
+    }
+    //if (parent instanceof )
+    int y = 0;
     return 0;
   }
 
   @Override
   public boolean isLeaf(Object node) {
-    return false;
+    if (node instanceof VS_STAGE){
+      VS_STAGE stage = (VS_STAGE) node;
+      return false;
+    }
+    return true;
+  }
+  
+  @Override
+  public int getIndexOfChild(Object parent, Object child) {
+    /*if (parent instanceof VS_STAGE){
+      VS_STAGE stage = (VS_STAGE) parent;
+      for (Integer groupNum : stage.groups.keySet()){
+        if (stage.groups.get(groupNum).equals(child)) return groupNum-1;
+      }
+    }    
+    int y = 0;*/
+    return 0;
   }
 
   @Override
   public void valueForPathChanged(TreePath path, Object newValue) {
-  }
-
-  @Override
-  public int getIndexOfChild(Object parent, Object child) {
-    return 0;
   }
 
   @Override

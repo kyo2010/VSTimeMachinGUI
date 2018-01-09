@@ -49,10 +49,18 @@ public class RaceList extends javax.swing.JFrame {
     jtUsers.getColumnModel().getColumn(2).setMinWidth(300);
 
     popup = new JPopupMenu();
+    JMenuItem miSelectRace = new JMenuItem("Select Race");
+    popup.add(miSelectRace);
     JMenuItem miEdit = new JMenuItem("Edit");
     popup.add(miEdit);
     JMenuItem miDelete = new JMenuItem("Delete");
     popup.add(miDelete);
+    miSelectRace.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        selectRace();
+      }
+    });
     miEdit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -93,23 +101,7 @@ public class RaceList extends javax.swing.JFrame {
             //popup.setVisible(false);   
           }
           if (e.getClickCount() == 2) {
-            int row = jtUsers.getSelectedRow();
-            VS_RACE race = raceModelTable.getRace(row);
-
-            try {
-              if (race != null) {
-                VS_RACE.dbControl.execSql(mainForm.con, "UPDATE " + VS_RACE.dbControl.getTableAlias() + " SET IS_ACTIVE=0");
-              }
-              race.IS_ACTIVE = 1;
-              VS_RACE.dbControl.update(mainForm.con, race);
-            } catch (Exception ex) {
-              MainForm.toLog(ex);
-            }
-
-            setVisible(false);
-
-            mainForm.setActiveRace(race);
-
+            selectRace();
             //raceModelTable.showEditDialog(row);          
             //JOptionPane.showMessageDialog(UserList.this, "Rows:"+jtUsers.getSelectedRow(), "Error", JOptionPane.ERROR_MESSAGE);
           }
@@ -128,7 +120,6 @@ public class RaceList extends javax.swing.JFrame {
           if (!source.isRowSelected(row)) {
             source.changeSelection(row, column, false, false);
           }
-
           popup.show(e.getComponent(), e.getX(), e.getY());
         }
       }
@@ -136,6 +127,22 @@ public class RaceList extends javax.swing.JFrame {
     });
 
     setVisible(false);
+  }
+
+  public void selectRace() {
+    int row = jtUsers.getSelectedRow();
+    VS_RACE race = raceModelTable.getRace(row);
+    try {
+      if (race != null) {
+        VS_RACE.dbControl.execSql(mainForm.con, "UPDATE " + VS_RACE.dbControl.getTableAlias() + " SET IS_ACTIVE=0");
+      }
+      race.IS_ACTIVE = 1;
+      VS_RACE.dbControl.update(mainForm.con, race);
+    } catch (Exception ex) {
+      MainForm.toLog(ex);
+    }
+    setVisible(false);
+    mainForm.setActiveRace(race);
   }
 
   public void refreshData() {
