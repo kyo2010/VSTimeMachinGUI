@@ -414,7 +414,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="butRecrateGropus">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Recreate Groups"/>
+            <Property name="text" type="java.lang.String" value="Save &amp; Recreate Groups"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butRecrateGropusActionPerformed"/>

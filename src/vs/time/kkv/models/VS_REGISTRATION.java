@@ -17,7 +17,7 @@ public class VS_REGISTRATION {
   public String VS_USER_NAME;   //  NOT_DETECTED
   public int IS_ACTIVE;   //  NOT_DETECTED
   public int VS_SOUND_EFFECT;
-  public int PILOT_TYPE;
+  public int PILOT_TYPE;  
   
   /** Constructor */ 
   public VS_REGISTRATION() {
@@ -43,4 +43,7 @@ public class VS_REGISTRATION {
     return num;
   }
   
+  public String toString(){
+    return VS_USER_NAME;
+  }  
 }

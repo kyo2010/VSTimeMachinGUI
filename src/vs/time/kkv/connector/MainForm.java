@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector;
 
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
 import java.awt.Dimension;
@@ -33,6 +35,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
@@ -56,7 +59,7 @@ import vs.time.kkv.models.VS_REGISTRATION;
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver {
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};  
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -76,10 +79,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public static MainForm _mainForm = null;
 
-  public static void toLog(Exception e) {
+  public static void _toLog(Exception e) {
     if (_mainForm != null) {
       _mainForm.log.writeFile(e);
     }
+  }
+  
+  public void toLog(Exception e) {
+    log.writeFile(e);    
   }
 
   public VSTimeConnector vsTimeConnector = null;
@@ -583,6 +590,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JTabbedPane tabbedPanel;
   // End of variables declaration//GEN-END:variables
 
+  public JTabbedPane getTabbedPanels(){
+    return tabbedPanel;
+  } 
+  
   public void setFormOnCenter(JFrame form) {
     Point p = this.getLocationOnScreen();
     form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);

@@ -139,7 +139,7 @@ public class RaceList extends javax.swing.JFrame {
       race.IS_ACTIVE = 1;
       VS_RACE.dbControl.update(mainForm.con, race);
     } catch (Exception ex) {
-      MainForm.toLog(ex);
+      mainForm.toLog(ex);
     }
     setVisible(false);
     mainForm.setActiveRace(race);

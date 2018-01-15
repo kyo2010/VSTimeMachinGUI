@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector.MainlPannels;
 
+import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -126,6 +127,7 @@ public class RegistrationTab extends javax.swing.JPanel {
     jPanel1 = new javax.swing.JPanel();
     jPanel2 = new javax.swing.JPanel();
     butRegistPilot = new javax.swing.JButton();
+    butAddNewStage = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -136,6 +138,13 @@ public class RegistrationTab extends javax.swing.JPanel {
       }
     });
 
+    butAddNewStage.setText("Add a New Race Stage");
+    butAddNewStage.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butAddNewStageActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -143,14 +152,18 @@ public class RegistrationTab extends javax.swing.JPanel {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(butRegistPilot)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(butRegistPilot)
-        .addContainerGap(13, Short.MAX_VALUE))
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(butRegistPilot)
+          .addComponent(butAddNewStage))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -198,8 +211,14 @@ public class RegistrationTab extends javax.swing.JPanel {
     RegisterPilotlForm.init(mainForm, -1).setVisible(true);
   }//GEN-LAST:event_butRegistPilotActionPerformed
 
+  private void butAddNewStageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butAddNewStageActionPerformed
+    // TODO add your handling code here:
+    StageNewForm.init(mainForm, null).setVisible(true);
+  }//GEN-LAST:event_butAddNewStageActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;

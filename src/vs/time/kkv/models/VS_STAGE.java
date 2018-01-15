@@ -27,9 +27,9 @@ public class VS_STAGE {
   public int MIN_LAP_TIME;
   public int LAPS;
   public int IS_GROUP_CREATED;
-  public int IS_SELECTED;
-  
-  public Map<Integer,List<VS_STAGE_GROUPS>> groups = new HashMap<Integer,List<VS_STAGE_GROUPS>>();
+  public int IS_SELECTED;  
+    
+  public Map<Integer,VS_STAGE_GROUP> groups = new HashMap<Integer,VS_STAGE_GROUP>();
   
   /** Constructor */ 
   public VS_STAGE() {
@@ -54,25 +54,62 @@ public class VS_STAGE {
     try{      
       dbControl.execSql(conn, "UPDATE "+dbControl.getTableAlias()+" SET IS_SELECTED=0 WHERE RACE_ID=?",raceID);
     }catch(Exception e){
-      MainForm.toLog(e);              
+      MainForm._toLog(e);              
     }    
   }
   
   public void loadGroups(Connection conn){
     try{
       groups.clear();
+      int GROUP_INDEX=0;
+      Map<Long,Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", ID);
       for (VS_STAGE_GROUPS usr : users){
-        List<VS_STAGE_GROUPS> group = groups.get(usr.GROUP_NUM);
+        long db_group_index = usr.GROUP_NUM;
+        Integer phisical_group_index = indexes.get(db_group_index);
+        if (phisical_group_index==null){
+          phisical_group_index = GROUP_INDEX;
+          indexes.put(db_group_index,phisical_group_index);
+          GROUP_INDEX++;
+        }                
+        VS_STAGE_GROUP group = groups.get(phisical_group_index);
         if (group==null){
-          group = new ArrayList<VS_STAGE_GROUPS>();
-          groups.put(usr.GROUP_NUM, group);
-        }
-        group.add(usr);
-      }      
+          group = new VS_STAGE_GROUP();          
+          groups.put(phisical_group_index, group);
+          group.GROUP_INDEX = GROUP_INDEX;
+          group.GROUP_NUM = usr.GROUP_NUM;         
+          group.GROUP_INDEX = phisical_group_index;                    
+        }        
+        group.users.add(usr);        
+        usr.parent = group;        
+      }
+      checkConstarin();
     }catch(Exception e){
-      MainForm.toLog(e);              
+      MainForm._toLog(e);              
     }
+  }
+  
+  public void checkConstarin(){
+    TreeSet<String> userNames = new TreeSet<String>();
+    for (Integer groupID : groups.keySet()){
+      VS_STAGE_GROUP group = groups.get(groupID);
+      group.useChannels = "";
+      for (VS_STAGE_GROUPS usr : group.users){
+        usr.isError = 0;
+        if (group.useChannels.indexOf(usr.CHANNEL)>=0){
+          usr.isError = 1;
+        }
+        if (userNames.contains(usr.PILOT)){
+          usr.isError = 2;
+        }        
+        userNames.add(usr.PILOT);        
+        group.useChannels += usr.CHANNEL+";";        
+      }
+    } 
+  }
+  
+  public String toString(){
+    return CAPTION;
   }
   
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vs.time.kkv.connector.MainlPannels;
+package vs.time.kkv.connector.MainlPannels.stage;
 
 import vs.time.kkv.connector.Race.*;
 import vs.time.kkv.connector.Users.*;
@@ -92,6 +92,7 @@ public class StageNewForm extends javax.swing.JFrame {
         channelControls.get(index).box.setSelectedItem(channel);
         index++;
       }
+      jcbStageType.setSelectedIndex(stage.STAGE_TYPE);
     }else{
       butRecrateGropus.setVisible(false);
       String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
@@ -354,7 +355,7 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
-    butRecrateGropus.setText("Recreate Groups");
+    butRecrateGropus.setText("Save & Recreate Groups");
     butRecrateGropus.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butRecrateGropusActionPerformed(evt);
@@ -431,7 +432,8 @@ public class StageNewForm extends javax.swing.JFrame {
       } catch (Exception e) {
       }
       int count_of_pilots = jtCountOfPilots.getSelectedIndex() + 1;
-      stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
+      stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;         
+      stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
       String channels = "";
       for (int index = 0; index<count_of_pilots; index++) {       
         channels += channelControls.get(index).box.getSelectedItem().toString() + ";";
@@ -488,12 +490,13 @@ public class StageNewForm extends javax.swing.JFrame {
   }//GEN-LAST:event_jcbStageTypeActionPerformed
 
   private void butRecrateGropusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRecrateGropusActionPerformed
-    // TODO add your handling code here:
+    // TODO add your handling code here:    
     try{
       if (stage!=null && stage.ID!=-1){
         stage.IS_GROUP_CREATED=0;
         VS_STAGE.dbControl.update(mainForm.con, stage);
         mainForm.setActiveRace(mainForm.activeRace);
+        bSaveActionPerformed(evt);
         setVisible(false);
       }      
     }catch(Exception e){

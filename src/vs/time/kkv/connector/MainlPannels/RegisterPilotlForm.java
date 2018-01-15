@@ -10,6 +10,7 @@ import KKV.DBControlSqlLite.DBModelTest;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -21,6 +22,7 @@ import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_USERS;
 
 /**
@@ -280,6 +282,12 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           return;          
         }                
         VS_REGISTRATION.dbControl.update(mainForm.con,usr);        
+        
+        /*// add user to all stages
+        for (int s_idx=0; s_idx<mainForm.getTabbedPanels().getComponentCount(); s_idx++){
+                  
+        }*/
+        
       } else {      
         usr.NUM = VS_REGISTRATION.maxNum(mainForm.con, usr.VS_RACE_ID)+1;      
         check = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=?", usr.VS_RACE_ID, usr.VS_TRANSPONDER);

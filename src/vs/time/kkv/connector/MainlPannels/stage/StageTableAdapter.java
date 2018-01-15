@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vs.time.kkv.connector.MainlPannels;
+package vs.time.kkv.connector.MainlPannels.stage;
 
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import vs.time.kkv.connector.Utils.KKVTreeTable.TreeTableModel;
 import vs.time.kkv.models.VS_STAGE;
+import vs.time.kkv.models.VS_STAGE_GROUP;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
  *
@@ -47,7 +49,19 @@ public class StageTableAdapter implements TreeTableModel {
       else 
         return "";
     }
-    return "Group";
+    if (node instanceof VS_STAGE_GROUP){
+      if (column==0)
+        return ((VS_STAGE_GROUP) node).toString();
+      else 
+        return "";    
+    }
+    if (node instanceof VS_STAGE_GROUPS){
+      if (column==0)
+        return ((VS_STAGE_GROUPS) node).toString();
+      else 
+        return "";    
+    }
+    return "";
   }
 
   @Override
@@ -61,15 +75,21 @@ public class StageTableAdapter implements TreeTableModel {
 
   @Override
   public Object getRoot() {
-    return tab.stage;
-  }    
+    return tab.stage; 
+  }
 
   @Override
   public Object getChild(Object parent, int index) {
     if (parent!=null && parent instanceof VS_STAGE){
       VS_STAGE stage = (VS_STAGE) parent;
-      return stage.groups.get(index-1);
+      VS_STAGE_GROUP group = stage.groups.get(index);
+      return group;
     }   
+    if (parent instanceof VS_STAGE_GROUP){
+      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
+      VS_STAGE_GROUPS usr = group.users.get(index);
+      return usr;
+    }
     //if (parent instanceof )
     return "";
   }
@@ -80,30 +100,47 @@ public class StageTableAdapter implements TreeTableModel {
       VS_STAGE stage = (VS_STAGE) parent;
       return stage.groups.size();
     }
+    if (parent instanceof VS_STAGE_GROUP){
+      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
+      return group.users.size();
+    }
     //if (parent instanceof )
-    int y = 0;
     return 0;
   }
 
   @Override
   public boolean isLeaf(Object node) {
-    if (node instanceof VS_STAGE){
+   if (node instanceof VS_STAGE){
       VS_STAGE stage = (VS_STAGE) node;
-      return false;
+      if (stage.groups.size()>0) return false;
+    }
+    if (node instanceof VS_STAGE_GROUP){
+      VS_STAGE_GROUP group = (VS_STAGE_GROUP) node;
+      if (group.users.size()>0) return false; 
     }
     return true;
   }
-  
+
   @Override
   public int getIndexOfChild(Object parent, Object child) {
-    /*if (parent instanceof VS_STAGE){
+    if (parent instanceof VS_STAGE){
       VS_STAGE stage = (VS_STAGE) parent;
-      for (Integer groupNum : stage.groups.keySet()){
-        if (stage.groups.get(groupNum).equals(child)) return groupNum-1;
+      for (int key: stage.groups.keySet()){
+        if (stage.groups.get(key).equals(child)){
+          return key;
+        }
       }
-    }    
-    int y = 0;*/
+    }
+    if (parent instanceof VS_STAGE_GROUP){
+      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
+      int index = 0;
+      for (VS_STAGE_GROUPS usr : group.users){
+        if (usr.equals(child)) return index;
+        index++;
+      }
+    }
     return 0;
+    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
