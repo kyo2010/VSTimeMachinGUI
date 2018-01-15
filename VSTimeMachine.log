@@ -1,37 +1,6 @@
-[2018-1-8 0:41:17] Null child not allowed java.lang.NullPointerException: Null child not allowed
-	at javax.swing.tree.TreePath.pathByAddingChild(TreePath.java:327)
-	at javax.swing.tree.VariableHeightLayoutCache$TreeStateNode.setParent(VariableHeightLayoutCache.java:1066)
-	at javax.swing.tree.DefaultMutableTreeNode.insert(DefaultMutableTreeNode.java:187)
-	at javax.swing.tree.DefaultMutableTreeNode.add(DefaultMutableTreeNode.java:411)
-	at javax.swing.tree.VariableHeightLayoutCache$TreeStateNode.expand(VariableHeightLayoutCache.java:1495)
-	at javax.swing.tree.VariableHeightLayoutCache$TreeStateNode.expand(VariableHeightLayoutCache.java:1288)
-	at javax.swing.tree.VariableHeightLayoutCache.rebuild(VariableHeightLayoutCache.java:743)
-	at javax.swing.tree.VariableHeightLayoutCache.setModel(VariableHeightLayoutCache.java:109)
-	at javax.swing.plaf.basic.BasicTreeUI.setModel(BasicTreeUI.java:412)
-	at javax.swing.plaf.basic.BasicTreeUI$Handler.propertyChange(BasicTreeUI.java:3414)
-	at java.beans.PropertyChangeSupport.fire(PropertyChangeSupport.java:335)
-	at java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:327)
-	at java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:263)
-	at java.awt.Component.firePropertyChange(Component.java:8430)
-	at javax.swing.JTree.setModel(JTree.java:882)
-	at javax.swing.JTree.<init>(JTree.java:670)
-	at vs.time.kkv.connector.Utils.KKVTreeTable.JTreeTable$TreeTableCellRenderer.<init>(JTreeTable.java:131)
-	at vs.time.kkv.connector.Utils.KKVTreeTable.JTreeTable.<init>(JTreeTable.java:49)
-	at vs.time.kkv.connector.MainlPannels.StageTab.<init>(StageTab.java:46)
-	at vs.time.kkv.connector.MainForm.setActiveRace(MainForm.java:108)
-	at vs.time.kkv.connector.MainForm.<init>(MainForm.java:164)
-	at vs.time.kkv.connector.MainForm$14.run(MainForm.java:545)
-	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
-	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)
-	at java.awt.EventQueue.access$500(EventQueue.java:97)
-	at java.awt.EventQueue$3.run(EventQueue.java:709)
-	at java.awt.EventQueue$3.run(EventQueue.java:703)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.awt.EventQueue.dispatchEvent(EventQueue.java:726)
-	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
-	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
-	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
-	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+[2018-1-15 16:6:51] systime:1516021611020,0,77,0.5,125
+[2018-1-15 16:6:51] timesynchok:77,1516021611018,121
+[2018-1-15 16:6:53] espinfo:0,KKV Time 1,2901325178,192,168,197,8888,8889,0.2.1
+[2018-1-15 16:6:53] systime:1516021613761,0,77,0.5,154
+[2018-1-15 16:8:50] espinfo:0,KKV Time 1,2901325178,192,168,197,8888,8889,0.2.1
+[2018-1-15 16:8:50] systime:1516021730476,0,77,0.5,135
