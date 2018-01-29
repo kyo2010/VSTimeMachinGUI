@@ -56,8 +56,9 @@ public class StageTableAdapter implements TreeTableModel {
         return "";    
     }
     if (node instanceof VS_STAGE_GROUPS){
+      VS_STAGE_GROUPS usr = (VS_STAGE_GROUPS)node;
       if (column==0)
-        return ((VS_STAGE_GROUPS) node).toString();
+        return usr.PILOT;
       else 
         return "";    
     }
@@ -90,6 +91,9 @@ public class StageTableAdapter implements TreeTableModel {
       VS_STAGE_GROUPS usr = group.users.get(index);
       return usr;
     }
+    if (parent instanceof VS_STAGE_GROUPS){
+      return null;
+    }
     //if (parent instanceof )
     return "";
   }
@@ -104,6 +108,14 @@ public class StageTableAdapter implements TreeTableModel {
       VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
       return group.users.size();
     }
+    if (parent instanceof VS_STAGE_GROUPS){
+      return 0;
+    }
+    /*if (parent instanceof VS_STAGE_GROUPS){
+      VS_STAGE_GROUPS group = (VS_STAGE_GROUPS) parent;
+      return group.
+    }*/
+    
     //if (parent instanceof )
     return 0;
   }
@@ -117,6 +129,9 @@ public class StageTableAdapter implements TreeTableModel {
     if (node instanceof VS_STAGE_GROUP){
       VS_STAGE_GROUP group = (VS_STAGE_GROUP) node;
       if (group.users.size()>0) return false; 
+    }
+    if (node instanceof VS_STAGE_GROUPS){
+      return true; 
     }
     return true;
   }
