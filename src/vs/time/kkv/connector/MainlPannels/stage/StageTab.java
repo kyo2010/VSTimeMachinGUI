@@ -49,6 +49,7 @@ public class StageTab extends javax.swing.JPanel {
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
+  public StageTableAdapter stageTableAdapter = null;
 
   /**
    * Creates new form PracticaTableTab
@@ -72,12 +73,19 @@ public class StageTab extends javax.swing.JPanel {
     jTree.setCellRenderer(render);       
     expandAllJTree();
 
-    jTable.setVisible(false);
+    stageTableAdapter = new StageTableAdapter(this);
+    jTable.setModel(stageTableAdapter);
+    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+    
+    for (int i=0; i<stageTableAdapter.getColumnCount(); i++){
+      jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
+    }    
+    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-    treeTable = new JTreeTable(new StageTableAdapter(this));
-    jScrollPane1.add(treeTable);
-    jScrollPane1.setViewportView(treeTable);
-    treeTable.setDragEnabled(true);    
+    //treeTable = new JTreeTable(new StageTableAdapter2(this));
+    //jScrollPane1.add(treeTable);
+    //jScrollPane1.setViewportView(treeTable);
+    //treeTable.setDragEnabled(true);    
     
    jTree.addMouseListener(new MouseListener() {
       @Override
@@ -215,12 +223,20 @@ public class StageTab extends javax.swing.JPanel {
       StageTabTreeEditForm.init(mainForm, this, group, null).setVisible(true);
     }
   }
+  
+  public void refreshTableData(){
+    if (stageTableAdapter!=null){
+      stageTableAdapter.loadData();
+      jTable.updateUI();
+    }  
+  }
 
   public void refreshData(boolean refreshInterface) {
     if (stage != null && stage.IS_GROUP_CREATED == 0) {
       createGroups();
     }
     stage.loadGroups(mainForm.con);
+    refreshTableData();
     //jTable.addNotify();
     //jTree.addNotify();
     //jTree.updateUI();

@@ -5,169 +5,191 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
-import vs.time.kkv.connector.Utils.KKVTreeTable.TreeTableModel;
-import vs.time.kkv.models.VS_STAGE;
+import vs.time.kkv.connector.Race.*;
+import vs.time.kkv.connector.Users.*;
+import KKV.DBControlSqlLite.UserException;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
+import vs.time.kkv.models.VS_USERS;
+
+import java.awt.Color; 
+import java.awt.Component; 
+import javax.swing.JTable; 
+import javax.swing.table.DefaultTableCellRenderer; 
+import javax.swing.table.TableCellRenderer; 
+
 
 /**
  *
  * @author kyo
  */
-public class StageTableAdapter implements TreeTableModel { 
+public class StageTableAdapter extends AbstractTableModel implements TableCellRenderer{
   
+  private List<StageTableData> rows;
+  private StageTab tab = null;
+  private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+
+  public static class STAGE_COLUMN{
+    String caption;
+    int width;
+    int ID;
+    
+    public static final int CID_PILOT = 10;
+    public static final int CID_CHANNEL = 20;
+    public static final int CID_TIME = 30;
+    public static final int CID_BEST_LAP = 40;
+    public static final int CID_LAPS = 50;
+    public static final int CID_LAP = 100;
+    
+    public STAGE_COLUMN(int ID, String caption, int width) {
+      this.ID = ID;
+      this.caption = caption;
+      this.width = width;
+    }    
+  }
   
-  StageTab tab;
+  static STAGE_COLUMN[] STAGE_COLUMNS = new STAGE_COLUMN[]{
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot",150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL,"Channel",30),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Time",100),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap",100),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps",30),
+  }; 
   
-  public StageTableAdapter(StageTab tab){
+  public StageTableAdapter(StageTab tab) {
     this.tab = tab;
+    loadData();
+  }
+
+  public void loadData() {
+    rows = new ArrayList<StageTableData>();
+    for (Integer groupId : tab.stage.groups.keySet()) {
+      VS_STAGE_GROUP group = tab.stage.groups.get(groupId);
+      rows.add(new StageTableData(group));
+      for (VS_STAGE_GROUPS pilot : group.users) {
+        rows.add(new StageTableData(pilot));
+      }
+    }
+  }
+  
+  public int getMinWidth(int col){   
+    if (col<STAGE_COLUMNS.length){
+      return STAGE_COLUMNS[col].width;
+    }
+    return 100;    
+  }
+
+  @Override
+  public int getRowCount() {
+    return rows.size();
   }
 
   @Override
   public int getColumnCount() {
-    return 3;  
+    return STAGE_COLUMNS.length + tab.stage.LAPS;
   }
 
   @Override
-  public String getColumnName(int column) {
-    return "Col"+column;
+  public String getColumnName(int columnIndex) {
+    if (columnIndex<STAGE_COLUMNS.length) {
+      return STAGE_COLUMNS[columnIndex].caption;
+    }        
+    return "Lap " + (columnIndex - STAGE_COLUMNS.length + 1);
   }
 
   @Override
-  public Class getColumnClass(int column) {
+  public Class<?> getColumnClass(int columnIndex) {
     return String.class;
   }
 
   @Override
-  public Object getValueAt(Object node, int column) {
-    if (node instanceof VS_STAGE){
-      VS_STAGE stage = (VS_STAGE) node;
-      if (column==0)
-        return ((VS_STAGE) node).CAPTION;
-      else 
+  public Object getValueAt(int rowIndex, int columnIndex) {
+    if (rows.size() > rowIndex) {
+      StageTableData td = rows.get(rowIndex);
+      if (td.isGrpup) {
+        if (columnIndex == 0) {
+          return "Group " + td.group.GROUP_NUM;
+        }
         return "";
-    }
-    if (node instanceof VS_STAGE_GROUP){
-      if (column==0)
-        return ((VS_STAGE_GROUP) node).toString();
-      else 
-        return "";    
-    }
-    if (node instanceof VS_STAGE_GROUPS){
-      VS_STAGE_GROUPS usr = (VS_STAGE_GROUPS)node;
-      if (column==0)
-        return usr.PILOT;
-      else 
-        return "";    
+      } else {
+        STAGE_COLUMN sc = null;
+        if (columnIndex<STAGE_COLUMNS.length) sc = STAGE_COLUMNS[columnIndex];        
+        if (sc!=null && sc.ID==STAGE_COLUMN.CID_PILOT) {
+          return td.pilot.PILOT;
+        }
+        if (sc!=null && sc.ID==STAGE_COLUMN.CID_CHANNEL) {
+          return td.pilot.CHANNEL;
+        }              
+      }
     }
     return "";
   }
 
-  @Override
-  public boolean isCellEditable(Object node, int column) {
+  public boolean isCellEditable(int row, int col) {
+    StageTableData td = rows.get(row);
+    if (td.isGrpup) {
+      return false;
+    }
+    STAGE_COLUMN sc = null;
+    if (col<STAGE_COLUMNS.length) sc = STAGE_COLUMNS[col];    
+    if (col >= STAGE_COLUMNS.length) {
+      return true;
+    }
+    if (sc!=null && sc.ID==STAGE_COLUMN.CID_PILOT) {
+      return true;
+    }
     return false;
   }
 
-  @Override
-  public void setValueAt(Object aValue, Object node, int column) {
+  public void showEditDialog(int row) {
+    if (row < rows.size() && row >= 0) {
+      //  VS_RACE race = rows.get(row);      
+      //  RaceControlForm.init(mainForm, race.RACE_ID).setVisible(true);
+    }
   }
 
-  @Override
-  public Object getRoot() {
-    return tab.stage; 
+  public void setValueAt(Object value, int row, int col) {    
+    //JOptionPane.showMessageDialog(mainForm, "Edition is error. " + e.error + " " + e.details, "Error", JOptionPane.ERROR_MESSAGE);    
   }
 
-  @Override
-  public Object getChild(Object parent, int index) {
-    if (parent!=null && parent instanceof VS_STAGE){
-      VS_STAGE stage = (VS_STAGE) parent;
-      VS_STAGE_GROUP group = stage.groups.get(index);
-      return group;
-    }   
-    if (parent instanceof VS_STAGE_GROUP){
-      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
-      VS_STAGE_GROUPS usr = group.users.get(index);
-      return usr;
-    }
-    if (parent instanceof VS_STAGE_GROUPS){
-      return null;
-    }
-    //if (parent instanceof )
-    return "";
-  }
-
-  @Override
-  public int getChildCount(Object parent) {
-    if (parent instanceof VS_STAGE){
-      VS_STAGE stage = (VS_STAGE) parent;
-      return stage.groups.size();
-    }
-    if (parent instanceof VS_STAGE_GROUP){
-      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
-      return group.users.size();
-    }
-    if (parent instanceof VS_STAGE_GROUPS){
-      return 0;
-    }
-    /*if (parent instanceof VS_STAGE_GROUPS){
-      VS_STAGE_GROUPS group = (VS_STAGE_GROUPS) parent;
-      return group.
-    }*/
-    
-    //if (parent instanceof )
-    return 0;
-  }
-
-  @Override
-  public boolean isLeaf(Object node) {
-   if (node instanceof VS_STAGE){
-      VS_STAGE stage = (VS_STAGE) node;
-      if (stage.groups.size()>0) return false;
-    }
-    if (node instanceof VS_STAGE_GROUP){
-      VS_STAGE_GROUP group = (VS_STAGE_GROUP) node;
-      if (group.users.size()>0) return false; 
-    }
-    if (node instanceof VS_STAGE_GROUPS){
-      return true; 
-    }
-    return true;
-  }
-
-  @Override
-  public int getIndexOfChild(Object parent, Object child) {
-    if (parent instanceof VS_STAGE){
-      VS_STAGE stage = (VS_STAGE) parent;
-      for (int key: stage.groups.keySet()){
-        if (stage.groups.get(key).equals(child)){
-          return key;
-        }
-      }
-    }
-    if (parent instanceof VS_STAGE_GROUP){
-      VS_STAGE_GROUP group = (VS_STAGE_GROUP) parent;
-      int index = 0;
-      for (VS_STAGE_GROUPS usr : group.users){
-        if (usr.equals(child)) return index;
-        index++;
-      }
-    }
-    return 0;
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void valueForPathChanged(TreePath path, Object newValue) {
-  }
-
-  @Override
-  public void addTreeModelListener(TreeModelListener l) {    
-  }
-
-  @Override
-  public void removeTreeModelListener(TreeModelListener l) {
-  }
+  public static final Color DEFAULT_FOREGROUND_COLOR = Color.BLACK;
+  public static final Color DEFAULT_BACKGROUD_COLOR = Color.WHITE;
   
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    StageTableData td = rows.get(row);
+    JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table,value, isSelected, hasFocus,row, column);
+    if (td.isGrpup){
+      //Font f = table.getFont();
+      //f.setA
+      //label.setFont(font);
+      label.setBackground(Color.BLUE);
+      label.setForeground(Color.WHITE);
+      label.setFont(label.getFont().deriveFont(Font.BOLD));
+    }else{
+      label.setBackground(DEFAULT_BACKGROUD_COLOR);
+      label.setForeground(DEFAULT_FOREGROUND_COLOR);
+    }
+    return label;
+  }
+    
 }

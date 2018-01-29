@@ -177,6 +177,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
         nodesToRemove.parent.users.remove(nodesToRemove);
         parent.users.add(node);
         stageTab.stage.checkConstarin();
+        stageTab.refreshTableData();
         tree.updateUI();
       } catch (Exception e) {
         stageTab.mainForm.toLog(e);
@@ -206,7 +207,8 @@ class StageTabTreeTransferHandler extends TransferHandler {
           }  
           usr.parent = parent;          
         }                
-        stageTab.stage.checkConstarin();        
+        stageTab.stage.checkConstarin(); 
+        stageTab.refreshTableData();
         tree.updateUI();
       } catch (Exception e) {
         stageTab.mainForm.toLog(e);
@@ -235,6 +237,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
         nodesToRemove.parent.users.remove(nodesToRemove);
         parent.users.add(node);
         stageTab.stage.checkConstarin();
+        stageTab.refreshTableData();
         tree.updateUI();
       } catch (Exception e) {
         stageTab.mainForm.toLog(e);
