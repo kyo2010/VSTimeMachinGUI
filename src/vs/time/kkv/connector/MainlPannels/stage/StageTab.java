@@ -58,7 +58,9 @@ public class StageTab extends javax.swing.JPanel {
     this.stage = _stage;
     initComponents();
     this.mainForm = main;
-    //topPanel.setVisible(false);        
+    //topPanel.setVisible(false);      
+    
+    butStartRace.setVisible(false);
 
     refreshData(false);
     treeModel = new StageTreeModel(this);
@@ -308,6 +310,11 @@ public class StageTab extends javax.swing.JPanel {
 
     butStartRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_add.png"))); // NOI18N
     butStartRace.setText("Start Race");
+    butStartRace.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butStartRaceActionPerformed(evt);
+      }
+    });
 
     butRemoveSatge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/remove.png"))); // NOI18N
     butRemoveSatge.setText("Delete Stage");
@@ -411,6 +418,10 @@ public class StageTab extends javax.swing.JPanel {
     // TODO add your handling code here:
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
+
+  private void butStartRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butStartRaceActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_butStartRaceActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

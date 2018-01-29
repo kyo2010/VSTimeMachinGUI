@@ -33,8 +33,15 @@ import vs.time.kkv.models.VS_USERS;
 
 import java.awt.Color; 
 import java.awt.Component; 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JTable; 
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer; 
 import javax.swing.table.TableCellRenderer; 
 
@@ -148,6 +155,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public boolean isCellEditable(int row, int col) {
     StageTableData td = rows.get(row);
     if (td.isGrpup) {
+      //if (col==1) return true;
       return false;
     }
     STAGE_COLUMN sc = null;
@@ -186,6 +194,24 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       label.setForeground(Color.BLACK);
       label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN      
       table.setRowHeight(row, 30);
+      
+      if (column==1){
+        JButton but = new JButton("Start!");      
+        but.addActionListener(new AbstractAction() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(tab.mainForm, "Go go go!", "Info", JOptionPane.INFORMATION_MESSAGE);    
+          }
+        });
+        if (isSelected) {
+          but.setForeground(table.getSelectionForeground());
+          but.setBackground(table.getSelectionBackground());
+        } else{
+          but.setForeground(table.getForeground());
+          but.setBackground(UIManager.getColor("Button.background"));
+        }
+        return but;
+      }      
     }else{
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
