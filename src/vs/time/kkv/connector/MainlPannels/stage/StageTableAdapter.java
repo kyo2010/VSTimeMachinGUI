@@ -34,6 +34,7 @@ import vs.time.kkv.models.VS_USERS;
 import java.awt.Color; 
 import java.awt.Component; 
 import javax.swing.JTable; 
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer; 
 import javax.swing.table.TableCellRenderer; 
 
@@ -179,15 +180,16 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     StageTableData td = rows.get(row);
     JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table,value, isSelected, hasFocus,row, column);
     if (td.isGrpup){
-      //Font f = table.getFont();
-      //f.setA
-      //label.setFont(font);
-      label.setBackground(Color.BLUE);
-      label.setForeground(Color.WHITE);
-      label.setFont(label.getFont().deriveFont(Font.BOLD));
+      label.setVerticalTextPosition(SwingConstants.CENTER);
+      label.setHorizontalTextPosition(SwingConstants.RIGHT);
+      label.setBackground(Color.LIGHT_GRAY);
+      label.setForeground(Color.BLACK);
+      label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN      
+      table.setRowHeight(row, 30);
     }else{
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
+      table.setRowHeight(row, 30);
     }
     return label;
   }
