@@ -86,6 +86,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public StageTableAdapter(StageTab tab) {
     this.tab = tab;
     loadData();
+    defaultTableCellRendererCellRenderer.setOpaque(true);
   }
 
   public void loadData() {
