@@ -218,7 +218,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
     
     if (parant_obj instanceof VS_STAGE) {
       VS_STAGE stage = (VS_STAGE)parant_obj;
-      VS_STAGE_GROUP parent = new VS_STAGE_GROUP();
+      VS_STAGE_GROUP parent = new VS_STAGE_GROUP(stage);
       VS_STAGE_GROUP last_group = null;
       for (int group_ndex : stage.groups.keySet()){
         last_group = stage.groups.get(group_ndex);

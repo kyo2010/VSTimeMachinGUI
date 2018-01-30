@@ -23,6 +23,13 @@ public class VS_STAGE_GROUP implements Transferable{
   public int GROUP_INDEX = 0; // 0..N-1   phisical index
   public List<VS_STAGE_GROUPS> users = new ArrayList<VS_STAGE_GROUPS>();
   public String useChannels = "";
+  public boolean isActive = false;
+  public VS_STAGE stage = null;
+  
+  public VS_STAGE_GROUP(VS_STAGE stage){
+    this.stage = stage;
+  }
+  
   public String toString(){
     return "Group "+GROUP_NUM;
   }

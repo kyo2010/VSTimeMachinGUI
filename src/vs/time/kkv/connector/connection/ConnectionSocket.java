@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
-import vs.time.kkv.connector.VSTimeConnector;
 
 /**
  *

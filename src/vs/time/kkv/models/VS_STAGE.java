@@ -74,7 +74,7 @@ public class VS_STAGE {
         }                
         VS_STAGE_GROUP group = groups.get(phisical_group_index);
         if (group==null){
-          group = new VS_STAGE_GROUP();          
+          group = new VS_STAGE_GROUP(this);   
           groups.put(phisical_group_index, group);
           group.GROUP_INDEX = GROUP_INDEX;
           group.GROUP_NUM = usr.GROUP_NUM;         

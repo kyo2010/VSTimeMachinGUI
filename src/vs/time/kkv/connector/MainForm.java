@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector;
 
+import vs.time.kkv.connector.connection.VSTimeConnector;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
@@ -51,6 +52,7 @@ import vs.time.kkv.models.VS_BANDS;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_STAGE_GROUP;
 
 /**
  *
@@ -95,10 +97,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public Connection con = null;
   public SpeekUtil speaker = new SpeekUtil();
   public VS_RACE activeRace = null;
+  public VS_STAGE_GROUP activeGroup = null;
   public RegistrationTab regForm = null;
   public int lastTranponderID = -1;
 
   public void setActiveRace(VS_RACE race) {
+    
+    if (activeGroup!=null){
+      JOptionPane.showMessageDialog(this, "Please stop race. Group"+activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);                    
+      return;
+    }
+    
     activeRace = race;
     // Open Tabs
     tabListenerEnabled = false;
@@ -605,10 +614,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
     }
-    jLabel3.setText(data);
+    jLabel3.setText(data+"   "+vsTimeConnector.last_error);
     if (!isPingCommand) {
       System.out.print(data);
       log.writeFile(data, true);
+    }
+    if (lap!=null){
+      this.lastTranponderID = lap.transponderID;
     }
   }
 }

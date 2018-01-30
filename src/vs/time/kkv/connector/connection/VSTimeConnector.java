@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vs.time.kkv.connector;
+package vs.time.kkv.connector.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +41,7 @@ public class VSTimeConnector {
   public ConnectionVSTimeMachine transport = null;
   public int lastTransponderID = -1;
   public boolean WIFI = false;
+  public String last_error = "";
   
   public VSTimeConnector(String port) {
     comPort = port;
@@ -204,6 +205,14 @@ public class VSTimeConnector {
         lap.time = Integer.parseInt(params[3]);
         lap.transpnderCounter = Integer.parseInt(params[4]);        
         long crc8_f = Long.parseLong(params[5]);
+        if (crc8!=crc8_f){
+          last_error = "lap receive is error. crc8 is error "+crc8_f+"<>"+crc8;
+          System.out.print(last_error);
+          return null;  
+        }else{
+          sentMessage("lapreceived:" + lap.numberOfPacket + "," + lap.baseStationID + "\r\n");        
+          return lap;
+        }  
         //int pos1
         
       }catch(Exception e){}  
@@ -212,7 +221,7 @@ public class VSTimeConnector {
     
       //synchronized(waitingVSTMParams){        
       // espinfo:0,VS Time Machine,vs123456,192,168,197,8888,8889,0.2.1
-      current_info = new VSTM_ESPInfo();
+     /* current_info = new VSTM_ESPInfo();
       try {
         current_info.connectionType = Integer.parseInt(params[0]);
       } catch (Exception e) {
@@ -231,7 +240,7 @@ public class VSTimeConnector {
       } catch (Exception e) {
       }
       current_info.isError = false;
-      waitingVSTMParams = false;
+      waitingVSTMParams = false;*/            
       //};
     }
             

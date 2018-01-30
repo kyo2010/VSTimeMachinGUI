@@ -50,11 +50,18 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author kyo
  */
-public class StageTableAdapter extends AbstractTableModel implements TableCellRenderer{
+public class StageTableAdapter extends AbstractTableModel implements TableCellRenderer {
   
   private List<StageTableData> rows;
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+  
+  public StageTableData getTableData(int row){
+    if (row<rows.size())
+      return rows.get(row);
+    return 
+       null;
+  }
 
   public static class STAGE_COLUMN{
     String caption;
@@ -197,13 +204,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       table.setRowHeight(row, 30);
       
       if (column==1){
-        JButton but = new JButton("Start!");      
-        but.addActionListener(new AbstractAction() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(tab.mainForm, "Go go go!", "Info", JOptionPane.INFORMATION_MESSAGE);    
-          }
-        });
+        JButton but = new JButton("Start!");   
+        if (tab.mainForm.activeGroup!=null && tab.mainForm.activeGroup==td.group){
+          but.setText("Stop");
+        }
+        td.raceButton = but;
         if (isSelected) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(table.getSelectionBackground());
@@ -221,4 +226,5 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     return label;
   }
     
+  
 }

@@ -12,6 +12,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class StageTab extends javax.swing.JPanel {
     initComponents();
     this.mainForm = main;
     //topPanel.setVisible(false);      
-    
+
     butStartRace.setVisible(false);
 
     refreshData(false);
@@ -72,24 +73,23 @@ public class StageTab extends javax.swing.JPanel {
     //render.setClosedIcon(new ImageIcon(...));
     //render.setOpenIcon(new ImageIcon(...));
     //render.setLeafIcon(new ImageIcon(...)); 
-    jTree.setCellRenderer(render);       
+    jTree.setCellRenderer(render);
     expandAllJTree();
 
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
-    
-    for (int i=0; i<stageTableAdapter.getColumnCount(); i++){
+
+    for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
-    }    
+    }
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
     //jScrollPane1.setViewportView(treeTable);
     //treeTable.setDragEnabled(true);    
-    
-   jTree.addMouseListener(new MouseListener() {
+    jTree.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
@@ -156,20 +156,20 @@ public class StageTab extends javax.swing.JPanel {
           if (res == JOptionPane.YES_OPTION) {
             try {
               VS_STAGE_GROUPS.dbControl.delete(mainForm.con, user);
-              refreshData(false);
+              refreshData(true);
             } catch (UserException ex) {
               mainForm.toLog(ex);
             }
           }
         }
-        if (obj!=null && obj instanceof VS_STAGE_GROUP){
-        VS_STAGE_GROUP group = (VS_STAGE_GROUP) obj;
-          int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete Group"+group.GROUP_NUM+" ?", "Delete group", JOptionPane.YES_NO_OPTION);
+        if (obj != null && obj instanceof VS_STAGE_GROUP) {
+          VS_STAGE_GROUP group = (VS_STAGE_GROUP) obj;
+          int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete Group" + group.GROUP_NUM + " ?", "Delete group", JOptionPane.YES_NO_OPTION);
           if (res == JOptionPane.YES_OPTION) {
             try {
-              for (VS_STAGE_GROUPS usr :  group.users){
+              for (VS_STAGE_GROUPS usr : group.users) {
                 VS_STAGE_GROUPS.dbControl.delete(mainForm.con, usr);
-              }          
+              }
               refreshData(true);
             } catch (UserException ex) {
               mainForm.toLog(ex);
@@ -178,10 +178,46 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     });
+
+    jTable.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
+          JTable source = (JTable) e.getSource();
+          int row = source.rowAtPoint(e.getPoint());
+          int column = source.columnAtPoint(e.getPoint());
+          if (!source.isRowSelected(row)) {
+            source.changeSelection(row, column, false, false);
+          }
+          if (column == 1) {
+            StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
+              return;
+            }
+
+            if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
+              mainForm.activeGroup = null;
+            } else {
+              if (td != null && td.isGrpup == true) {
+                mainForm.activeGroup = td.group;                
+                JOptionPane.showMessageDialog(mainForm, "Go go go ! Group" + td.group.GROUP_NUM, "Info", JOptionPane.INFORMATION_MESSAGE);
+              }
+            }
+            source.updateUI();
+          }
+        }
+      }
+
+      public void mouseReleased(MouseEvent e) {
+
+      }
+
+    });
   }
-  
-  public void checkGroupConstrain (){
-  
+
+  public void checkGroupConstrain() {
+
   }
 
   // expandAllNodes(tree, 0, tree.getRowCount());
@@ -225,12 +261,12 @@ public class StageTab extends javax.swing.JPanel {
       StageTabTreeEditForm.init(mainForm, this, group, null).setVisible(true);
     }
   }
-  
-  public void refreshTableData(){
-    if (stageTableAdapter!=null){
+
+  public void refreshTableData() {
+    if (stageTableAdapter != null) {
       stageTableAdapter.loadData();
       jTable.updateUI();
-    }  
+    }
   }
 
   public void refreshData(boolean refreshInterface) {

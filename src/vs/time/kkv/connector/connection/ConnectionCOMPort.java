@@ -12,7 +12,6 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
-import vs.time.kkv.connector.VSTimeConnector;
 
 /**
  *
