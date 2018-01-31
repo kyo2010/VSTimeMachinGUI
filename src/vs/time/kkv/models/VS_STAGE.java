@@ -58,14 +58,29 @@ public class VS_STAGE {
     }    
   }
   
-  public void loadGroups(Connection conn){
+  public void loadGroups(Connection conn, long race_id, long stage_id){
     try{
       groups.clear();
       int GROUP_INDEX=0;
       Map<Long,Integer> indexes = new HashMap<>();
-      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", ID);
+      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
+      Map<String,VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANSPONDER", "VS_RACE_ID=?", race_id);
       for (VS_STAGE_GROUPS usr : users){
         long db_group_index = usr.GROUP_NUM;
+        VS_REGISTRATION reg_user = regs.get(""+usr.TRANSPONDER);
+        if (reg_user==null){
+          reg_user = new VS_REGISTRATION();
+          reg_user.PILOT_TYPE = 0;
+          reg_user.NUM = VS_REGISTRATION.maxNum(conn, race_id)+1;
+          reg_user.VS_RACE_ID = RACE_ID;
+          reg_user.VS_TRANSPONDER = usr.TRANSPONDER;
+          reg_user.VS_SOUND_EFFECT = 1;
+          reg_user.IS_ACTIVE = 0;
+          reg_user.VS_USER_NAME = usr.PILOT;
+          VS_REGISTRATION.dbControl.insert(conn, reg_user);
+          regs.put(""+usr.TRANSPONDER, reg_user);
+        }
+        usr.PILOT = reg_user.VS_USER_NAME;
         Integer phisical_group_index = indexes.get(db_group_index);
         if (phisical_group_index==null){
           phisical_group_index = GROUP_INDEX;

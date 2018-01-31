@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.MainlPannels.stage;
 
 import KKV.DBControlSqlLite.UserException;
+import KKV.DBControlSqlLite.Utils.Tools;
 import java.awt.BorderLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -16,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,13 +29,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.InfoForm;
 import vs.time.kkv.connector.Utils.KKVTreeTable.JTreeTable;
 import vs.time.kkv.connector.Utils.KKVTreeTable.TreeCellRender;
+import vs.time.kkv.connector.Utils.SpeekUtil;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUP;
@@ -44,13 +49,28 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  * @author kyo
  */
 public class StageTab extends javax.swing.JPanel {
-
   MainForm mainForm;
   JTreeTable treeTable = null;
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
   public StageTableAdapter stageTableAdapter = null;
+  Timer raceTimer = new Timer(10, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      long t = Calendar.getInstance().getTimeInMillis();
+      long d = t - mainForm.raceTime;      
+      timerCaption.setText(getTimeIntervel(d));
+    }
+  });
+  
+  public String getTimeIntervel(long time){
+    long min = time/1000/60;
+    long sec = time/1000-min*60;      
+    long milisec = time-(sec+min*60)*1000;            
+    milisec = Math.round(milisec/10);
+    return Tools.padl(""+min,2,"0")+":"+Tools.padl(""+sec,2,"0")+":"+Tools.padl(""+milisec,2,"0");
+  };
 
   /**
    * Creates new form PracticaTableTab
@@ -61,7 +81,7 @@ public class StageTab extends javax.swing.JPanel {
     this.mainForm = main;
     //topPanel.setVisible(false);      
 
-    butStartRace.setVisible(false);
+    timerCaption.setVisible(false);
 
     refreshData(false);
     treeModel = new StageTreeModel(this);
@@ -180,8 +200,10 @@ public class StageTab extends javax.swing.JPanel {
     });
 
     jTable.addMouseListener(new MouseAdapter() {
+      boolean infoWindowRunning = false;
+      
       @Override
-      public void mouseClicked(MouseEvent e) {
+      public synchronized void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
@@ -189,7 +211,7 @@ public class StageTab extends javax.swing.JPanel {
           if (!source.isRowSelected(row)) {
             source.changeSelection(row, column, false, false);
           }
-          if (column == 1) {
+          if (column == 1 && !infoWindowRunning) {
             StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
@@ -198,10 +220,50 @@ public class StageTab extends javax.swing.JPanel {
 
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
               mainForm.activeGroup = null;
+              raceTimer.stop();
+              //timerCaption.setVisible(false);              
             } else {
               if (td != null && td.isGrpup == true) {
-                mainForm.activeGroup = td.group;                
-                JOptionPane.showMessageDialog(mainForm, "Go go go ! Group" + td.group.GROUP_NUM, "Info", JOptionPane.INFORMATION_MESSAGE);
+                mainForm.activeGroup = td.group;
+                timerCaption.setText(getTimeIntervel(0));
+                timerCaption.setVisible(true);
+                infoWindowRunning = true; 
+                mainForm.speaker.speak("One!");
+                InfoForm.init(mainForm, "1").setVisible(true);
+                Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                  public void actionPerformed(ActionEvent e) {
+                    mainForm.speaker.speak("Two!");
+                    InfoForm.init(mainForm, "2").setVisible(true);                    
+                    Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                      public void actionPerformed(ActionEvent e) {
+                        mainForm.speaker.speak("Three!");
+                        InfoForm.init(mainForm, "3").setVisible(true);
+                        Timer t3 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                          public void actionPerformed(ActionEvent e) {
+                            mainForm.speaker.speak("Go!");
+                            InfoForm.init(mainForm, "Go!").setVisible(true);
+                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();                            
+                            raceTimer.start();
+                            Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                              public void actionPerformed(ActionEvent e) {
+                                InfoForm.init(mainForm, "").setVisible(false);
+                                infoWindowRunning = false;
+                              }
+                            });
+                            t4.setRepeats(false);
+                            t4.start();
+                          }
+                        });
+                        t3.setRepeats(false);
+                        t3.start();
+                      }
+                    });
+                    t2.setRepeats(false);
+                    t2.start();
+                  }
+                });
+                t1.setRepeats(false);
+                t1.start();                
               }
             }
             source.updateUI();
@@ -214,6 +276,23 @@ public class StageTab extends javax.swing.JPanel {
       }
 
     });
+  }  
+
+  public class MinThread extends Thread {
+
+    public int seconds;
+
+    public MinThread(int seconds) {
+      this.seconds = seconds;
+    }
+
+    @Override
+    public void run() {
+      try {
+        Thread.sleep(seconds * 1000);
+      } catch (InterruptedException ex) {
+      }
+    }
   }
 
   public void checkGroupConstrain() {
@@ -273,7 +352,7 @@ public class StageTab extends javax.swing.JPanel {
     if (stage != null && stage.IS_GROUP_CREATED == 0) {
       createGroups();
     }
-    stage.loadGroups(mainForm.con);
+    stage.loadGroups(mainForm.con,stage.RACE_ID,stage.ID);
     refreshTableData();
     //jTable.addNotify();
     //jTree.addNotify();
@@ -334,23 +413,15 @@ public class StageTab extends javax.swing.JPanel {
   private void initComponents() {
 
     topPanel = new javax.swing.JPanel();
-    butStartRace = new javax.swing.JButton();
     butRemoveSatge = new javax.swing.JButton();
     butConfig = new javax.swing.JButton();
+    timerCaption = new javax.swing.JLabel();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable = new javax.swing.JTable();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTree = new ExpandedJTree();
-
-    butStartRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_add.png"))); // NOI18N
-    butStartRace.setText("Start Race");
-    butStartRace.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        butStartRaceActionPerformed(evt);
-      }
-    });
 
     butRemoveSatge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/remove.png"))); // NOI18N
     butRemoveSatge.setText("Delete Stage");
@@ -368,13 +439,19 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    timerCaption.setBackground(new java.awt.Color(0, 153, 51));
+    timerCaption.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    timerCaption.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    timerCaption.setText("00:00:00");
+    timerCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0), 5));
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(butStartRace)
+        .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(butConfig)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -388,7 +465,7 @@ public class StageTab extends javax.swing.JPanel {
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butStartRace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     jSplitPane2.setDividerLocation(200);
@@ -455,21 +532,17 @@ public class StageTab extends javax.swing.JPanel {
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
-  private void butStartRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butStartRaceActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_butStartRaceActionPerformed
-
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton butConfig;
   private javax.swing.JButton butRemoveSatge;
-  private javax.swing.JButton butStartRace;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JSplitPane jSplitPane1;
   private javax.swing.JSplitPane jSplitPane2;
   private javax.swing.JTable jTable;
   public javax.swing.JTree jTree;
+  private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables
 }

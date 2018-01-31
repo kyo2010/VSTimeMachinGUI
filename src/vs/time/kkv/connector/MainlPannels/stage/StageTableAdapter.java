@@ -170,10 +170,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     if (col<STAGE_COLUMNS.length) sc = STAGE_COLUMNS[col];    
     if (col >= STAGE_COLUMNS.length) {
       return true;
-    }
-    if (sc!=null && sc.ID==STAGE_COLUMN.CID_PILOT) {
-      return true;
-    }
+    }    
     return false;
   }
 

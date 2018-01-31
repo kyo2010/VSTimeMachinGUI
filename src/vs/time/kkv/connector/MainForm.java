@@ -25,6 +25,7 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.DBControlSqlLite.Utils.TempFileWrite;
 import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -99,6 +100,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public RegistrationTab regForm = null;
+  public long raceTime = 0;
   public int lastTranponderID = -1;
 
   public void setActiveRace(VS_RACE race) {
@@ -603,7 +605,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     return tabbedPanel;
   } 
   
-  public void setFormOnCenter(JFrame form) {
+  public void setFormOnCenter(Window form) {
     Point p = this.getLocationOnScreen();
     form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
   }
