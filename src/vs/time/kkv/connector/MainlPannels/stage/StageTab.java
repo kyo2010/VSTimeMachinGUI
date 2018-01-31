@@ -540,7 +540,7 @@ public class StageTab extends javax.swing.JPanel {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JSplitPane jSplitPane1;
   private javax.swing.JSplitPane jSplitPane2;
-  private javax.swing.JTable jTable;
+  public javax.swing.JTable jTable;
   public javax.swing.JTree jTree;
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;

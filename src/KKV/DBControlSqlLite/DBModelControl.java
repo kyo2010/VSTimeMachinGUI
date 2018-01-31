@@ -18,32 +18,36 @@ import java.util.*;
  * @author kimlaev
  */
 public class DBModelControl<Model> extends DBIControl {
+
   public DBModelControl setCallProcedure(String callSql) {
     this.callSql = callSql;
     return this;
-  }  
+  }
+
   public DBModelControl setInitSQl(String initSQl) {
     this.initSQl = initSQl;
     return this;
   }
+
   public String getTableAlias() {
     return clazz.getSimpleName();
   }
+
   public <Model> DBModelControl(Class clazz, String tableName, DBModelField[] fields) {
     this.clazz = clazz;
     this.tableName = tableName;
     this.fields = fields;
-  }  
-  
+  }
+
   public String NEXT_FIELD_NAME = null;
-  public String PRED_FIELD_NAME = null;  
-  
+  public String PRED_FIELD_NAME = null;
+
   public DBModelControl setIterratorFields(String PRED_FIELD_NAME, String NEXT_FIELD_NAME) {
     this.NEXT_FIELD_NAME = NEXT_FIELD_NAME;
     this.PRED_FIELD_NAME = PRED_FIELD_NAME;
     return this;
   }
-  
+
   public int count(Connection conn, String where, Object... args) throws UserException {
     String sql = "SELECT count(*) FROM " + tableName + ((where == null || where.equals("")) ? "" : " WHERE " + where);
     PreparedStatement stat = null;
@@ -77,8 +81,8 @@ public class DBModelControl<Model> extends DBIControl {
   public int count(Connection conn, String where) throws UserException {
     return count(conn, where, new Object[]{});
   }
-  
-  public String getSelectSql(String where) throws UserException{
+
+  public String getSelectSql(String where) throws UserException {
     String sql_fields = "";
     String joins = "";
     for (DBModelField field : fields) {
@@ -112,37 +116,37 @@ public class DBModelControl<Model> extends DBIControl {
             sql_fields += ",";
           }
           sql_fields += field.SQLCalculatedFormula;
-        } else if (field.dbFieldName != null) {          
-          if (field.fieldTarget == DBModelField.FT_ARRAY){
-            for (int i=0; i<field.FT_ARRAY_SIZE; i++){
+        } else if (field.dbFieldName != null) {
+          if (field.fieldTarget == DBModelField.FT_ARRAY) {
+            for (int i = 0; i < field.FT_ARRAY_SIZE; i++) {
               if (!sql_fields.equals("")) {
                 sql_fields += ",";
               }
-              sql_fields += getTableAlias() + "."+"\"" + field.dbFieldName+i+"\"";
+              sql_fields += getTableAlias() + "." + "\"" + field.dbFieldName + i + "\"";
             }
-          }else{            
+          } else {
             if (!sql_fields.equals("")) {
               sql_fields += ",";
             }
-            if (field.dbFieldName.indexOf("(")>=0){
+            if (field.dbFieldName.indexOf("(") >= 0) {
               sql_fields += field.dbFieldName;
-            }else{
+            } else {
               sql_fields += getTableAlias() + "." + field.dbFieldName;
-            }  
-          }  
+            }
+          }
         }
       }
     }
     String sql = "SELECT " + sql_fields + " FROM " + tableName + " as " + getTableAlias() + addonJoins + joins + ((where == null || "".equals(where)) ? "" : " WHERE " + where);
-    sql = sql.replaceAll("\\<T1\\>", getTableAlias()+".");    
-    return sql;  
+    sql = sql.replaceAll("\\<T1\\>", getTableAlias() + ".");
+    return sql;
   }
-  
-  public <Model> List<Model> __getListFromRS(ResultSet rs, String sql) throws UserException{
+
+  public <Model> List<Model> __getListFromRS(ResultSet rs, String sql) throws UserException {
     Model item = null;
     List<Model> result = new ArrayList<Model>();
-    Model prev_item = null;    
-    try {      
+    Model prev_item = null;
+    try {
       while (rs.next()) {
         try {
           item = (Model) clazz.newInstance();
@@ -189,21 +193,21 @@ public class DBModelControl<Model> extends DBIControl {
             }
           } else {
             if (modelField.fieldTarget == DBModelField.FT_SKIP) {
-            } else if (modelField.dbFieldName != null) {              
+            } else if (modelField.dbFieldName != null) {
               Field field = clazz.getField(modelField.name);
               DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
               modelField.fieldAdapter = fieldAdapter;
-              
-              if (modelField.fieldTarget==DBModelField.FT_ARRAY){
-                for (int i=0; i<modelField.FT_ARRAY_SIZE; i++){
+
+              if (modelField.fieldTarget == DBModelField.FT_ARRAY) {
+                for (int i = 0; i < modelField.FT_ARRAY_SIZE; i++) {
                   fieldAdapter.loadFromRS(field, item, rs, rsIndex, modelField, i);
                   rsIndex++;
                 }
-              }else{
+              } else {
                 fieldAdapter.loadFromRS(field, item, rs, rsIndex, modelField, 0);
                 rsIndex++;
-              }              
-              
+              }
+
               if (prev_item == null) {
                 isNewItem = true;
               } else {
@@ -224,26 +228,25 @@ public class DBModelControl<Model> extends DBIControl {
         }
         if (isNewItem || joinExist == false) {
           result.add(item);
-          
+
           /*try{
             if(clazz.getField("ACCOUNT").get(item).toString().equalsIgnoreCase("70010549")){
               int y = 0;
             } 
           }catch(Exception e){}  */
-          
-          if (PRED_FIELD_NAME!=null && prev_item!=null ){
+          if (PRED_FIELD_NAME != null && prev_item != null) {
             try {
               clazz.getField(PRED_FIELD_NAME).set(item, prev_item);
             } catch (Exception e) {
             }
           }
-          if (NEXT_FIELD_NAME!=null && prev_item!=null){
+          if (NEXT_FIELD_NAME != null && prev_item != null) {
             try {
               clazz.getField(NEXT_FIELD_NAME).set(prev_item, item);
             } catch (Exception e) {
             }
           }
-          prev_item = item;          
+          prev_item = item;
         }
         // add List to prev_item
         if (joinExist) {
@@ -254,21 +257,23 @@ public class DBModelControl<Model> extends DBIControl {
             } catch (Exception e) {
               // throw new UserException("Error", "We can't get List object from field " + name + " " + e.getMessage());
             }
-            if (jList==null){
-              try{
+            if (jList == null) {
+              try {
                 jList = new ArrayList<Model>();
-                clazz.getField(name).set(prev_item,jList);
-              }catch(Exception e){}  
+                clazz.getField(name).set(prev_item, jList);
+              } catch (Exception e) {
+              }
             }
-            try{
+            try {
               if (join_objs.get(name) != null && jList != null) {
                 jList.add(join_objs.get(name));
               }
-            }catch(Exception e){}
-            
+            } catch (Exception e) {
+            }
+
           }
         }
-      }                  
+      }
     } catch (SQLException se) {
       System.out.println(Tools.traceErrorWithCaption(se));
       System.out.println("Sql is error. SQL : " + sql + "\nError message: \n" + se.toString());
@@ -282,7 +287,7 @@ public class DBModelControl<Model> extends DBIControl {
     } catch (Exception e) {
       System.out.println(Tools.traceErrorWithCaption(e));
       throw new UserException("Error", "GetList error. Model: " + clazz.getName() + " sql:" + sql);
-    } finally {      
+    } finally {
     }
     return result;
   }
@@ -300,14 +305,14 @@ public class DBModelControl<Model> extends DBIControl {
       stat = conn.prepareStatement(sql);
       fillStat(sql, stat, args);
       rs = stat.executeQuery();
-      result = __getListFromRS(rs,sql);
+      result = __getListFromRS(rs, sql);
     } catch (SQLException se) {
       System.out.println(Tools.traceErrorWithCaption(se));
       System.out.println("Sql is error. SQL : " + sql + "\nError message: \n" + se.toString());
       throw new UserException("Sql is error", "SQL : " + sql + "\nError message: \n" + se.toString());
-     } catch (UserException ue) {
+    } catch (UserException ue) {
       System.out.println(Tools.traceErrorWithCaption(ue));
-      throw ue;      
+      throw ue;
     } catch (Exception e) {
       System.out.println(Tools.traceErrorWithCaption(e));
       throw new UserException("Error", "GetList error. Model: " + clazz.getName() + " sql:" + sql);
@@ -346,7 +351,7 @@ public class DBModelControl<Model> extends DBIControl {
       String keyValue1 = "";
       try {
         Field field = clazz.getField(f_key1.name);
-        DBFieldAdapter fieldAdapter = getSuitableAdapter(field);        
+        DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
         keyValue1 = fieldAdapter.getField(field, obj, f_key1.name, 0, f_key1);
       } catch (Exception e) {
         throw new UserException("Error", "I can't read a field name '" + f_key1.name + "' in obj:" + clazz.getSimpleName());
@@ -538,17 +543,17 @@ public class DBModelControl<Model> extends DBIControl {
         }
       } catch (Exception e) {
       }
-    }    
+    }
 
     String[][] res = new String[items.size() + addonRecords.length][];
-    if (inEnd) {      
+    if (inEnd) {
       for (int i = 0; i < items.size(); i++) {
         res[i] = items.get(i);
-      }      
-      for (int i = 0; i < addonRecords.length; i++) {
-        res[i+items.size()] = addonRecords[i];
       }
-    } else {      
+      for (int i = 0; i < addonRecords.length; i++) {
+        res[i + items.size()] = addonRecords[i];
+      }
+    } else {
       for (int i = 0; i < addonRecords.length; i++) {
         res[i] = addonRecords[i];
       }
@@ -556,7 +561,7 @@ public class DBModelControl<Model> extends DBIControl {
         res[i + addonRecords.length] = items.get(i);
       }
     }
-    
+
     if (res.length == 0) {
       res = new String[0][0];
     }
@@ -614,7 +619,7 @@ public class DBModelControl<Model> extends DBIControl {
     }
     return items;
   }
-  
+
   public ArrayList<String[]> getGroupBy(Connection conn, String condition, String orderby, String... fields) throws UserException {
 
     ArrayList<String[]> items = new ArrayList<String[]>();
@@ -627,13 +632,15 @@ public class DBModelControl<Model> extends DBIControl {
         fields_st = "";
       }
       fields_st += field;
-      if (field.indexOf("MAX")!=0 && field.indexOf("MIN")!=0 && field.indexOf("SUM")!=0  ){
-        if (!group_by_st.equals("")) group_by_st+=",";
+      if (field.indexOf("MAX") != 0 && field.indexOf("MIN") != 0 && field.indexOf("SUM") != 0) {
+        if (!group_by_st.equals("")) {
+          group_by_st += ",";
+        }
         group_by_st += field;
       }
     }
-    
-    String sql = "SELECT " + fields_st + " FROM " + tableName + " where " + condition + " Group by "+group_by_st+" "+orderby;
+
+    String sql = "SELECT " + fields_st + " FROM " + tableName + " where " + condition + " Group by " + group_by_st + " " + orderby;
     PreparedStatement stat = null;
 
     ResultSet rs = null;
@@ -647,7 +654,7 @@ public class DBModelControl<Model> extends DBIControl {
         String[] rows = new String[fields.length];
         int index = 0;
         for (String field : fields) {
-          rows[index] = rs.getString(index+1).trim();
+          rows[index] = rs.getString(index + 1).trim();
           index++;
         }
         items.add(rows);
@@ -805,55 +812,55 @@ public class DBModelControl<Model> extends DBIControl {
                   || field.fieldTarget == DBModelField.FT_JOIN_FIELD
                   || field.fieldTarget == DBModelField.FT_SKIP
                   || field.fieldTarget == DBModelField.FT_SKIP_INSERT_UPDATE
-                  || field.fieldTarget == DBModelField.FT_CALULATED_FIELD                  
+                  || field.fieldTarget == DBModelField.FT_CALULATED_FIELD
                   || field.fieldTarget == DBModelField.FT_SKIP_INSERT) {
             continue;
           }
           if (field.dbFieldName != null) {
-            if (field.fieldTarget == DBModelField.FT_ARRAY){
-              for (int i=0; i<field.FT_ARRAY_SIZE; i++){
+            if (field.fieldTarget == DBModelField.FT_ARRAY) {
+              for (int i = 0; i < field.FT_ARRAY_SIZE; i++) {
                 if (!sql_fields.equals("")) {
                   sql_fields += ",";
                 }
-                sql_fields += "\""+field.dbFieldName+i+"\"";
+                sql_fields += "\"" + field.dbFieldName + i + "\"";
               }
-            }else{              
+            } else {
               if (!sql_fields.equals("")) {
                 sql_fields += ",";
               }
               sql_fields += field.dbFieldName;
-            }  
+            }
           }
         }
-        String values = "";       
+        String values = "";
         for (DBModelField field : fields) {
           if (field.fieldTarget == DBModelField.FT_AUTOINCREMENT
                   || field.fieldTarget == DBModelField.FT_JOIN_FIELD
                   || field.fieldTarget == DBModelField.FT_SKIP
                   || field.fieldTarget == DBModelField.FT_SKIP_INSERT_UPDATE
-                  || field.fieldTarget == DBModelField.FT_CALULATED_FIELD     
+                  || field.fieldTarget == DBModelField.FT_CALULATED_FIELD
                   || field.fieldTarget == DBModelField.FT_SKIP_INSERT || field.dbFieldName == null) {
             continue;
-          }          
-          if (field.fieldTarget == DBModelField.FT_ARRAY){
-            for (int i=0; i<field.FT_ARRAY_SIZE; i++){
+          }
+          if (field.fieldTarget == DBModelField.FT_ARRAY) {
+            for (int i = 0; i < field.FT_ARRAY_SIZE; i++) {
               if (!values.equals("")) {
                 values += ",";
               }
               values += "?";
             }
-          }else{
+          } else {
             if (!values.equals("")) {
               values += ",";
             }
             values += "?";
-          }  
+          }
         }
 
-        sql = "INSERT INTO " + tableName + " ( " + sql_fields + " ) VALUES (" + values + ")";        
+        sql = "INSERT INTO " + tableName + " ( " + sql_fields + " ) VALUES (" + values + ")";
         if (fieldIDName != null) {
           //sql = "SELECT MAX(" + fieldIDName.dbFieldName + ") AS ID FROM NEW TABLE ( " + sql + " )";
-          addon_sql="select last_insert_rowid()";
+          addon_sql = "select last_insert_rowid()";
         }
         stat = conn.prepareStatement(sql);
         if (useSavedPreparedStatment) {
@@ -872,7 +879,7 @@ public class DBModelControl<Model> extends DBIControl {
                   || modelField.fieldTarget == DBModelField.FT_JOIN_FIELD
                   || modelField.fieldTarget == DBModelField.FT_SKIP
                   || modelField.fieldTarget == DBModelField.FT_SKIP_INSERT_UPDATE
-                  || modelField.fieldTarget == DBModelField.FT_CALULATED_FIELD     
+                  || modelField.fieldTarget == DBModelField.FT_CALULATED_FIELD
                   || modelField.fieldTarget == DBModelField.FT_SKIP_INSERT || modelField.dbFieldName == null) {
             continue;
           }
@@ -881,15 +888,15 @@ public class DBModelControl<Model> extends DBIControl {
 
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          if (modelField.fieldTarget == DBModelField.FT_ARRAY){
-            for (int i=0; i<modelField.FT_ARRAY_SIZE; i++){
+          if (modelField.fieldTarget == DBModelField.FT_ARRAY) {
+            for (int i = 0; i < modelField.FT_ARRAY_SIZE; i++) {
               fieldAdapter.setPSField(field, item, stat, paramIndex, i, modelField);
               paramIndex++;
             }
-          }else{  
+          } else {
             fieldAdapter.setPSField(field, item, stat, paramIndex, 0, modelField);
             paramIndex++;
-          }                   
+          }
         }
         if (fieldIDName == null) {
           stat.execute();
@@ -954,23 +961,23 @@ public class DBModelControl<Model> extends DBIControl {
                 || modelField.fieldTarget == DBModelField.FT_JOIN_FIELD
                 || modelField.fieldTarget == DBModelField.FT_SKIP
                 || modelField.fieldTarget == DBModelField.FT_SKIP_INSERT_UPDATE
-                || modelField.fieldTarget == DBModelField.FT_CALULATED_FIELD 
+                || modelField.fieldTarget == DBModelField.FT_CALULATED_FIELD
                 || modelField.fieldTarget == DBModelField.FT_SKIP_UPDATE || modelField.dbFieldName == null) {
           continue;
         }
-        if (modelField.fieldTarget == DBModelField.FT_ARRAY){
-          for (int i=0; i<modelField.FT_ARRAY_SIZE; i++){
+        if (modelField.fieldTarget == DBModelField.FT_ARRAY) {
+          for (int i = 0; i < modelField.FT_ARRAY_SIZE; i++) {
             if (!values.equals("")) {
               values += ", ";
-            }        
-            values += "\""+modelField.dbFieldName+i+"\"" + "=?";
+            }
+            values += "\"" + modelField.dbFieldName + i + "\"" + "=?";
           }
-        }else{    
+        } else {
           if (!values.equals("")) {
             values += ", ";
-          }        
+          }
           values += modelField.dbFieldName + "=?";
-        }  
+        }
         Field field = clazz.getField(modelField.name);
         fieldForStatement.add(modelField);
         fieldForStatement2.add(field);
@@ -989,15 +996,15 @@ public class DBModelControl<Model> extends DBIControl {
         //fill statement parameters
         DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
         DBModelField modelField = fieldForStatement.get(filedIndex);
-        if (modelField.fieldTarget == DBModelField.FT_ARRAY){
-          for (int i=0; i<modelField.FT_ARRAY_SIZE; i++){
+        if (modelField.fieldTarget == DBModelField.FT_ARRAY) {
+          for (int i = 0; i < modelField.FT_ARRAY_SIZE; i++) {
             fieldAdapter.setPSField(field, item, stat, paramIndex, i, modelField);
             paramIndex++;
           }
-        }else{  
+        } else {
           fieldAdapter.setPSField(field, item, stat, paramIndex, 0, modelField);
           paramIndex++;
-        }  
+        }
         filedIndex++;
       }
       stat.execute();
@@ -1095,7 +1102,7 @@ public class DBModelControl<Model> extends DBIControl {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
@@ -1139,7 +1146,7 @@ public class DBModelControl<Model> extends DBIControl {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
@@ -1160,10 +1167,10 @@ public class DBModelControl<Model> extends DBIControl {
     }
     return result;
   }
-  
-   public <Model> Map<String,Map<String, Map<String, List<Model>>>> getMap3InList(Connection conn, String key1, String key2, String key3, String where, Object... args) throws UserException {
-    Map<String,Map<String, Map<String, List<Model>>>> result = new TreeMap<String,Map<String, Map<String, List<Model>>>>();
-    DBModelField[] f_keys = new DBModelField[]{null, null,null};
+
+  public <Model> Map<String, Map<String, Map<String, List<Model>>>> getMap3InList(Connection conn, String key1, String key2, String key3, String where, Object... args) throws UserException {
+    Map<String, Map<String, Map<String, List<Model>>>> result = new TreeMap<String, Map<String, Map<String, List<Model>>>>();
+    DBModelField[] f_keys = new DBModelField[]{null, null, null};
     for (DBModelField modelField : fields) {
       if (modelField.name.equalsIgnoreCase(key1) || (modelField.dbFieldName != null && modelField.dbFieldName.equalsIgnoreCase(key1))) {
         f_keys[0] = modelField;
@@ -1187,14 +1194,14 @@ public class DBModelControl<Model> extends DBIControl {
 
     List<Model> list = getList(conn, where, args);
     for (Model obj : list) {
-      String[] key_values = new String[]{"", "",""};
+      String[] key_values = new String[]{"", "", ""};
       int index = 0;
       for (DBModelField modelField : f_keys) {
         try {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
@@ -1219,7 +1226,6 @@ public class DBModelControl<Model> extends DBIControl {
     }
     return result;
   }
-  
 
   public <Model> Map<String, Map<String, Map<String, Model>>> getMap3(Connection conn, String key1, String key2, String key3, String where) throws UserException {
     return getMap3(conn, key1, key2, key3, where, new Object[]{});
@@ -1258,7 +1264,7 @@ public class DBModelControl<Model> extends DBIControl {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
@@ -1277,6 +1283,20 @@ public class DBModelControl<Model> extends DBIControl {
       m2.put(key_values[2], obj);
     }
     return result;
+  }
+
+  public <Model> void putObjToMap(Map<String, Map<String, Map<String, Model>>> result, String key1, String key2, String key3, Model obj) {
+    Map<String, Map<String, Model>> m1 = result.get(key1);
+    if (m1 == null) {
+      m1 = new HashMap<String, Map<String, Model>>();
+      result.put(key1, m1);
+    }
+    Map<String, Model> m2 = m1.get(key2);
+    if (m2 == null) {
+      m2 = new HashMap<String, Model>();
+      m1.put(key2, m2);
+    }
+    m2.put(key3, obj);
   }
 
   public <Model> Map<String, Map<String, Map<String, Map<String, Model>>>> getMap4(Connection conn, String key0, String key1, String key2, String key3, String where) throws UserException {
@@ -1322,7 +1342,7 @@ public class DBModelControl<Model> extends DBIControl {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
           modelField.fieldAdapter = fieldAdapter;
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
@@ -1362,7 +1382,7 @@ public class DBModelControl<Model> extends DBIControl {
               Field field = clazz.getField(modelField.name);
               DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
               modelField.fieldAdapter = fieldAdapter;
-              key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+              key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
             } catch (Exception e) {
               throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
             }
@@ -1505,10 +1525,8 @@ public class DBModelControl<Model> extends DBIControl {
       }
     }
   }
-  
-  
-  
-    public <Model> Map<String, List<Model>> getMapListWithParams(Connection conn, String key1,  Map<String, String> params, String where) throws UserException {
+
+  public <Model> Map<String, List<Model>> getMapListWithParams(Connection conn, String key1, Map<String, String> params, String where) throws UserException {
     Map<String, List<Model>> result = new HashMap<String, List<Model>>();
     DBModelField[] f_keys = new DBModelField[]{null};
     for (DBModelField modelField : fields) {
@@ -1528,14 +1546,14 @@ public class DBModelControl<Model> extends DBIControl {
         try {
           Field field = clazz.getField(modelField.name);
           DBFieldAdapter fieldAdapter = getSuitableAdapter(field);
-          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0,modelField).trim();
+          key_values[index] = fieldAdapter.getField(field, obj, modelField.name, 0, modelField).trim();
           index++;
         } catch (Exception e) {
           throw new UserException("Error", "I can't read a field name '" + modelField.name + "' in obj:" + clazz.getSimpleName());
         }
       }
       List<Model> rList = result.get(key_values[0]);
-      if (rList==null){
+      if (rList == null) {
         rList = new ArrayList<Model>();
         result.put(key_values[0], rList);
       }
@@ -1543,15 +1561,15 @@ public class DBModelControl<Model> extends DBIControl {
     }
     return result;
   }
-  
+
   public List getListFromMap(Connection conn, String addonWhere, Map<String, String> params) throws UserException {
     return getListWithParam(conn, addonWhere, params);
   }
-  
+
   public <Model> List<Model> getListWithParam(Connection conn, String addonWhere, Map<String, String> params, Object... args) throws UserException {
     List<Model> result = new ArrayList<Model>();
     PreparedStatement stat = null;
-    ResultSet rs = null;    
+    ResultSet rs = null;
     String sql = getSelectSql(addonWhere);
     sql = sql.replaceAll("\\{ADDON_WHERE\\}", addonWhere);
     if (params != null) {
@@ -1569,7 +1587,7 @@ public class DBModelControl<Model> extends DBIControl {
       } else {
         rs = stat.executeQuery();
       }
-      result = __getListFromRS(rs,sql);
+      result = __getListFromRS(rs, sql);
     } catch (SQLException se) {
       throw new UserException("Sql is error", "SQL : " + sql + "\nError message: \n" + se.toString());
     } catch (Exception e) {
