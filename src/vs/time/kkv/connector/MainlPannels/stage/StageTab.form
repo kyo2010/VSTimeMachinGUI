@@ -19,7 +19,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="topPanel" max="32767" attributes="0"/>
-                  <Component id="jSplitPane2" pref="598" max="32767" attributes="0"/>
+                  <Component id="jSplitPane2" pref="845" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
               <Component id="jSplitPane1" min="-2" pref="0" max="-2" attributes="0"/>
@@ -50,6 +50,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="pdfButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="butConfig" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="butRemoveSatge" min="-2" max="-2" attributes="0"/>
@@ -62,7 +64,10 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="butConfig" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="butConfig" alignment="3" max="32767" attributes="0"/>
+                          <Component id="pdfButton" alignment="3" max="32767" attributes="0"/>
+                      </Group>
                       <Component id="butRemoveSatge" max="32767" attributes="0"/>
                       <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -111,6 +116,14 @@
               </Border>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="pdfButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jButton1"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pdfButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

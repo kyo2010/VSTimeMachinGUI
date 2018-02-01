@@ -44,11 +44,28 @@ import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.io.FileOutputStream;
+import java.text.AttributedCharacterIterator;
+import java.util.Map;
+
 /**
  *
  * @author kyo
  */
 public class StageTab extends javax.swing.JPanel {
+
   MainForm mainForm;
   JTreeTable treeTable = null;
   public VS_STAGE stage = null;
@@ -59,18 +76,20 @@ public class StageTab extends javax.swing.JPanel {
     @Override
     public void actionPerformed(ActionEvent e) {
       long t = Calendar.getInstance().getTimeInMillis();
-      long d = t - mainForm.raceTime;      
+      long d = t - mainForm.raceTime;
       timerCaption.setText(getTimeIntervel(d));
     }
   });
-  
-  public String getTimeIntervel(long time){
-    long min = time/1000/60;
-    long sec = time/1000-min*60;      
-    long milisec = time-(sec+min*60)*1000;            
-    milisec = Math.round(milisec/10);
-    return Tools.padl(""+min,2,"0")+":"+Tools.padl(""+sec,2,"0")+":"+Tools.padl(""+milisec,2,"0");
-  };
+
+  public String getTimeIntervel(long time) {
+    long min = time / 1000 / 60;
+    long sec = time / 1000 - min * 60;
+    long milisec = time - (sec + min * 60) * 1000;
+    milisec = Math.round(milisec / 10);
+    return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 2, "0");
+  }
+
+  ;
 
   /**
    * Creates new form PracticaTableTab
@@ -201,7 +220,7 @@ public class StageTab extends javax.swing.JPanel {
 
     jTable.addMouseListener(new MouseAdapter() {
       boolean infoWindowRunning = false;
-      
+
       @Override
       public synchronized void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
@@ -227,13 +246,13 @@ public class StageTab extends javax.swing.JPanel {
                 mainForm.activeGroup = td.group;
                 timerCaption.setText(getTimeIntervel(0));
                 timerCaption.setVisible(true);
-                infoWindowRunning = true; 
+                infoWindowRunning = true;
                 mainForm.speaker.speak("One!");
                 InfoForm.init(mainForm, "1").setVisible(true);
                 Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                   public void actionPerformed(ActionEvent e) {
                     mainForm.speaker.speak("Two!");
-                    InfoForm.init(mainForm, "2").setVisible(true);                    
+                    InfoForm.init(mainForm, "2").setVisible(true);
                     Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
                         mainForm.speaker.speak("Three!");
@@ -242,7 +261,7 @@ public class StageTab extends javax.swing.JPanel {
                           public void actionPerformed(ActionEvent e) {
                             mainForm.speaker.speak("Go!");
                             InfoForm.init(mainForm, "Go!").setVisible(true);
-                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();                            
+                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
                             raceTimer.start();
                             Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                               public void actionPerformed(ActionEvent e) {
@@ -263,7 +282,7 @@ public class StageTab extends javax.swing.JPanel {
                   }
                 });
                 t1.setRepeats(false);
-                t1.start();                
+                t1.start();
               }
             }
             source.updateUI();
@@ -276,7 +295,7 @@ public class StageTab extends javax.swing.JPanel {
       }
 
     });
-  }  
+  }
 
   public class MinThread extends Thread {
 
@@ -352,7 +371,7 @@ public class StageTab extends javax.swing.JPanel {
     if (stage != null && stage.IS_GROUP_CREATED == 0) {
       createGroups();
     }
-    stage.loadGroups(mainForm.con,stage.RACE_ID,stage.ID);
+    stage.loadGroups(mainForm.con, stage.RACE_ID, stage.ID);
     refreshTableData();
     //jTable.addNotify();
     //jTree.addNotify();
@@ -363,6 +382,75 @@ public class StageTab extends javax.swing.JPanel {
       //jTree.setModel(treeModel);
     }
     expandAllJTree();
+  }
+
+  private void print() {
+    Document document = new Document(PageSize.A4.rotate());
+    try {
+      PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("jTable.pdf"));
+
+      document.open();
+      PdfContentByte cb = writer.getDirectContent();
+
+      cb.saveState();
+      Graphics2D g2 = cb.createGraphicsShapes(500, 500);
+
+      Shape oldClip = g2.getClip();
+      g2.clipRect(0, 0, 500, 500);
+
+      jTable.print(g2);
+      g2.setClip(oldClip);
+
+      g2.dispose();
+      cb.restoreState();
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+    document.close();
+  }
+
+  public void print2() {
+    try {
+      //BaseFont bf = BaseFont.createFont("C:\\WINXP\\Fonts\\ARIAL.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED); //подключаем файл шрифта, который поддерживает кириллицу
+      BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+      //SystemFont font=new SystemFont(new Font("Arial",Font.BOLD,12),new Color(255,255,255));
+
+      Font font = new Font(bf);
+
+      try {
+        int rowCount = jTable.getRowCount();
+        //Document document = new Document();
+        Document document = new Document(PageSize.A4.rotate());
+        PdfWriter.getInstance(document, new FileOutputStream("C:/data.pdf"));
+        document.open();
+        int colCount = jTable.getColumnCount();
+        PdfPTable tab = new PdfPTable(jTable.getColumnCount());
+
+        float[] widths = new float[colCount];
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+          tab.addCell(jTable.getColumnName(i));
+          widths[i] = stageTableAdapter.getMinWidth(i);
+        }
+        tab.setWidths(widths);
+        for (int row = 0; row < rowCount; row++) {
+          for (int col = 0; col < colCount; col++) {
+            Object obj = jTable.getModel().getValueAt(row, col);
+            tab.addCell(obj.toString());
+          }
+        }
+        Font font1 = new Font(bf, 12);
+        String text1 = "Тест";
+        document.add(new Paragraph(text1, font));
+        
+        text1 = "Test";
+        document.add(new Paragraph(text1, font));
+
+        document.add(tab);
+        document.close();
+      } catch (Exception e) {
+      }
+    } catch (Exception e) {
+    }
   }
 
   public void createGroups() {
@@ -416,6 +504,7 @@ public class StageTab extends javax.swing.JPanel {
     butRemoveSatge = new javax.swing.JButton();
     butConfig = new javax.swing.JButton();
     timerCaption = new javax.swing.JLabel();
+    pdfButton = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -445,6 +534,13 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption.setText("00:00:00");
     timerCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0), 5));
 
+    pdfButton.setText("jButton1");
+    pdfButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        pdfButtonActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -453,6 +549,8 @@ public class StageTab extends javax.swing.JPanel {
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(pdfButton)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butConfig)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butRemoveSatge)
@@ -463,7 +561,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
@@ -498,7 +598,7 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE))
         .addGap(0, 0, 0)
         .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(0, 0, 0))
@@ -532,6 +632,11 @@ public class StageTab extends javax.swing.JPanel {
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
+  private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
+    // TODO add your handling code here:
+    print2();
+  }//GEN-LAST:event_pdfButtonActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton butConfig;
@@ -542,6 +647,7 @@ public class StageTab extends javax.swing.JPanel {
   private javax.swing.JSplitPane jSplitPane2;
   public javax.swing.JTable jTable;
   public javax.swing.JTree jTree;
+  private javax.swing.JButton pdfButton;
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables

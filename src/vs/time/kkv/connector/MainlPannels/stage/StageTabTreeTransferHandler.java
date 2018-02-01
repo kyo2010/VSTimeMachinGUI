@@ -9,6 +9,7 @@ import KKV.DBControlSqlLite.UserException;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.models.*;
 
 class StageTabTreeTransferHandler extends TransferHandler {
@@ -85,7 +87,9 @@ class StageTabTreeTransferHandler extends TransferHandler {
 
   private boolean haveCompleteNode(JTree tree) {
     int[] selRows = tree.getSelectionRows();
-    if (selRows.length==0) return false;
+    if (selRows.length == 0) {
+      return false;
+    }
     TreePath path = tree.getPathForRow(selRows[0]);
     pathFrom = path;
     try {
@@ -116,7 +120,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
       try {
         //return new VS_STAGE_GROUPS(nodes);
         VS_STAGE_GROUPS nn = node.copy();
-        nn.GID = -1;
+        //nn.GID = ;
         nodeNew = nn;
         return nn;
       } catch (UserException ex) {
@@ -166,76 +170,71 @@ class StageTabTreeTransferHandler extends TransferHandler {
 
     if (parant_obj instanceof VS_STAGE_GROUP) {
       VS_STAGE_GROUP parent = (VS_STAGE_GROUP) dest.getLastPathComponent();
+      node.GROUP_NUM = parent.GROUP_NUM;
+      
+       if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
+        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+        stageTab.refreshTableData();
+        tree.updateUI();
+        return false;
+      }
 
       try {
-        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);
-        node.GROUP_NUM = parent.GROUP_NUM;
+        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);        
         long max = VS_STAGE_GROUPS.getMaxNumInGroup(stageTab.mainForm.con, node.STAGE_ID, parent.GROUP_NUM);
         node.NUM_IN_GROUP = (int) (max + 1);
         node.parent = parent;
         VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, node);
         nodesToRemove.parent.users.remove(nodesToRemove);
         parent.users.add(node);
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
+      
         stageTab.stage.checkConstarin();
         stageTab.refreshTableData();
         tree.updateUI();
       } catch (Exception e) {
         stageTab.mainForm.toLog(e);
-      }
-      return  true;
+      }            
+      return true;
     }
 
     if (parant_obj instanceof VS_STAGE_GROUPS) {
       VS_STAGE_GROUPS beforeNode = (VS_STAGE_GROUPS) dest.getLastPathComponent();
       VS_STAGE_GROUP parent = beforeNode.parent;
-      try {                        
-        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);
-        node.GROUP_NUM = parent.GROUP_NUM;                        
-        nodesToRemove.parent.users.remove(nodesToRemove);
-        parent.users.add(parent.users.indexOf(beforeNode), node);
-        node.GID = -1;
-        node.STAGE_ID = nodesToRemove.STAGE_ID;
-        int index = 1;
-        for (VS_STAGE_GROUPS usr : parent.users){
-          usr.NUM_IN_GROUP = index;
-          usr.GROUP_NUM = parent.GROUP_NUM;          
-          index++;
-          if (usr==node){
-            VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, usr);           
-          }else{          
-            VS_STAGE_GROUPS.dbControl.update(stageTab.mainForm.con, usr);
-          }  
-          usr.parent = parent;          
-        }                
-        stageTab.stage.checkConstarin(); 
-        stageTab.refreshTableData();
-        tree.updateUI();
-      } catch (Exception e) {
-        stageTab.mainForm.toLog(e);
-      }
-      return true;
-    }
-    
-    if (parant_obj instanceof VS_STAGE) {
-      VS_STAGE stage = (VS_STAGE)parant_obj;
-      VS_STAGE_GROUP parent = new VS_STAGE_GROUP(stage);
-      VS_STAGE_GROUP last_group = null;
-      for (int group_ndex : stage.groups.keySet()){
-        last_group = stage.groups.get(group_ndex);
-      }
-      parent.GROUP_INDEX = last_group.GROUP_INDEX+1;
-      parent.GROUP_NUM = last_group.GROUP_NUM +1;
-      stage.groups.put(parent.GROUP_INDEX, parent);
 
-      try {
-        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);
+      try {       
         node.GROUP_NUM = parent.GROUP_NUM;
-        long max = VS_STAGE_GROUPS.getMaxNumInGroup(stageTab.mainForm.con, node.STAGE_ID, parent.GROUP_NUM);
-        node.NUM_IN_GROUP = (int) (max + 1);
-        node.parent = parent;
-        VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, node);
-        nodesToRemove.parent.users.remove(nodesToRemove);
-        parent.users.add(node);
+        if (nodesToRemove!=null && nodesToRemove.parent!=null && nodesToRemove.parent.users!=null){
+          nodesToRemove.parent.users.remove(nodesToRemove);
+        } 
+        
+        if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
+          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+          stageTab.refreshTableData();
+          tree.updateUI();
+          return false;
+        }
+        
+        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);
+        
+        parent.users.add(parent.users.indexOf(beforeNode), node);        
+        node.STAGE_ID = nodesToRemove.STAGE_ID;
+        int index = 1;        
+        for (VS_STAGE_GROUPS usr : parent.users) {
+          usr.NUM_IN_GROUP = index;
+          usr.GROUP_NUM = parent.GROUP_NUM;                   
+          index++;
+          if (usr == node) {
+            node.GID = -1;
+            VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, usr);
+          } else {
+            VS_STAGE_GROUPS.dbControl.update(stageTab.mainForm.con, usr);
+          }
+          usr.parent = parent;
+        }
+        
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
+      
         stageTab.stage.checkConstarin();
         stageTab.refreshTableData();
         tree.updateUI();
@@ -244,9 +243,78 @@ class StageTabTreeTransferHandler extends TransferHandler {
       }
       return true;
     }
-    
+
+    if (parant_obj instanceof VS_STAGE) {
+      VS_STAGE stage = (VS_STAGE) parant_obj;
+      VS_STAGE_GROUP parent = new VS_STAGE_GROUP(stage);
+      VS_STAGE_GROUP last_group = null;
+      for (int group_ndex : stage.groups.keySet()) {
+        last_group = stage.groups.get(group_ndex);
+      }
+      parent.GROUP_INDEX = last_group.GROUP_INDEX + 1;
+      parent.GROUP_NUM = last_group.GROUP_NUM + 1;
+      node.GROUP_NUM = parent.GROUP_NUM;
+      stage.groups.put(parent.GROUP_INDEX, parent);
+      if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
+        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+        stageTab.refreshTableData();
+        tree.updateUI();
+        return false;
+      }
+
+      try {
+        VS_STAGE_GROUPS.dbControl.delete(stageTab.mainForm.con, nodesToRemove);
+        long max = VS_STAGE_GROUPS.getMaxNumInGroup(stageTab.mainForm.con, node.STAGE_ID, parent.GROUP_NUM);
+        node.NUM_IN_GROUP = (int) (max + 1);
+        node.parent = parent;
+        VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, node);
+        nodesToRemove.parent.users.remove(nodesToRemove);
+        parent.users.add(node);
+        
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);      
+        
+        stageTab.stage.checkConstarin();
+        stageTab.refreshTableData();
+        tree.updateUI();
+      } catch (Exception e) {
+        stageTab.mainForm.toLog(e);
+      }
+      return true;
+    }
+
     System.out.println("importData finished");
-       
+
+    return false;
+  }
+  
+  public boolean moveTimeResult(Connection con, long race_id, long stage_id, int transponderId, long old_group, long new_group){
+    if (old_group==new_group) return true;
+    try{
+     List<VS_RACE_LAP> laps = VS_RACE_LAP.dbControl.getList(con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", race_id,stage_id,old_group,transponderId);
+     for (VS_RACE_LAP lap: laps){
+        lap.GROUP_NUM = new_group;
+        lap.TRANSPONDER_ID = transponderId;
+        VS_RACE_LAP.dbControl.update(con, lap);
+     }
+     return true;
+    }catch(Exception e){
+      MainForm._toLog(e);
+    }
+    return false;
+  }
+
+  public static boolean canBeNewUserInserted(Connection con, VS_STAGE_GROUPS new_user) {
+    try {
+      VS_STAGE_GROUPS t1 = VS_STAGE_GROUPS.dbControl.getItem(con, "STAGE_ID=? and GROUP_NUM=? and TRANSPONDER=?", new_user.STAGE_ID, new_user.GROUP_NUM, new_user.TRANSPONDER);
+      if (t1 == null) {
+        return true;
+      }
+      if (t1.GID == new_user.GID) {
+        return true;
+      }
+    } catch (Exception e) {
+      MainForm._toLog(e);
+    }
     return false;
   }
 

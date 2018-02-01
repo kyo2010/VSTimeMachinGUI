@@ -153,7 +153,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       StageTableData td = rows.get(rowIndex);
       if (td.isGrpup) {
         if (columnIndex == 0) {
-          return "Group " + td.group.GROUP_NUM;
+          return " -= Group " + td.group.GROUP_NUM+" =- ";
         }
         return "";
       } else {
