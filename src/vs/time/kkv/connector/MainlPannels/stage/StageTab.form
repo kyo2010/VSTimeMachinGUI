@@ -50,6 +50,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="refreshData" min="-2" pref="62" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="pdfButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="butConfig" min="-2" max="-2" attributes="0"/>
@@ -70,6 +72,7 @@
                       </Group>
                       <Component id="butRemoveSatge" max="32767" attributes="0"/>
                       <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
+                      <Component id="refreshData" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -119,10 +122,25 @@
         </Component>
         <Component class="javax.swing.JButton" name="pdfButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jButton1"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/report-icon.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Report"/>
+            <Property name="toolTipText" type="java.lang.String" value="Create PDF Report"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pdfButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="refreshData">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/refresh-icon.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Refresh data"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshDataActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

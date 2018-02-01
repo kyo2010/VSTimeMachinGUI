@@ -103,26 +103,8 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption.setVisible(false);
 
     refreshData(false);
-    treeModel = new StageTreeModel(this);
-    jTree.setModel(treeModel);
-    jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
-    jTree.setDragEnabled(true);
-    jTree.setDropMode(DropMode.USE_SELECTION);
-    StageTreeCellRender render = new StageTreeCellRender();
-    //render.setClosedIcon(new ImageIcon(...));
-    //render.setOpenIcon(new ImageIcon(...));
-    //render.setLeafIcon(new ImageIcon(...)); 
-    jTree.setCellRenderer(render);
-    expandAllJTree();
-
-    stageTableAdapter = new StageTableAdapter(this);
-    jTable.setModel(stageTableAdapter);
-    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
-
-    for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
-      jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
-    }
-    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    refreshDataActionPerformed(null);
+    
 
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
@@ -505,6 +487,7 @@ public class StageTab extends javax.swing.JPanel {
     butConfig = new javax.swing.JButton();
     timerCaption = new javax.swing.JLabel();
     pdfButton = new javax.swing.JButton();
+    refreshData = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -534,10 +517,20 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption.setText("00:00:00");
     timerCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0), 5));
 
-    pdfButton.setText("jButton1");
+    pdfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/report-icon.png"))); // NOI18N
+    pdfButton.setText("Report");
+    pdfButton.setToolTipText("Create PDF Report");
     pdfButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         pdfButtonActionPerformed(evt);
+      }
+    });
+
+    refreshData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/refresh-icon.png"))); // NOI18N
+    refreshData.setToolTipText("Refresh data");
+    refreshData.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        refreshDataActionPerformed(evt);
       }
     });
 
@@ -549,6 +542,8 @@ public class StageTab extends javax.swing.JPanel {
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(refreshData, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(pdfButton)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butConfig)
@@ -565,7 +560,8 @@ public class StageTab extends javax.swing.JPanel {
             .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     jSplitPane2.setDividerLocation(200);
@@ -637,6 +633,29 @@ public class StageTab extends javax.swing.JPanel {
     print2();
   }//GEN-LAST:event_pdfButtonActionPerformed
 
+  private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
+    // TODO add your handling code here:
+    treeModel = new StageTreeModel(this);
+    jTree.setModel(treeModel);
+    jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
+    jTree.setDragEnabled(true);
+    jTree.setDropMode(DropMode.USE_SELECTION);
+    StageTreeCellRender render = new StageTreeCellRender();    
+    jTree.setCellRenderer(render);
+    expandAllJTree();
+
+    stageTableAdapter = new StageTableAdapter(this);
+    jTable.setModel(stageTableAdapter);
+    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+
+    for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
+      jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
+    }
+    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    
+    refreshData(true);     
+  }//GEN-LAST:event_refreshDataActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton butConfig;
@@ -648,6 +667,7 @@ public class StageTab extends javax.swing.JPanel {
   public javax.swing.JTable jTable;
   public javax.swing.JTree jTree;
   private javax.swing.JButton pdfButton;
+  private javax.swing.JButton refreshData;
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables
