@@ -172,6 +172,21 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (sc != null && sc.ID == STAGE_COLUMN.CID_PILOT) {
           return td.pilot.PILOT;
         }
+        
+        td.pilot.recalculateLapTimes(tab.mainForm.con,tab.stage,laps,false);
+        
+        if (sc != null && sc.ID == STAGE_COLUMN.CID_BEST_LAP) {  
+          if (td.pilot.BEST_LAP==0) return "";
+          return tab.getTimeIntervel(td.pilot.BEST_LAP);          
+        } 
+        if (sc != null && sc.ID == STAGE_COLUMN.CID_LAPS) {  
+          if (td.pilot.LAPS==0 && td.pilot.IS_FINISHED!=0) return "";
+          return td.pilot.LAPS;          
+        }
+        if (sc != null && sc.ID == STAGE_COLUMN.CID_TIME) {  
+          if (td.pilot.RACE_TIME==0) return "";
+          return tab.getTimeIntervel(td.pilot.RACE_TIME);          
+        }
         if (sc != null && sc.ID == STAGE_COLUMN.CID_CHANNEL) {
           return td.pilot.CHANNEL;
         }
@@ -230,6 +245,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.TRANSPONDER, getLapNumberFromCol(col));
               if (lap==null) isError = true;
               VS_RACE_LAP.dbControl.putObjToMap(laps, ""+td.pilot.GROUP_NUM, ""+td.pilot.TRANSPONDER, ""+getLapNumberFromCol(col), lap);
+              td.pilot.IS_RECALULATED = 0;              
             } else {
               isError = true;
             }

@@ -10,8 +10,11 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
+import java.util.Map;
 
 public class VS_STAGE_GROUPS implements Transferable{
+  
+  public static final long MAX_TIME = (99*60+59)*1000+999;
 
   public static DataFlavor VS_STAGE_GROUPS_FLOWER = null;
   static{
@@ -29,6 +32,11 @@ public class VS_STAGE_GROUPS implements Transferable{
   public int TRANSPONDER;   //  NOT_DETECTED
   public String CHANNEL;   //  NOT_DETECTED
   public int isError = 0;
+  public long LAPS;
+  public long BEST_LAP;
+  public long RACE_TIME;
+  public int IS_RECALULATED = 0;
+  public int IS_FINISHED = 0;
   
   public VS_STAGE_GROUP parent = null;
   
@@ -44,6 +52,11 @@ public class VS_STAGE_GROUPS implements Transferable{
     new DBModelField("PILOT").setDbFieldName("\"PILOT\""),
     new DBModelField("TRANSPONDER").setDbFieldName("\"TRANSPONDER\""),
     new DBModelField("CHANNEL").setDbFieldName("\"CHANNEL\""),
+    new DBModelField("LAPS").setDbFieldName("\"LAPS\""),
+    new DBModelField("BEST_LAP").setDbFieldName("\"BEST_LAP\""),
+    new DBModelField("RACE_TIME").setDbFieldName("\"RACE_TIME\""),
+    new DBModelField("IS_RECALULATED").setDbFieldName("\"IS_RECALULATED\""),
+    new DBModelField("IS_FINISHED").setDbFieldName("\"IS_FINISHED\""),
   });
   
   public String toString(){
@@ -80,5 +93,38 @@ public class VS_STAGE_GROUPS implements Transferable{
     long max = VS_STAGE_GROUPS.dbControl.getMax(conn,
                 "NUM_IN_GROUP", "STAGE_ID=? and GROUP_NUM=?", stageId, groupNum);
     return max;
+  }
+  
+  public void recalculateLapTimes(Connection conn, VS_STAGE stage, Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps, boolean please_recalculate){
+    try{
+      if (IS_RECALULATED==1 && please_recalculate!=true){
+        
+      }else{        
+        long best_time_lap = MAX_TIME;
+        long _RACE_TIME = 0;
+        LAPS = 0;
+        for (String lap_st : laps.get(""+GROUP_NUM).get(""+TRANSPONDER).keySet()){
+          //int lap = Integer.parseInt(lap_st);
+          VS_RACE_LAP lap = laps.get(""+GROUP_NUM).get(""+TRANSPONDER).get(lap_st);
+          if (lap.TRANSPONDER_TIME<best_time_lap) best_time_lap = lap.TRANSPONDER_TIME;   
+          LAPS++;
+          _RACE_TIME += lap.TRANSPONDER_TIME;
+        } 
+        if (LAPS>0){
+          BEST_LAP = best_time_lap;         
+        }
+        if ((stage.LAPS == (int)LAPS)){
+          RACE_TIME = _RACE_TIME;
+        } 
+        if (IS_FINISHED==1){
+          if (BEST_LAP==0) BEST_LAP = MAX_TIME;
+          if ((stage.LAPS != (int)LAPS)){
+            RACE_TIME = MAX_TIME;
+          }
+        }
+        IS_RECALULATED = 1;
+      }
+    }catch(Exception e){
+    }  
   }
 }
