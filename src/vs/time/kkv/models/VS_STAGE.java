@@ -28,6 +28,7 @@ public class VS_STAGE {
   public int LAPS;
   public int IS_GROUP_CREATED;
   public int IS_SELECTED;  
+  public String PARENT_STAGE = "";
     
   public Map<Integer,VS_STAGE_GROUP> groups = new HashMap<Integer,VS_STAGE_GROUP>();
   
@@ -48,6 +49,7 @@ public class VS_STAGE {
     new DBModelField("MIN_LAP_TIME").setDbFieldName("\"MIN_LAP_TIME\""),
     new DBModelField("IS_GROUP_CREATED").setDbFieldName("\"IS_GROUP_CREATED\""),
     new DBModelField("IS_SELECTED").setDbFieldName("\"IS_SELECTED\""),
+    new DBModelField("PARENT_STAGE").setDbFieldName("\"PARENT_STAGE\""),
   });
   
   public static void resetSelectedTab(Connection conn, long raceID){

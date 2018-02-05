@@ -104,7 +104,6 @@ public class StageTab extends javax.swing.JPanel {
 
     refreshData(false);
     refreshDataActionPerformed(null);
-    
 
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
@@ -423,7 +422,7 @@ public class StageTab extends javax.swing.JPanel {
         Font font1 = new Font(bf, 12);
         String text1 = "Тест";
         document.add(new Paragraph(text1, font));
-        
+
         text1 = "Test";
         document.add(new Paragraph(text1, font));
 
@@ -438,34 +437,53 @@ public class StageTab extends javax.swing.JPanel {
   public void createGroups() {
     try {
       if (stage != null && stage.ID != -1) {
-        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
-        List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
-        int count_man_in_group = 0;
-        int GRUP_NUM = 1;
-        String[] channels = stage.CHANNELS.split(";");
-        int prev_type_pilot = -1;
-        for (VS_REGISTRATION user : users) {
-          // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
-          if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
-            GRUP_NUM++;
-            count_man_in_group = 0;
-          }
-          // Create new group, if full
-          count_man_in_group = count_man_in_group + 1;
-          if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
-            GRUP_NUM++;
-            count_man_in_group = 1;
-          }
-          VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
-          gr.STAGE_ID = stage.ID;
-          gr.GROUP_NUM = GRUP_NUM;
-          gr.PILOT = user.VS_USER_NAME;
-          gr.NUM_IN_GROUP = count_man_in_group;
-          gr.CHANNEL = channels[count_man_in_group - 1];
-          gr.TRANSPONDER = user.VS_TRANSPONDER;
-          prev_type_pilot = user.PILOT_TYPE;
-          VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+        VS_STAGE parent_stage = null;
+        try {
+          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=?", stage.PARENT_STAGE);
+        } catch (Exception e) {
         }
+
+        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
+
+        if (parent_stage != null) {
+          // Copy grups to new Stage
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
+          for (VS_STAGE_GROUPS grp: groups){
+            grp.GID = -1;
+            grp.STAGE_ID = stage.ID;
+            grp.isError = 0;
+            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, grp);
+          }
+        } else {
+          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+          int count_man_in_group = 0;
+          int GRUP_NUM = 1;
+          String[] channels = stage.CHANNELS.split(";");
+          int prev_type_pilot = -1;
+          for (VS_REGISTRATION user : users) {
+            // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
+            if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
+              GRUP_NUM++;
+              count_man_in_group = 0;
+            }
+            // Create new group, if full
+            count_man_in_group = count_man_in_group + 1;
+            if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
+              GRUP_NUM++;
+              count_man_in_group = 1;
+            }
+            VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
+            gr.STAGE_ID = stage.ID;
+            gr.GROUP_NUM = GRUP_NUM;
+            gr.PILOT = user.VS_USER_NAME;
+            gr.NUM_IN_GROUP = count_man_in_group;
+            gr.CHANNEL = channels[count_man_in_group - 1];
+            gr.TRANSPONDER = user.VS_TRANSPONDER;
+            prev_type_pilot = user.PILOT_TYPE;
+            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+          }
+        }
+
         stage.IS_GROUP_CREATED = 1;
         VS_STAGE.dbControl.update(mainForm.con, stage);
       }
@@ -640,7 +658,7 @@ public class StageTab extends javax.swing.JPanel {
     jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
     jTree.setDragEnabled(true);
     jTree.setDropMode(DropMode.USE_SELECTION);
-    StageTreeCellRender render = new StageTreeCellRender();    
+    StageTreeCellRender render = new StageTreeCellRender();
     jTree.setCellRenderer(render);
     expandAllJTree();
 
@@ -652,8 +670,8 @@ public class StageTab extends javax.swing.JPanel {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
     }
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    
-    refreshData(true);     
+
+    refreshData(true);
   }//GEN-LAST:event_refreshDataActionPerformed
 
 
