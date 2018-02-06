@@ -449,9 +449,9 @@ public class StageTab extends javax.swing.JPanel {
         }
 
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
-        List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
-
+        
         if (parent_stage != null) {
+          List<VS_STAGE_GROUPS> groups = null;//VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
           for (VS_STAGE_GROUPS usr : groups) {
@@ -469,7 +469,7 @@ public class StageTab extends javax.swing.JPanel {
               for (VS_STAGE_GROUPS usr : groups) {
                 if (user_names.contains(usr.PILOT)) usr.isError = 2;
                 user_names.add(usr.PILOT);
-              }              
+              }                 
               List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
               for (VS_STAGE_GROUPS usr : groups) {
                 VS_REGISTRATION reg = users.get(""+usr.TRANSPONDER);
@@ -547,6 +547,7 @@ public class StageTab extends javax.swing.JPanel {
 
             }
           } else {
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);          
             // usual copy
             for (VS_STAGE_GROUPS grp : groups) {
               grp.GID = -1;
