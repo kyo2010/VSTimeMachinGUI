@@ -58,7 +58,12 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.io.FileOutputStream;
 import java.text.AttributedCharacterIterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import vs.time.kkv.models.VS_RACE_LAP;
 
 /**
  *
@@ -444,15 +449,113 @@ public class StageTab extends javax.swing.JPanel {
         }
 
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
+        List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
 
         if (parent_stage != null) {
           // Copy grups to new Stage
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
-          for (VS_STAGE_GROUPS grp: groups){
-            grp.GID = -1;
-            grp.STAGE_ID = stage.ID;
-            grp.isError = 0;
-            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, grp);
+          Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
+          for (VS_STAGE_GROUPS usr : groups) {
+            usr.IS_FINISHED = 1;
+            usr.recalculateLapTimes(mainForm.con, stage, laps, true);
+          }
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
+            if (1 == 1) {
+              // based on best time
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by RACE_TIME, BEST_LAP", parent_stage.ID);
+              checkGroupConstrain();
+              Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+              TreeSet<String> user_names = new TreeSet();
+              for (VS_STAGE_GROUPS usr : groups) {
+                if (user_names.contains(usr.PILOT)) usr.isError = 2;
+                user_names.add(usr.PILOT);
+              }              
+              List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                VS_REGISTRATION reg = users.get(""+usr.TRANSPONDER);
+                if (reg != null) {
+                  usr.PILOT = reg.VS_USER_NAME;
+                  if (reg.IS_ACTIVE == 0 || usr.isError==2) {
+                    inactives.add(usr);
+                  }
+                }
+              }
+              for (VS_STAGE_GROUPS del : inactives) {
+                groups.remove(del);
+              }
+              int count_man = groups.size();
+              int count_max_in_groups = stage.COUNT_PILOTS_IN_GROUP;
+              int count_man_in_group = 1;
+              int count_groups = count_man / count_max_in_groups;
+              if (count_groups*count_max_in_groups<count_man) count_groups++;
+              int current_group = 1;
+              String[] channels = stage.CHANNELS.split(";");
+              HashMap<Integer, HashMap<String, Integer>> usingChannels = new HashMap<Integer, HashMap<String, Integer>>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                HashMap<String, Integer> groupChannels = usingChannels.get(current_group);
+                if (groupChannels == null) {
+                  groupChannels = new HashMap<String, Integer>();
+                  usingChannels.put(current_group, groupChannels);
+                }
+                usr.GID = -1;
+                //usr.CHANNEL = channels[count_man_in_group - 1];
+                usr.STAGE_ID = stage.ID;                
+                usr.IS_FINISHED = 0;
+                usr.IS_RECALULATED = 0;
+                usr.NUM_IN_GROUP = count_man_in_group;
+                usr.GROUP_NUM = current_group;
+                usr.BEST_LAP = 0;
+                usr.LAPS = 0;
+                usr.RACE_TIME = 0;
+                Integer countUse = groupChannels.get(usr.CHANNEL);
+                if (countUse == null) {
+                  countUse = 0;
+                }
+                countUse++;
+                groupChannels.put(usr.CHANNEL, countUse);
+                current_group++;
+                if (current_group > count_groups) {
+                  current_group = 1;
+                  count_man_in_group++;
+                }
+              }
+              HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int)usr.GROUP_NUM);
+                if (checkChannels == null) {
+                  checkChannels = new HashMap<String, Integer>();
+                  checkChannelsAll.put((int) usr.GROUP_NUM, checkChannels);
+                }
+                HashMap<String, Integer> groupChannels = usingChannels.get((int)usr.GROUP_NUM);
+                Integer countUse = groupChannels.get(usr.CHANNEL);
+                if (countUse > 1) {
+                  if (checkChannels.get(usr.CHANNEL) == null) {
+                    checkChannels.put(usr.CHANNEL,1);
+                  } else {
+                    for (String channel : channels) {
+                      if (groupChannels.get(channel) == null) {
+                        usr.CHANNEL = channel;
+                        groupChannels.put(usr.CHANNEL, 1);
+                      }
+                    }
+                  }
+                }
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+              }
+            } else {
+              // Double         
+
+            }
+          } else {
+            // usual copy
+            for (VS_STAGE_GROUPS grp : groups) {
+              grp.GID = -1;
+              grp.STAGE_ID = stage.ID;
+              grp.isError = 0;
+              grp.IS_FINISHED = 0;
+              grp.IS_RECALULATED = 0;
+              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, grp);
+            }
           }
         } else {
           List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
@@ -506,6 +609,7 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption = new javax.swing.JLabel();
     pdfButton = new javax.swing.JButton();
     refreshData = new javax.swing.JButton();
+    bNewStage = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -552,6 +656,15 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    bNewStage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/add.png"))); // NOI18N
+    bNewStage.setText("New Stage");
+    bNewStage.setToolTipText("Add a new stage tab");
+    bNewStage.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bNewStageActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -559,12 +672,14 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
         .addComponent(refreshData, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(pdfButton)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butConfig)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(bNewStage)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butRemoveSatge)
         .addContainerGap())
@@ -575,9 +690,10 @@ public class StageTab extends javax.swing.JPanel {
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(bNewStage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pdfButton))
           .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
@@ -612,7 +728,7 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE))
+          .addComponent(jSplitPane2))
         .addGap(0, 0, 0)
         .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(0, 0, 0))
@@ -674,8 +790,14 @@ public class StageTab extends javax.swing.JPanel {
     refreshData(true);
   }//GEN-LAST:event_refreshDataActionPerformed
 
+  private void bNewStageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewStageActionPerformed
+    // TODO add your handling code here:
+    StageNewForm.init(mainForm, null).setVisible(true);
+  }//GEN-LAST:event_bNewStageActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton bNewStage;
   private javax.swing.JButton butConfig;
   private javax.swing.JButton butRemoveSatge;
   private javax.swing.JScrollPane jScrollPane1;

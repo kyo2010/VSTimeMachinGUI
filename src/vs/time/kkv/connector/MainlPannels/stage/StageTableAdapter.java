@@ -57,6 +57,7 @@ import vs.time.kkv.models.VS_RACE_LAP;
 public class StageTableAdapter extends AbstractTableModel implements TableCellRenderer {
 
   private List<StageTableData> rows;
+  Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
 
@@ -98,9 +99,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     this.tab = tab;
     loadData();
     defaultTableCellRendererCellRenderer.setOpaque(true);
-  }
-  
-  Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
+  }    
 
   public void loadData() {
     rows = new ArrayList<StageTableData>();

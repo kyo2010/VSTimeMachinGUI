@@ -19,7 +19,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="topPanel" max="32767" attributes="0"/>
-                  <Component id="jSplitPane2" pref="845" max="32767" attributes="0"/>
+                  <Component id="jSplitPane2" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
               <Component id="jSplitPane1" min="-2" pref="0" max="-2" attributes="0"/>
@@ -49,12 +49,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="43" max="32767" attributes="0"/>
                   <Component id="refreshData" min="-2" pref="62" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pdfButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="butConfig" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="bNewStage" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="butRemoveSatge" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -67,10 +69,11 @@
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="butRemoveSatge" alignment="3" max="32767" attributes="0"/>
+                          <Component id="bNewStage" alignment="3" max="32767" attributes="0"/>
                           <Component id="butConfig" alignment="3" max="32767" attributes="0"/>
-                          <Component id="pdfButton" alignment="3" max="32767" attributes="0"/>
+                          <Component id="pdfButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="butRemoveSatge" max="32767" attributes="0"/>
                       <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
                       <Component id="refreshData" max="32767" attributes="0"/>
                   </Group>
@@ -141,6 +144,18 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshDataActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="bNewStage">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/add.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="New Stage"/>
+            <Property name="toolTipText" type="java.lang.String" value="Add a new stage tab"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bNewStageActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

@@ -61,6 +61,10 @@ import vs.time.kkv.models.VS_STAGE_GROUP;
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver {
 
+  public static final int STAGE_PRACTICA = 0;
+  public static final int STAGE_QUALIFICATION = 1;
+  public static final int STAGE_RACE = 2;
+  
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};  
 

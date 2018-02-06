@@ -29,13 +29,15 @@ public class StageTreeCellRender extends DefaultTreeCellRenderer{
       VS_STAGE_GROUPS usr = (VS_STAGE_GROUPS) value;
       if (usr.isError>0){
         if (!sel){
-          setForeground(Color.RED);
+          if (usr.isError==1)
+            setForeground(Color.RED);
+          if (usr.isError>=2)
+            setForeground(Color.BLUE);
         }else{
           setForeground(Color.YELLOW);          
         }          
       }
     }
     return cmp;
-  }
-       
+  }       
 }

@@ -123,6 +123,7 @@ public class VS_STAGE_GROUPS implements Transferable{
           }
         }
         IS_RECALULATED = 1;
+        VS_STAGE_GROUPS.dbControl.update(conn, this);
       }
     }catch(Exception e){
     }  
