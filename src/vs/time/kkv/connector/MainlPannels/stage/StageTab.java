@@ -541,7 +541,7 @@ public class StageTab extends javax.swing.JPanel {
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
 
         if (parent_stage != null) {
-          List<VS_STAGE_GROUPS> groups = null;//VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
           for (VS_STAGE_GROUPS usr : groups) {
@@ -643,13 +643,16 @@ public class StageTab extends javax.swing.JPanel {
           } else {
             groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
             // usual copy
-            for (VS_STAGE_GROUPS grp : groups) {
-              grp.GID = -1;
-              grp.STAGE_ID = stage.ID;
-              grp.isError = 0;
-              grp.IS_FINISHED = 0;
-              grp.IS_RECALULATED = 0;
-              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, grp);
+            for (VS_STAGE_GROUPS user : groups) {
+              user.GID = -1;
+              user.STAGE_ID = stage.ID;
+              user.isError = 0;
+              user.IS_FINISHED = 0;
+              user.IS_RECALULATED = 0;
+              user.LAPS = 0;
+              user.RACE_TIME = 0;
+              user.BEST_LAP = 0;              
+              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, user);
             }
           }
         } else {
