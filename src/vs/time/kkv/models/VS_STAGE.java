@@ -1,6 +1,5 @@
-/*** KKV Class Generator V.0.1, This class is based on 'VS_PRACTICA' table.
- *** The class was generated automatically.  ***/
-
+/** * KKV Class Generator V.0.1, This class is based on 'VS_PRACTICA' table.
+ *** The class was generated automatically.  ** */
 package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.*;
@@ -8,14 +7,17 @@ import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import vs.time.kkv.connector.MainForm;
+import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
 public class VS_STAGE {
-  
+
   public long ID = -1;   //  NOT_DETECTED
   public long RACE_ID;   //  NOT_DETECTED
   public int FLAG_BY_PYLOT_TYPE;
@@ -27,14 +29,19 @@ public class VS_STAGE {
   public int MIN_LAP_TIME;
   public int LAPS;
   public int IS_GROUP_CREATED;
-  public int IS_SELECTED;  
+  public int IS_SELECTED;
   public String PARENT_STAGE = "";
-    
-  public Map<Integer,VS_STAGE_GROUP> groups = new HashMap<Integer,VS_STAGE_GROUP>();
-  
-  /** Constructor */ 
+
+  public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
+
+  public Map<Integer, VS_STAGE_GROUP> groups = new HashMap<Integer, VS_STAGE_GROUP>();
+
+  /**
+   * Constructor
+   */
   public VS_STAGE() {
-  };
+  }
+  ;
   
   public static DBModelControl<VS_STAGE> dbControl = new DBModelControl<VS_STAGE>(VS_STAGE.class, "VS_STAGE", new DBModelField[]{
     new DBModelField("ID").setDbFieldName("\"ID\"").setAutoIncrement(),
@@ -49,84 +56,172 @@ public class VS_STAGE {
     new DBModelField("MIN_LAP_TIME").setDbFieldName("\"MIN_LAP_TIME\""),
     new DBModelField("IS_GROUP_CREATED").setDbFieldName("\"IS_GROUP_CREATED\""),
     new DBModelField("IS_SELECTED").setDbFieldName("\"IS_SELECTED\""),
-    new DBModelField("PARENT_STAGE").setDbFieldName("\"PARENT_STAGE\""),
-  });
-  
-  public static void resetSelectedTab(Connection conn, long raceID){
-    try{      
-      dbControl.execSql(conn, "UPDATE "+dbControl.getTableAlias()+" SET IS_SELECTED=0 WHERE RACE_ID=?",raceID);
-    }catch(Exception e){
-      MainForm._toLog(e);              
-    }    
+    new DBModelField("PARENT_STAGE").setDbFieldName("\"PARENT_STAGE\""),});
+
+  public static void resetSelectedTab(Connection conn, long raceID) {
+    try {
+      dbControl.execSql(conn, "UPDATE " + dbControl.getTableAlias() + " SET IS_SELECTED=0 WHERE RACE_ID=?", raceID);
+    } catch (Exception e) {
+      MainForm._toLog(e);
+    }
   }
-  
-  public void loadGroups(Connection conn, long race_id, long stage_id){
-    try{
+
+  public void loadGroups(Connection conn, long race_id, long stage_id) {
+    try {
       groups.clear();
-      int GROUP_INDEX=0;
-      Map<Long,Integer> indexes = new HashMap<>();
+      int GROUP_INDEX = 0;
+      Map<Long, Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
-      Map<String,VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANSPONDER", "VS_RACE_ID=?", race_id);
-      for (VS_STAGE_GROUPS usr : users){
+      Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANSPONDER", "VS_RACE_ID=?", race_id);
+      for (VS_STAGE_GROUPS usr : users) {
         long db_group_index = usr.GROUP_NUM;
-        VS_REGISTRATION reg_user = regs.get(""+usr.TRANSPONDER);
-        if (reg_user==null){
+        VS_REGISTRATION reg_user = regs.get("" + usr.TRANSPONDER);
+        if (reg_user == null) {
           reg_user = new VS_REGISTRATION();
           reg_user.PILOT_TYPE = 0;
-          reg_user.NUM = VS_REGISTRATION.maxNum(conn, race_id)+1;
+          reg_user.NUM = VS_REGISTRATION.maxNum(conn, race_id) + 1;
           reg_user.VS_RACE_ID = RACE_ID;
           reg_user.VS_TRANSPONDER = usr.TRANSPONDER;
           reg_user.VS_SOUND_EFFECT = 1;
           reg_user.IS_ACTIVE = 0;
           reg_user.VS_USER_NAME = usr.PILOT;
           VS_REGISTRATION.dbControl.insert(conn, reg_user);
-          regs.put(""+usr.TRANSPONDER, reg_user);
+          regs.put("" + usr.TRANSPONDER, reg_user);
         }
         usr.PILOT = reg_user.VS_USER_NAME;
         Integer phisical_group_index = indexes.get(db_group_index);
-        if (phisical_group_index==null){
+        if (phisical_group_index == null) {
           phisical_group_index = GROUP_INDEX;
-          indexes.put(db_group_index,phisical_group_index);
+          indexes.put(db_group_index, phisical_group_index);
           GROUP_INDEX++;
-        }                
+        }
         VS_STAGE_GROUP group = groups.get(phisical_group_index);
-        if (group==null){
-          group = new VS_STAGE_GROUP(this);   
+        if (group == null) {
+          group = new VS_STAGE_GROUP(this);
           groups.put(phisical_group_index, group);
           group.GROUP_INDEX = GROUP_INDEX;
-          group.GROUP_NUM = usr.GROUP_NUM;         
-          group.GROUP_INDEX = phisical_group_index;                    
-        }        
-        group.users.add(usr);        
-        usr.parent = group;        
+          group.GROUP_NUM = usr.GROUP_NUM;
+          group.GROUP_INDEX = phisical_group_index;
+        }
+        group.users.add(usr);
+        usr.parent = group;
       }
       checkConstarin();
-    }catch(Exception e){
-      MainForm._toLog(e);              
+    } catch (Exception e) {
+      MainForm._toLog(e);
     }
   }
-  
-  public void checkConstarin(){
+
+  public void checkConstarin() {
     TreeSet<String> userNames = new TreeSet<String>();
-    for (Integer groupID : groups.keySet()){
+    for (Integer groupID : groups.keySet()) {
       VS_STAGE_GROUP group = groups.get(groupID);
       group.useChannels = "";
-      for (VS_STAGE_GROUPS usr : group.users){
+      for (VS_STAGE_GROUPS usr : group.users) {
         usr.isError = 0;
-        if (group.useChannels.indexOf(usr.CHANNEL)>=0){
+        if (group.useChannels.indexOf(usr.CHANNEL) >= 0) {
           usr.isError = 1;
         }
-        if (userNames.contains(usr.PILOT)){
+        if (userNames.contains(usr.PILOT)) {
           usr.isError = 2;
-        }        
-        userNames.add(usr.PILOT);        
-        group.useChannels += usr.CHANNEL+";";        
+        }
+        userNames.add(usr.PILOT);
+        group.useChannels += usr.CHANNEL + ";";
       }
-    } 
+    }
   }
-  
-  public String toString(){
+
+  public String toString() {
     return CAPTION;
   }
-  
+
+  public VS_RACE_LAP getLap(int GROUP_NUM, int TRANSPONDER, int lapNumber) {
+    VS_RACE_LAP lap = null;
+    try {
+      lap = laps.get("" + GROUP_NUM).get("" + TRANSPONDER).get(lapNumber);
+    } catch (Exception e) {
+    }
+    return lap;
+  }
+
+  public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long START_TIME) {
+    boolean find_error = false;
+    try {
+      Map<String, VS_RACE_LAP> user_laps = laps.get("" + GROUP_NUM).get("" + TRANSPONDER);
+      HashSet<Integer> sorted = new HashSet();
+      try {
+        if (user_laps != null) {
+          for (String lapnum : user_laps.keySet()) {
+            sorted.add(Integer.parseInt(lapnum));
+          }
+        }
+      } catch (Exception ein) {
+        find_error = true;
+      } 
+      int lap_index = 1;
+      if (!find_error) {        
+        for (int lap_number : sorted) {
+          if (lap_number != lap_index) {
+            find_error = true;
+            break;
+          }
+          if (user_laps.get("" + lap_number).TIME_START != START_TIME) {
+            find_error = true;
+            break;
+          }
+          lap_index++;
+        }
+      }
+      if (find_error) {
+        // delete from DataBase
+        try {
+          if (user_laps != null) {
+            user_laps.clear();
+            VS_RACE_LAP.dbControl.delete(mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?", RACE_ID, ID, GROUP_NUM, TRANSPONDER);
+          }
+        } catch (Exception ein) {
+          mainForm._toLog(ein);
+        }
+      } else {
+        if (user_laps != null) {          
+          return user_laps.get("" + (lap_index-1));
+        }
+      }
+    } catch (Exception e) {
+      mainForm._toLog(e);
+    } finally {
+    }
+    return null;
+  }
+
+  public void addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {
+    try {
+      usr.IS_FINISHED = 0;
+      VS_RACE_LAP lap = new VS_RACE_LAP();
+      lap.BASE_ID = 0;
+      lap.GROUP_NUM = usr.GROUP_NUM;
+      lap.TRANSPONDER_ID = usr.TRANSPONDER;
+      lap.RACE_ID = mainForm.activeGroup.stage.RACE_ID;
+      lap.STAGE_ID = mainForm.activeGroup.stage.ID;
+      lap.TIME_START = mainForm.raceTime;
+      lap.TIME_FROM_START = time;
+      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime);
+      lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
+      lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
+      
+      if (lap.LAP==1){
+        usr.RACE_TIME = 0;
+        usr.BEST_LAP = 0;
+      }
+            
+      if (lap.TRANSPONDER_TIME>=MIN_LAP_TIME*1000) {
+        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
+        VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);        
+      }  
+      usr.IS_RECALULATED = 0;
+    } catch (Exception e) {
+      mainForm._toLog(e);
+    }
+  }
+
 }

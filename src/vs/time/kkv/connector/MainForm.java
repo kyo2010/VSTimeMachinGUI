@@ -10,6 +10,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
+import KKV.DBControlSqlLite.UserException;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -49,10 +50,12 @@ import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.SpeekUtil;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.models.DataBaseStructure;
 import vs.time.kkv.models.VS_BANDS;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.models.VS_STAGE_GROUP;
 
 /**
@@ -175,6 +178,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     try {
       con = DBModelTest.getConnectionForTest();
+      
+      // check for update
+      double db_version = VS_SETTING.getParam(con, "DataBaseVersion", 1.0);
+      double db_version_new = DataBaseStructure.executeAddons(db_version, con);
+      VS_SETTING.setParam(con, "DataBaseVersion", ""+db_version_new);
+      
+    } catch (UserException ue) {
+      error_log.writeFile(ue);
+      JOptionPane.showMessageDialog(this, ue.details,ue.error, JOptionPane.ERROR_MESSAGE);
     } catch (Exception e) {
       error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);

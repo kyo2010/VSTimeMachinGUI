@@ -19,6 +19,8 @@ public class VS_RACE_LAP {
   public int TRANSPONDER_ID;   //  NOT_DETECTED
   public int NUMBER_PACKET;   //  NOT_DETECTED
   public long TRANSPONDER_TIME;   //  NOT_DETECTED
+  public long TIME_START = 0;
+  public long TIME_FROM_START = 0;
   public int LAP;   //  NOT_DETECTED
   
   /** Constructor */ 
@@ -34,6 +36,8 @@ public class VS_RACE_LAP {
     new DBModelField("TRANSPONDER_ID").setDbFieldName("\"TRANSPONDER_ID\""),
     new DBModelField("NUMBER_PACKET").setDbFieldName("\"NUMBER_PACKET\""),
     new DBModelField("TRANSPONDER_TIME").setDbFieldName("\"TRANSPONDER_TIME\""),
+    new DBModelField("TIME_START").setDbFieldName("\"TIME_START\""),
+    new DBModelField("TIME_FROM_START").setDbFieldName("\"TIME_FROM_START\""),
     new DBModelField("LAP").setDbFieldName("\"LAP\""),
   });
  
@@ -50,8 +54,13 @@ public class VS_RACE_LAP {
       lap.NUMBER_PACKET = 0;
       lap.TRANSPONDER_ID = TRANSPONDER_ID;
       lap.TRANSPONDER_TIME = time;
-      lap.LAP = LAP;      
+      lap.LAP = LAP;                        
       VS_RACE_LAP.dbControl.insert(con,lap);
+      for (VS_STAGE_GROUPS usr : group.users){
+        if (usr.TRANSPONDER==TRANSPONDER_ID){
+          usr.IS_RECALULATED = 0;   
+        }
+      }      
       return lap;
     }catch(Exception e){
       MainForm._toLog(e);         

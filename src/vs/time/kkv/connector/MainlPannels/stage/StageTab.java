@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.MainlPannels.stage;
 
 import KKV.DBControlSqlLite.UserException;
+import KKV.DBControlSqlLite.Utils.JDEDate;
 import KKV.DBControlSqlLite.Utils.Tools;
 import java.awt.BorderLayout;
 import java.awt.datatransfer.DataFlavor;
@@ -56,6 +57,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
@@ -63,7 +65,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
 import vs.time.kkv.models.VS_RACE_LAP;
+import vs.time.kkv.models.VS_SETTING;
 
 /**
  *
@@ -150,12 +154,21 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
     popupMenuJTree = new JPopupMenu();
+    JMenuItem miExport = new JMenuItem("Export");
+    popupMenuJTree.add(miExport);
+    
     JMenuItem miAdd = new JMenuItem("Add");
     popupMenuJTree.add(miAdd);
     JMenuItem miEdit = new JMenuItem("Edit");
     popupMenuJTree.add(miEdit);
     JMenuItem miDelete = new JMenuItem("Delete");
     popupMenuJTree.add(miDelete);
+    miExport.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        treeToPDF();
+      }
+    });
     miEdit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -224,6 +237,10 @@ public class StageTab extends javax.swing.JPanel {
             }
 
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
+              for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
+                user.IS_FINISHED = 1;
+                user.recalculateLapTimes(mainForm.con, stage, true);
+              }
               mainForm.activeGroup = null;
               raceTimer.stop();
               //timerCaption.setVisible(false);              
@@ -369,70 +386,132 @@ public class StageTab extends javax.swing.JPanel {
     }
     expandAllJTree();
   }
-
-  private void print() {
-    Document document = new Document(PageSize.A4.rotate());
-    try {
-      PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("jTable.pdf"));
-
-      document.open();
-      PdfContentByte cb = writer.getDirectContent();
-
-      cb.saveState();
-      Graphics2D g2 = cb.createGraphicsShapes(500, 500);
-
-      Shape oldClip = g2.getClip();
-      g2.clipRect(0, 0, 500, 500);
-
-      jTable.print(g2);
-      g2.setClip(oldClip);
-
-      g2.dispose();
-      cb.restoreState();
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-    document.close();
+  
+  public BaseFont getRussianFont() throws DocumentException, IOException{
+    //return BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H",BaseFont.EMBEDDED);
+    String path = (new File("")).getAbsolutePath();
+    String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
+    BaseFont bfComic = BaseFont.createFont( path +"\\font.ttf", encode, BaseFont.EMBEDDED);
+    return bfComic;
   }
 
-  public void print2() {
+  public void treeToPDF(){
     try {
-      //BaseFont bf = BaseFont.createFont("C:\\WINXP\\Fonts\\ARIAL.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED); //подключаем файл шрифта, который поддерживает кириллицу
-      BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-      //SystemFont font=new SystemFont(new Font("Arial",Font.BOLD,12),new Color(255,255,255));
-
+      File dir = new File("reports");
+      dir.mkdirs();
+      JDEDate jd = new JDEDate();
+      String fileName = dir.getAbsolutePath()+"\\"+jd.getDateAsYYYYMMDD_andTime("-", "_")+".pdf";
+      
+      BaseFont bf = getRussianFont();
       Font font = new Font(bf);
 
       try {
         int rowCount = jTable.getRowCount();
         //Document document = new Document();
-        Document document = new Document(PageSize.A4.rotate());
-        PdfWriter.getInstance(document, new FileOutputStream("C:/data.pdf"));
+        Document document = new Document(/*PageSize.A4.rotate()*/);
+        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+        document.open();
+        
+        Font font1 = new Font(bf, 16);
+        Paragraph caption = new Paragraph(stage.CAPTION, font1);
+        caption.getFont().setStyle(Font.BOLD);
+        document.add(caption);
+
+        //text1 = "Test";
+        document.add(new Paragraph(" ", font));
+        
+        for (Integer groupNum : stage.groups.keySet()){
+          VS_STAGE_GROUP group = stage.groups.get(groupNum);
+          Paragraph grpup_pr = new Paragraph("Group"+group.GROUP_NUM, font);
+          grpup_pr.getFont().setStyle(Font.BOLD);
+          document.add(grpup_pr);
+          for (VS_STAGE_GROUPS usr : group.users){
+            Paragraph user_pr = new Paragraph(usr.PILOT + "\tcahnnel: "+usr.CHANNEL, font);
+            user_pr.getFont().setStyle(Font.NORMAL);
+            document.add(user_pr);
+          }
+          document.add(new Paragraph(" ", font));
+        }
+
+        document.close();
+
+        try //try statement 
+        {
+          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName +"\"");   //open the file chart.pdf 
+
+        } catch (Exception e) //catch any exceptions here 
+        {
+          System.out.println("Error" + e);  //print the error 
+        }
+
+      } catch (Exception e) {
+      }
+    } catch (Exception e) {
+    }
+  }
+
+  public void tableToPDF() {
+    try {
+      File dir = new File("reports");
+      dir.mkdirs();
+      JDEDate jd = new JDEDate();
+      String fileName = dir.getAbsolutePath()+"\\"+jd.getDateAsYYYYMMDD_andTime("-", "_")+".pdf";
+      
+      BaseFont bf = getRussianFont();
+      Font font = new Font(bf); 
+      Font fontBold = new Font(bf); 
+      fontBold.setStyle(Font.BOLD);
+      Font fontCption = new Font(bf,16);      
+      fontCption.setStyle(Font.BOLD);
+ 
+      try {
+        int rowCount = jTable.getRowCount();
+        //Document document = new Document();
+        Document document = new Document(/*PageSize.A4.rotate()*/);
+        PdfWriter.getInstance(document, new FileOutputStream(fileName));
         document.open();
         int colCount = jTable.getColumnCount();
-        PdfPTable tab = new PdfPTable(jTable.getColumnCount());
+        PdfPTable tab = new PdfPTable(jTable.getColumnCount());        
 
-        float[] widths = new float[colCount];
+        int[] widths = new int[colCount];
+        int max_width = 0;
         for (int i = 0; i < jTable.getColumnCount(); i++) {
-          tab.addCell(jTable.getColumnName(i));
+          Paragraph paragraph=new Paragraph(jTable.getColumnName(i),fontBold);                     
+          tab.addCell(paragraph);         
           widths[i] = stageTableAdapter.getMinWidth(i);
+          max_width += widths[i];
         }
         tab.setWidths(widths);
+        tab.setWidthPercentage(100);
+       
         for (int row = 0; row < rowCount; row++) {
           for (int col = 0; col < colCount; col++) {
             Object obj = jTable.getModel().getValueAt(row, col);
-            tab.addCell(obj.toString());
+            Paragraph paragraph=new Paragraph(obj.toString(),font); 
+            paragraph.getFont().setStyle(Font.NORMAL);
+            tab.addCell(paragraph);
           }
         }
-        Font font1 = new Font(bf, 12);
-        String text1 = "Тест";
-        document.add(new Paragraph(text1, font));
+        
+        Paragraph caption = new Paragraph("Этап : " + stage.CAPTION, fontCption);        
+        document.add(caption);
 
-        text1 = "Test";
-        document.add(new Paragraph(text1, font));
+        //text1 = "Test";
+        document.add(new Paragraph(" ", font));
 
+        tab.setHorizontalAlignment(PdfPTable.ALIGN_LEFT);
         document.add(tab);
         document.close();
+
+        try //try statement 
+        {
+          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName +"\"");   //open the file chart.pdf 
+
+        } catch (Exception e) //catch any exceptions here 
+        {
+          System.out.println("Error" + e);  //print the error 
+        }
+
       } catch (Exception e) {
       }
     } catch (Exception e) {
@@ -449,14 +528,14 @@ public class StageTab extends javax.swing.JPanel {
         }
 
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
-        
+
         if (parent_stage != null) {
           List<VS_STAGE_GROUPS> groups = null;//VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
           for (VS_STAGE_GROUPS usr : groups) {
             usr.IS_FINISHED = 1;
-            usr.recalculateLapTimes(mainForm.con, stage, laps, true);
+            usr.recalculateLapTimes(mainForm.con, stage, true);
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
@@ -467,15 +546,17 @@ public class StageTab extends javax.swing.JPanel {
               Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
               for (VS_STAGE_GROUPS usr : groups) {
-                if (user_names.contains(usr.PILOT)) usr.isError = 2;
+                if (user_names.contains(usr.PILOT)) {
+                  usr.isError = 2;
+                }
                 user_names.add(usr.PILOT);
-              }                 
+              }
               List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
               for (VS_STAGE_GROUPS usr : groups) {
-                VS_REGISTRATION reg = users.get(""+usr.TRANSPONDER);
+                VS_REGISTRATION reg = users.get("" + usr.TRANSPONDER);
                 if (reg != null) {
                   usr.PILOT = reg.VS_USER_NAME;
-                  if (reg.IS_ACTIVE == 0 || usr.isError==2) {
+                  if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
                     inactives.add(usr);
                   }
                 }
@@ -487,7 +568,9 @@ public class StageTab extends javax.swing.JPanel {
               int count_max_in_groups = stage.COUNT_PILOTS_IN_GROUP;
               int count_man_in_group = 1;
               int count_groups = count_man / count_max_in_groups;
-              if (count_groups*count_max_in_groups<count_man) count_groups++;
+              if (count_groups * count_max_in_groups < count_man) {
+                count_groups++;
+              }
               int current_group = 1;
               String[] channels = stage.CHANNELS.split(";");
               HashMap<Integer, HashMap<String, Integer>> usingChannels = new HashMap<Integer, HashMap<String, Integer>>();
@@ -499,7 +582,7 @@ public class StageTab extends javax.swing.JPanel {
                 }
                 usr.GID = -1;
                 //usr.CHANNEL = channels[count_man_in_group - 1];
-                usr.STAGE_ID = stage.ID;                
+                usr.STAGE_ID = stage.ID;
                 usr.IS_FINISHED = 0;
                 usr.IS_RECALULATED = 0;
                 usr.NUM_IN_GROUP = count_man_in_group;
@@ -521,16 +604,16 @@ public class StageTab extends javax.swing.JPanel {
               }
               HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
               for (VS_STAGE_GROUPS usr : groups) {
-                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int)usr.GROUP_NUM);
+                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int) usr.GROUP_NUM);
                 if (checkChannels == null) {
                   checkChannels = new HashMap<String, Integer>();
                   checkChannelsAll.put((int) usr.GROUP_NUM, checkChannels);
                 }
-                HashMap<String, Integer> groupChannels = usingChannels.get((int)usr.GROUP_NUM);
+                HashMap<String, Integer> groupChannels = usingChannels.get((int) usr.GROUP_NUM);
                 Integer countUse = groupChannels.get(usr.CHANNEL);
                 if (countUse > 1) {
                   if (checkChannels.get(usr.CHANNEL) == null) {
-                    checkChannels.put(usr.CHANNEL,1);
+                    checkChannels.put(usr.CHANNEL, 1);
                   } else {
                     for (String channel : channels) {
                       if (groupChannels.get(channel) == null) {
@@ -547,7 +630,7 @@ public class StageTab extends javax.swing.JPanel {
 
             }
           } else {
-            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);          
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
             // usual copy
             for (VS_STAGE_GROUPS grp : groups) {
               grp.GID = -1;
@@ -617,6 +700,18 @@ public class StageTab extends javax.swing.JPanel {
     jTable = new javax.swing.JTable();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTree = new ExpandedJTree();
+
+    addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        formKeyPressed(evt);
+      }
+    });
+
+    topPanel.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        topPanelKeyPressed(evt);
+      }
+    });
 
     butRemoveSatge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/remove.png"))); // NOI18N
     butRemoveSatge.setText("Delete Stage");
@@ -712,12 +807,22 @@ public class StageTab extends javax.swing.JPanel {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
+    jTable.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        jTableKeyPressed(evt);
+      }
+    });
     jScrollPane1.setViewportView(jTable);
 
     jSplitPane2.setRightComponent(jScrollPane1);
 
     jTree.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
     jTree.setDragEnabled(true);
+    jTree.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        jTreeKeyPressed(evt);
+      }
+    });
     jScrollPane2.setViewportView(jTree);
 
     jSplitPane2.setLeftComponent(jScrollPane2);
@@ -765,7 +870,7 @@ public class StageTab extends javax.swing.JPanel {
 
   private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
     // TODO add your handling code here:
-    print2();
+    tableToPDF();
   }//GEN-LAST:event_pdfButtonActionPerformed
 
   private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
@@ -791,10 +896,47 @@ public class StageTab extends javax.swing.JPanel {
     refreshData(true);
   }//GEN-LAST:event_refreshDataActionPerformed
 
+  private void keyPressed(java.awt.event.KeyEvent evt) {
+    if (raceTimer.isRunning()) {
+      //JOptionPane.showMessageDialog(mainForm, "key:"+evt.getKeyChar(), "Information", JOptionPane.INFORMATION_MESSAGE);              
+      if (evt.getKeyChar() >= '1' && evt.getKeyChar() <= '8') {
+        try {
+          int user_index = evt.getKeyChar() - '0' - 1;
+          long time = Calendar.getInstance().getTimeInMillis();
+          VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
+          stage.addLapFromKeyPress(mainForm, usr, time);
+          jTable.updateUI();
+        } catch (Exception e) {
+        }
+      }
+    }
+  }
+
   private void bNewStageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewStageActionPerformed
     // TODO add your handling code here:
     StageNewForm.init(mainForm, null).setVisible(true);
   }//GEN-LAST:event_bNewStageActionPerformed
+
+  private void jTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableKeyPressed
+    // TODO add your handling code here:
+    keyPressed(evt);
+
+  }//GEN-LAST:event_jTableKeyPressed
+
+  private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+    keyPressed(evt);
+    // TODO add your handling code here:
+  }//GEN-LAST:event_formKeyPressed
+
+  private void jTreeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTreeKeyPressed
+    // TODO add your handling code here:
+    keyPressed(evt);
+  }//GEN-LAST:event_jTreeKeyPressed
+
+  private void topPanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_topPanelKeyPressed
+    // TODO add your handling code here:
+    keyPressed(evt);
+  }//GEN-LAST:event_topPanelKeyPressed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

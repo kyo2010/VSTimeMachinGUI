@@ -7,13 +7,12 @@ import KKV.DBControlSqlLite.*;
 import java.sql.Time;
 
 public class VS_RACE_CYCLE {
-  
+ /* 
   public int CYCLE_ID;   //  NOT_DETECTED
   public int CYCLE_NUM;   //  NOT_DETECTED
   public int RACE_ID;   //  NOT_DETECTED
   public String CYCLE_CAPTION;   //  NOT_DETECTED
   
-  /** Constructor */ 
   public VS_RACE_CYCLE() {
   };
   
@@ -22,6 +21,6 @@ public class VS_RACE_CYCLE {
     new DBModelField("CYCLE_NUM").setDbFieldName("\"CYCLE_NUM\""),
     new DBModelField("RACE_ID").setDbFieldName("\"RACE_ID\""),
     new DBModelField("CYCLE_CAPTION").setDbFieldName("\"CYCLE_CAPTION\""),
-  });
+  });*/
   
 }

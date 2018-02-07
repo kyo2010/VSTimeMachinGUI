@@ -62,4 +62,16 @@ public class VS_SETTING {
     return paramDefault;
   }
   
+  public static double getParam(Connection conn, String paramName, double paramDefault) {
+    try{
+      VS_SETTING v1 = VS_SETTING.dbControl.getItem(conn, "PARAM_NAME=?", paramName);
+      if (v1!=null){
+        return Double.parseDouble(v1.PARAM_VALUE);
+      }  
+    }catch(Exception e){
+      e.printStackTrace();
+    } 
+    return paramDefault;
+  }
+  
 }
