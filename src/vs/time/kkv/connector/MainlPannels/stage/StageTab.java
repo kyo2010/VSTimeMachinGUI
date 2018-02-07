@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
+import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_SETTING;
 
@@ -245,24 +246,34 @@ public class StageTab extends javax.swing.JPanel {
               raceTimer.stop();
               //timerCaption.setVisible(false);              
             } else {
+              final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {
                 mainForm.activeGroup = td.group;
                 timerCaption.setText(getTimeIntervel(0));
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
-                mainForm.speaker.speak("One!");
-                InfoForm.init(mainForm, "1").setVisible(true);
+                if (useSpeach) mainForm.speaker.speak("Three!");
+                InfoForm.init(mainForm, "3").setVisible(true);
                 Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                   public void actionPerformed(ActionEvent e) {
-                    mainForm.speaker.speak("Two!");
+                    if (useSpeach) mainForm.speaker.speak("Two!");
                     InfoForm.init(mainForm, "2").setVisible(true);
                     Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
-                        mainForm.speaker.speak("Three!");
-                        InfoForm.init(mainForm, "3").setVisible(true);
+                        if (useSpeach) mainForm.speaker.speak("One!");
+                        InfoForm.init(mainForm, "1").setVisible(true);
                         Timer t3 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                           public void actionPerformed(ActionEvent e) {
-                            mainForm.speaker.speak("Go!");
+                            if (useSpeach) mainForm.speaker.speak("Go!");
+                            try{
+                              Beep.beep();                             
+                            }catch(Exception ein){
+                              mainForm._toLog(ein);
+                              JOptionPane.showMessageDialog(mainForm, "Beep generator is error", "Error", JOptionPane.INFORMATION_MESSAGE);
+                              InfoForm.init(mainForm, "").setVisible(false);
+                              infoWindowRunning = false;
+                              return;
+                            }  
                             InfoForm.init(mainForm, "Go!").setVisible(true);
                             mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
                             raceTimer.start();
@@ -393,7 +404,7 @@ public class StageTab extends javax.swing.JPanel {
     String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
     BaseFont bfComic = BaseFont.createFont( path +"\\font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
-  }
+  } 
 
   public void treeToPDF(){
     try {
