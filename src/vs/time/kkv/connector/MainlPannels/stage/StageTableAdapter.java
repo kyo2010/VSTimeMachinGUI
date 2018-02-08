@@ -302,6 +302,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
       table.setRowHeight(row, 30);
+      
+      if (td.pilot.parent==tab.mainForm.activeGroup){
+        label.setBackground(Color.GREEN);
+        label.setForeground(Color.BLACK);
+        label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
+      }
+      
     }
     return label;
   }

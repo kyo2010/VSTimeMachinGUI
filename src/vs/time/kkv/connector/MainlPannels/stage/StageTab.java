@@ -82,7 +82,7 @@ public class StageTab extends javax.swing.JPanel {
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
   public StageTableAdapter stageTableAdapter = null;
-  Timer raceTimer = new Timer(10, new ActionListener() {
+  Timer raceTimer = new Timer(52, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       long t = Calendar.getInstance().getTimeInMillis();
@@ -244,40 +244,49 @@ public class StageTab extends javax.swing.JPanel {
               }
               mainForm.activeGroup = null;
               raceTimer.stop();
+              jTree.updateUI();
               //timerCaption.setVisible(false);              
             } else {
+              
+              if (td.group.users!=null && td.group.users.size()>0 && td.group.users.get(0).IS_FINISHED==1){
+                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to reflight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
+                 if (res == JOptionPane.YES_OPTION) {
+                 }else{
+                   return;
+                 }                
+              }
+              
               final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {
                 mainForm.activeGroup = td.group;
                 timerCaption.setText(getTimeIntervel(0));
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
-                if (useSpeach) mainForm.speaker.speak("Three!");
+                InfoForm.init(mainForm, "!!!").setVisible(true);
+                mainForm.beep.palyAndWait("attention");                
                 InfoForm.init(mainForm, "3").setVisible(true);
+                //if (useSpeach) mainForm.speaker.speak("Three!");                
+                mainForm.beep.paly("three");
                 Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
-                  public void actionPerformed(ActionEvent e) {
-                    if (useSpeach) mainForm.speaker.speak("Two!");
+                  public void actionPerformed(ActionEvent e) {                    
                     InfoForm.init(mainForm, "2").setVisible(true);
+                    //if (useSpeach) mainForm.speaker.speak("Two!");
+                    mainForm.beep.paly("two");
                     Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
-                        if (useSpeach) mainForm.speaker.speak("One!");
                         InfoForm.init(mainForm, "1").setVisible(true);
-                        Timer t3 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                        //if (useSpeach) mainForm.speaker.speak("One!");                        
+                        mainForm.beep.paly("one");
+                        int rnd = (int) (Math.random()*3000);
+                        Timer t3 = new Timer(1000+rnd, new ActionListener() {      // Timer 4 seconds
                           public void actionPerformed(ActionEvent e) {
-                            if (useSpeach) mainForm.speaker.speak("Go!");
-                            try{
-                              Beep.beep();                             
-                            }catch(Exception ein){
-                              mainForm._toLog(ein);
-                              JOptionPane.showMessageDialog(mainForm, "Beep generator is error", "Error", JOptionPane.INFORMATION_MESSAGE);
-                              InfoForm.init(mainForm, "").setVisible(false);
-                              infoWindowRunning = false;
-                              return;
-                            }  
-                            InfoForm.init(mainForm, "Go!").setVisible(true);
-                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-                            raceTimer.start();
-                            Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                            InfoForm.init(mainForm, "Go!").setVisible(true);                            
+                            mainForm.beep.paly("beep");                             
+                            //if (useSpeach) mainForm.speaker.speak("Go!");
+                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();                            
+                            raceTimer.start();                            
+                            jTree.updateUI();
+                            Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
                               public void actionPerformed(ActionEvent e) {
                                 InfoForm.init(mainForm, "").setVisible(false);
                                 infoWindowRunning = false;
@@ -894,7 +903,7 @@ public class StageTab extends javax.swing.JPanel {
     jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
     jTree.setDragEnabled(true);
     jTree.setDropMode(DropMode.USE_SELECTION);
-    StageTreeCellRender render = new StageTreeCellRender();
+    StageTreeCellRender render = new StageTreeCellRender(this);
     jTree.setCellRenderer(render);
     expandAllJTree();
 

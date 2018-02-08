@@ -25,6 +25,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.DBControlSqlLite.Utils.TempFileWrite;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -48,6 +49,7 @@ import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
+import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.SpeekUtil;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.DataBaseStructure;
@@ -104,6 +106,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public TempFileWrite error_log = new TempFileWrite("error.log");
   public Connection con = null;
   public SpeekUtil speaker = new SpeekUtil();
+  public Beep beep = new Beep();
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public RegistrationTab regForm = null;
@@ -129,12 +132,32 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       try {
         List<VS_STAGE> stages = VS_STAGE.dbControl.getList(con, "RACE_ID=? order by STAGE_NUM", race.RACE_ID);
+        int index = 1;
+        boolean isFound = false;
+        StageTab stage1 = null;
         for (VS_STAGE stage : stages) {
           StageTab p = new StageTab(this, stage);
           tabbedPanel.add(stage.CAPTION, p);
+          
+          //tabbedPanel.setForegroundAt(index, Color.BLUE);
+          //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
+          
+          if (stage.STAGE_TYPE==MainForm.STAGE_QUALIFICATION){
+             tabbedPanel.setForegroundAt(index, Color.BLUE);
+          }
+          if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
+             tabbedPanel.setForegroundAt(index, Color.RED);
+          }
+          
           if (stage.IS_SELECTED == 1) {
             tabbedPanel.setSelectedComponent(p);
+            isFound = true;
           }
+          stage1 = p;
+          index++;
+        }
+        if (!isFound && stage1!=null){
+           tabbedPanel.setSelectedComponent(stage1);
         }
         tabListenerEnabled = true;
       } catch (Exception e) {
@@ -216,6 +239,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
     });
+    
+    //beep.palyAndWait("attention");
+    //beep.paly("three");
+    //beep.paly("two");
+    //beep.paly("one");
+    //beep.paly("beep");
+    
   }
 
   public void setStateMenu(boolean isConnected) {
