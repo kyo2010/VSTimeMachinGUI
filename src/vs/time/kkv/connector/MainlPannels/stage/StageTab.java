@@ -248,7 +248,7 @@ public class StageTab extends javax.swing.JPanel {
               //timerCaption.setVisible(false);              
             } else {
               
-              if (td.group.users!=null && td.group.users.size()>0 && td.group.users.get(0).IS_FINISHED==1){
+              if (td.group!=null && td.group.users!=null && td.group.users.size()>0 && td.group.users.get(0).IS_FINISHED==1){
                  int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to reflight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
                  if (res == JOptionPane.YES_OPTION) {
                  }else{
