@@ -942,7 +942,13 @@ public class StageTab extends javax.swing.JPanel {
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
             VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, mainForm.raceTime, usr);
             if (lap!=null){
-              try{
+              if (time-lap.TIME_FROM_START>5000){
+                int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete last time" + usr.PILOT + " ?", "Delete lap time?", JOptionPane.YES_NO_OPTION);
+                if (res != JOptionPane.YES_OPTION) {
+                  return;
+                }
+              }
+              try{                
                 stage.delLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, lap.LAP,  lap);
                 usr.IS_RECALULATED = 0;
                 usr.BEST_LAP = 0;
