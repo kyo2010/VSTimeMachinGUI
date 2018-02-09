@@ -194,7 +194,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
           .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton1)
           .addComponent(chEnabledSound)))
@@ -387,7 +387,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JButton butPilots;
   private javax.swing.JButton butUsedLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
-  private javax.swing.JTextField edTransponder;
+  public javax.swing.JTextField edTransponder;
   private javax.swing.JTextField edUser;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;

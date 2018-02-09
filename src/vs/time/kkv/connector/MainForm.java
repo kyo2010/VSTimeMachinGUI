@@ -11,6 +11,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
 import KKV.DBControlSqlLite.UserException;
+import KKV.DBControlSqlLite.Utils.JDEDate;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -34,6 +35,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Connection;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -59,6 +61,8 @@ import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.models.VS_STAGE_GROUP;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
+import vs.time.kkv.models.VS_USERS;
 
 /**
  *
@@ -69,9 +73,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
   public static final int STAGE_RACE = 2;
-  
+
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};  
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -96,14 +100,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       _mainForm.log.writeFile(e);
     }
   }
-  
+
   public void toLog(Exception e) {
-    log.writeFile(e);    
+    log.writeFile(e);
   }
 
   public VSTimeConnector vsTimeConnector = null;
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
   public TempFileWrite error_log = new TempFileWrite("error.log");
+  public TempFileWrite lap_log = new TempFileWrite("lap.log");
+  public TempFileWrite race_log = new TempFileWrite("race.csv");
   public Connection con = null;
   public SpeekUtil speaker = new SpeekUtil();
   public Beep beep = new Beep();
@@ -114,12 +120,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int lastTranponderID = -1;
 
   public void setActiveRace(VS_RACE race) {
-    
-    if (activeGroup!=null){
-      JOptionPane.showMessageDialog(this, "Please stop race. Group"+activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);                    
+
+    if (activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop race. Group" + activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
       return;
     }
-    
+
     activeRace = race;
     // Open Tabs
     tabListenerEnabled = false;
@@ -138,17 +144,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         for (VS_STAGE stage : stages) {
           StageTab p = new StageTab(this, stage);
           tabbedPanel.add(stage.CAPTION, p);
-          
+
           //tabbedPanel.setForegroundAt(index, Color.BLUE);
           //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
-          
-          if (stage.STAGE_TYPE==MainForm.STAGE_QUALIFICATION){
-             tabbedPanel.setForegroundAt(index, Color.BLUE);
+          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
+            tabbedPanel.setForegroundAt(index, Color.BLUE);
           }
-          if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
-             tabbedPanel.setForegroundAt(index, Color.RED);
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            tabbedPanel.setForegroundAt(index, Color.RED);
           }
-          
+
           if (stage.IS_SELECTED == 1) {
             tabbedPanel.setSelectedComponent(p);
             isFound = true;
@@ -156,8 +161,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           stage1 = p;
           index++;
         }
-        if (!isFound && stage1!=null){
-           tabbedPanel.setSelectedComponent(stage1);
+        if (!isFound && stage1 != null) {
+          tabbedPanel.setSelectedComponent(stage1);
         }
         tabListenerEnabled = true;
       } catch (Exception e) {
@@ -190,8 +195,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           MainForm.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           //setVisible(false);
           //e.getWindow().dispose();          
-        }else{
-          
+        } else {
+
         }
       }
     });
@@ -201,15 +206,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     try {
       con = DBModelTest.getConnectionForTest();
-      
+
       // check for update
       double db_version = VS_SETTING.getParam(con, "DataBaseVersion", 1.0);
       double db_version_new = DataBaseStructure.executeAddons(db_version, con);
-      VS_SETTING.setParam(con, "DataBaseVersion", ""+db_version_new);
-      
+      VS_SETTING.setParam(con, "DataBaseVersion", "" + db_version_new);
+
     } catch (UserException ue) {
       error_log.writeFile(ue);
-      JOptionPane.showMessageDialog(this, ue.details,ue.error, JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(this, ue.details, ue.error, JOptionPane.ERROR_MESSAGE);
     } catch (Exception e) {
       error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
@@ -239,13 +244,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
     });
-    
+
     //beep.palyAndWait("attention");
     //beep.paly("three");
     //beep.paly("two");
     //beep.paly("one");
     //beep.paly("beep");
-    
   }
 
   public void setStateMenu(boolean isConnected) {
@@ -647,10 +651,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JTabbedPane tabbedPanel;
   // End of variables declaration//GEN-END:variables
 
-  public JTabbedPane getTabbedPanels(){
+  public JTabbedPane getTabbedPanels() {
     return tabbedPanel;
-  } 
-  
+  }
+
   public void setFormOnCenter(Window form) {
     Point p = this.getLocationOnScreen();
     form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
@@ -662,13 +666,94 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
     }
-    jLabel3.setText(data+"   "+vsTimeConnector.last_error);
+    jLabel3.setText(data + "   " + vsTimeConnector.last_error);
     if (!isPingCommand) {
-      System.out.print(data);
+      System.out.println(data);
       log.writeFile(data, true);
     }
-    if (lap!=null){
+    if (lap != null) {
       this.lastTranponderID = lap.transponderID;
+      if (transponderListener!=null) transponderListener.newTransponder(lap.transponderID);
+      long time = Calendar.getInstance().getTimeInMillis();
+      lap_log.writeFile("LAP;"+new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":")+";"+lap.transponderID+";"+lap.baseStationID+";"+lap.numberOfPacket+";"+lap.transpnderCounter);
+      if (Math.abs(time-lap.time)<1000) time = lap.time;
+      this.lastTranponderID = lap.transponderID;
+      VS_STAGE_GROUP activeGroup = this.activeGroup;
+      if (activeGroup != null) {
+        VS_STAGE_GROUPS user = null;
+        for (VS_STAGE_GROUPS usr : activeGroup.users) {
+          if (usr.TRANSPONDER == lap.transponderID) {
+            user = usr;
+            break;
+          }
+        }
+        if (user == null) {
+          try {
+            VS_REGISTRATION usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
+                    activeGroup.stage.RACE_ID, lap.transponderID);
+            if (usr_reg == null) {
+              VS_USERS global_user = VS_USERS.dbControl.getItem(con, "VSID=?", lap.transponderID);
+              if (global_user==null){
+                global_user = new VS_USERS();
+                global_user.VS_SOUND_EFFECT = 1;
+                global_user.VSID = lap.transponderID;
+                global_user.setName("USER_"+lap.transponderID);
+                VS_USERS.dbControl.insert(con, global_user);
+              }
+              usr_reg = new VS_REGISTRATION();
+              usr_reg.VS_TRANSPONDER = lap.transponderID;
+              usr_reg.VS_USER_NAME = global_user.VS_NAME;
+              usr_reg.VS_SOUND_EFFECT = global_user.VS_SOUND_EFFECT;
+              usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
+              usr_reg.IS_ACTIVE = 0;
+              usr_reg.PILOT_TYPE=0;
+              usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID)+1;
+              VS_REGISTRATION.dbControl.insert(con, usr_reg);              
+            }
+            user = new VS_STAGE_GROUPS();
+            user.GROUP_NUM = activeGroup.GROUP_NUM;
+            user.STAGE_ID = activeGroup.stage.ID;
+            user.PILOT = usr_reg.VS_USER_NAME;
+            user.parent = activeGroup;
+            user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM)+1;
+            user.isError = 2;
+            user.TRANSPONDER = lap.transponderID;
+            user.CHANNEL = "A1";
+            VS_STAGE_GROUPS.dbControl.insert(con, user);      
+            activeGroup.users.add(user);
+            if (activeGroup.stageTab!=null) {
+              try{
+                activeGroup.stageTab.pleasuUpdateTree = true;       
+              }catch(Exception ein){}  
+            }
+            if (activeGroup.stageTab!=null) {
+              try{
+                activeGroup.stageTab.stageTableAdapter.loadData();
+                activeGroup.stageTab.pleasuUpdateTable = true;
+              }catch(Exception ein){}  
+            }
+          } catch (Exception e) {
+            _toLog(e);
+          }
+        }
+        if (user != null) {
+          activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
+          try{
+            if (activeGroup.stageTab!=null) activeGroup.stageTab.pleasuUpdateTable = true;
+          }catch(Exception ein){}  
+        }
+      }
     }
   }
+  
+  public interface LastTransponderListener{
+    public void newTransponder(long transponder);
+  }
+  
+  LastTransponderListener transponderListener = null;
+
+  public void setTransponderListener(LastTransponderListener transponderListener) {
+    this.transponderListener = transponderListener;
+  }
+  
 }

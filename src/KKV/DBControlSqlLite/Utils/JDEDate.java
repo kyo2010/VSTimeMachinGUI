@@ -84,6 +84,11 @@ public class JDEDate {
         setJDEDate(value);
     }
     
+     public JDEDate(long value) {
+       //setNowDate();
+       setDate(value);
+    }
+    
     public JDEDate(JDEDate value) {
       cal.setTimeInMillis(value.getTimeInMillis());
     }

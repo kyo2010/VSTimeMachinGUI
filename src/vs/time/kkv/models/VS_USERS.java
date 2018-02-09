@@ -27,4 +27,9 @@ public class VS_USERS {
     new DBModelField("VS_NAME_UPPER").setDbFieldName("VS_NAME_UPPER"),
   });
   
+  public void setName(String name){
+    VS_NAME = name;
+    VS_NAME_UPPER = VS_NAME.toUpperCase();
+  }
+  
 }

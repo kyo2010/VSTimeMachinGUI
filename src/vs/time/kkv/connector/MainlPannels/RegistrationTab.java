@@ -15,7 +15,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainForm.LastTransponderListener;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
@@ -25,13 +28,12 @@ import vs.time.kkv.models.VS_REGISTRATION;
  *
  * @author kyo
  */
-public class RegistrationTab extends javax.swing.JPanel {
+public class RegistrationTab extends javax.swing.JPanel implements LastTransponderListener {
 
   MainForm mainForm;
   RegistrationModelTable regModelTable = null;
   JPopupMenu popup = null;
-  
-  
+
   /**
    * Creates new form RegistrationForm
    */
@@ -44,7 +46,7 @@ public class RegistrationTab extends javax.swing.JPanel {
     jtPilotRegistration.getColumnModel().getColumn(4).setPreferredWidth(800);
     jtPilotRegistration.setRowHeight(28);
     jtPilotRegistration.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));
-    
+
     popup = new JPopupMenu();
     JMenuItem miEdit = new JMenuItem("Edit");
     popup.add(miEdit);
@@ -57,9 +59,9 @@ public class RegistrationTab extends javax.swing.JPanel {
       public void actionPerformed(ActionEvent e) {
         int row = jtPilotRegistration.getSelectedRow();
         VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
-        if (regInfo!=null){
+        if (regInfo != null) {
           RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
-        }  
+        }
       }
     });
     miAdd.addActionListener(new ActionListener() {
@@ -74,7 +76,7 @@ public class RegistrationTab extends javax.swing.JPanel {
         int row = jtPilotRegistration.getSelectedRow();
         VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
         if (regInfo != null) {
-          int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to delete '"+regInfo.VS_USER_NAME+"' Pilot?", "Delete Pilot", JOptionPane.YES_NO_OPTION);
+          int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to delete '" + regInfo.VS_USER_NAME + "' Pilot?", "Delete Pilot", JOptionPane.YES_NO_OPTION);
           if (res == JOptionPane.YES_OPTION) {
             try {
               regInfo.dbControl.delete(mainForm.con, regInfo);
@@ -87,7 +89,7 @@ public class RegistrationTab extends javax.swing.JPanel {
       }
     });
     jtPilotRegistration.add(popup);
-    
+
     jtPilotRegistration.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -106,15 +108,33 @@ public class RegistrationTab extends javax.swing.JPanel {
       }
 
     });
-    
+
     refreshData();
+  }  
+
+  VS_REGISTRATION usr_reg = null;
+  long transponder = -1;
+  
+  @Override
+  public void newTransponder(long transponder) {
+    activeTransponder.setVisible(true);
+    this.transponder = transponder;
+    activeTransponder.setText(""+mainForm.lastTranponderID);
+    try{
+      usr_reg = null;
+      usr_reg = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
+                    mainForm.activeRace.RACE_ID, transponder);
+      activeTransponder.setText(usr_reg.VS_USER_NAME+" - "+mainForm.lastTranponderID);
+    }catch(Exception e){}
+  }    
+  
+  public void refreshData() {
+    activeTransponder.setVisible(false);
+    regModelTable.loadData();
+    jtPilotRegistration.addNotify();
+    mainForm.setTransponderListener(this);
   }
   
-  public void refreshData(){
-    regModelTable.loadData();
-    jtPilotRegistration.addNotify();     
-  }
-
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,6 +148,7 @@ public class RegistrationTab extends javax.swing.JPanel {
     jPanel2 = new javax.swing.JPanel();
     butRegistPilot = new javax.swing.JButton();
     butAddNewStage = new javax.swing.JButton();
+    activeTransponder = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -145,6 +166,16 @@ public class RegistrationTab extends javax.swing.JPanel {
       }
     });
 
+    activeTransponder.setBackground(new java.awt.Color(0, 153, 51));
+    activeTransponder.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    activeTransponder.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    activeTransponder.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)));
+    activeTransponder.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        activeTransponderMouseClicked(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -154,16 +185,18 @@ public class RegistrationTab extends javax.swing.JPanel {
         .addComponent(butRegistPilot)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
+        .addGap(5, 5, 5)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(butRegistPilot)
-          .addComponent(butAddNewStage))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addComponent(butAddNewStage)
+          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -174,7 +207,9 @@ public class RegistrationTab extends javax.swing.JPanel {
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addGroup(jPanel1Layout.createSequentialGroup()
+        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGap(5, 5, 5))
     );
 
     jtPilotRegistration.setModel(new javax.swing.table.DefaultTableModel(
@@ -216,8 +251,21 @@ public class RegistrationTab extends javax.swing.JPanel {
     StageNewForm.init(mainForm, null).setVisible(true);
   }//GEN-LAST:event_butAddNewStageActionPerformed
 
+  private void activeTransponderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_activeTransponderMouseClicked
+    // TODO add your handling code here:
+    if (SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() >= 2) {
+      RegisterPilotlForm reg = RegisterPilotlForm.init(mainForm, usr_reg==null?-1:usr_reg.ID);      
+      //reg.
+      if (usr_reg==null && transponder!=-1){
+        reg.edTransponder.setText("" + transponder);
+      }
+      reg.setVisible(true);
+    }
+  }//GEN-LAST:event_activeTransponderMouseClicked
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JLabel activeTransponder;
   private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JPanel jPanel1;

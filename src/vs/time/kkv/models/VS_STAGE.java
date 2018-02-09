@@ -3,6 +3,7 @@
 package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.*;
+import KKV.DBControlSqlLite.Utils.JDEDate;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
@@ -135,7 +137,7 @@ public class VS_STAGE {
     return CAPTION;
   }
 
-  public VS_RACE_LAP getLap(int GROUP_NUM, int TRANSPONDER, int lapNumber) {
+  public VS_RACE_LAP getLap(long GROUP_NUM, int TRANSPONDER, int lapNumber) {
     VS_RACE_LAP lap = null;
     try {
       lap = laps.get("" + GROUP_NUM).get("" + TRANSPONDER).get(lapNumber);
@@ -143,8 +145,17 @@ public class VS_STAGE {
     }
     return lap;
   }
+  
+  public void delLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, int lapNumber, VS_RACE_LAP delLap) {
+    VS_RACE_LAP lap = null;
+    try {
+      laps.get("" + GROUP_NUM).get("" + TRANSPONDER).remove(""+lapNumber);
+      VS_RACE_LAP.dbControl.delete(mainForm.con, delLap);
+    } catch (Exception e) {
+    }    
+  }
 
-  public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long START_TIME) {
+  public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long START_TIME, VS_STAGE_GROUPS usr) {
     boolean find_error = false;
     try {
       Map<String, VS_RACE_LAP> user_laps = laps.get("" + GROUP_NUM).get("" + TRANSPONDER);
@@ -176,7 +187,7 @@ public class VS_STAGE {
         // delete from DataBase
         try {
           if (user_laps != null) {
-            user_laps.clear();
+            user_laps.clear();            
             VS_RACE_LAP.dbControl.delete(mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?", RACE_ID, ID, GROUP_NUM, TRANSPONDER);
           }
         } catch (Exception ein) {
@@ -188,15 +199,20 @@ public class VS_STAGE {
         }
       }
     } catch (Exception e) {
-      mainForm._toLog(e);
+     // mainForm._toLog(e);
     } finally {
     }
+    usr.IS_FINISHED = 0;
+    usr.IS_RECALULATED = 0;
+    usr.BEST_LAP = 0;
+    usr.RACE_TIME = 0;
     return null;
   }
 
   public void addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {
     try {
       usr.IS_FINISHED = 0;
+      usr.IS_RECALULATED = 0;
       VS_RACE_LAP lap = new VS_RACE_LAP();
       lap.BASE_ID = 0;
       lap.GROUP_NUM = usr.GROUP_NUM;
@@ -205,7 +221,7 @@ public class VS_STAGE {
       lap.STAGE_ID = mainForm.activeGroup.stage.ID;
       lap.TIME_START = mainForm.raceTime;
       lap.TIME_FROM_START = time;
-      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime);
+      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime,usr);
       lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
       lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
       
@@ -215,7 +231,10 @@ public class VS_STAGE {
       }
             
       if (lap.TRANSPONDER_TIME>=MIN_LAP_TIME*1000) {
-        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
+        try{
+          mainForm.race_log.writeFile("\""+usr.parent.stage.CAPTION+"\";"+"Group"+usr.parent.GROUP_NUM+";"+usr.TRANSPONDER+";\""+usr.PILOT+"\";"+time+";"+new JDEDate(time).getTimeString(":")+";"+lap.LAP+";"+ StageTab.getTimeIntervel(lap.TRANSPONDER_TIME)+";");
+        }catch(Exception ein){}  
+        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);         
         VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);        
       }  
       usr.IS_RECALULATED = 0;

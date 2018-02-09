@@ -43,12 +43,18 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       String data = "";
       try {
         data = serialPort.readString(event.getEventValue());
+        int len = data==null?0:data.length();
+        if (len>=2 && data.substring(len-2,len).equalsIgnoreCase("\r\n")){
+          data = data.substring(0,len-2);
+        };
         String[] commands = data.split(":");
         String[] params = null;
         long crc8 = 0;
         int lpos = data.lastIndexOf(",");
-        String nd = data.substring(0,lpos);
-        crc8 = VSTimeConnector.crc8(nd.getBytes());
+        if (lpos>0){
+          String nd = data.substring(0,lpos);
+          crc8 = VSTimeConnector.crc8(nd.getBytes());
+        }
         VSTM_LapInfo lap = null;
         if (commands.length >= 2) {
           params = commands[1].split(",");

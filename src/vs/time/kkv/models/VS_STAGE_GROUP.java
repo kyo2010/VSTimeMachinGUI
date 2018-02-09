@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.TransferHandler;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import static vs.time.kkv.models.VS_STAGE_GROUPS.VS_STAGE_GROUPS_FLOWER;
 
 /**
@@ -25,6 +26,7 @@ public class VS_STAGE_GROUP implements Transferable{
   public String useChannels = "";
   public boolean isActive = false;
   public VS_STAGE stage = null;
+  public StageTab stageTab = null;
   
   public VS_STAGE_GROUP(VS_STAGE stage){
     this.stage = stage;

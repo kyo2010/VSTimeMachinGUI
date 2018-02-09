@@ -82,16 +82,36 @@ public class StageTab extends javax.swing.JPanel {
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
   public StageTableAdapter stageTableAdapter = null;
+  
+  public boolean pleasuUpdateTree = false;
+  public boolean pleasuUpdateTable = false;
+  
   Timer raceTimer = new Timer(52, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.raceTime;
       timerCaption.setText(getTimeIntervel(d));
+      try{
+        if (pleasuUpdateTree){
+          pleasuUpdateTree = false;
+          if (jTree!=null){
+            jTree.notifyAll();
+            jTree.updateUI();
+          }
+        }
+        if (pleasuUpdateTable){
+          pleasuUpdateTable = false;
+          if (treeTable!=null){
+            treeTable.notifyAll();
+            treeTable.updateUI();
+          }  
+        }
+      }catch(Exception ex){}  
     }
   });
 
-  public String getTimeIntervel(long time) {
+  public static String getTimeIntervel(long time) {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
@@ -157,7 +177,7 @@ public class StageTab extends javax.swing.JPanel {
     popupMenuJTree = new JPopupMenu();
     JMenuItem miExport = new JMenuItem("Export");
     popupMenuJTree.add(miExport);
-    
+
     JMenuItem miAdd = new JMenuItem("Add");
     popupMenuJTree.add(miAdd);
     JMenuItem miEdit = new JMenuItem("Edit");
@@ -247,28 +267,37 @@ public class StageTab extends javax.swing.JPanel {
               jTree.updateUI();
               //timerCaption.setVisible(false);              
             } else {
-              
-              if (td.group!=null && td.group.users!=null && td.group.users.size()>0 && td.group.users.get(0).IS_FINISHED==1){
-                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to reflight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
-                 if (res == JOptionPane.YES_OPTION) {
-                 }else{
-                   return;
-                 }                
+
+              if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
+                int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to reflight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                } else {
+                  return;
+                }
               }
-              
+
+              if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+                int res = JOptionPane.showConfirmDialog(StageTab.this, "Transponder hub device is not connected.\nDo you like to start?", "Information", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                } else {
+                  return;
+                }
+              }
+
               final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {
                 mainForm.activeGroup = td.group;
+                td.group.stageTab = StageTab.this;
                 timerCaption.setText(getTimeIntervel(0));
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
                 InfoForm.init(mainForm, "!!!").setVisible(true);
-                mainForm.beep.palyAndWait("attention");                
+                mainForm.beep.palyAndWait("attention");
                 InfoForm.init(mainForm, "3").setVisible(true);
                 //if (useSpeach) mainForm.speaker.speak("Three!");                
                 mainForm.beep.paly("three");
                 Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
-                  public void actionPerformed(ActionEvent e) {                    
+                  public void actionPerformed(ActionEvent e) {
                     InfoForm.init(mainForm, "2").setVisible(true);
                     //if (useSpeach) mainForm.speaker.speak("Two!");
                     mainForm.beep.paly("two");
@@ -277,14 +306,14 @@ public class StageTab extends javax.swing.JPanel {
                         InfoForm.init(mainForm, "1").setVisible(true);
                         //if (useSpeach) mainForm.speaker.speak("One!");                        
                         mainForm.beep.paly("one");
-                        int rnd = (int) (Math.random()*3000);
-                        Timer t3 = new Timer(1000+rnd, new ActionListener() {      // Timer 4 seconds
+                        int rnd = (int) (Math.random() * 3000);
+                        Timer t3 = new Timer(1000 + rnd, new ActionListener() {      // Timer 4 seconds
                           public void actionPerformed(ActionEvent e) {
-                            InfoForm.init(mainForm, "Go!").setVisible(true);                            
-                            mainForm.beep.paly("beep");                             
+                            InfoForm.init(mainForm, "Go!").setVisible(true);
+                            mainForm.beep.paly("beep");
                             //if (useSpeach) mainForm.speaker.speak("Go!");
-                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();                            
-                            raceTimer.start();                            
+                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+                            raceTimer.start();
                             jTree.updateUI();
                             Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
                               public void actionPerformed(ActionEvent e) {
@@ -318,24 +347,7 @@ public class StageTab extends javax.swing.JPanel {
       }
 
     });
-  }
-
-  public class MinThread extends Thread {
-
-    public int seconds;
-
-    public MinThread(int seconds) {
-      this.seconds = seconds;
-    }
-
-    @Override
-    public void run() {
-      try {
-        Thread.sleep(seconds * 1000);
-      } catch (InterruptedException ex) {
-      }
-    }
-  }
+  }  
 
   public void checkGroupConstrain() {
 
@@ -406,22 +418,22 @@ public class StageTab extends javax.swing.JPanel {
     }
     expandAllJTree();
   }
-  
-  public BaseFont getRussianFont() throws DocumentException, IOException{
+
+  public BaseFont getRussianFont() throws DocumentException, IOException {
     //return BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H",BaseFont.EMBEDDED);
     String path = (new File("")).getAbsolutePath();
     String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
-    BaseFont bfComic = BaseFont.createFont( path +"\\font.ttf", encode, BaseFont.EMBEDDED);
+    BaseFont bfComic = BaseFont.createFont(path + "\\font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
-  } 
+  }
 
-  public void treeToPDF(){
+  public void treeToPDF() {
     try {
       File dir = new File("reports");
       dir.mkdirs();
       JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath()+"\\"+jd.getDateAsYYYYMMDD_andTime("-", "_")+".pdf";
-      
+      String fileName = dir.getAbsolutePath() + "\\" + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
+
       BaseFont bf = getRussianFont();
       Font font = new Font(bf);
 
@@ -431,7 +443,7 @@ public class StageTab extends javax.swing.JPanel {
         Document document = new Document(/*PageSize.A4.rotate()*/);
         PdfWriter.getInstance(document, new FileOutputStream(fileName));
         document.open();
-        
+
         Font font1 = new Font(bf, 16);
         Paragraph caption = new Paragraph(stage.CAPTION, font1);
         caption.getFont().setStyle(Font.BOLD);
@@ -439,14 +451,14 @@ public class StageTab extends javax.swing.JPanel {
 
         //text1 = "Test";
         document.add(new Paragraph(" ", font));
-        
-        for (Integer groupNum : stage.groups.keySet()){
+
+        for (Integer groupNum : stage.groups.keySet()) {
           VS_STAGE_GROUP group = stage.groups.get(groupNum);
-          Paragraph grpup_pr = new Paragraph("Group"+group.GROUP_NUM, font);
+          Paragraph grpup_pr = new Paragraph("Group" + group.GROUP_NUM, font);
           grpup_pr.getFont().setStyle(Font.BOLD);
           document.add(grpup_pr);
-          for (VS_STAGE_GROUPS usr : group.users){
-            Paragraph user_pr = new Paragraph(usr.PILOT + "\tcahnnel: "+usr.CHANNEL, font);
+          for (VS_STAGE_GROUPS usr : group.users) {
+            Paragraph user_pr = new Paragraph(usr.PILOT + "\tcahnnel: " + usr.CHANNEL, font);
             user_pr.getFont().setStyle(Font.NORMAL);
             document.add(user_pr);
           }
@@ -457,7 +469,7 @@ public class StageTab extends javax.swing.JPanel {
 
         try //try statement 
         {
-          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName +"\"");   //open the file chart.pdf 
+          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName + "\"");   //open the file chart.pdf 
 
         } catch (Exception e) //catch any exceptions here 
         {
@@ -475,15 +487,15 @@ public class StageTab extends javax.swing.JPanel {
       File dir = new File("reports");
       dir.mkdirs();
       JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath()+"\\"+jd.getDateAsYYYYMMDD_andTime("-", "_")+".pdf";
-      
+      String fileName = dir.getAbsolutePath() + "\\" + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
+
       BaseFont bf = getRussianFont();
-      Font font = new Font(bf); 
-      Font fontBold = new Font(bf); 
+      Font font = new Font(bf);
+      Font fontBold = new Font(bf);
       fontBold.setStyle(Font.BOLD);
-      Font fontCption = new Font(bf,16);      
+      Font fontCption = new Font(bf, 16);
       fontCption.setStyle(Font.BOLD);
- 
+
       try {
         int rowCount = jTable.getRowCount();
         //Document document = new Document();
@@ -491,29 +503,29 @@ public class StageTab extends javax.swing.JPanel {
         PdfWriter.getInstance(document, new FileOutputStream(fileName));
         document.open();
         int colCount = jTable.getColumnCount();
-        PdfPTable tab = new PdfPTable(jTable.getColumnCount());        
+        PdfPTable tab = new PdfPTable(jTable.getColumnCount());
 
         int[] widths = new int[colCount];
         int max_width = 0;
         for (int i = 0; i < jTable.getColumnCount(); i++) {
-          Paragraph paragraph=new Paragraph(jTable.getColumnName(i),fontBold);                     
-          tab.addCell(paragraph);         
+          Paragraph paragraph = new Paragraph(jTable.getColumnName(i), fontBold);
+          tab.addCell(paragraph);
           widths[i] = stageTableAdapter.getMinWidth(i);
           max_width += widths[i];
         }
         tab.setWidths(widths);
         tab.setWidthPercentage(100);
-       
+
         for (int row = 0; row < rowCount; row++) {
           for (int col = 0; col < colCount; col++) {
             Object obj = jTable.getModel().getValueAt(row, col);
-            Paragraph paragraph=new Paragraph(obj.toString(),font); 
+            Paragraph paragraph = new Paragraph(obj.toString(), font);
             paragraph.getFont().setStyle(Font.NORMAL);
             tab.addCell(paragraph);
           }
         }
-        
-        Paragraph caption = new Paragraph("Этап : " + stage.CAPTION, fontCption);        
+
+        Paragraph caption = new Paragraph("Этап : " + stage.CAPTION, fontCption);
         document.add(caption);
 
         //text1 = "Test";
@@ -525,7 +537,7 @@ public class StageTab extends javax.swing.JPanel {
 
         try //try statement 
         {
-          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName +"\"");   //open the file chart.pdf 
+          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName + "\"");   //open the file chart.pdf 
 
         } catch (Exception e) //catch any exceptions here 
         {
@@ -660,7 +672,7 @@ public class StageTab extends javax.swing.JPanel {
               user.IS_RECALULATED = 0;
               user.LAPS = 0;
               user.RACE_TIME = 0;
-              user.BEST_LAP = 0;              
+              user.BEST_LAP = 0;
               VS_STAGE_GROUPS.dbControl.insert(mainForm.con, user);
             }
           }
@@ -923,13 +935,32 @@ public class StageTab extends javax.swing.JPanel {
     if (raceTimer.isRunning()) {
       //JOptionPane.showMessageDialog(mainForm, "key:"+evt.getKeyChar(), "Information", JOptionPane.INFORMATION_MESSAGE);              
       if (evt.getKeyChar() >= '1' && evt.getKeyChar() <= '8') {
-        try {
-          int user_index = evt.getKeyChar() - '0' - 1;
-          long time = Calendar.getInstance().getTimeInMillis();
-          VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
-          stage.addLapFromKeyPress(mainForm, usr, time);
-          jTable.updateUI();
-        } catch (Exception e) {
+        if (evt.isAltDown() || evt.isControlDown()) {
+          try {
+            int user_index = evt.getKeyChar() - '0' - 1;
+            long time = Calendar.getInstance().getTimeInMillis();
+            VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
+            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, mainForm.raceTime, usr);
+            if (lap!=null){
+              try{
+                stage.delLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, lap.LAP,  lap);
+                usr.IS_RECALULATED = 0;
+                usr.BEST_LAP = 0;
+                usr.IS_FINISHED = 0;
+                pleasuUpdateTable = true;
+              }catch(Exception ein){}        
+            }           
+          } catch (Exception e) {
+          }
+        } else {
+          try {
+            int user_index = evt.getKeyChar() - '0' - 1;
+            long time = Calendar.getInstance().getTimeInMillis();
+            VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
+            stage.addLapFromKeyPress(mainForm, usr, time);
+            pleasuUpdateTable = true;
+          } catch (Exception e) {
+          }
         }
       }
     }

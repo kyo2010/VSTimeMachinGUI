@@ -202,7 +202,7 @@ public class VSTimeConnector {
         lap.numberOfPacket = Integer.parseInt(params[0]);
         lap.baseStationID = Integer.parseInt(params[1]);
         lap.transponderID = Integer.parseInt(params[2]);
-        lap.time = Integer.parseInt(params[3]);
+        lap.time = Long.parseLong(params[3]);
         lap.transpnderCounter = Integer.parseInt(params[4]);        
         long crc8_f = Long.parseLong(params[5]);
         if (crc8!=crc8_f){

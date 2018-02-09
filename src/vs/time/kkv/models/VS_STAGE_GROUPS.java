@@ -135,6 +135,7 @@ public class VS_STAGE_GROUPS implements Transferable {
         if (all_laps_is_exist) {
           RACE_TIME = _RACE_TIME;
         }
+        if (all_laps_is_exist) IS_FINISHED = 1;
         if (IS_FINISHED == 1) {
           if (BEST_LAP == 0) {
             BEST_LAP = MAX_TIME;
