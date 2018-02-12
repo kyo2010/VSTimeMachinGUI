@@ -38,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -142,7 +143,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       //List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);          
       try {
         List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.RACE_ID=? and stage.STAGE_TYPE=?) order by RACE_TIME, BEST_LAP", tab.stage.RACE_ID, MainForm.STAGE_QUALIFICATION);
-        Set<String> pilots = new TreeSet<String>();
+        HashMap<String,VS_STAGE_GROUPS> pilots = new HashMap<String,VS_STAGE_GROUPS>();
         Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=?", tab.stage.RACE_ID);
 
         rows = new ArrayList<StageTableData>();
@@ -157,7 +158,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
 
           if (tab.stage.FLAG_BY_PYLOT_TYPE == MainForm.PILOT_TYPE_NONE_INDEX || tab.stage.FLAG_BY_PYLOT_TYPE == reg.PILOT_TYPE) {
-            if (!pilots.contains(pilot.PILOT)) {
+            if (pilots.get(pilot.PILOT)==null) {
               pilot.NUM_IN_GROUP = index;
               pilot.IS_FINISHED = 1;
               pilot.IS_RECALULATED = 1;
@@ -166,14 +167,23 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               index++;
 
               pilot.GID = -1;
-              pilot.STAGE_ID = tab.stage.ID;
-              if (isQualificated(pilot)) {
-                VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
+              pilot.STAGE_ID = tab.stage.ID;              
+              pilots.put(pilot.PILOT,pilot);
+            }else{
+              VS_STAGE_GROUPS pilot1 = pilots.get(pilot.PILOT);
+              if (pilot1.BEST_LAP!=0 && pilot1.BEST_LAP<pilot.BEST_LAP){
+                pilot.BEST_LAP = pilot1.BEST_LAP;
               }
-            }
-            pilots.add(pilot.PILOT);
-          }
+            }            
+          }          
         }
+        for (VS_STAGE_GROUPS pilot : pilots.values()){
+          if (isQualificated(pilot)) {
+            VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
+          }
+        }  
+        
+        
 
       } catch (Exception ein) {
         MainForm._toLog(ein);
@@ -181,9 +191,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     } else {
       rows = new ArrayList<StageTableData>();
       for (Integer groupId : tab.stage.groups.keySet()) {
-        VS_STAGE_GROUP group = tab.stage.groups.get(groupId);
+        VS_STAGE_GROUP group = tab.stage.groups.get(groupId);        
         rows.add(new StageTableData(group));
         for (VS_STAGE_GROUPS pilot : group.users) {
+          pilot.IS_RECALULATED = 0;
           rows.add(new StageTableData(pilot));
         }
       }
