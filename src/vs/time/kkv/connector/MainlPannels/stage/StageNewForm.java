@@ -589,7 +589,7 @@ public class StageNewForm extends javax.swing.JFrame {
     // TODO add your handling code here:
     
     if (jcbStageType.getSelectedIndex()==MainForm.STAGE_QUALIFICATION_RESULT){
-      LapsCaption.setText("Count pilots : ");
+      LapsCaption.setText("Count qual pilots : ");
       stagePanel.setVisible(false);
       panelQualificationResult.setVisible(true);      
     }else{
