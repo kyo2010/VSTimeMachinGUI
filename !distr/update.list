@@ -1,7 +1,13 @@
-0.72::VS_Time_Connector.jar
+0.73::VS_Time_Connector.jar
 0.2::font.ttf
 0.1::sounds/1.wav
 0.1::sounds/2.wav
 0.1::sounds/3.wav
 0.1::sounds/beep.wav
 0.1::sounds/attention.wav
+0.1::lib/marytts-lang-en-5.2.jar
+0.1::lib/marytts-lang-ru-5.2.jar
+0.1::lib/marytts-runtime-5.2-jar-with-dependencies.jar
+0.1::lib/voice-cmu-rms-hsmm-5.2.jar
+0.1::vsTimeConnector.ini
+0::

@@ -58,6 +58,7 @@ import vs.time.kkv.models.DataBaseStructure;
 import vs.time.kkv.models.VS_BANDS;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
+import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.models.VS_STAGE_GROUP;
@@ -673,13 +674,35 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     if (lap != null) {
       this.lastTranponderID = lap.transponderID;
-      if (transponderListener!=null) transponderListener.newTransponder(lap.transponderID);
+      if (transponderListener != null) {
+        transponderListener.newTransponder(lap.transponderID);
+      }
       long time = Calendar.getInstance().getTimeInMillis();
-      lap_log.writeFile("LAP;"+new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":")+";"+lap.transponderID+";"+lap.baseStationID+";"+lap.numberOfPacket+";"+lap.transpnderCounter);
-      if (Math.abs(time-lap.time)<1000) time = lap.time;
+      lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
+      if (Math.abs(time - lap.time) < 1000) {
+        time = lap.time;
+      }
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;
-      if (activeGroup != null) {
+
+      VS_REGISTRATION usr_reg = null;
+      if (activeRace != null) {
+        try {
+          usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
+                  activeRace.RACE_ID, lap.transponderID);
+        } catch (Exception ein) {
+        }
+      }
+
+      if (activeGroup == null) {
+        if (usr_reg != null) {
+          speaker.speak(usr_reg.VS_USER_NAME);
+        } else {
+          speaker.speak("pilot " + lap.transponderID);
+        }
+      }
+
+      if (activeRace != null && activeGroup != null) {
         VS_STAGE_GROUPS user = null;
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
           if (usr.TRANSPONDER == lap.transponderID) {
@@ -689,15 +712,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
         if (user == null) {
           try {
-            VS_REGISTRATION usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
-                    activeGroup.stage.RACE_ID, lap.transponderID);
             if (usr_reg == null) {
               VS_USERS global_user = VS_USERS.dbControl.getItem(con, "VSID=?", lap.transponderID);
-              if (global_user==null){
+              if (global_user == null) {
                 global_user = new VS_USERS();
                 global_user.VS_SOUND_EFFECT = 1;
                 global_user.VSID = lap.transponderID;
-                global_user.setName("USER_"+lap.transponderID);
+                global_user.setName("USER_" + lap.transponderID);
                 VS_USERS.dbControl.insert(con, global_user);
               }
               usr_reg = new VS_REGISTRATION();
@@ -706,54 +727,60 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
               usr_reg.VS_SOUND_EFFECT = global_user.VS_SOUND_EFFECT;
               usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
               usr_reg.IS_ACTIVE = 0;
-              usr_reg.PILOT_TYPE=0;
-              usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID)+1;
-              VS_REGISTRATION.dbControl.insert(con, usr_reg);              
+              usr_reg.PILOT_TYPE = 0;
+              usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID) + 1;
+              VS_REGISTRATION.dbControl.insert(con, usr_reg);
             }
             user = new VS_STAGE_GROUPS();
             user.GROUP_NUM = activeGroup.GROUP_NUM;
             user.STAGE_ID = activeGroup.stage.ID;
             user.PILOT = usr_reg.VS_USER_NAME;
             user.parent = activeGroup;
-            user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM)+1;
+            user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM) + 1;
             user.isError = 2;
             user.TRANSPONDER = lap.transponderID;
             user.CHANNEL = "A1";
-            VS_STAGE_GROUPS.dbControl.insert(con, user);      
+            VS_STAGE_GROUPS.dbControl.insert(con, user);
             activeGroup.users.add(user);
-            if (activeGroup.stageTab!=null) {
-              try{
-                activeGroup.stageTab.pleasuUpdateTree = true;       
-              }catch(Exception ein){}  
+            if (activeGroup.stageTab != null) {
+              try {
+                activeGroup.stageTab.pleasuUpdateTree = true;
+              } catch (Exception ein) {
+              }
             }
-            if (activeGroup.stageTab!=null) {
-              try{
+            if (activeGroup.stageTab != null) {
+              try {
                 activeGroup.stageTab.stageTableAdapter.loadData();
                 activeGroup.stageTab.pleasuUpdateTable = true;
-              }catch(Exception ein){}  
+              } catch (Exception ein) {
+              }
             }
           } catch (Exception e) {
             _toLog(e);
           }
         }
         if (user != null) {
-          activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
-          try{
-            if (activeGroup.stageTab!=null) activeGroup.stageTab.pleasuUpdateTable = true;
-          }catch(Exception ein){}  
+          VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);         
+          try {
+            if (activeGroup.stageTab != null) {
+              activeGroup.stageTab.pleasuUpdateTable = true;
+            }
+          } catch (Exception ein) {
+          }
         }
       }
     }
   }
-  
-  public interface LastTransponderListener{
+
+  public interface LastTransponderListener {
+
     public void newTransponder(long transponder);
   }
-  
+
   LastTransponderListener transponderListener = null;
 
   public void setTransponderListener(LastTransponderListener transponderListener) {
     this.transponderListener = transponderListener;
   }
-  
+
 }

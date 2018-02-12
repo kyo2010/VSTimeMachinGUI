@@ -145,14 +145,14 @@ public class VS_STAGE {
     }
     return lap;
   }
-  
+
   public void delLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, int lapNumber, VS_RACE_LAP delLap) {
     VS_RACE_LAP lap = null;
     try {
-      laps.get("" + GROUP_NUM).get("" + TRANSPONDER).remove(""+lapNumber);
+      laps.get("" + GROUP_NUM).get("" + TRANSPONDER).remove("" + lapNumber);
       VS_RACE_LAP.dbControl.delete(mainForm.con, delLap);
     } catch (Exception e) {
-    }    
+    }
   }
 
   public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long START_TIME, VS_STAGE_GROUPS usr) {
@@ -168,9 +168,9 @@ public class VS_STAGE {
         }
       } catch (Exception ein) {
         find_error = true;
-      } 
+      }
       int lap_index = 1;
-      if (!find_error) {        
+      if (!find_error) {
         for (int lap_number : sorted) {
           if (lap_number != lap_index) {
             find_error = true;
@@ -187,19 +187,19 @@ public class VS_STAGE {
         // delete from DataBase
         try {
           if (user_laps != null) {
-            user_laps.clear();            
+            user_laps.clear();
             VS_RACE_LAP.dbControl.delete(mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?", RACE_ID, ID, GROUP_NUM, TRANSPONDER);
           }
         } catch (Exception ein) {
           mainForm._toLog(ein);
         }
       } else {
-        if (user_laps != null) {          
-          return user_laps.get("" + (lap_index-1));
+        if (user_laps != null) {
+          return user_laps.get("" + (lap_index - 1));
         }
       }
     } catch (Exception e) {
-     // mainForm._toLog(e);
+      // mainForm._toLog(e);
     } finally {
     }
     usr.IS_FINISHED = 0;
@@ -209,7 +209,8 @@ public class VS_STAGE {
     return null;
   }
 
-  public void addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {
+  public VS_RACE_LAP addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {
+    VS_RACE_LAP lap_return = null;
     try {
       usr.IS_FINISHED = 0;
       usr.IS_RECALULATED = 0;
@@ -221,26 +222,39 @@ public class VS_STAGE {
       lap.STAGE_ID = mainForm.activeGroup.stage.ID;
       lap.TIME_START = mainForm.raceTime;
       lap.TIME_FROM_START = time;
-      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime,usr);
+      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime, usr);
       lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
       lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
-      
-      if (lap.LAP==1){
+
+      if (lap.LAP == 1) {
         usr.RACE_TIME = 0;
         usr.BEST_LAP = 0;
       }
-            
-      if (lap.TRANSPONDER_TIME>=MIN_LAP_TIME*1000) {
-        try{
-          mainForm.race_log.writeFile("\""+usr.parent.stage.CAPTION+"\";"+"Group"+usr.parent.GROUP_NUM+";"+usr.TRANSPONDER+";\""+usr.PILOT+"\";"+time+";"+new JDEDate(time).getTimeString(":")+";"+lap.LAP+";"+ StageTab.getTimeIntervel(lap.TRANSPONDER_TIME)+";");
-        }catch(Exception ein){}  
-        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);         
-        VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);        
-      }  
+
+      if (lap.TRANSPONDER_TIME >= MIN_LAP_TIME * 1000) {
+        try {
+          mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.TRANSPONDER + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
+        } catch (Exception ein) {
+        }
+        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
+        VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
+        lap_return = lap;
+      }
       usr.IS_RECALULATED = 0;
+
+      String krug = "";
+      if (lap_return != null) {
+        if (lap_return.LAP == usr.parent.stage.LAPS) {
+          krug = "finish";
+        } else {
+          krug = mainForm.speaker.krugNumber(lap_return.LAP + 1) + " круг";
+        }
+        mainForm.speaker.speak(usr.PILOT + " " + krug);
+      }
+
     } catch (Exception e) {
       mainForm._toLog(e);
     }
+    return lap_return;
   }
-
 }

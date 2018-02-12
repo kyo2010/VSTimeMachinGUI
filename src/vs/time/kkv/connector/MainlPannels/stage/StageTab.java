@@ -263,8 +263,9 @@ public class StageTab extends javax.swing.JPanel {
                 user.recalculateLapTimes(mainForm.con, stage, true);
               }
               mainForm.activeGroup = null;
-              raceTimer.stop();
+              raceTimer.stop();              
               jTree.updateUI();
+              mainForm.speaker.speak("The Stage finshed");
               //timerCaption.setVisible(false);              
             } else {
 
