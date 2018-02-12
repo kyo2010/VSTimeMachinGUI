@@ -39,6 +39,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long RACE_TIME;
   public int IS_RECALULATED = 0;
   public int IS_FINISHED = 0;
+  public int PILOT_TYPE = 0;  
 
   public VS_STAGE_GROUP parent = null;
 

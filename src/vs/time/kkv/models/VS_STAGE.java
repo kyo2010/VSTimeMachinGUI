@@ -15,7 +15,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
-import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
 public class VS_STAGE {
@@ -42,8 +41,10 @@ public class VS_STAGE {
    * Constructor
    */
   public VS_STAGE() {
-  }
-  ;
+    if (STAGE_TYPE==MainForm.STAGE_QUALIFICATION_RESULT){
+      LAPS = -1;
+    } 
+  } 
   
   public static DBModelControl<VS_STAGE> dbControl = new DBModelControl<VS_STAGE>(VS_STAGE.class, "VS_STAGE", new DBModelField[]{
     new DBModelField("ID").setDbFieldName("\"ID\"").setAutoIncrement(),
@@ -91,6 +92,7 @@ public class VS_STAGE {
           regs.put("" + usr.TRANSPONDER, reg_user);
         }
         usr.PILOT = reg_user.VS_USER_NAME;
+        usr.PILOT_TYPE = reg_user.PILOT_TYPE;
         Integer phisical_group_index = indexes.get(db_group_index);
         if (phisical_group_index == null) {
           phisical_group_index = GROUP_INDEX;

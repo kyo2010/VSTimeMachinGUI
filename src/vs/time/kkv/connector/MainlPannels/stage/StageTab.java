@@ -65,8 +65,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import static vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter.getLapNumberFromCol;
 import vs.time.kkv.connector.Utils.Beep;
+import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_SETTING;
 
@@ -128,7 +128,7 @@ public class StageTab extends javax.swing.JPanel {
     this.stage = _stage;
     initComponents();
     this.mainForm = main;
-    //topPanel.setVisible(false);      
+    //topPanel.setVisible(false);              
 
     timerCaption.setVisible(false);
 
@@ -243,6 +243,7 @@ public class StageTab extends javax.swing.JPanel {
 
       @Override
       public synchronized void mouseClicked(MouseEvent e) {
+         if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) return;
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
@@ -348,6 +349,13 @@ public class StageTab extends javax.swing.JPanel {
       }
 
     });
+    
+     if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+       jSplitPane1.setVisible(false);
+       jTree.setVisible(false);
+       jScrollPane2.setVisible(false);
+       //jSplitPane2.set
+     }    
   }  
 
   public void checkGroupConstrain() {
@@ -446,9 +454,15 @@ public class StageTab extends javax.swing.JPanel {
         document.open();
 
         Font font1 = new Font(bf, 16);
-        Paragraph caption = new Paragraph(stage.CAPTION, font1);
+        
+        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?",stage.RACE_ID);
+        Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, font1);
+        race_caption.getFont().setStyle(Font.BOLD);
+        document.add(race_caption);
+        
+        Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, font1);
         caption.getFont().setStyle(Font.BOLD);
-        document.add(caption);
+        document.add(caption);                
 
         //text1 = "Test";
         document.add(new Paragraph(" ", font));
@@ -459,7 +473,7 @@ public class StageTab extends javax.swing.JPanel {
           grpup_pr.getFont().setStyle(Font.BOLD);
           document.add(grpup_pr);
           for (VS_STAGE_GROUPS usr : group.users) {
-            Paragraph user_pr = new Paragraph(usr.PILOT + "\tcahnnel: " + usr.CHANNEL, font);
+            Paragraph user_pr = new Paragraph(usr.NUM_IN_GROUP+". "+usr.PILOT + ", cahnnel: " + usr.CHANNEL, font);
             user_pr.getFont().setStyle(Font.NORMAL);
             document.add(user_pr);
           }
@@ -526,7 +540,11 @@ public class StageTab extends javax.swing.JPanel {
           }
         }
 
-        Paragraph caption = new Paragraph("Этап : " + stage.CAPTION, fontCption);
+        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?",stage.RACE_ID);
+        Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, fontCption);
+        document.add(race_caption);
+        
+        Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, fontCption);
         document.add(caption);
 
         //text1 = "Test";
@@ -566,15 +584,17 @@ public class StageTab extends javax.swing.JPanel {
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
-          for (VS_STAGE_GROUPS usr : groups) {
-            usr.IS_FINISHED = 1;
-            usr.recalculateLapTimes(mainForm.con, stage, true);
+          if (parent_stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT){
+            for (VS_STAGE_GROUPS usr : groups) {
+              usr.IS_FINISHED = 1;
+              usr.recalculateLapTimes(mainForm.con, stage, true);
+            }
           }
-          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE /*&& parent_stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT*/) {
             //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
             if (1 == 1) {
               // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by RACE_TIME, BEST_LAP", parent_stage.ID);
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               checkGroupConstrain();
               Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();

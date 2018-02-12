@@ -73,10 +73,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
-  public static final int STAGE_RACE = 2;
+  public static final int STAGE_QUALIFICATION_RESULT = 2;
+  public static final int STAGE_RACE = 3;
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Race"};
+  public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle","None"};
+  public final static int PILOT_TYPE_NONE_INDEX = 3;
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result","Race"};
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -154,7 +157,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             tabbedPanel.setForegroundAt(index, Color.RED);
           }
-
+          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+            tabbedPanel.setForegroundAt(index, Color.MAGENTA);
+          }
+          
           if (stage.IS_SELECTED == 1) {
             tabbedPanel.setSelectedComponent(p);
             isFound = true;
