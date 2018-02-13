@@ -40,6 +40,12 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int IS_RECALULATED = 0;
   public int IS_FINISHED = 0;
   public int PILOT_TYPE = 0;  
+  public int SCORE = 0;
+  public int WIN = 0;
+  public int LOSE = 0;
+  
+  public int wins = 0;
+  public int loses = 0;
 
   public VS_STAGE_GROUP parent = null;
 
@@ -47,8 +53,7 @@ public class VS_STAGE_GROUPS implements Transferable {
    * Constructor
    */
   public VS_STAGE_GROUPS() {
-  }
-  ;
+  }; 
   
   public static DBModelControl<VS_STAGE_GROUPS> dbControl = new DBModelControl<VS_STAGE_GROUPS>(VS_STAGE_GROUPS.class, "VS_STAGE_GROUPS", new DBModelField[]{
     new DBModelField("GID").setDbFieldName("\"GID\"").setAutoIncrement(),
@@ -62,7 +67,11 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("BEST_LAP").setDbFieldName("\"BEST_LAP\""),
     new DBModelField("RACE_TIME").setDbFieldName("\"RACE_TIME\""),
     new DBModelField("IS_RECALULATED").setDbFieldName("\"IS_RECALULATED\""),
-    new DBModelField("IS_FINISHED").setDbFieldName("\"IS_FINISHED\""),});
+    new DBModelField("IS_FINISHED").setDbFieldName("\"IS_FINISHED\""),
+    new DBModelField("SCORE").setDbFieldName("\"SCORE\""),
+    new DBModelField("WIN").setDbFieldName("\"WIN\""),
+    new DBModelField("LOSE").setDbFieldName("\"LOSE\""),
+  });
 
   public String toString() {
     return PILOT + " (" + CHANNEL + ")";

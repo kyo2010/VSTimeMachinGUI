@@ -65,7 +65,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.DefaultCellEditor;
 import vs.time.kkv.connector.Utils.Beep;
+import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_SETTING;
@@ -82,32 +84,62 @@ public class StageTab extends javax.swing.JPanel {
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
   public StageTableAdapter stageTableAdapter = null;
-  
+
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
-  
-  Timer raceTimer = new Timer(52, new ActionListener() {
+  public boolean isOneTable = false;
+
+  Timer raceTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.raceTime;
-      timerCaption.setText(getTimeIntervel(d));
-      try{
-        if (pleasuUpdateTree){
+      timerCaption.setText(getTimeIntervelInSec(d));
+      try {
+        if (pleasuUpdateTree) {
           pleasuUpdateTree = false;
-          if (jTree!=null){
+          if (jTree != null) {
             jTree.notifyAll();
             jTree.updateUI();
           }
         }
-        if (pleasuUpdateTable){
+        if (pleasuUpdateTable) {
           pleasuUpdateTable = false;
-          if (treeTable!=null){
+          if (treeTable != null) {
             treeTable.notifyAll();
             treeTable.updateUI();
-          }  
+          }
         }
-      }catch(Exception ex){}  
+      } catch (Exception ex) {
+      }
+    }
+  });
+  
+  Timer waitTimer = new Timer(1000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (mainForm.unRaceTime==0) return;
+      if (raceTimer.isRunning()) return;
+      long t = Calendar.getInstance().getTimeInMillis();
+      long d = t - mainForm.unRaceTime;
+      timerCaption.setText(getTimeIntervelInSec(d));
+      try {
+        if (pleasuUpdateTree) {
+          pleasuUpdateTree = false;
+          if (jTree != null) {
+            jTree.notifyAll();
+            jTree.updateUI();
+          }
+        }
+        if (pleasuUpdateTable) {
+          pleasuUpdateTable = false;
+          if (treeTable != null) {
+            treeTable.notifyAll();
+            treeTable.updateUI();
+          }
+        }
+      } catch (Exception ex) {
+      }
     }
   });
 
@@ -118,8 +150,14 @@ public class StageTab extends javax.swing.JPanel {
     milisec = Math.round(milisec / 10);
     return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 2, "0");
   }
-
-  ;
+  
+  public static String getTimeIntervelInSec(long time) {
+    long min = time / 1000 / 60;
+    long sec = time / 1000 - min * 60;
+    long milisec = time - (sec + min * 60) * 1000;
+    milisec = Math.round(milisec / 10);
+    return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0");
+  }
 
   /**
    * Creates new form PracticaTableTab
@@ -131,10 +169,14 @@ public class StageTab extends javax.swing.JPanel {
     //topPanel.setVisible(false);              
 
     timerCaption.setVisible(false);
+    
+    if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+      isOneTable = true;
+    }
 
     refreshData(false);
     refreshDataActionPerformed(null);
-
+    
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
     //jScrollPane1.setViewportView(treeTable);
@@ -142,6 +184,7 @@ public class StageTab extends javax.swing.JPanel {
     jTree.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (stage.IS_LOCK==1) return;
         if (SwingUtilities.isRightMouseButton(e)) {
           int row = jTree.getClosestRowForLocation(e.getX(), e.getY());
           jTree.setSelectionRow(row);
@@ -243,7 +286,8 @@ public class StageTab extends javax.swing.JPanel {
 
       @Override
       public synchronized void mouseClicked(MouseEvent e) {
-         if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) return;
+        if (isOneTable) return;
+        if (stage.IS_LOCK==1) return;
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
@@ -251,8 +295,9 @@ public class StageTab extends javax.swing.JPanel {
           if (!source.isRowSelected(row)) {
             source.changeSelection(row, column, false, false);
           }
-          if (column == 1 && !infoWindowRunning) {
-            StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+          StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+          if (td==null || !td.isGrpup) return;
+          if (column == 1 && !infoWindowRunning) {            
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
@@ -263,8 +308,9 @@ public class StageTab extends javax.swing.JPanel {
                 user.IS_FINISHED = 1;
                 user.recalculateLapTimes(mainForm.con, stage, true);
               }
+              mainForm.activeGroup.recalculateScores(mainForm);
               mainForm.activeGroup = null;
-              raceTimer.stop();              
+              raceTimer.stop();
               jTree.updateUI();
               mainForm.speaker.speak("The Stage finshed");
               //timerCaption.setVisible(false);              
@@ -288,6 +334,7 @@ public class StageTab extends javax.swing.JPanel {
 
               final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {
+                if (stage.IS_LOCK==1) return;
                 mainForm.activeGroup = td.group;
                 td.group.stageTab = StageTab.this;
                 timerCaption.setText(getTimeIntervel(0));
@@ -348,15 +395,15 @@ public class StageTab extends javax.swing.JPanel {
 
       }
 
-    });
-    
-     if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
-       jSplitPane1.setVisible(false);
-       jTree.setVisible(false);
-       jScrollPane2.setVisible(false);
-       //jSplitPane2.set
-     }    
-  }  
+    });        
+
+    if (isOneTable) {
+      jSplitPane1.setVisible(false);
+      jTree.setVisible(false);
+      jScrollPane2.setVisible(false);
+      //jSplitPane2.set
+    }
+  }
 
   public void checkGroupConstrain() {
 
@@ -454,15 +501,15 @@ public class StageTab extends javax.swing.JPanel {
         document.open();
 
         Font font1 = new Font(bf, 16);
-        
-        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?",stage.RACE_ID);
+
+        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
         Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, font1);
         race_caption.getFont().setStyle(Font.BOLD);
         document.add(race_caption);
-        
+
         Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, font1);
         caption.getFont().setStyle(Font.BOLD);
-        document.add(caption);                
+        document.add(caption);
 
         //text1 = "Test";
         document.add(new Paragraph(" ", font));
@@ -473,7 +520,7 @@ public class StageTab extends javax.swing.JPanel {
           grpup_pr.getFont().setStyle(Font.BOLD);
           document.add(grpup_pr);
           for (VS_STAGE_GROUPS usr : group.users) {
-            Paragraph user_pr = new Paragraph(usr.NUM_IN_GROUP+". "+usr.PILOT + ", cahnnel: " + usr.CHANNEL, font);
+            Paragraph user_pr = new Paragraph(usr.NUM_IN_GROUP + ". " + usr.PILOT + ", cahnnel: " + usr.CHANNEL, font);
             user_pr.getFont().setStyle(Font.NORMAL);
             document.add(user_pr);
           }
@@ -540,10 +587,10 @@ public class StageTab extends javax.swing.JPanel {
           }
         }
 
-        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?",stage.RACE_ID);
+        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
         Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, fontCption);
         document.add(race_caption);
-        
+
         Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, fontCption);
         document.add(caption);
 
@@ -577,6 +624,12 @@ public class StageTab extends javax.swing.JPanel {
           parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=?", stage.PARENT_STAGE);
         } catch (Exception e) {
         }
+        if (parent_stage == null) {
+          try {
+            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "PARENT_STAGE_ID=?", stage.PARENT_STAGE_ID);
+          } catch (Exception e) {
+          }
+        }
 
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
 
@@ -584,7 +637,7 @@ public class StageTab extends javax.swing.JPanel {
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
-          if (parent_stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT){
+          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT) {
             for (VS_STAGE_GROUPS usr : groups) {
               usr.IS_FINISHED = 1;
               usr.recalculateLapTimes(mainForm.con, stage, true);
@@ -950,6 +1003,15 @@ public class StageTab extends javax.swing.JPanel {
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     refreshData(true);
+    
+    /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
+      StageTableAdapter.STAGE_COLUMN[] columns = stageTableAdapter.getColumns();
+      for (int index=0; index<columns.length; index++){        
+        if (columns[index].ID==StageTableAdapter.STAGE_COLUMN.CID_SCORE && stage.RACE_TYPE==MainForm.RACE_TYPE_WHOOP){
+          jTable.getColumnModel().getColumn(index).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.SCORES_WHOOP)));
+        }
+      }
+    }*/
   }//GEN-LAST:event_refreshDataActionPerformed
 
   private void keyPressed(java.awt.event.KeyEvent evt) {
@@ -962,21 +1024,22 @@ public class StageTab extends javax.swing.JPanel {
             long time = Calendar.getInstance().getTimeInMillis();
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
             VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, mainForm.raceTime, usr);
-            if (lap!=null){
-              if (time-lap.TIME_FROM_START>5000){
+            if (lap != null) {
+              if (time - lap.TIME_FROM_START > 5000) {
                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete last time" + usr.PILOT + " ?", "Delete lap time?", JOptionPane.YES_NO_OPTION);
                 if (res != JOptionPane.YES_OPTION) {
                   return;
                 }
               }
-              try{                
-                stage.delLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, lap.LAP,  lap);
+              try {
+                stage.delLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, lap.LAP, lap);
                 usr.IS_RECALULATED = 0;
                 usr.BEST_LAP = 0;
                 usr.IS_FINISHED = 0;
                 pleasuUpdateTable = true;
-              }catch(Exception ein){}        
-            }           
+              } catch (Exception ein) {
+              }
+            }
           } catch (Exception e) {
           }
         } else {

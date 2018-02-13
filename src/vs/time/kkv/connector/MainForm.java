@@ -75,11 +75,28 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_QUALIFICATION = 1;
   public static final int STAGE_QUALIFICATION_RESULT = 2;
   public static final int STAGE_RACE = 3;
+  public static final int STAGE_RACE_RESULT = 4; 
+  
+  public static final int STAGE_SORT_BY_RACE_TIME = 0;
+  public static final int STAGE_SORT_BY_LAP_TIME = 1;
+  public static final int STAGE_SORT_BY_SCORE_DESC = 2;
+  public static final int STAGE_SORT_BY_LOSS_DESC = 3;
+  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score","Loss"};    
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle","None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result","Race"};
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result","Race","Race Result"};
+  
+  public static final int RACE_TYPE_WHOOP = 0;
+  public static final int RACE_TYPE_DOUBLE = 1;
+  public static final int RACE_TYPE_SINGLE = 2;
+  public final static String[] RACE_TYPES = new String[]{"Whoop Race", "Double elemenation", "Single elemination"};
+
+  public static final int SCORE_WHOOP_NONE = 0;
+  public static final int SCORE_WHOOP_WON = 1;
+  public static final int SCORE_WHOOP_LOST = 2;
+  public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -121,6 +138,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_STAGE_GROUP activeGroup = null;
   public RegistrationTab regForm = null;
   public long raceTime = 0;
+  public long unRaceTime = Calendar.getInstance().getTimeInMillis();
   public int lastTranponderID = -1;
 
   public void setActiveRace(VS_RACE race) {
@@ -147,7 +165,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         StageTab stage1 = null;
         for (VS_STAGE stage : stages) {
           StageTab p = new StageTab(this, stage);
-          tabbedPanel.add(stage.CAPTION, p);
+          String prefix = "";
+          if (stage.STAGE_TYPE>MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE<MainForm.PILOT_TYPE_NONE_INDEX){
+            try{
+              prefix = " ["+MainForm.PILOT_TYPES[stage.PILOT_TYPE]+"]";
+            }catch(Exception e){}  
+          }
+          tabbedPanel.add(stage.CAPTION+prefix, p);
 
           //tabbedPanel.setForegroundAt(index, Color.BLUE);
           //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
@@ -157,8 +181,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             tabbedPanel.setForegroundAt(index, Color.RED);
           }
-          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
             tabbedPanel.setForegroundAt(index, Color.MAGENTA);
+          }
+          if (stage.IS_LOCK == 1) {
+            tabbedPanel.setForegroundAt(index, Color.CYAN);
           }
           
           if (stage.IS_SELECTED == 1) {
@@ -396,6 +423,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jLabel2.getAccessibleContext().setAccessibleName("statusCaption");
     jLabel3.getAccessibleContext().setAccessibleName("jStatusText");
 
+    tabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        tabbedPanelStateChanged(evt);
+      }
+    });
+
     jMenu1.setText("Time Machines");
 
     menuWLANSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/wlan-setting.png"))); // NOI18N
@@ -510,10 +543,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
+        .addGap(4, 4, 4)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -596,6 +629,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       StageNewForm.init(this, null).setVisible(true);
     }
   }//GEN-LAST:event_jmAddStageToRaceActionPerformed
+
+  private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
+    // TODO add your handling code here:       
+    //JOptionPane.showMessageDialog(this, ""+tabbedPanel.getSelectedComponent(), "test", JOptionPane.ERROR_MESSAGE);
+  }//GEN-LAST:event_tabbedPanelStateChanged
 
   /**
    * @param args the command line arguments

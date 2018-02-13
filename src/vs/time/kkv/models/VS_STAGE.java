@@ -31,7 +31,12 @@ public class VS_STAGE {
   public int LAPS;
   public int IS_GROUP_CREATED;
   public int IS_SELECTED;
+  public int SORT_TYPE;
+  public int RACE_TYPE;
+  public int PILOT_TYPE;
   public String PARENT_STAGE = "";
+  public long PARENT_STAGE_ID = 0;
+  public int IS_LOCK = 0;
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
 
@@ -41,9 +46,6 @@ public class VS_STAGE {
    * Constructor
    */
   public VS_STAGE() {
-    if (STAGE_TYPE==MainForm.STAGE_QUALIFICATION_RESULT){
-      LAPS = -1;
-    } 
   } 
   
   public static DBModelControl<VS_STAGE> dbControl = new DBModelControl<VS_STAGE>(VS_STAGE.class, "VS_STAGE", new DBModelField[]{
@@ -59,7 +61,13 @@ public class VS_STAGE {
     new DBModelField("MIN_LAP_TIME").setDbFieldName("\"MIN_LAP_TIME\""),
     new DBModelField("IS_GROUP_CREATED").setDbFieldName("\"IS_GROUP_CREATED\""),
     new DBModelField("IS_SELECTED").setDbFieldName("\"IS_SELECTED\""),
-    new DBModelField("PARENT_STAGE").setDbFieldName("\"PARENT_STAGE\""),});
+    new DBModelField("PARENT_STAGE").setDbFieldName("\"PARENT_STAGE\""),
+    new DBModelField("SORT_TYPE").setDbFieldName("\"SORT_TYPE\""),
+    new DBModelField("RACE_TYPE").setDbFieldName("\"RACE_TYPE\""),
+    new DBModelField("PILOT_TYPE").setDbFieldName("\"PILOT_TYPE\""),
+    new DBModelField("PARENT_STAGE_ID").setDbFieldName("\"PARENT_STAGE_ID\""),
+    new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
+  });
 
   public static void resetSelectedTab(Connection conn, long raceID) {
     try {
@@ -122,7 +130,7 @@ public class VS_STAGE {
       VS_STAGE_GROUP group = groups.get(groupID);
       group.useChannels = "";
       for (VS_STAGE_GROUPS usr : group.users) {
-        usr.isError = 0;
+        usr.isError = 0;        
         if (group.useChannels.indexOf(usr.CHANNEL) >= 0) {
           usr.isError = 1;
         }
@@ -231,6 +239,7 @@ public class VS_STAGE {
       if (lap.LAP == 1) {
         usr.RACE_TIME = 0;
         usr.BEST_LAP = 0;
+        usr.SCORE = 0;
       }
 
       if (lap.TRANSPONDER_TIME >= MIN_LAP_TIME * 1000) {

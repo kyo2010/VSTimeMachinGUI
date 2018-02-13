@@ -40,7 +40,7 @@ public class StageTreeCellRender extends DefaultTreeCellRenderer {
     cmp.setForeground(DEFAULT_FOREGROUND_COLOR);
     cmp.setFont(getFont().deriveFont(Font.PLAIN));
 
-    if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+    if (tab.isOneTable) {
       cmp.setBackground(DEFAULT_BACKGROUD_COLOR);
       cmp.setForeground(DEFAULT_FOREGROUND_COLOR);
       cmp.setFont(getFont().deriveFont(Font.PLAIN));
