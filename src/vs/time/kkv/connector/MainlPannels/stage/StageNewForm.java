@@ -126,6 +126,7 @@ public class StageNewForm extends javax.swing.JFrame {
     } else {
       jtLapsCount.setText("" + 3);
       parentStage.setSelectedItem(last_stage);
+      jPilotType.setSelectedIndex(MainForm.PILOT_TYPE_NONE_INDEX);
       butRecrateGropus.setVisible(false);
       String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
       String[] channels = st_channels.split(";");
