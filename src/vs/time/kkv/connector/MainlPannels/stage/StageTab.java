@@ -94,7 +94,7 @@ public class StageTab extends javax.swing.JPanel {
     public void actionPerformed(ActionEvent e) {
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.raceTime;
-      timerCaption.setText(getTimeIntervelInSec(d));
+      timerCaption.setText(getTimeIntervelForTimer(d));
       try {
         if (pleasuUpdateTree) {
           pleasuUpdateTree = false;
@@ -113,35 +113,7 @@ public class StageTab extends javax.swing.JPanel {
       } catch (Exception ex) {
       }
     }
-  });
-  
-  Timer waitTimer = new Timer(1000, new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      if (mainForm.unRaceTime==0) return;
-      if (raceTimer.isRunning()) return;
-      long t = Calendar.getInstance().getTimeInMillis();
-      long d = t - mainForm.unRaceTime;
-      timerCaption.setText(getTimeIntervelInSec(d));
-      try {
-        if (pleasuUpdateTree) {
-          pleasuUpdateTree = false;
-          if (jTree != null) {
-            jTree.notifyAll();
-            jTree.updateUI();
-          }
-        }
-        if (pleasuUpdateTable) {
-          pleasuUpdateTable = false;
-          if (treeTable != null) {
-            treeTable.notifyAll();
-            treeTable.updateUI();
-          }
-        }
-      } catch (Exception ex) {
-      }
-    }
-  });
+  });    
 
   public static String getTimeIntervel(long time) {
     long min = time / 1000 / 60;
@@ -151,7 +123,7 @@ public class StageTab extends javax.swing.JPanel {
     return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 2, "0");
   }
   
-  public static String getTimeIntervelInSec(long time) {
+  public static String getTimeIntervelForTimer(long time) {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
@@ -304,6 +276,7 @@ public class StageTab extends javax.swing.JPanel {
             }
 
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
+              mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
               for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
                 user.IS_FINISHED = 1;
                 user.recalculateLapTimes(mainForm.con, stage, true);
@@ -337,7 +310,7 @@ public class StageTab extends javax.swing.JPanel {
                 if (stage.IS_LOCK==1) return;
                 mainForm.activeGroup = td.group;
                 td.group.stageTab = StageTab.this;
-                timerCaption.setText(getTimeIntervel(0));
+                timerCaption.setText(getTimeIntervelForTimer(0));
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
                 InfoForm.init(mainForm, "!!!").setVisible(true);

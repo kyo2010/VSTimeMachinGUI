@@ -121,6 +121,7 @@ public class StageNewForm extends javax.swing.JFrame {
       }
       jPilotType.setSelectedIndex(stage.PILOT_TYPE);      
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
+      PilotsForNextRound.setText(""+stage.PILOTS_FOR_NEXT_ROUND);
     } else {
       jtLapsCount.setText("" + 3);
       parentStage.setSelectedItem(last_stage);
@@ -132,7 +133,7 @@ public class StageNewForm extends javax.swing.JFrame {
         channelControls.get(index).box.setSelectedItem(channel);
         index++;
       }
-      jtCountOfPilots.setSelectedIndex(channels.length - 1);
+      jtCountOfPilots.setSelectedIndex(channels.length - 1);      
     }
     
     jcbStageTypeActionPerformed(null);        
@@ -183,6 +184,8 @@ public class StageNewForm extends javax.swing.JFrame {
     jPilotType = new javax.swing.JComboBox<>();
     jLabel6 = new javax.swing.JLabel();
     jOrderBy = new javax.swing.JComboBox<>();
+    jLabel7 = new javax.swing.JLabel();
+    PilotsForNextRound = new javax.swing.JTextField();
     racePanel = new javax.swing.JPanel();
     jRaceTypeLabel = new javax.swing.JLabel();
     jRaceType = new javax.swing.JComboBox<>();
@@ -378,15 +381,25 @@ public class StageNewForm extends javax.swing.JFrame {
 
     jOrderBy.setModel(new javax.swing.DefaultComboBoxModel(MainForm.STAGE_SORTS));
 
+    jLabel7.setText("Pilots for next round");
+
+    PilotsForNextRound.setText("4");
+
     javax.swing.GroupLayout panelQualificationResultLayout = new javax.swing.GroupLayout(panelQualificationResult);
     panelQualificationResult.setLayout(panelQualificationResultLayout);
     panelQualificationResultLayout.setHorizontalGroup(
       panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(panelQualificationResultLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel2)
-        .addGap(18, 18, 18)
-        .addComponent(jPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGroup(panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addGroup(panelQualificationResultLayout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addGap(18, 18, 18)
+            .addComponent(jPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(panelQualificationResultLayout.createSequentialGroup()
+            .addComponent(jLabel7)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(53, 53, 53)
         .addComponent(jLabel6)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -402,6 +415,10 @@ public class StageNewForm extends javax.swing.JFrame {
           .addComponent(jPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel6)
           .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel7)
+          .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -478,7 +495,7 @@ public class StageNewForm extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(panelQualificationResult, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(panelQualificationResult, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -591,6 +608,11 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
       
+      try {
+        stage.PILOTS_FOR_NEXT_ROUND = Integer.parseInt(PilotsForNextRound.getText());
+      } catch (Exception e) {
+      }      
+      
       stage.PILOT_TYPE = jPilotType.getSelectedIndex();
 
       String channels = "";
@@ -682,11 +704,11 @@ public class StageNewForm extends javax.swing.JFrame {
     }
 
     if (jcbStageType.getSelectedIndex() == MainForm.STAGE_QUALIFICATION_RESULT || jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_RESULT) {
-      LapsCaption.setText("Count qual pilots : ");
+      //LapsCaption.setText("Count pilots for next round: ");
       stagePanel.setVisible(false);
       panelQualificationResult.setVisible(true);
     } else {
-      LapsCaption.setText("Laps : ");
+      //LapsCaption.setText("Laps : ");
       stagePanel.setVisible(true);
       panelQualificationResult.setVisible(false);
     }
@@ -761,6 +783,7 @@ public class StageNewForm extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel Caption;
   private javax.swing.JLabel LapsCaption;
+  private javax.swing.JTextField PilotsForNextRound;
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
   private javax.swing.JButton butRecrateGropus;
@@ -770,6 +793,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
+  private javax.swing.JLabel jLabel7;
   private javax.swing.JComboBox<String> jOrderBy;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;

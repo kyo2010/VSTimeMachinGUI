@@ -86,10 +86,10 @@ public class VS_STAGE_GROUP implements Transferable {
     @Override
     public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
       if (o1.SCORE>o2.SCORE){
-        return 1;
+        return -1;
       }
       if (o1.SCORE<o2.SCORE){
-        return -1;
+        return 1;
       }
       if (o1.RACE_TIME > o2.RACE_TIME) {
         return 1;

@@ -284,6 +284,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //beep.paly("two");
     //beep.paly("one");
     //beep.paly("beep");
+    
+    
+    TimerForm.init(this).setVisible(true);
   }
 
   public void setStateMenu(boolean isConnected) {
@@ -295,7 +298,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (vsTimeConnector.WIFI) {
         menuParameters.setEnabled(false);
       }
-    }
+    }        
   }
 
   /**
