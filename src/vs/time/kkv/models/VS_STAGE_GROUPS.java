@@ -43,6 +43,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int SCORE = 0;
   public int WIN = 0;
   public int LOSE = 0;
+  public int ACTIVE_FOR_NEXT_STAGE = 1;
   
   public int wins = 0;
   public int loses = 0;
@@ -71,6 +72,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("SCORE").setDbFieldName("\"SCORE\""),
     new DBModelField("WIN").setDbFieldName("\"WIN\""),
     new DBModelField("LOSE").setDbFieldName("\"LOSE\""),
+    new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),    
   });
 
   public String toString() {

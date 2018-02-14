@@ -55,6 +55,7 @@ import javax.swing.table.TableCellRenderer;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_STAGE;
 import static vs.time.kkv.models.VS_STAGE_GROUP.GROUP_TIME_COMPARATOR;
 
 /**
@@ -211,7 +212,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           if (tab.stage.PILOT_TYPE == MainForm.PILOT_TYPE_NONE_INDEX || tab.stage.PILOT_TYPE == pilot.PILOT_TYPE) {
             if (pilots.get(pilot.PILOT) == null) {
               pilot.NUM_IN_GROUP = index;
-              pilot.IS_FINISHED = 1;
+              //pilot.IS_FINISHED = 1;
               pilot.IS_RECALULATED = 1;
 
               rows.add(new StageTableData(pilot));
@@ -229,9 +230,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
         }
         for (VS_STAGE_GROUPS pilot : pilots.values()) {
-          if (isQualificated(pilot)) {
-            VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
+          if (isQualificated(pilot)) {            
+            pilot.ACTIVE_FOR_NEXT_STAGE = 1;
+          }else{
+            pilot.ACTIVE_FOR_NEXT_STAGE = 0;
           }
+          VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
         }
 
       } catch (Exception ein) {
@@ -240,11 +244,20 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
       //List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);          
       try {
-
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
 
+        long union_stage_id = tab.stage.PARENT_STAGE_ID;
+        VS_STAGE parent_stage = null;
+        try {
+          parent_stage = VS_STAGE.dbControl.getItem(tab.mainForm.con, "ID=?", union_stage_id);
+          if (parent_stage!=null && parent_stage.STAGE_TYPE==MainForm.STAGE_RACE){
+            union_stage_id = parent_stage.PARENT_STAGE_ID;
+          }
+        } catch (Exception e) {
+        }
+        
         // get all results        
-        List<VS_STAGE_GROUPS> all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=?) ", MainForm.STAGE_RACE, tab.stage.PARENT_STAGE_ID);
+        List<VS_STAGE_GROUPS> all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=?) ", MainForm.STAGE_RACE, union_stage_id);
         List<VS_STAGE_GROUPS> results = new ArrayList<VS_STAGE_GROUPS>();
         HashMap<String, VS_STAGE_GROUPS> pilots = new HashMap<String, VS_STAGE_GROUPS>();
         Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=?", tab.stage.RACE_ID);
@@ -262,7 +275,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           VS_STAGE_GROUPS result = pilots.get(pilot.PILOT);
           if (result == null) {
             pilot.NUM_IN_GROUP = index;
-            pilot.IS_FINISHED = 1;
+            //pilot.IS_FINISHED = 1;
             pilot.IS_RECALULATED = 1;
             pilot.GID = -1;
             pilot.STAGE_ID = tab.stage.ID;
@@ -306,10 +319,17 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           pilot.STAGE_ID = tab.stage.ID;
           pilot.IS_RECALULATED = 1;
           pilot.IS_FINISHED = 1;
+          pilot.STAGE_ID = tab.stage.ID;          
           index++;
           try {
-            VS_STAGE_GROUPS.dbControl.save(tab.mainForm.con, pilot);
+            if (isQualificated(pilot)){
+              pilot.ACTIVE_FOR_NEXT_STAGE = 1;
+            }else{
+              pilot.ACTIVE_FOR_NEXT_STAGE = 0;
+            }
+            VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
           } catch (Exception e) {
+            tab.mainForm._toLog(e);
           }
           rows.add(new StageTableData(pilot));
         }

@@ -607,10 +607,10 @@ public class StageTab extends javax.swing.JPanel {
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
 
         if (parent_stage != null) {
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
-          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT) {
+          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
             for (VS_STAGE_GROUPS usr : groups) {
               usr.IS_FINISHED = 1;
               usr.recalculateLapTimes(mainForm.con, stage, true);
@@ -620,7 +620,7 @@ public class StageTab extends javax.swing.JPanel {
             //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
             if (1 == 1) {
               // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               checkGroupConstrain();
               Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
@@ -709,7 +709,7 @@ public class StageTab extends javax.swing.JPanel {
 
             }
           } else {
-            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
             // usual copy
             for (VS_STAGE_GROUPS user : groups) {
               user.GID = -1;

@@ -122,6 +122,7 @@ public class StageNewForm extends javax.swing.JFrame {
       jPilotType.setSelectedIndex(stage.PILOT_TYPE);      
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
       PilotsForNextRound.setText(""+stage.PILOTS_FOR_NEXT_ROUND);
+      jRaceType.setSelectedIndex(stage.RACE_TYPE);
     } else {
       jtLapsCount.setText("" + 3);
       parentStage.setSelectedItem(last_stage);
@@ -177,8 +178,6 @@ public class StageNewForm extends javax.swing.JFrame {
     jcbChannel4 = new javax.swing.JComboBox();
     jlChannel4 = new javax.swing.JLabel();
     jchGroupByPilotType = new javax.swing.JCheckBox();
-    jLabel5 = new javax.swing.JLabel();
-    parentStage = new javax.swing.JComboBox<>();
     panelQualificationResult = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
     jPilotType = new javax.swing.JComboBox<>();
@@ -189,6 +188,8 @@ public class StageNewForm extends javax.swing.JFrame {
     racePanel = new javax.swing.JPanel();
     jRaceTypeLabel = new javax.swing.JLabel();
     jRaceType = new javax.swing.JComboBox<>();
+    jLabel5 = new javax.swing.JLabel();
+    parentStage = new javax.swing.JComboBox<>();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -271,10 +272,6 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
-    jLabel5.setText("Copy groups from stage");
-
-    parentStage.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
     javax.swing.GroupLayout stagePanelLayout = new javax.swing.GroupLayout(stagePanel);
     stagePanel.setLayout(stagePanelLayout);
     stagePanelLayout.setHorizontalGroup(
@@ -282,7 +279,9 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(stagePanelLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addGroup(stagePanelLayout.createSequentialGroup()
+            .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addContainerGap())
           .addGroup(stagePanelLayout.createSequentialGroup()
             .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(stagePanelLayout.createSequentialGroup()
@@ -323,21 +322,13 @@ public class StageNewForm extends javax.swing.JFrame {
                     .addComponent(jlChannel8)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(jcbChannel8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-            .addGap(0, 0, Short.MAX_VALUE))
-          .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jLabel5)
-            .addGap(24, 24, 24)
-            .addComponent(parentStage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE))))
     );
     stagePanelLayout.setVerticalGroup(
       stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, stagePanelLayout.createSequentialGroup()
+        .addGap(4, 4, 4)
         .addComponent(jchGroupByPilotType)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel5)
-          .addComponent(parentStage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
@@ -446,6 +437,10 @@ public class StageNewForm extends javax.swing.JFrame {
         .addGap(0, 7, Short.MAX_VALUE))
     );
 
+    jLabel5.setText("Parent Stage");
+
+    parentStage.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -456,22 +451,27 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel4)
-              .addComponent(LapsCaption))
+            .addComponent(jLabel5)
+            .addGap(75, 75, 75)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(84, 84, 84)
                 .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(parentStage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())))
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(Caption)
-            .addGap(75, 75, 75)
-            .addComponent(jtCaption)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel4)
+                  .addComponent(LapsCaption))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(Caption)
+                .addGap(75, 75, 75)
+                .addComponent(jtCaption)))
             .addContainerGap())))
       .addComponent(racePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
@@ -491,7 +491,12 @@ public class StageNewForm extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(LapsCaption)
-          .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(parentStage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel5))))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -531,7 +536,7 @@ public class StageNewForm extends javax.swing.JFrame {
         .addComponent(butRecrateGropus)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
-        .addGap(291, 291, 291))
+        .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -607,6 +612,7 @@ public class StageNewForm extends javax.swing.JFrame {
       int count_of_pilots = jtCountOfPilots.getSelectedIndex() + 1;
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
+      stage.RACE_TYPE = jRaceType.getSelectedIndex();
       
       try {
         stage.PILOTS_FOR_NEXT_ROUND = Integer.parseInt(PilotsForNextRound.getText());
@@ -624,10 +630,17 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.IS_SELECTED = 1;
       if (stage.ID == -1) {
 
-        if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE && stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP) {
-          if (parent_stage!=null) {
+        if (stage.STAGE_TYPE == MainForm.STAGE_RACE){
+         if (parent_stage!=null) {
             stage.PILOT_TYPE = parent_stage.PILOT_TYPE;
+            stage.SORT_TYPE = MainForm.STAGE_SORT_BY_RACE_TIME;
           }
+        } 
+        
+        if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE && 
+                ( stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP ||
+                  stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE
+                )) {         
           stage.SORT_TYPE = MainForm.STAGE_SORT_BY_SCORE_DESC;
           stage.ID = -1;
           String caption = stage.CAPTION;
