@@ -67,6 +67,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   private List<StageTableData> rows;
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+  
+  public static boolean SHOW_CHECK_RACE_BUTTON = false;
 
   public StageTableData getTableData(int row) {
     if (row < rows.size()) {
@@ -698,7 +700,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
         return but;
       }
-      if (column == 2) {
+      if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
         JButton but = new JButton("Check");
         td.raceButton = but;
         if (isSelected) {
@@ -731,7 +733,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
 
       } else {
-        if (column == 0) {
+        if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
           if (td.pilot.CHECK_FOR_RACE == 0) {
             label.setBackground(Color.WHITE);
           } else {

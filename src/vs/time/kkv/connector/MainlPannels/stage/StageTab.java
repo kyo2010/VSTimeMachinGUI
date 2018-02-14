@@ -296,6 +296,12 @@ public class StageTab extends javax.swing.JPanel {
           StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
           if (td==null || !td.isGrpup) return;
           if (column == 2 && !infoWindowRunning && td!=null && td.isGrpup) {            
+           
+            if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+                JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information",  JOptionPane.INFORMATION_MESSAGE);
+                return;                
+              }
+            
             mainForm.vsTimeConnector.clearTransponderSearchQueue();
             for (VS_STAGE_GROUPS user : checkingGrpup.users){
               user.CHECK_FOR_RACE = 0;
