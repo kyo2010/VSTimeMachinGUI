@@ -14,6 +14,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPort;
@@ -42,6 +44,16 @@ public class VSTimeConnector {
   public int lastTransponderID = -1;
   public boolean WIFI = false;
   public String last_error = "";
+  public Set<Integer> transpondersIsAlive = new TreeSet<Integer>(); 
+  
+  public void clearTransponderSearchQueue(){
+    transpondersIsAlive.clear();
+  }
+  
+  public boolean isTransponderSeached(int trans_id){
+    if (transpondersIsAlive.contains(trans_id)) return true;
+    return false;
+  }
   
   public VSTimeConnector(String port) {
     comPort = port;
@@ -82,6 +94,32 @@ public class VSTimeConnector {
   public void getPower() throws SerialPortException {
     sentMessage("rcvpwr\r\n");
   }
+  
+  public void seachTransponder(int transponderID) throws SerialPortException{
+    sentMessage("searchtrans:"+transponderID+";\r\n");  
+  }
+  
+  /**
+   первие 3 бита это цвета: 3 бит красный, 2 зеленый, 1 голубой
+     self.clr1 = 1; - UIColor.blueColor;
+     self.clr2 = 2; - UIColor.greenColor;
+     self.clr3 = 3; - UIColor.cyanColor;
+     self.clr4 = 4; - UIColor.redColor;
+     self.clr5 = 5; - UIColor.magentaColor;
+     self.clr6 = 6; - UIColor.yellowColor;
+     self.clr7 = 7; - UIColor.whiteColor;
+     self.clr8 = 0; - UIColor.blackColor;
+   
+    если надо мигать в воротах то 6 бит надо установить в 1
+    * if(self.competition.flashInGate == 1){
+    *    color |= ( 1 << 6 );
+    * }
+    
+    Установка цвета:  задержка в 200ms будет, и три повтора
+   */
+  public void setColor(int transponderID, int color) throws SerialPortException{
+    sentMessage("sendcolor:"+transponderID+","+color+"\r\n");  
+  }    
 
   Boolean waitingVSTMParams = false;
   VSTM_ESPInfo current_info = null;
@@ -164,7 +202,14 @@ public class VSTimeConnector {
     if (commands[0].equalsIgnoreCase("ping")) {
       if (baseStationID == null) {
         baseStationID = params[1];
-      }          
+      }    
+    }else if (commands[0].equalsIgnoreCase("echotrans")) {
+      //echotrans:<ID>,<CRC>\r\n  
+      long crc8_f = Long.parseLong(params[1]);
+      int trans_id = Integer.parseInt(params[0]);
+      if (crc8!=crc8_f){
+        transpondersIsAlive.add(trans_id);
+      }                      
     }else if (commands[0].equalsIgnoreCase("timesynchok")) {
       baseStationID = params[0];
       sentMessage("timesynchreceived:" + params[0] + "\r\n");

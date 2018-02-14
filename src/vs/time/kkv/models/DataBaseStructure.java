@@ -31,6 +31,7 @@ public class DataBaseStructure {
     new DBAddonStructure(1.6, "ALTER TABLE VS_STAGE_GROUPS ADD LOSE INTEGER  NOT NULL DEFAULT 0;"),  
     new DBAddonStructure(1.7, "ALTER TABLE VS_STAGE ADD PILOTS_FOR_NEXT_ROUND INTEGER  NOT NULL DEFAULT 3;"),  
     new DBAddonStructure(1.8, "ALTER TABLE VS_STAGE_GROUPS ADD ACTIVE_FOR_NEXT_STAGE INTEGER NOT NULL DEFAULT 1;"),      
+    new DBAddonStructure(1.9, "ALTER TABLE VS_STAGE_GROUPS ADD CHECK_FOR_RACE INTEGER  NOT NULL DEFAULT 0;"),      
   };
 
   public static class DBAddonStructure {

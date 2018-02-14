@@ -114,6 +114,32 @@ public class StageTab extends javax.swing.JPanel {
       }
     }
   });    
+  
+  public int checkerCycle = 0;
+  VS_STAGE_GROUP checkingGrpup = null;
+  Timer checkerTimer = new Timer(300, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {      
+      try {
+        if (checkingGrpup!=null){
+          int pilot_num = checkerCycle % checkingGrpup.users.size();
+          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE==0){
+            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER);          
+          }  
+        }          
+        for (VS_STAGE_GROUPS user : checkingGrpup.users){
+          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)){
+            user.CHECK_FOR_RACE = 1;
+          }
+        }  
+      } catch (Exception ex) {
+      }
+      checkerCycle++;
+      if (checkerCycle*checkerTimer.getInitialDelay()>5000){
+        checkerTimer.stop();
+      }
+    }
+  });    
 
   public static String getTimeIntervel(long time) {
     long min = time / 1000 / 60;
@@ -269,7 +295,16 @@ public class StageTab extends javax.swing.JPanel {
           }
           StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
           if (td==null || !td.isGrpup) return;
-          if (column == 1 && !infoWindowRunning) {            
+          if (column == 2 && !infoWindowRunning && td!=null && td.isGrpup) {            
+            mainForm.vsTimeConnector.clearTransponderSearchQueue();
+            for (VS_STAGE_GROUPS user : checkingGrpup.users){
+              user.CHECK_FOR_RACE = 0;
+            }
+            checkerCycle = 0;
+            checkingGrpup = td.group;
+            checkerTimer.start();            
+          }
+          if (column == 1 && !infoWindowRunning && td!=null && td.isGrpup) {            
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
