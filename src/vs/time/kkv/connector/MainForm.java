@@ -27,6 +27,8 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.DBControlSqlLite.Utils.TempFileWrite;
 import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -34,6 +36,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.IOException;
+import java.net.URI;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
@@ -52,6 +56,7 @@ import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.Beep;
+import vs.time.kkv.connector.Utils.Html;
 import vs.time.kkv.connector.Utils.SpeekUtil;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.DataBaseStructure;
@@ -75,19 +80,19 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_QUALIFICATION = 1;
   public static final int STAGE_QUALIFICATION_RESULT = 2;
   public static final int STAGE_RACE = 3;
-  public static final int STAGE_RACE_RESULT = 4; 
-  
+  public static final int STAGE_RACE_RESULT = 4;
+
   public static final int STAGE_SORT_BY_RACE_TIME = 0;
   public static final int STAGE_SORT_BY_LAP_TIME = 1;
   public static final int STAGE_SORT_BY_SCORE_DESC = 2;
   public static final int STAGE_SORT_BY_LOSS_DESC = 3;
-  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score","Loss"};    
+  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss"};
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
-  public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle","None"};
+  public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result","Race","Race Result"};
-  
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result", "Race", "Race Result"};
+
   public static final int RACE_TYPE_WHOOP = 0;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 2;
@@ -140,6 +145,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public long raceTime = 0;
   public long unRaceTime = Calendar.getInstance().getTimeInMillis();
   public int lastTranponderID = -1;
+  public RaceHttpServer httpServer = null;
 
   public void setActiveRace(VS_RACE race) {
 
@@ -166,12 +172,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         for (VS_STAGE stage : stages) {
           StageTab p = new StageTab(this, stage);
           String prefix = "";
-          if (stage.STAGE_TYPE>MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE<MainForm.PILOT_TYPE_NONE_INDEX){
-            try{
-              prefix = " ["+MainForm.PILOT_TYPES[stage.PILOT_TYPE]+"]";
-            }catch(Exception e){}  
+          if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {
+            try {
+              prefix = " [" + MainForm.PILOT_TYPES[stage.PILOT_TYPE] + "]";
+            } catch (Exception e) {
+            }
           }
-          tabbedPanel.add(stage.CAPTION+prefix, p);
+          tabbedPanel.add(stage.CAPTION + prefix, p);
 
           //tabbedPanel.setForegroundAt(index, Color.BLUE);
           //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
@@ -187,7 +194,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (stage.IS_LOCK == 1) {
             tabbedPanel.setForegroundAt(index, Color.CYAN);
           }
-          
+
           if (stage.IS_SELECTED == 1) {
             tabbedPanel.setSelectedComponent(p);
             isFound = true;
@@ -284,9 +291,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //beep.paly("two");
     //beep.paly("one");
     //beep.paly("beep");
-    
-    
     TimerForm.init(this).setVisible(true);
+
+    if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
+      SystemOptions.runWebServer(this);
+    }
   }
 
   public void setStateMenu(boolean isConnected) {
@@ -298,7 +307,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (vsTimeConnector.WIFI) {
         menuParameters.setEnabled(false);
       }
-    }        
+    }
   }
 
   /**
@@ -322,6 +331,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jLabel3 = new javax.swing.JLabel();
     tabbedPanel = new javax.swing.JTabbedPane();
     jMenuBar1 = new javax.swing.JMenuBar();
+    jMenu3 = new javax.swing.JMenu();
+    mSystemOptions = new javax.swing.JMenuItem();
+    mSystemMonitor = new javax.swing.JMenuItem();
     jMenu1 = new javax.swing.JMenu();
     menuWLANSetting = new javax.swing.JMenuItem();
     menuConnect = new javax.swing.JMenuItem();
@@ -431,6 +443,26 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         tabbedPanelStateChanged(evt);
       }
     });
+
+    jMenu3.setText("System");
+
+    mSystemOptions.setText("Options");
+    mSystemOptions.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mSystemOptionsActionPerformed(evt);
+      }
+    });
+    jMenu3.add(mSystemOptions);
+
+    mSystemMonitor.setText("Web Monitor");
+    mSystemMonitor.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mSystemMonitorActionPerformed(evt);
+      }
+    });
+    jMenu3.add(mSystemMonitor);
+
+    jMenuBar1.add(jMenu3);
 
     jMenu1.setText("Time Machines");
 
@@ -638,6 +670,50 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //JOptionPane.showMessageDialog(this, ""+tabbedPanel.getSelectedComponent(), "test", JOptionPane.ERROR_MESSAGE);
   }//GEN-LAST:event_tabbedPanelStateChanged
 
+  private void mSystemOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemOptionsActionPerformed
+    // TODO add your handling code here:
+    SystemOptions.init(this).setVisible(true);
+  }//GEN-LAST:event_mSystemOptionsActionPerformed
+
+  private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
+    // TODO add your handling code here:    
+    String uri = "http://localhost:" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
+    System.out.println("open url:" + uri);
+
+    //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
+    //Html.createHTMLPane("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80));       
+    
+    if (Desktop.isDesktopSupported()) {
+      try {
+        Desktop.getDesktop().browse(new URI(uri));
+      } catch (Exception e) {
+        _toLog(e);
+      }
+    } else {
+      Runtime runtime = Runtime.getRuntime();
+      try {
+        runtime.exec("xdg-open " + uri);
+      } catch (IOException e) {
+        _toLog(e);
+      }
+      
+       //String os = System.getProperty("os.name").toLowerCase();
+       // for Ubuntu
+       // Runtime runtime = Runtime.getRuntime();
+       // runtime.exec("/usr/bin/firefox -new-window " + url);
+       
+       // mac
+       //Runtime rt = Runtime.getRuntime();
+       //rt.exec("open " + url);
+       
+       // windows
+       // rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+    }
+
+    //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
+    //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
+  }//GEN-LAST:event_mSystemMonitorActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -679,6 +755,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JLabel jLabel3;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
+  private javax.swing.JMenu jMenu3;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JPanel jPanel1;
@@ -686,6 +763,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTable jTable1;
   private javax.swing.JMenuItem jmAddStageToRace;
+  private javax.swing.JMenuItem mSystemMonitor;
+  private javax.swing.JMenuItem mSystemOptions;
   private javax.swing.JMenuItem menuAddUser;
   private javax.swing.JMenuItem menuConnect;
   private javax.swing.JMenuItem menuDisconnect;
@@ -807,7 +886,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (user != null) {
-          VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);         
+          VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
           try {
             if (activeGroup.stageTab != null) {
               activeGroup.stageTab.pleasuUpdateTable = true;
