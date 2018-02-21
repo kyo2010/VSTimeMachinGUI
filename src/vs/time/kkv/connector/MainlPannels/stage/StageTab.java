@@ -623,7 +623,6 @@ public class StageTab extends javax.swing.JPanel {
         {
           System.out.println("Error" + e);  //print the error 
         }
-
       } catch (Exception e) {
       }
     } catch (Exception e) {
