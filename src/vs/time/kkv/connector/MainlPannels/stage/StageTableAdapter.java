@@ -68,7 +68,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
   
-  public static boolean SHOW_CHECK_RACE_BUTTON = false;
+  public static boolean SHOW_CHECK_RACE_BUTTON = true;
 
   public StageTableData getTableData(int row) {
     if (row < rows.size()) {
@@ -736,7 +736,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
           if (td.pilot.CHECK_FOR_RACE == 0) {
             label.setBackground(Color.WHITE);
-          } else {
+          }if (td.pilot.CHECK_FOR_RACE == 2) {
+            label.setBackground(Color.RED);
+          }else {
             label.setBackground(Color.YELLOW);
           }
         } else {

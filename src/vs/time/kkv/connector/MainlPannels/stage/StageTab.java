@@ -303,11 +303,11 @@ public class StageTab extends javax.swing.JPanel {
               }
             
             mainForm.vsTimeConnector.clearTransponderSearchQueue();
+            checkingGrpup = td.group;
             for (VS_STAGE_GROUPS user : checkingGrpup.users){
               user.CHECK_FOR_RACE = 0;
             }
-            checkerCycle = 0;
-            checkingGrpup = td.group;
+            checkerCycle = 0;            
             checkerTimer.start();            
           }
           if (column == 1 && !infoWindowRunning && td!=null && td.isGrpup) {            
@@ -640,7 +640,7 @@ public class StageTab extends javax.swing.JPanel {
         }
         if (parent_stage == null) {
           try {
-            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "PARENT_STAGE_ID=?", stage.PARENT_STAGE_ID);
+            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=?", stage.PARENT_STAGE_ID);
           } catch (Exception e) {
           }
         }

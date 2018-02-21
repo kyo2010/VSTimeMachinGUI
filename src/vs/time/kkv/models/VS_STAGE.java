@@ -35,7 +35,7 @@ public class VS_STAGE {
   public int RACE_TYPE;
   public int PILOT_TYPE;
   public String PARENT_STAGE = "";
-  public long PARENT_STAGE_ID = 0;
+  public long PARENT_STAGE_ID = -1;
   public int IS_LOCK = 0;
   public int PILOTS_FOR_NEXT_ROUND = 3;
 
