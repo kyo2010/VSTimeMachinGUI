@@ -688,7 +688,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_mSystemOptionsActionPerformed
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
-    // TODO add your handling code here:    
+    if (httpServer==null){
+       SystemOptions.runWebServer(this);
+    }
+         
     String uri = "http://"+LOCAL_HOST+":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
     System.out.println("open url:" + uri);
 
