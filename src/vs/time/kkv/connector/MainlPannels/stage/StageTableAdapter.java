@@ -8,6 +8,7 @@ package vs.time.kkv.connector.MainlPannels.stage;
 import vs.time.kkv.connector.Race.*;
 import vs.time.kkv.connector.Users.*;
 import KKV.DBControlSqlLite.UserException;
+import static com.lowagie.text.pdf.BidiOrder.R;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -701,11 +702,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         return but;
       }
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
-        JButton but = new JButton("Check");
-        td.raceButton = but;
-        if (isSelected) {
+        JButton but = new JButton("Check");        
+        if (td.isGrpup && td.group==tab.checkingGrpup) {
           but.setForeground(table.getSelectionForeground());
-          but.setBackground(table.getSelectionBackground());
+          but.setBackground(new Color(193, 211, 245));
         } else {
           but.setForeground(table.getForeground());
           but.setBackground(UIManager.getColor("Button.background"));
@@ -736,10 +736,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
           if (td.pilot.CHECK_FOR_RACE == 0) {
             label.setBackground(Color.WHITE);
-          }if (td.pilot.CHECK_FOR_RACE == 2) {
-            label.setBackground(Color.RED);
+          }else if (td.pilot.CHECK_FOR_RACE == 2) {
+            label.setBackground(Color.LIGHT_GRAY);
           }else {
-            label.setBackground(Color.YELLOW);
+            if (td.pilot!=null && td.pilot.color!=null){
+              label.setBackground(td.pilot.color.getColor());
+            }else{  
+              label.setBackground(Color.YELLOW);
+            }
           }
         } else {
           if (td.pilot.parent == tab.mainForm.activeGroup) {

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.Map;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 
 public class VS_STAGE_GROUPS implements Transferable {
 
@@ -45,6 +46,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int LOSE = 0;
   public int ACTIVE_FOR_NEXT_STAGE = 1;
   public int CHECK_FOR_RACE = 0;
+  public VSColor color = null;
   
   public int wins = 0;
   public int loses = 0;

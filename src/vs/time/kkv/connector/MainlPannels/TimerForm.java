@@ -51,10 +51,11 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.unRaceTime==0) return;
+      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
       if (mainForm.activeGroup!=null){
         infoLabel.setText("");
         return;
-      }
+      }      
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.unRaceTime;
       infoLabel.setText(StageTab.getTimeIntervelForTimer(d));

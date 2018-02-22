@@ -618,9 +618,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     String port = ports.getSelectedItem().toString();
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
-      vsTimeConnector = new VSTimeConnector(port);
+      vsTimeConnector = new VSTimeConnector(this, port, WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
       try {
-        vsTimeConnector.connect(this, WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
+        vsTimeConnector.connect();
         setStateMenu(true);
       } catch (Exception e) {
         jLabel3.setText(e.toString());

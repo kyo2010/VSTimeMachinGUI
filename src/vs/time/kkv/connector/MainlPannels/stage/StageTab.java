@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultCellEditor;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
@@ -89,9 +90,10 @@ public class StageTab extends javax.swing.JPanel {
   public boolean pleasuUpdateTable = false;
   public boolean isOneTable = false;
 
-  Timer raceTimer = new Timer(500, new ActionListener() {
+  Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
+      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.raceTime;
       timerCaption.setText(getTimeIntervelForTimer(d));
@@ -117,26 +119,53 @@ public class StageTab extends javax.swing.JPanel {
   
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
-  Timer checkerTimer = new Timer(300, new ActionListener() {
+  Timer checkerTimer = new Timer(1000, new ActionListener() {
     @Override
-    public void actionPerformed(ActionEvent e) {      
+    public void actionPerformed(ActionEvent e) {   
+      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
+      Timer timer = (Timer)e.getSource();
+      InfoForm.init(mainForm, "Check",100).setVisible(true);
       try {
         if (checkingGrpup!=null){
           int pilot_num = checkerCycle % checkingGrpup.users.size();
-          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE==0){
-            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER);          
+          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE==2){
+            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER);            
+            try{
+              Thread.currentThread().wait(100);
+            }catch(Exception ein){}           
           }  
+          String channel = checkingGrpup.users.get(pilot_num).CHANNEL;
+          try{
+            int color_index = Integer.parseInt(channel.substring(1))-1;
+            if (color_index<VSColor.CHANNEL_COLORS.length){
+              mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, VSColor.CHANNEL_COLORS[color_index].getVSColor());
+              checkingGrpup.users.get(pilot_num).color = VSColor.CHANNEL_COLORS[color_index];
+            }
+          }catch(Exception ein){}          
         }          
         for (VS_STAGE_GROUPS user : checkingGrpup.users){
           if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)){
             user.CHECK_FOR_RACE = 1;
+            pleasuUpdateTable = true;
           }
         }  
       } catch (Exception ex) {
       }
       checkerCycle++;
-      if (checkerCycle*checkerTimer.getInitialDelay()>5000){
-        checkerTimer.stop();
+      
+      boolean all_ok = true;
+      for (VS_STAGE_GROUPS user : checkingGrpup.users){
+        if (user.CHECK_FOR_RACE!=1) all_ok = false;
+      };
+      
+      if (checkerCycle*timer.getInitialDelay()>15000 || all_ok){
+        timer.stop();
+        for (VS_STAGE_GROUPS user : checkingGrpup.users){
+          if (user.CHECK_FOR_RACE==2) user.CHECK_FOR_RACE = 0;
+        };
+        pleasuUpdateTable = true;
+        checkingGrpup = null;
+        InfoForm.init(mainForm, "").setVisible(false);
       }
     }
   });    
@@ -305,10 +334,11 @@ public class StageTab extends javax.swing.JPanel {
             mainForm.vsTimeConnector.clearTransponderSearchQueue();
             checkingGrpup = td.group;
             for (VS_STAGE_GROUPS user : checkingGrpup.users){
-              user.CHECK_FOR_RACE = 0;
+              user.CHECK_FOR_RACE = 2;
             }
+            pleasuUpdateTable = true;
             checkerCycle = 0;            
-            checkerTimer.start();            
+            checkerTimer.start();             
           }
           if (column == 1 && !infoWindowRunning && td!=null && td.isGrpup) {            
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {

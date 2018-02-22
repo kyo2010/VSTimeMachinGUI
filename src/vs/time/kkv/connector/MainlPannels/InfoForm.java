@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector.MainlPannels;
 
+import java.awt.Font;
 import javax.swing.JDialog;
 import vs.time.kkv.connector.MainForm;
 
@@ -41,7 +42,7 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
     //com.sun.awt.AWTUtilities.setWindowShape(this, s);
   }
   
-  public static InfoForm init(MainForm mainForm, String caption) {
+  public static InfoForm init(MainForm mainForm, String caption, int fontsize) {
     if (form == null) {
       form = new InfoForm();      
     }
@@ -49,8 +50,11 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
       mainForm.setFormOnCenter(form);
     }
     form.jLabel1.setText(caption);    
-    form.setVisible(false);
-    return form;
+    form.jLabel1.setFont(new Font(form.jLabel1.getFont().getFontName(),Font.BOLD,fontsize));
+    return form;    
+  }  
+  public static InfoForm init(MainForm mainForm, String caption) {
+    return init(mainForm,caption,210);
   }
   
   @SuppressWarnings("unchecked")
