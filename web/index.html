@@ -5,12 +5,45 @@
   <meta http-equiv="Pragma" Content="no-cache">
   <meta http-equiv="Expires" Content="0">
   <title>{TITLE}</title>
+
+<style>
+.btn-group .button1 {
+    background-color: #4CAF50; /* Green */
+    border: 1px solid green;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+}
+.btn-group .button1:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+.btn-group .button1:hover {
+    background-color: #3e8e41;
+}
+table
+{
+    border-collapse: collapse; /* эквивалент 'cellspacing' */
+} 
+table td, table th
+{
+    padding: 3; /* эквивалент 'cellpadding' */
+}
+</style>  
+  
 <body>
-  <h1>Drone Racing System<h1>
-  <h2>Race: {RACE_CAPTION}<h2>
-  <h2>Stage: {STAGE_CAPTION}<h2>
-  {MENU} 
-  <br><br>
+  <h3>Drone Racing System<br/>
+      Race: {RACE_CAPTION}<br/>
+      Stage: {STAGE_CAPTION}</h3>
+  <div class="btn-group">
+    <!-- <button class='button' onclick='location.href="href">caption</button>"  -->  
+    {MENU}
+  </div>  
+  <br/>
   {PAGE_CONTENT}
 
 </body>

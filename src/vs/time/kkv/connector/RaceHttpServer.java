@@ -27,6 +27,7 @@ import ru.nkv.var.StringVar;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
@@ -58,6 +59,11 @@ public class RaceHttpServer implements HttpHandler, Runnable {
     thread.start();
     connected = true;
   }
+  
+  public static String createMenuButton(String caption, String href){
+    return " <button class='button' onclick='location.href=\""+href+"\"'>"+caption+"</button>\n";
+        
+  }
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
@@ -76,7 +82,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
     }
 
     VS_STAGE active_stage = null;
-    String MENU = "<a href='?stage=reg'>Registration</a>&nbsp;";
+    String MENU = createMenuButton("Registration","?stage=reg");
 
     Map<String, Object> parameters = new HashMap<>();
     parseQuery(exchange.getRequestURI().toString(), parameters);
@@ -97,7 +103,8 @@ public class RaceHttpServer implements HttpHandler, Runnable {
     if (stages != null) {
       int index = 0;
       for (VS_STAGE stage : stages) {
-        MENU += "<a href='?stage=" + stage.ID + "'>" + stage.CAPTION + "</a>&nbsp;";
+        //MENU += "<a href='?stage=" + stage.ID + "'>" + stage.CAPTION + "</a>&nbsp;";
+        MENU += createMenuButton( stage.CAPTION,"?stage="+stage.ID);
         index++;
         if (stage.IS_SELECTED == 1 && stage_id == -1 && stage_id!=-2) {
           active_stage = stage;
@@ -111,8 +118,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
 
     String STAGE_CAPTION = "";
     String PAGE_CONTENT = "";
-    if (active_stage
-            == null) {
+    if (active_stage == null) {
       STAGE_CAPTION = "Registration";
        PAGE_CONTENT += "<table>\n";
         PAGE_CONTENT += "<tr>\n";
@@ -120,8 +126,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
         PAGE_CONTENT += "</tr>\n";
       try {
         List<VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? order by NUM", race_id);
-        for (VS_REGISTRATION reg : regs) {
-          PAGE_CONTENT += reg.NUM + ". " + reg.VS_USER_NAME + "<br/>";
+        for (VS_REGISTRATION reg : regs) {          
           PAGE_CONTENT += "<tr>\n";
           PAGE_CONTENT += "  <td>" + reg.NUM + "</td><td>"+reg.VS_USER_NAME+"</td>\n";
           PAGE_CONTENT += "</tr>\n";
@@ -167,7 +172,12 @@ public class RaceHttpServer implements HttpHandler, Runnable {
             }
           }
 
-          PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td>" + user.CHANNEL + "</td><td>"
+          String bgcolor="#ffffff";
+          VSColor color = VSColor.getColorForChannel(user.CHANNEL);
+          if (color!=null){
+            bgcolor=VSColor.getHTMLColorString(color.color);
+          }
+          PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' bgcolor='"+bgcolor+"'>" + user.CHANNEL + "</td><td>"
                   + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
                   + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
                   + status + "</td>\n";

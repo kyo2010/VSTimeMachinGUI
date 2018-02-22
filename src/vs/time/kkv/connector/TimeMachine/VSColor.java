@@ -30,6 +30,17 @@ public class VSColor {
   public Color color;
   public int vscolor = 0;
 
+  public static String getHTMLColorString(Color color) {
+    String red = Integer.toHexString(color.getRed());
+    String green = Integer.toHexString(color.getGreen());
+    String blue = Integer.toHexString(color.getBlue());
+
+    return "#"
+            + (red.length() == 1 ? "0" + red : red)
+            + (green.length() == 1 ? "0" + green : green)
+            + (blue.length() == 1 ? "0" + blue : blue);
+  }
+
   public VSColor(byte blue, byte green, byte red, Color color) {
     /*vscolor = (blue & 0xFF) | ((green & 0xFF) << 1) | ((red & 0xFF) << 2) | 
               ((1 & 0xFF) << 6); // blinking*/
