@@ -84,7 +84,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       try {
         serialPort.closePort();
       } catch (SerialPortException ex) {
-        Logger.getLogger(ConnectionCOMPort.class.getName()).log(Level.SEVERE, null, ex);
+        //Logger.getLogger(ConnectionCOMPort.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
   }

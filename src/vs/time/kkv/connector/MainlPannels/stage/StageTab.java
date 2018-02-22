@@ -134,14 +134,12 @@ public class StageTab extends javax.swing.JPanel {
               Thread.currentThread().wait(100);
             }catch(Exception ein){}           
           }  
-          String channel = checkingGrpup.users.get(pilot_num).CHANNEL;
-          try{
-            int color_index = Integer.parseInt(channel.substring(1))-1;
-            if (color_index<VSColor.CHANNEL_COLORS.length){
-              mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, VSColor.CHANNEL_COLORS[color_index].getVSColor());
-              checkingGrpup.users.get(pilot_num).color = VSColor.CHANNEL_COLORS[color_index];
-            }
-          }catch(Exception ein){}          
+                                        
+          VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL);
+          if (vs_color!=null){
+            mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
+          }  
+          checkingGrpup.users.get(pilot_num).color = vs_color;                                
         }          
         for (VS_STAGE_GROUPS user : checkingGrpup.users){
           if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)){

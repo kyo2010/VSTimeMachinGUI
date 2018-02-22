@@ -37,7 +37,10 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
@@ -146,6 +149,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public long unRaceTime = Calendar.getInstance().getTimeInMillis();
   public int lastTranponderID = -1;
   public RaceHttpServer httpServer = null;
+  public String LOCAL_HOST = "localhost";
 
   public void setActiveRace(VS_RACE race) {
 
@@ -295,6 +299,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this);
+    }
+    
+    try {
+      LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();      
+      System.out.println("Local IP: "+LOCAL_HOST);
+    } catch (UnknownHostException e) {
+      toLog(e);
+      //e.printStackTrace();
     }
   }
 
@@ -677,12 +689,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
     // TODO add your handling code here:    
-    String uri = "http://localhost:" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
+    String uri = "http://"+LOCAL_HOST+":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
     System.out.println("open url:" + uri);
 
     //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
     //Html.createHTMLPane("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80));       
-    
     if (Desktop.isDesktopSupported()) {
       try {
         Desktop.getDesktop().browse(new URI(uri));
@@ -696,18 +707,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       } catch (IOException e) {
         _toLog(e);
       }
-      
-       //String os = System.getProperty("os.name").toLowerCase();
-       // for Ubuntu
-       // Runtime runtime = Runtime.getRuntime();
-       // runtime.exec("/usr/bin/firefox -new-window " + url);
-       
-       // mac
-       //Runtime rt = Runtime.getRuntime();
-       //rt.exec("open " + url);
-       
-       // windows
-       // rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+
+      //String os = System.getProperty("os.name").toLowerCase();
+      // for Ubuntu
+      // Runtime runtime = Runtime.getRuntime();
+      // runtime.exec("/usr/bin/firefox -new-window " + url);
+      // mac
+      //Runtime rt = Runtime.getRuntime();
+      //rt.exec("open " + url);
+      // windows
+      // rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
     }
 
     //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
