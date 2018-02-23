@@ -20,12 +20,14 @@ import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import ru.nkv.var.StringVar;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
+import vs.time.kkv.connector.MainlPannels.InfoForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_RACE;
@@ -72,6 +74,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
     VS_RACE race = null;
     List<VS_STAGE> stages = null;
     int race_id = -1;
+    String INFO = "";
 
     try {
       race = VS_RACE.dbControl.getItem(mainForm.con, "IS_ACTIVE=1");
@@ -115,7 +118,20 @@ public class RaceHttpServer implements HttpHandler, Runnable {
       }
     } else {
     }
+    
+    INFO = "";
+        
+    long time = Calendar.getInstance().getTimeInMillis();
+    long activeGroupNum = -1;
+    if (mainForm.activeGroup != null && mainForm.activeGroup.stage.ID == active_stage.ID) {
+      activeGroupNum = mainForm.activeGroup.GROUP_NUM;
+      if (mainForm.raceTime!=0)
+        INFO = "Active race: Group"+activeGroupNum+". Race time: "+StageTab.getTimeIntervelForTimer(time-mainForm.raceTime);     
+    };
 
+    InfoForm infoForm = InfoForm.getCurrentInfo();
+    if (infoForm!=null) INFO = infoForm.caption;    
+    
     String STAGE_CAPTION = "";
     String PAGE_CONTENT = "";
     if (active_stage == null) {
@@ -139,13 +155,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
       STAGE_CAPTION = active_stage.CAPTION;
       try {
         List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", active_stage.ID);
-        long currentGroup = 0;
-        long activeGroupNum = -1;
-
-        if (mainForm.activeGroup != null && mainForm.activeGroup.stage.ID == active_stage.ID) {
-          activeGroupNum = mainForm.activeGroup.GROUP_NUM;
-        }
-
+        long currentGroup = 0;              
         PAGE_CONTENT += "<table>\n";
         PAGE_CONTENT += "<tr>\n";
         PAGE_CONTENT += "  <th>#</th><th>Pilot</th><th>Channel</th><th>Best Lap</th><th>Race Lap</th><th>Status</th>\n";
@@ -177,7 +187,7 @@ public class RaceHttpServer implements HttpHandler, Runnable {
           if (color!=null){
             bgcolor=VSColor.getHTMLColorString(color.color);
           }
-          PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' bgcolor='"+bgcolor+"'>" + user.CHANNEL + "</td><td>"
+          PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' bgcolor='"+bgcolor+"' class='ramka'>" + user.CHANNEL + "</td><td>"
                   + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
                   + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
                   + status + "</td>\n";
@@ -189,19 +199,14 @@ public class RaceHttpServer implements HttpHandler, Runnable {
         PAGE_CONTENT += "Groups are formatings";
       }
     }
-
     IVar varsPool = new VarPool();
-
-    varsPool.addChild(
-            new StringVar("TITLE", "Drone Racing System"));
-    varsPool.addChild(
-            new StringVar("RACE_CAPTION", race == null ? "None" : race.RACE_NAME));
-    varsPool.addChild(
-            new StringVar("STAGE_CAPTION", STAGE_CAPTION));
-    varsPool.addChild(
-            new StringVar("MENU", MENU));
-    varsPool.addChild(
-            new StringVar("PAGE_CONTENT", PAGE_CONTENT));
+    varsPool.addChild(new StringVar("TITLE", "Drone Racing System"));
+    varsPool.addChild(new StringVar("RACE_CAPTION", race == null ? "None" : race.RACE_NAME));
+    varsPool.addChild(new StringVar("STAGE_CAPTION", STAGE_CAPTION));
+    varsPool.addChild(new StringVar("MENU", MENU));
+    varsPool.addChild(new StringVar("PAGE_CONTENT", PAGE_CONTENT));
+    if (!INFO.equalsIgnoreCase("")) INFO = "<div class='info'>"+INFO+"</div><br/>";
+    varsPool.addChild(new StringVar("INFO", INFO));
 
     String html = varsPool.applyValues(templ);
 

@@ -350,11 +350,13 @@ public class StageTab extends javax.swing.JPanel {
                 user.IS_FINISHED = 1;
                 user.recalculateLapTimes(mainForm.con, stage, true);
               }
+              long group_num = mainForm.activeGroup.GROUP_NUM;
               mainForm.activeGroup.recalculateScores(mainForm);
               mainForm.activeGroup = null;
               raceTimer.stop();
               jTree.updateUI();
-              mainForm.speaker.speak("The Stage finshed");
+              //mainForm.speaker.speak("The Stage finshed");
+              mainForm.speaker.speak("Group "+group_num+" has been finshed");
               //timerCaption.setVisible(false);              
             } else {
 
@@ -383,6 +385,10 @@ public class StageTab extends javax.swing.JPanel {
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
                 InfoForm.init(mainForm, "!!!").setVisible(true);
+                /*mainForm.beep.palyAndWait("Group "+td.group.GROUP_NUM+" is ready");
+                try{
+                  wait(1000);
+                }catch(Exception ect){}*/
                 mainForm.beep.palyAndWait("attention");
                 InfoForm.init(mainForm, "3").setVisible(true);
                 //if (useSpeach) mainForm.speaker.speak("Three!");                

@@ -17,7 +17,7 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
   
   MainForm mainForm = null;
   static InfoForm form = null;
-  String caption = "";
+  public String caption = "";
 
   /**
    * Creates new form InfoForm
@@ -49,10 +49,17 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
     if (mainForm != null) {
       mainForm.setFormOnCenter(form);
     }
+    form.caption = caption;
     form.jLabel1.setText(caption);    
     form.jLabel1.setFont(new Font(form.jLabel1.getFont().getFontName(),Font.BOLD,fontsize));
     return form;    
   }  
+  
+  public static InfoForm getCurrentInfo(){
+    if (form!=null && form.isVisible()) return form;
+    return null;
+  }
+  
   public static InfoForm init(MainForm mainForm, String caption) {
     return init(mainForm,caption,210);
   }

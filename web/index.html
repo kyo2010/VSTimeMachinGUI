@@ -4,8 +4,8 @@
   <meta http-equiv="Cache-Control" Content="no-cache">
   <meta http-equiv="Pragma" Content="no-cache">
   <meta http-equiv="Expires" Content="0">
+  <meta http-equiv="refresh" content="3"> 
   <title>{TITLE}</title>
-
 <style>
 .btn-group .button1 {
     background-color: #4CAF50; /* Green */
@@ -27,11 +27,42 @@
 }
 table
 {
-    border-collapse: collapse; /* эквивалент 'cellspacing' */
+    border-collapse: collapse; 
+    border-spacing: 5px 5px; 
+
 } 
 table td, table th
 {
-    padding: 3; /* эквивалент 'cellpadding' */
+    padding: 3;
+}
+
+.info {
+  color: #0000; 
+  font-weight: bold;
+  background:#FFFF99; 
+  border: 1px #000066 solid; 
+  -moz-border-radius: 10px; 
+  -webkit-border-radius: 10px; 
+  -khtml-border-radius:10px; 
+  border-radius: 10px;
+  margin: auto;
+  overflow: auto; 
+  vertical-align: center;
+  text-align: center;
+  padding: 5px;
+}
+
+.ramka{
+  border: 1px #000066 solid;
+}
+
+#circle {
+	width: 100px;
+	height: 100px;
+	background: yellow;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
 }
 </style>  
   
@@ -39,6 +70,7 @@ table td, table th
   <h3>Drone Racing System<br/>
       Race: {RACE_CAPTION}<br/>
       Stage: {STAGE_CAPTION}</h3>
+  {INFO}
   <div class="btn-group">
     <!-- <button class='button' onclick='location.href="href">caption</button>"  -->  
     {MENU}
