@@ -33,6 +33,7 @@ import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
+import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
@@ -123,10 +124,11 @@ public class RaceHttpServer implements HttpHandler, Runnable {
         
     long time = Calendar.getInstance().getTimeInMillis();
     long activeGroupNum = -1;
-    if (mainForm.activeGroup != null && mainForm.activeGroup.stage.ID == active_stage.ID) {
-      activeGroupNum = mainForm.activeGroup.GROUP_NUM;
+    VS_STAGE_GROUP activeGroup = mainForm.activeGroup;
+    if (activeGroup != null && activeGroup.stage.ID == active_stage.ID) {
+      activeGroupNum = activeGroup.GROUP_NUM;
       if (mainForm.raceTime!=0)
-        INFO = "Active race: Group"+activeGroupNum+". Race time: "+StageTab.getTimeIntervelForTimer(time-mainForm.raceTime);     
+        INFO = "Race is active. Stage: "+activeGroup.stage.CAPTION+". Group"+activeGroupNum+". Race time: "+StageTab.getTimeIntervelForTimer(time-mainForm.raceTime);     
     };
 
     InfoForm infoForm = InfoForm.getCurrentInfo();
