@@ -154,7 +154,7 @@ public class StageTab extends javax.swing.JPanel {
               //Thread.currentThread().wait(400);              
               //System.out.println("time2: "+Calendar.getInstance().getTimeInMillis());    
             } catch (Exception ein) {
-            }
+            } 
             //mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER,vs_color.getVSColor());            
 
           }

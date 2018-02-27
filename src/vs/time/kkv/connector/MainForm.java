@@ -842,7 +842,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       if (activeGroup == null) {
         if (usr_reg != null) {
-          speaker.speak(usr_reg.VS_USER_NAME);
+          speaker.speak( speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
         } else {
           speaker.speak( speaker.getSpeachMessages().pilot("pilot " + lap.transponderID));
         }

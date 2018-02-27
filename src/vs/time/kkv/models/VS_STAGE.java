@@ -271,12 +271,7 @@ public class VS_STAGE {
 
       String krug = "";
       if (lap_for_sound != null) {
-        if (lap_for_sound.LAP == usr.parent.stage.LAPS) {
-          krug = "finish";
-        } else {
-          krug = mainForm.speaker.krugNumber(lap_for_sound.LAP + 1) + " круг";
-        }
-        mainForm.speaker.speak(usr.PILOT + " " + krug);
+        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().lapTime(usr.PILOT, lap_for_sound.LAP, usr.parent.stage.LAPS));
       }
 
     } catch (Exception e) {

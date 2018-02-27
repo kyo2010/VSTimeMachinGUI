@@ -16,6 +16,7 @@ import marytts.exceptions.MaryConfigurationException;
 import vs.time.kkv.connector.MainForm;
 import static vs.time.kkv.connector.MainForm._mainForm;
 import vs.time.kkv.connector.Utils.TTS.LANG.ISpeachMessages;
+import vs.time.kkv.connector.Utils.TTS.LANG.SpeekText;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -63,22 +64,15 @@ public class SpeekUtil extends Thread {
     reset();
     start();
   }
-
-  class SpeekQueue {
-
-    public String textToSpeach;
-
-    public SpeekQueue(String textToSpeach) {
-      this.textToSpeach = textToSpeach;
-    }
-  }
+ 
 
   @Override
   public void run() {
     while (!MainForm.PLEASE_CLOSE_ALL_THREAD) {
       if (stack.size() > 0) {
         try {
-          String txt = stack.get(0).textToSpeach;
+          SpeekText st = stack.get(0);
+          String txt =st.textToSpeach;
           stack.remove(0);
           if (defaultSpeaker.useTranslit()) {
             txt = translit(txt);
@@ -86,7 +80,7 @@ public class SpeekUtil extends Thread {
           if (defaultSpeaker != null) {
             defaultSpeaker.say(txt);
           }
-          sleep(1500);
+          sleep(st.time);
         } catch (Exception e) {
         }
       } else {
@@ -103,13 +97,13 @@ public class SpeekUtil extends Thread {
     return ISpeachMessages.EN;
   }
 
-  Vector<SpeekQueue> stack = new Vector<SpeekQueue>();
+  Vector<SpeekText> stack = new Vector<SpeekText>();
 
   public void reset() {
     defaultSpeaker = TextToSpeachFactory.getByNameTTS(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
   }
 
-  public void speak(final String inputText) {
+  public void speak(SpeekText st) {
     //if (inputText != null && !inputText.isEmpty()) {
     //  voice.speak(inputText);
     //}
@@ -121,7 +115,12 @@ public class SpeekUtil extends Thread {
         tts.speak(translit(inputText), 1.0f, true, true);
       }                 
     }.start();*/
-    stack.add(new SpeekQueue(inputText));
+    stack.add(st);
+    if (st.wait>0){
+      try{
+        wait(st.wait);
+      }catch(Exception e){}
+    }
   }
 
   public static void main(String[] args) throws MaryConfigurationException {
@@ -153,35 +152,6 @@ public class SpeekUtil extends Thread {
     return textOut.toString();
   }
 
-  public String krugNumber(int lap) {
-    if (lap == 1) {
-      return "первый";
-    }
-    if (lap == 2) {
-      return "второй";
-    }
-    if (lap == 3) {
-      return "третий";
-    }
-    if (lap == 4) {
-      return "четвертый";
-    }
-    if (lap == 5) {
-      return "пятый";
-    }
-    if (lap == 6) {
-      return "шестой";
-    }
-    if (lap == 7) {
-      return "седьмой";
-    }
-    if (lap == 8) {
-      return "восьмой";
-    }
-    if (lap == 9) {
-      return "девятый";
-    }
-    return "" + lap;
-  }
+  
 
 }

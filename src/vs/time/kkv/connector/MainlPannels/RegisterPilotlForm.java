@@ -321,7 +321,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   }//GEN-LAST:event_bSaveActionPerformed
 
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    mainForm.speaker.speak(edUser.getText());
+    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().msg(edUser.getText()));
   }//GEN-LAST:event_jButton1ActionPerformed
 
   private void butPilotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butPilotsActionPerformed

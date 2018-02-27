@@ -10,27 +10,76 @@ package vs.time.kkv.connector.Utils.TTS.LANG;
  * @author kyo
  */
 public class RusSpeachMessages extends ISpeachMessages{
-  public String groupFinished(long groupIndex){
-    return "Гонка группы " + groupIndex + " закончена";
+  public SpeekText groupFinished(long groupIndex){
+    return new SpeekText("Гонка группы " + groupIndex + " закончена",2000);
   };
   
-  public String pilotIsChecked(String pilot){
-    return pilot+" найден";
+  public SpeekText pilotIsChecked(String pilot){
+    return new SpeekText(pilot+" найден");
   }
   
-  public String raceIsOverIn10sec(){
-   return "Гонка закончится через десять секунд";
+  public SpeekText raceIsOverIn10sec(){
+   return new SpeekText("Гонка закончится через десять секунд",2000);
   }
   
-  public String connected(){
-    return "соединено";
+  public SpeekText connected(){
+    return new SpeekText("соединено");
   }
   
-  public String disconnected(){
-    return "разъединено";
+  public SpeekText disconnected(){
+    return new SpeekText("разъединено");
   }
   
-  public String pilot(String name){
-    return "Пилот "+name;
+  public SpeekText pilot(String name){
+    return new SpeekText("Пилот "+name);
+  }
+  
+  public SpeekText startMessage(String id){
+    if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
+    if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);
+    if (id.equalsIgnoreCase("three")) return new SpeekText("Три",350);
+    if (id.equalsIgnoreCase("attention")) return new SpeekText("Внимание",1000,1000);
+    return new SpeekText(id);      
+  }
+  
+   public SpeekText lapTime(String pilot, int lap, int countLaps) {
+    String krug = "";
+    if (lap == countLaps) {
+      krug = "финиш";
+    } else {
+      krug = krugNumber(lap + 1) + " круг";
+    }
+    return new SpeekText(pilot +" "+krug);
+  }
+  
+  public String krugNumber(int lap) {
+    if (lap == 1) {
+      return "первый";
+    }
+    if (lap == 2) {
+      return "второй";
+    }
+    if (lap == 3) {
+      return "третий";
+    }
+    if (lap == 4) {
+      return "четвертый";
+    }
+    if (lap == 5) {
+      return "пятый";
+    }
+    if (lap == 6) {
+      return "шестой";
+    }
+    if (lap == 7) {
+      return "седьмой";
+    }
+    if (lap == 8) {
+      return "восьмой";
+    }
+    if (lap == 9) {
+      return "девятый";
+    }
+    return "" + lap;
   }
 }

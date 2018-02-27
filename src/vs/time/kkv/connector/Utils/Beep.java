@@ -35,10 +35,10 @@ public class Beep {
     this.mainForm = mainForm;
     
     sounds.put("beep", new PreLoadSound("beep.wav"));
-    sounds.put("one",  new PreLoadSound("1.wav"));
-    sounds.put("two",  new PreLoadSound("2.wav"));
-    sounds.put("three",  new PreLoadSound("3.wav"));
-    sounds.put("attention",  new PreLoadSound("attention.wav"));
+    sounds.put("one",  new PreLoadSound("_1.wav"));
+    sounds.put("two",  new PreLoadSound("_2.wav"));
+    sounds.put("three",  new PreLoadSound("_3.wav"));
+    sounds.put("attention",  new PreLoadSound("_attention.wav"));
   }
 
   public void paly(String sound_id) {
@@ -47,7 +47,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak(sound_id);
+        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
       }
     } else {
       sound.play();
@@ -60,7 +60,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak(sound_id);
+        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
       }
     } else {
       sound.playAndWait();
@@ -73,7 +73,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak(sound_id);
+        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
       }
     } else {
       sound.playInThread();
