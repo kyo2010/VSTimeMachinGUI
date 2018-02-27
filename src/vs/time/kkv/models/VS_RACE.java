@@ -15,7 +15,9 @@ public class VS_RACE {
   public JDEDate RACE_DATE = new JDEDate();   //  NOT_DETECTED
   public int COUNT_OF_LAPS = 3;   //  NOT_DETECTED
   public int MIN_LAP_TIME = 18;
+  public long MAX_RACE_TIME = 300;
   public int IS_ACTIVE = 0;
+  public int PLEASE_IGNORE_FIRST_LAP = 0;
   public String CHANNEL1 = "";
   public String CHANNEL2 = "";
   public String CHANNEL3 = "";
@@ -37,6 +39,8 @@ public class VS_RACE {
     new DBModelField("CHANNEL2").setDbFieldName("\"CHANNEL2\""),
     new DBModelField("CHANNEL3").setDbFieldName("\"CHANNEL3\""),
     new DBModelField("CHANNEL4").setDbFieldName("\"CHANNEL4\""),
+    new DBModelField("PLEASE_IGNORE_FIRST_LAP").setDbFieldName("\"PLEASE_IGNORE_FIRST_LAP\""),
+    new DBModelField("MAX_RACE_TIME").setDbFieldName("\"MAX_RACE_TIME\""),    
   });
   
 }

@@ -105,7 +105,7 @@ public class RaceListModelTable extends AbstractTableModel {
   }
    
   public boolean isCellEditable(int row, int col){
-    if (col==2) return true;
+    //if (col==2) return true;
     return false;
   }
   

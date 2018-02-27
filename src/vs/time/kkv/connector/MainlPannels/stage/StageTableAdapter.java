@@ -51,6 +51,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -683,7 +684,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       if (column == 1) {
         JButton but = new JButton("Start!");
         if (tab.mainForm.activeGroup != null && tab.mainForm.activeGroup == td.group) {
-          but.setText("Stop");
+          but.setText("Stop");                        
+          but.setFont(but.getFont().deriveFont(Font.BOLD));
+          but.setForeground(Color.RED);         
         }
         td.raceButton = but;
         if (isSelected) {

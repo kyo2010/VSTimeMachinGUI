@@ -37,6 +37,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int isError = 0;
   public long LAPS;
   public long BEST_LAP;
+  public long FIRST_LAP;
   public long RACE_TIME;
   public int IS_RECALULATED = 0;
   public int IS_FINISHED = 0;
@@ -77,6 +78,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("LOSE").setDbFieldName("\"LOSE\""),
     new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),    
     new DBModelField("CHECK_FOR_RACE").setDbFieldName("\"CHECK_FOR_RACE\""),    
+    new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),    
   });
 
   public String toString() {

@@ -121,9 +121,11 @@ public class VSTimeConnector {
     sentMessage("rcvpwr\r\n");
   }
 
-  public void seachTransponder(int transponderID) throws SerialPortException {
-    sentMessage("searchtrans:" + transponderID + ";\r\n");
+  public void seachTransponder(int transponderID, int color) throws SerialPortException {
+    sentMessage("searchtrans:" + transponderID + ","+color+";\r\n");
   }
+  
+  
 
   /**
    * первие 3 бита это цвета: 3 бит красный, 2 зеленый, 1 голубой self.clr1 = 1;

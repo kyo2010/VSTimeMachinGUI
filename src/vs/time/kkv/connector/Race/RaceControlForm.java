@@ -65,7 +65,13 @@ public class RaceControlForm extends javax.swing.JFrame {
     if (race==null) race = new VS_RACE();
     jtLapsCount.setText(""+race.COUNT_OF_LAPS);
     jtMinLapTime.setText(""+race.MIN_LAP_TIME);
-    jtRaceName.setText(""+race.RACE_NAME);        
+    jtMaxRaceTime.setText(""+race.MAX_RACE_TIME);
+    jtRaceName.setText(""+race.RACE_NAME);    
+    if (race.PLEASE_IGNORE_FIRST_LAP==1){
+      jcIgnoreFirstLap.setSelected(true);
+    }else{
+      jcIgnoreFirstLap.setSelected(false);
+    }   
   }
 
   /**
@@ -84,6 +90,10 @@ public class RaceControlForm extends javax.swing.JFrame {
     jtLapsCount = new javax.swing.JTextField();
     jLabel3 = new javax.swing.JLabel();
     jtMinLapTime = new javax.swing.JTextField();
+    jLabel4 = new javax.swing.JLabel();
+    jtMaxRaceTime = new javax.swing.JTextField();
+    jcIgnoreFirstLap = new javax.swing.JCheckBox();
+    jLSeconds = new javax.swing.JLabel();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -99,6 +109,23 @@ public class RaceControlForm extends javax.swing.JFrame {
 
     jtMinLapTime.setText("18");
 
+    jLabel4.setText("Max Race Time");
+
+    jtMaxRaceTime.setText("0");
+
+    jcIgnoreFirstLap.setText("Ignore First Lap");
+    jcIgnoreFirstLap.setToolTipText("Please ust the flag if your first gate is the first");
+    jcIgnoreFirstLap.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+    jcIgnoreFirstLap.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+    jcIgnoreFirstLap.setIconTextGap(22);
+    jcIgnoreFirstLap.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jcIgnoreFirstLapActionPerformed(evt);
+      }
+    });
+
+    jLSeconds.setText("seconds");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -108,16 +135,20 @@ public class RaceControlForm extends javax.swing.JFrame {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel3)
+              .addComponent(jLabel4)
               .addComponent(jLabel1)
               .addComponent(jLabel2))
-            .addGap(40, 40, 40)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jtRaceName, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(jLabel3)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jtMaxRaceTime, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLSeconds))
+              .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jtRaceName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
+          .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
@@ -133,9 +164,16 @@ public class RaceControlForm extends javax.swing.JFrame {
           .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel4)
+          .addComponent(jtMaxRaceTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLSeconds))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
           .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jcIgnoreFirstLap)
+        .addGap(5, 5, 5))
     );
 
     bSave.setText("Save");
@@ -159,32 +197,32 @@ public class RaceControlForm extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(bSave)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(17, Short.MAX_VALUE)
+        .addGap(10, 10, 10)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
           .addComponent(bCancel))
-        .addContainerGap())
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -200,10 +238,18 @@ public class RaceControlForm extends javax.swing.JFrame {
       try{
         race.COUNT_OF_LAPS = Integer.parseInt(jtLapsCount.getText());
       }catch(Exception e){}
+      race.PLEASE_IGNORE_FIRST_LAP = 0;
+      if (jcIgnoreFirstLap.isSelected()) race.PLEASE_IGNORE_FIRST_LAP = 1;
       try{
         race.MIN_LAP_TIME = Integer.parseInt(jtMinLapTime.getText());
       }catch(Exception e){}  
       race.RACE_NAME = jtRaceName.getText();  
+      
+      race.MAX_RACE_TIME = 0;
+      try{
+        race.MAX_RACE_TIME = Integer.parseInt(jtMaxRaceTime.getText());
+      }catch(Exception e){}  
+      
       if (race.RACE_ID!=-1) {
         VS_RACE.dbControl.update(mainForm.con,race);        
       } else { 
@@ -217,6 +263,10 @@ public class RaceControlForm extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_bSaveActionPerformed
+
+  private void jcIgnoreFirstLapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcIgnoreFirstLapActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_jcIgnoreFirstLapActionPerformed
 
   /**
    * @param args the command line arguments
@@ -257,12 +307,16 @@ public class RaceControlForm extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
+  private javax.swing.JLabel jLSeconds;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
+  private javax.swing.JCheckBox jcIgnoreFirstLap;
   private javax.swing.JTextField jtLapsCount;
+  private javax.swing.JTextField jtMaxRaceTime;
   private javax.swing.JTextField jtMinLapTime;
   private javax.swing.JTextField jtRaceName;
   // End of variables declaration//GEN-END:variables

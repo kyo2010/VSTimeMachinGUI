@@ -6,7 +6,7 @@ package vs.time.kkv.models;
 import KKV.DBControlSqlLite.*;
 import java.sql.Time;
 
-public class VS_BANDS {
+public class VS_BANDS { 
   
   public String ID;   //  NOT_DETECTED
   public String POS;   //  NOT_DETECTED

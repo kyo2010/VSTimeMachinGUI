@@ -93,10 +93,12 @@ public class StageTab extends javax.swing.JPanel {
   Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
-      long t = Calendar.getInstance().getTimeInMillis();
-      long d = t - mainForm.raceTime;
-      timerCaption.setText(getTimeIntervelForTimer(d));
+      if (mainForm.vsTimeConnector != null) {
+        mainForm.vsTimeConnector.checkConnection();
+      }
+      long current_time = Calendar.getInstance().getTimeInMillis();
+      long raceTime = current_time - mainForm.raceTime;
+      timerCaption.setText(getTimeIntervelForTimer(raceTime));
       try {
         if (pleasuUpdateTree) {
           pleasuUpdateTree = false;
@@ -114,59 +116,85 @@ public class StageTab extends javax.swing.JPanel {
         }
       } catch (Exception ex) {
       }
+      long max_race_time = 0;
+      if (mainForm.activeRace!=null) max_race_time = mainForm.activeRace.MAX_RACE_TIME;
+      if (max_race_time!=0 && max_race_time!=-1){
+        max_race_time = max_race_time*1000;
+        long diff = (raceTime + 10000 - max_race_time)/1000;
+        long diff_ms = max_race_time - raceTime;
+        if (diff==0){
+           mainForm.speaker.speak("The Race will be finished in ten seconds");
+        }
+        if (diff_ms<0){
+          stopRace();
+        }
+      }
     }
-  });    
-  
+  });
+
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
-  Timer checkerTimer = new Timer(1000, new ActionListener() {
+  Timer checkerTimer = new Timer(400, new ActionListener() {
     @Override
-    public void actionPerformed(ActionEvent e) {   
-      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
-      Timer timer = (Timer)e.getSource();
-      InfoForm.init(mainForm, "Check",100).setVisible(true);
+    public void actionPerformed(ActionEvent e) {
+      if (mainForm.vsTimeConnector != null) {
+        mainForm.vsTimeConnector.checkConnection();
+      }
+      Timer timer = (Timer) e.getSource();
+      InfoForm.init(mainForm, "Check", 100).setVisible(true);
       try {
-        if (checkingGrpup!=null){
+        if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
-          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE==2){
-            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER);            
-            try{
-              Thread.currentThread().wait(100);
-            }catch(Exception ein){}           
-          }  
-                                        
-          VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL);
-          if (vs_color!=null){
-            mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
-          }  
-          checkingGrpup.users.get(pilot_num).color = vs_color;                                
-        }          
-        for (VS_STAGE_GROUPS user : checkingGrpup.users){
-          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)){
+          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
+            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL);
+            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
+            checkingGrpup.users.get(pilot_num).color = vs_color;
+            try {
+              System.out.println("time1: " + Calendar.getInstance().getTimeInMillis());
+              //Thread.currentThread().wait(400);              
+              //System.out.println("time2: "+Calendar.getInstance().getTimeInMillis());    
+            } catch (Exception ein) {
+            }
+            //mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER,vs_color.getVSColor());            
+
+          }
+
+          //VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL);
+          //if (vs_color!=null){
+          //  mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
+          //}                                     
+        }
+        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)) {
             user.CHECK_FOR_RACE = 1;
             pleasuUpdateTable = true;
+            mainForm.speaker.speak(user.PILOT+" is checked");
           }
-        }  
+        }
       } catch (Exception ex) {
       }
       checkerCycle++;
-      
+
       boolean all_ok = true;
-      for (VS_STAGE_GROUPS user : checkingGrpup.users){
-        if (user.CHECK_FOR_RACE!=1) all_ok = false;
+      for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+        if (user.CHECK_FOR_RACE != 1) {
+          all_ok = false;
+        }
       };
-      
-      if (checkerCycle*timer.getInitialDelay()>15000 || all_ok){
+
+      if (checkerCycle * timer.getInitialDelay() > 15000 || all_ok) {
         timer.stop();
-        for (VS_STAGE_GROUPS user : checkingGrpup.users){
-          if (user.CHECK_FOR_RACE==2) user.CHECK_FOR_RACE = 0;
+        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+          if (user.CHECK_FOR_RACE == 2) {
+            user.CHECK_FOR_RACE = 0;
+          }
         };
         pleasuUpdateTable = true;
         checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
       }
     }
-  });    
+  });
 
   public static String getTimeIntervel(long time) {
     long min = time / 1000 / 60;
@@ -175,7 +203,7 @@ public class StageTab extends javax.swing.JPanel {
     milisec = Math.round(milisec / 10);
     return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 2, "0");
   }
-  
+
   public static String getTimeIntervelForTimer(long time) {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
@@ -194,14 +222,14 @@ public class StageTab extends javax.swing.JPanel {
     //topPanel.setVisible(false);              
 
     timerCaption.setVisible(false);
-    
+
     if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
       isOneTable = true;
     }
 
     refreshData(false);
     refreshDataActionPerformed(null);
-    
+
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
     //jScrollPane1.setViewportView(treeTable);
@@ -209,7 +237,9 @@ public class StageTab extends javax.swing.JPanel {
     jTree.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (stage.IS_LOCK==1) return;
+        if (stage.IS_LOCK == 1) {
+          return;
+        }
         if (SwingUtilities.isRightMouseButton(e)) {
           int row = jTree.getClosestRowForLocation(e.getX(), e.getY());
           jTree.setSelectionRow(row);
@@ -311,8 +341,12 @@ public class StageTab extends javax.swing.JPanel {
 
       @Override
       public synchronized void mouseClicked(MouseEvent e) {
-        if (isOneTable) return;
-        if (stage.IS_LOCK==1) return;
+        if (isOneTable) {
+          return;
+        }
+        if (stage.IS_LOCK == 1) {
+          return;
+        }
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
@@ -321,42 +355,34 @@ public class StageTab extends javax.swing.JPanel {
             source.changeSelection(row, column, false, false);
           }
           StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
-          if (td==null || !td.isGrpup) return;
-          if (column == 2 && !infoWindowRunning && td!=null && td.isGrpup) {            
-           
+          if (td == null || !td.isGrpup) {
+            return;
+          }
+          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) {
+
             if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
-                JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information",  JOptionPane.INFORMATION_MESSAGE);
-                return;                
-              }
-            
+              JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information", JOptionPane.INFORMATION_MESSAGE);
+              return;
+            }
+
             mainForm.vsTimeConnector.clearTransponderSearchQueue();
             checkingGrpup = td.group;
-            for (VS_STAGE_GROUPS user : checkingGrpup.users){
+            for (VS_STAGE_GROUPS user : checkingGrpup.users) {
               user.CHECK_FOR_RACE = 2;
+              user.FIRST_LAP = 0;
             }
             pleasuUpdateTable = true;
-            checkerCycle = 0;            
-            checkerTimer.start();             
+            checkerCycle = 0;
+            checkerTimer.start();
           }
-          if (column == 1 && !infoWindowRunning && td!=null && td.isGrpup) {            
+          if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) {
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
 
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
-              mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
-              for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
-                user.IS_FINISHED = 1;
-                user.recalculateLapTimes(mainForm.con, stage, true);
-              }
-              long group_num = mainForm.activeGroup.GROUP_NUM;
-              mainForm.activeGroup.recalculateScores(mainForm);
-              mainForm.activeGroup = null;
-              raceTimer.stop();
-              jTree.updateUI();
-              //mainForm.speaker.speak("The Stage finshed");
-              mainForm.speaker.speak("Group "+group_num+" has been finshed");
+              stopRace();
               //timerCaption.setVisible(false);              
             } else {
 
@@ -378,9 +404,14 @@ public class StageTab extends javax.swing.JPanel {
 
               final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {
-                if (stage.IS_LOCK==1) return;
+                if (stage.IS_LOCK == 1) {
+                  return;
+                }
                 mainForm.activeGroup = td.group;
                 td.group.stageTab = StageTab.this;
+                for (VS_STAGE_GROUPS user : td.group.users){
+                  user.FIRST_LAP = 0;
+                }
                 timerCaption.setText(getTimeIntervelForTimer(0));
                 timerCaption.setVisible(true);
                 infoWindowRunning = true;
@@ -443,7 +474,7 @@ public class StageTab extends javax.swing.JPanel {
 
       }
 
-    });        
+    });
 
     if (isOneTable) {
       jSplitPane1.setVisible(false);
@@ -453,8 +484,21 @@ public class StageTab extends javax.swing.JPanel {
     }
   }
 
-  public void checkGroupConstrain() {
-
+  /*public void checkGroupConstrain() {      
+  }*/
+  public void stopRace() {
+    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
+    raceTimer.stop();    
+    for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
+      user.IS_FINISHED = 1;
+      user.recalculateLapTimes(mainForm.con, stage, true);
+    }
+    long group_num = mainForm.activeGroup.GROUP_NUM;
+    mainForm.activeGroup.recalculateScores(mainForm);
+    mainForm.activeGroup = null;
+    jTree.updateUI();
+    //mainForm.speaker.speak("The Stage finshed");
+    mainForm.speaker.speak("Group " + group_num + " has been finshed");
   }
 
   // expandAllNodes(tree, 0, tree.getRowCount());
@@ -668,12 +712,12 @@ public class StageTab extends javax.swing.JPanel {
       if (stage != null && stage.ID != -1) {
         VS_STAGE parent_stage = null;
         try {
-          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=?", stage.PARENT_STAGE);
+          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
         } catch (Exception e) {
         }
         if (parent_stage == null) {
           try {
-            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=?", stage.PARENT_STAGE_ID);
+            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", stage.PARENT_STAGE_ID, stage.RACE_ID);
           } catch (Exception e) {
           }
         }
@@ -695,7 +739,7 @@ public class StageTab extends javax.swing.JPanel {
             if (1 == 1) {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
-              checkGroupConstrain();
+              //checkGroupConstrain();
               Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
               for (VS_STAGE_GROUPS usr : groups) {
@@ -1008,6 +1052,10 @@ public class StageTab extends javax.swing.JPanel {
 
   private void butRemoveSatgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRemoveSatgeActionPerformed
     // TODO add your handling code here:
+    if (mainForm.activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
+      return;
+    }
     int res = JOptionPane.showConfirmDialog(this, "Do you want to delete '" + stage.CAPTION + "' Stage?", "Delete Stage", JOptionPane.YES_NO_OPTION);
     if (res == JOptionPane.YES_OPTION) {
       try {
@@ -1021,6 +1069,10 @@ public class StageTab extends javax.swing.JPanel {
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
     // TODO add your handling code here:
+    if (mainForm.activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
+      return;
+    }
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
@@ -1031,6 +1083,11 @@ public class StageTab extends javax.swing.JPanel {
 
   private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
     // TODO add your handling code here:
+    if (mainForm.activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
+      return;
+    }
+
     treeModel = new StageTreeModel(this);
     jTree.setModel(treeModel);
     jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
@@ -1050,7 +1107,7 @@ public class StageTab extends javax.swing.JPanel {
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     refreshData(true);
-    
+
     /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
       StageTableAdapter.STAGE_COLUMN[] columns = stageTableAdapter.getColumns();
       for (int index=0; index<columns.length; index++){        
@@ -1105,6 +1162,10 @@ public class StageTab extends javax.swing.JPanel {
 
   private void bNewStageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewStageActionPerformed
     // TODO add your handling code here:
+    if (mainForm.activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
+      return;
+    }
     StageNewForm.init(mainForm, null).setVisible(true);
   }//GEN-LAST:event_bNewStageActionPerformed
 

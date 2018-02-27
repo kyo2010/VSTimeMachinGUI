@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector;
 
+import vs.time.kkv.connector.web.RaceHttpServer;
 import vs.time.kkv.connector.connection.VSTimeConnector;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
@@ -174,6 +175,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         boolean isFound = false;
         StageTab stage1 = null;
         for (VS_STAGE stage : stages) {
+          stage.race = race;
           StageTab p = new StageTab(this, stage);
           String prefix = "";
           if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {

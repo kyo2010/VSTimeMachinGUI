@@ -38,6 +38,7 @@ public class VS_STAGE {
   public long PARENT_STAGE_ID = -1;
   public int IS_LOCK = 0;
   public int PILOTS_FOR_NEXT_ROUND = 3;
+  public VS_RACE race = null;
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
 
@@ -47,8 +48,8 @@ public class VS_STAGE {
    * Constructor
    */
   public VS_STAGE() {
-  } 
-  
+  }
+
   public static DBModelControl<VS_STAGE> dbControl = new DBModelControl<VS_STAGE>(VS_STAGE.class, "VS_STAGE", new DBModelField[]{
     new DBModelField("ID").setDbFieldName("\"ID\"").setAutoIncrement(),
     new DBModelField("RACE_ID").setDbFieldName("\"RACE_ID\""),
@@ -68,8 +69,7 @@ public class VS_STAGE {
     new DBModelField("PILOT_TYPE").setDbFieldName("\"PILOT_TYPE\""),
     new DBModelField("PARENT_STAGE_ID").setDbFieldName("\"PARENT_STAGE_ID\""),
     new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
-    new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),
-  });
+    new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),});
 
   public static void resetSelectedTab(Connection conn, long raceID) {
     try {
@@ -132,7 +132,7 @@ public class VS_STAGE {
       VS_STAGE_GROUP group = groups.get(groupID);
       group.useChannels = "";
       for (VS_STAGE_GROUPS usr : group.users) {
-        usr.isError = 0;        
+        usr.isError = 0;
         if (group.useChannels.indexOf(usr.CHANNEL) >= 0) {
           usr.isError = 1;
         }
@@ -244,23 +244,31 @@ public class VS_STAGE {
         usr.SCORE = 0;
       }
 
-      if (lap.TRANSPONDER_TIME >= MIN_LAP_TIME * 1000) {
-        try {
-          mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.TRANSPONDER + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
-        } catch (Exception ein) {
-        }
-        VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
-        VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
-        lap_return = lap;
+      VS_RACE_LAP lap_for_sound = null;
+      if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP == 0) {
+        usr.FIRST_LAP = time;        
+        lap_for_sound = lap;
+        lap_for_sound.LAP = 0;
+      } else {        
+        if (lap.TRANSPONDER_TIME >= MIN_LAP_TIME * 1000) {
+          try {
+            mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.TRANSPONDER + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
+          } catch (Exception ein) {
+          }
+          VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
+          VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
+          lap_for_sound = lap;
+          lap_return = lap;
+        }        
       }
       usr.IS_RECALULATED = 0;
 
       String krug = "";
-      if (lap_return != null) {
-        if (lap_return.LAP == usr.parent.stage.LAPS) {
+      if (lap_for_sound != null) {
+        if (lap_for_sound.LAP == usr.parent.stage.LAPS) {
           krug = "finish";
         } else {
-          krug = mainForm.speaker.krugNumber(lap_return.LAP + 1) + " круг";
+          krug = mainForm.speaker.krugNumber(lap_for_sound.LAP + 1) + " круг";
         }
         mainForm.speaker.speak(usr.PILOT + " " + krug);
       }
