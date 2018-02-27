@@ -819,7 +819,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
       long time = Calendar.getInstance().getTimeInMillis();
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
-      if (Math.abs(time - lap.time) < 1000) {
+      if (Math.abs(time - lap.time) < 7000) {
         time = lap.time;
       }
       this.lastTranponderID = lap.transponderID;

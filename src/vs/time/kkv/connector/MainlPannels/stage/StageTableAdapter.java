@@ -719,7 +719,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
       table.setRowHeight(row, 30);
-
+      
       if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
         if (isQualificated(td.pilot)) {
         } else {

@@ -243,6 +243,12 @@ public class VS_STAGE {
         usr.BEST_LAP = 0;
         usr.SCORE = 0;
       }
+      
+      long lap_time = lap.TRANSPONDER_TIME;
+      
+      if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP != 0 && lap.LAP==1) {
+        lap_time = time - usr.FIRST_LAP;
+      }
 
       VS_RACE_LAP lap_for_sound = null;
       if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP == 0) {
@@ -250,7 +256,7 @@ public class VS_STAGE {
         lap_for_sound = lap;
         lap_for_sound.LAP = 0;
       } else {        
-        if (lap.TRANSPONDER_TIME >= MIN_LAP_TIME * 1000) {
+        if (lap_time >= MIN_LAP_TIME * 1000) {
           try {
             mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.TRANSPONDER + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
           } catch (Exception ein) {
