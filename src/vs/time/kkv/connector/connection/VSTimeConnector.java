@@ -14,6 +14,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
@@ -48,8 +50,9 @@ public class VSTimeConnector {
   public ConnectionVSTimeMachine transport = null;
   public int lastTransponderID = -1;
   public boolean WIFI = false;
-  public String last_error = "";
-  public Set<Integer> transpondersIsAlive = new TreeSet<Integer>();
+  public String last_error = "";   
+  
+  public Map<Integer, VS_EchoTrans> transpondersIsAlive = new HashMap<Integer, VS_EchoTrans>();
   long lastPingTime = 0;
 
   public void clearTransponderSearchQueue() {
@@ -57,7 +60,7 @@ public class VSTimeConnector {
   }
 
   public boolean isTransponderSeached(int trans_id) {
-    if (transpondersIsAlive.contains(trans_id)) {
+    if (transpondersIsAlive.get(trans_id)!=null) {
       return true;
     }
     return false;
@@ -232,10 +235,15 @@ public class VSTimeConnector {
       } else if (commands[0].equalsIgnoreCase("echotrans")) {
         //echotrans:<ID>,<CRC>\r\n  
         if (params.length >= 2) {
-          long crc8_f = Long.parseLong(params[1]);
+          int last_index = params.length-1;
+          long crc8_f = Long.parseLong(params[last_index]);
+          String firmWareVersion = "not detected";
+          if (params.length > 2){
+            firmWareVersion = params[1];
+          }
           int trans_id = Integer.parseInt(params[0]);
-          if (crc8 == crc8_f) {
-            transpondersIsAlive.add(trans_id);
+          if (crc8 == crc8_f) {            
+            transpondersIsAlive.put(trans_id, new VS_EchoTrans(trans_id, firmWareVersion));
           }
         }
       } else if (commands[0].equalsIgnoreCase("timesynchok")) {
