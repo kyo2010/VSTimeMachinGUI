@@ -252,12 +252,15 @@ public class RaceControlForm extends javax.swing.JFrame {
       
       if (race.RACE_ID!=-1) {
         VS_RACE.dbControl.update(mainForm.con,race);        
+        if (mainForm.activeRace!=null && mainForm.activeRace.RACE_ID==race.RACE_ID){
+          mainForm.activeRace = race;
+        }
       } else { 
         VS_RACE.dbControl.insert(mainForm.con, race);
         mainForm.setActiveRace(race);
       }  
       setVisible(false);
-      RaceList.init(mainForm).refreshData();
+      RaceList.init(mainForm).refreshData();      
     } catch (Exception e) {
       mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);

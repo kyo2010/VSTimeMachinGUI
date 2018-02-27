@@ -7,6 +7,7 @@ package vs.time.kkv.connector;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
+import vs.time.kkv.connector.Utils.TTS.TextToSpeachFactory;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -34,6 +35,7 @@ public class SystemOptions extends javax.swing.JFrame {
     
     singelton.WEB_PORT.setText(VS_SETTING.getParam(mainForm.con, "WEB_PORT", "80"));      
     singelton.WebServiceStartOnRun.setSelected( VS_SETTING.getParam(mainForm.con, "START_HTTPD_ON_RUN", 0)==1?true:false );
+    singelton.jcTTS_API.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
     
     SystemOptions th = singelton;
     Point p = mainForm.getLocationOnScreen();
@@ -61,8 +63,10 @@ public class SystemOptions extends javax.swing.JFrame {
     jButCancel = new javax.swing.JButton();
     WebServiceStartOnRun = new javax.swing.JCheckBox();
     bHTTPServer = new javax.swing.JButton();
+    jLabel2 = new javax.swing.JLabel();
+    jcTTS_API = new javax.swing.JComboBox<>();
 
-    setTitle("WLan Setting");
+    setTitle("System Settings");
     setResizable(false);
 
     jLabel1.setText("HTTP Server Port");
@@ -106,6 +110,7 @@ public class SystemOptions extends javax.swing.JFrame {
 
     WebServiceStartOnRun.setText("Start HTTP Server automatically");
     WebServiceStartOnRun.setToolTipText("");
+    WebServiceStartOnRun.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
     WebServiceStartOnRun.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         WebServiceStartOnRunActionPerformed(evt);
@@ -119,6 +124,11 @@ public class SystemOptions extends javax.swing.JFrame {
       }
     });
 
+    jLabel2.setText("Text to speach API");
+
+    jcTTS_API.setModel(new javax.swing.DefaultComboBoxModel(TextToSpeachFactory.getTTSNames()));
+    jcTTS_API.setName(""); // NOI18N
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -126,14 +136,20 @@ public class SystemOptions extends javax.swing.JFrame {
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jLabel1)
-            .addGap(62, 62, 62)
-            .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addComponent(WebServiceStartOnRun))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(bHTTPServer)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(62, 62, 62)
+                .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(WebServiceStartOnRun))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(bHTTPServer))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addGap(18, 18, 18)
+            .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -147,7 +163,11 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(WebServiceStartOnRun)
           .addComponent(bHTTPServer))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel2)
+          .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -166,6 +186,8 @@ public class SystemOptions extends javax.swing.JFrame {
     
     VS_SETTING.setParam(mainForm.con, "WEB_PORT", ""+WEB_PORT_INT);
     VS_SETTING.setParam(mainForm.con, "START_HTTPD_ON_RUN", ""+ (WebServiceStartOnRun.isSelected() ? 1 : 0));
+    VS_SETTING.setParam(mainForm.con, "TTS_API", ""+jcTTS_API.getSelectedItem());
+    mainForm.speaker.reset();
     
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
@@ -204,6 +226,8 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JComboBox<String> jcTTS_API;
   // End of variables declaration//GEN-END:variables
 }

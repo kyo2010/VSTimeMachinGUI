@@ -244,7 +244,8 @@ public class VSTimeConnector {
           int trans_id = Integer.parseInt(params[0]);
           if (crc8 == crc8_f) {            
             transpondersIsAlive.put(trans_id, new VS_EchoTrans(trans_id, firmWareVersion));
-          }
+            sentMessage("echook:"+trans_id+"\r\n");
+          }          
         }
       } else if (commands[0].equalsIgnoreCase("timesynchok")) {
         baseStationID = params[0];

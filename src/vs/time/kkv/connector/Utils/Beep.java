@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector.Utils;
 
+import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -17,6 +18,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import vs.time.kkv.connector.MainForm;
 
 /**
  *
@@ -25,9 +27,13 @@ import javax.sound.sampled.DataLine;
 public class Beep {
 
   Map<String, PreLoadSound> sounds = new HashMap<String, PreLoadSound>();
-  SpeekUtil speaker = new SpeekUtil();
-
-  public Beep() {
+  
+  //SpeekUtil speaker = null;
+  
+  MainForm mainForm;
+  public Beep(MainForm mainForm) {
+    this.mainForm = mainForm;
+    
     sounds.put("beep", new PreLoadSound("beep.wav"));
     sounds.put("one",  new PreLoadSound("1.wav"));
     sounds.put("two",  new PreLoadSound("2.wav"));
@@ -41,7 +47,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        speaker.speak(sound_id);
+        mainForm.speaker.speak(sound_id);
       }
     } else {
       sound.play();
@@ -54,7 +60,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        speaker.speak(sound_id);
+        mainForm.speaker.speak(sound_id);
       }
     } else {
       sound.playAndWait();
@@ -67,7 +73,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        speaker.speak(sound_id);
+        mainForm.speaker.speak(sound_id);
       }
     } else {
       sound.playInThread();

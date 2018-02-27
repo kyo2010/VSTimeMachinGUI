@@ -61,7 +61,7 @@ import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.Html;
-import vs.time.kkv.connector.Utils.SpeekUtil;
+import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.DataBaseStructure;
 import vs.time.kkv.models.VS_BANDS;
@@ -106,6 +106,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
   public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
+  
+  public static boolean PLEASE_CLOSE_ALL_THREAD = false;
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -141,8 +143,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public TempFileWrite lap_log = new TempFileWrite("lap.log");
   public TempFileWrite race_log = new TempFileWrite("race.csv");
   public Connection con = null;
-  public SpeekUtil speaker = new SpeekUtil();
-  public Beep beep = new Beep();
+  public SpeekUtil speaker = null;
+  public Beep beep = null;
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public RegistrationTab regForm = null;
@@ -235,6 +237,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       public void windowClosing(WindowEvent e) {
         int res = JOptionPane.showConfirmDialog(MainForm.this, "Do you want to close?", "Exit ?", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
+          PLEASE_CLOSE_ALL_THREAD = true;
           if (vsTimeConnector != null) {
             vsTimeConnector.disconnect();
           }
@@ -291,7 +294,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
     });
-
+    
+    speaker = new SpeekUtil(this);
+    beep = new Beep(this);
+    
     //beep.palyAndWait("attention");
     //beep.paly("three");
     //beep.paly("two");
@@ -641,7 +647,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         System.out.println(e);
         vsTimeConnector = null;
       }
-      speaker.speak("connected");
+      speaker.speak(speaker.getSpeachMessages().connected());
     }
   }//GEN-LAST:event_connectButtonActionPerformed
 
@@ -652,7 +658,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     vsTimeConnector = null;
     setStateMenu(false);
     jLabel3.setText("disconnected");
-    speaker.speak("disconnected");
+    speaker.speak(speaker.getSpeachMessages().disconnected());   
   }//GEN-LAST:event_menuDisconnectActionPerformed
 
   private void menuWLANSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuWLANSettingActionPerformed
@@ -838,7 +844,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         if (usr_reg != null) {
           speaker.speak(usr_reg.VS_USER_NAME);
         } else {
-          speaker.speak("pilot " + lap.transponderID);
+          speaker.speak( speaker.getSpeachMessages().pilot("pilot " + lap.transponderID));
         }
       }
 

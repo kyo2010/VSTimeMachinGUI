@@ -39,7 +39,7 @@ import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.InfoForm;
 import vs.time.kkv.connector.Utils.KKVTreeTable.JTreeTable;
 import vs.time.kkv.connector.Utils.KKVTreeTable.TreeCellRender;
-import vs.time.kkv.connector.Utils.SpeekUtil;
+import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUP;
@@ -123,7 +123,7 @@ public class StageTab extends javax.swing.JPanel {
         long diff = (raceTime + 10000 - max_race_time)/1000;
         long diff_ms = max_race_time - raceTime;
         if (diff==0){
-           mainForm.speaker.speak("The Race will be finished in ten seconds");
+           mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().raceIsOverIn10sec() );
         }
         if (diff_ms<0){
           stopRace();
@@ -168,7 +168,7 @@ public class StageTab extends javax.swing.JPanel {
           if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)) {
             user.CHECK_FOR_RACE = 1;
             pleasuUpdateTable = true;
-            mainForm.speaker.speak(user.PILOT+" is checked");
+            mainForm.speaker.speak(  mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT) );
           }
         }
       } catch (Exception ex) {
@@ -498,7 +498,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.activeGroup = null;
     jTree.updateUI();
     //mainForm.speaker.speak("The Stage finshed");
-    mainForm.speaker.speak("Group " + group_num + " has been finshed");
+    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().groupFinished(group_num));
   }
 
   // expandAllNodes(tree, 0, tree.getRowCount());
