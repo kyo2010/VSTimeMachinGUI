@@ -7,6 +7,7 @@ package vs.time.kkv.connector.MainlPannels;
 
 import java.awt.Font;
 import javax.swing.JOptionPane;
+import javax.swing.text.DefaultCaret;
 import vs.time.kkv.connector.MainForm;
 import static vs.time.kkv.connector.MainlPannels.InfoForm.form;
 import vs.time.kkv.connector.TimeMachine.VSColor;
@@ -22,6 +23,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
    */
   public VSTeamConsole() {
     initComponents();
+    DefaultCaret caret = (DefaultCaret)jText.getCaret();
+    caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
   }
   
   public MainForm mainForm = null;
@@ -32,11 +35,11 @@ public class VSTeamConsole extends javax.swing.JFrame {
   public static VSTeamConsole init(MainForm mainForm) {
     if (_form == null) {
       _form = new VSTeamConsole();      
+      if (mainForm != null) {
+        mainForm.setFormOnCenter(_form);
+      }
     }
-    _form.mainForm = mainForm;
-    if (mainForm != null) {
-      mainForm.setFormOnCenter(_form);
-    }    
+     if (mainForm != null) _form.mainForm = mainForm;        
     _form.jcbShowPing.setSelected(showPing);
     _form.jtLastTransID.setText( ""+ mainForm.lastTranponderID );
     _form.setVisible(false);    
@@ -76,6 +79,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
     jText = new javax.swing.JTextArea();
 
     setTitle("Console");
+    setAlwaysOnTop(true);
+    setIconImage(MainForm.getWindowsIcon().getImage());
     addWindowListener(new java.awt.event.WindowAdapter() {
       public void windowClosed(java.awt.event.WindowEvent evt) {
         formWindowClosed(evt);
@@ -332,7 +337,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   }
   
   public static synchronized void addText(String text){
-    _form.jText.append(text+"\n");
+    _form.jText.append(text+"\n");   
   }   
   
   public static synchronized void setLastTransID(String text){

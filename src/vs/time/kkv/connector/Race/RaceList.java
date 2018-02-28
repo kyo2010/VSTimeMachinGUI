@@ -180,6 +180,7 @@ public class RaceList extends javax.swing.JFrame {
     jtUsers = new javax.swing.JTable();
 
     setTitle("Race List");
+    setIconImage(MainForm.getWindowsIcon().getImage());
 
     butAddNewRace.setText("Add New Race");
     butAddNewRace.setPreferredSize(new java.awt.Dimension(80, 23));

@@ -110,6 +110,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     bCancel = new javax.swing.JButton();
 
     setTitle("Pilot Card");
+    setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
 
     jLabel1.setText("Transponder ID:");

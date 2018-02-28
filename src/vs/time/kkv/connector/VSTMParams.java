@@ -118,6 +118,7 @@ public class VSTMParams extends javax.swing.JFrame {
     jButton2 = new javax.swing.JButton();
 
     setFocusCycleRoot(false);
+    setIconImage(MainForm.getWindowsIcon().getImage());
     setModalExclusionType(null);
     setName("VSTMParamsForm"); // NOI18N
     setResizable(false);

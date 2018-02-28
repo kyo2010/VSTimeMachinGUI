@@ -129,6 +129,7 @@ public class UserList extends javax.swing.JFrame {
     jtUsers = new javax.swing.JTable();
 
     setTitle("Pilot List");
+    setIconImage(MainForm.getWindowsIcon().getImage());
 
     jLabel1.setText("Find Pilot:");
 

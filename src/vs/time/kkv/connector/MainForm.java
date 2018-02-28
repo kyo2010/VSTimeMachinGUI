@@ -753,6 +753,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     VSTeamConsole.init(this).setVisible(true);
   }//GEN-LAST:event_mConsoleActionPerformed
 
+  public static ImageIcon windowsIcon = null;
+
+  public static ImageIcon getWindowsIcon() {
+    return windowsIcon;
+  }
+
+  public static void setWindowsIcon(URL url) {    
+    windowsIcon = new ImageIcon(url);
+  }
+  
+  
   /**
    * @param args the command line arguments
    */
@@ -775,9 +786,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       public void run() {
         MainForm mainForm = new MainForm("VS Time Connector");
         //javax.swing.ImageIcon icon = new javax.swing.ImageIcon( getProperty('fiji.dir')+"/images/vs-logo.png" );
-        URL url = getClass().getResource("/images/vs-logo.png");
-        ImageIcon icon = new ImageIcon(url);
-        mainForm.setIconImage(icon.getImage());
+        
+        setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
+        mainForm.setIconImage(getWindowsIcon().getImage());
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         mainForm.setSize(dim.width / 2, dim.height / 2);

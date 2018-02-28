@@ -67,6 +67,7 @@ public class WLANSetting extends javax.swing.JFrame {
     jButCancel = new javax.swing.JButton();
 
     setTitle("WLan Setting");
+    setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
 
     jLabel1.setText("Listining Port");

@@ -67,6 +67,7 @@ public class SystemOptions extends javax.swing.JFrame {
     jcTTS_API = new javax.swing.JComboBox<>();
 
     setTitle("System Settings");
+    setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
 
     jLabel1.setText("HTTP Server Port");

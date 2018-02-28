@@ -99,6 +99,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     bCancel = new javax.swing.JButton();
 
     setTitle("Race Card");
+    setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
 
     jLabel1.setText("Race name:");
