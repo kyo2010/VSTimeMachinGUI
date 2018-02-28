@@ -51,6 +51,21 @@ public class VSTimeConnector {
   public int lastTransponderID = -1;
   public boolean WIFI = false;
   public String last_error = "";   
+  public VSSendListener sendListener = null;
+
+  public VSSendListener getSendListener() {
+    return sendListener;
+  }
+
+  public VSTimeConnector setSendListener(VSSendListener sendListener) {
+    this.sendListener = sendListener;
+    return this;
+  }
+  
+  
+  public interface VSSendListener{
+    public void sendVSText(String text);
+  }
   
   public Map<Integer, VS_EchoTrans> transpondersIsAlive = new HashMap<Integer, VS_EchoTrans>();
   long lastPingTime = 0;
@@ -196,12 +211,16 @@ public class VSTimeConnector {
     sentMessage("getinfo:" + baseID + "\r\n");
   }
 
-  public void sentMessage(String st) throws SerialPortException {
+  public void sentMessage(String st) throws SerialPortException {    
     System.out.print("send:" + st);
     if (transport != null) {
       transport.sendData(st);
     }
-
+    if (sendListener!=null){
+      try{
+        sendListener.sendVSText(st);
+      }catch(Exception e){}  
+    }
   }
 
   /**

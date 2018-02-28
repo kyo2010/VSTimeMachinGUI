@@ -78,7 +78,7 @@ import vs.time.kkv.models.VS_USERS;
  *
  * @author kyo
  */
-public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver {
+public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver,VSTimeConnector.VSSendListener {
 
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
@@ -135,6 +135,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public void toLog(Exception e) {
     log.writeFile(e);
+  }
+  
+  public void toLog(String st) {
+    log.writeFile(st);
   }
 
   public VSTimeConnector vsTimeConnector = null;
@@ -354,6 +358,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenu3 = new javax.swing.JMenu();
     mSystemOptions = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
+    mConsole = new javax.swing.JMenuItem();
     jMenu1 = new javax.swing.JMenu();
     menuWLANSetting = new javax.swing.JMenuItem();
     menuConnect = new javax.swing.JMenuItem();
@@ -481,6 +486,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(mSystemMonitor);
+
+    mConsole.setText("VS Team Console");
+    mConsole.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mConsoleActionPerformed(evt);
+      }
+    });
+    jMenu3.add(mConsole);
 
     jMenuBar1.add(jMenu3);
 
@@ -639,6 +652,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
       vsTimeConnector = new VSTimeConnector(this, port, WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
+      vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();
         setStateMenu(true);
@@ -734,6 +748,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
   }//GEN-LAST:event_mSystemMonitorActionPerformed
 
+  private void mConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mConsoleActionPerformed
+    // TODO add your handling code here:
+    VSTeamConsole.init(this).setVisible(true);
+  }//GEN-LAST:event_mConsoleActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -783,6 +802,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTable jTable1;
   private javax.swing.JMenuItem jmAddStageToRace;
+  private javax.swing.JMenuItem mConsole;
   private javax.swing.JMenuItem mSystemMonitor;
   private javax.swing.JMenuItem mSystemOptions;
   private javax.swing.JMenuItem menuAddUser;
@@ -809,10 +829,20 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   @Override
   public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
-    boolean isPingCommand = false;
+    boolean isPingCommand = false;        
+    
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
     }
+    
+    if (VSTeamConsole.isOpened){
+      if (isPingCommand && !VSTeamConsole.showPing){
+        // ignore ping
+      }else{
+        VSTeamConsole.addText(data);
+      }
+    }
+    
     jLabel3.setText(data + "   " + vsTimeConnector.last_error);
     if (!isPingCommand) {
       System.out.println(data);
@@ -830,6 +860,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;
+      if (VSTeamConsole.isOpened){
+        VSTeamConsole.setLastTransID(""+lastTranponderID);
+      }
 
       VS_REGISTRATION usr_reg = null;
       if (activeRace != null) {
@@ -915,6 +948,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
       }
+    }
+  }
+
+  @Override
+  public void sendVSText(String text) {
+    if (VSTeamConsole.isOpened){
+      VSTeamConsole.addText(text);
     }
   }
 

@@ -80,7 +80,7 @@ public class Beep {
     }
   }
 
-  public static class PreLoadSound extends Thread {
+  public class PreLoadSound extends Thread {
 
     public String file = "";
     public Clip clip = null;
@@ -107,7 +107,8 @@ public class Beep {
         //clip.start();
         isLoaded = true;
       } catch (Exception e) {
-        e.printStackTrace();
+        //e.printStackTrace();
+        Beep.this.mainForm.toLog("reading file is error:"+file);
       }
     }
 

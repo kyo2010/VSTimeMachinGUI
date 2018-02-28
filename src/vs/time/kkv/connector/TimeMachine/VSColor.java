@@ -16,6 +16,12 @@ public class VSColor {
   final static byte BYTE_1 = 1;
   final static byte BYTE_0 = 0;
 
+  public static VSColor RED = new VSColor(BYTE_0, BYTE_0, BYTE_1, Color.RED);
+  public static VSColor OFF = new VSColor(BYTE_0, BYTE_0, BYTE_0, Color.BLACK);
+  public static VSColor GREEN = new VSColor(BYTE_0, BYTE_1, BYTE_0, Color.GREEN);
+  public static VSColor BLUE = new VSColor(BYTE_1, BYTE_0, BYTE_0, Color.BLUE);
+  public static VSColor WHITE = new VSColor(BYTE_1, BYTE_1, BYTE_1, Color.WHITE);
+  
   public static VSColor[] CHANNEL_COLORS = new VSColor[]{
     new VSColor(BYTE_0, BYTE_0, BYTE_1, Color.RED), // 1 channel
     new VSColor(BYTE_0, BYTE_1, BYTE_0, Color.GREEN), // 2 channel
