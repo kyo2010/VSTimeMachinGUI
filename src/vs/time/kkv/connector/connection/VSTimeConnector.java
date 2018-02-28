@@ -52,6 +52,7 @@ public class VSTimeConnector {
   public boolean WIFI = false;
   public String last_error = "";   
   public VSSendListener sendListener = null;
+  public Map<Integer, String> flashResponse = new HashMap<Integer, String>();
 
   public VSSendListener getSendListener() {
     return sendListener;
@@ -210,6 +211,11 @@ public class VSTimeConnector {
   public void getInfo(String baseID) throws SerialPortException {
     sentMessage("getinfo:" + baseID + "\r\n");
   }
+  
+  public void sendflash(int TransID, String data) throws SerialPortException {
+    flashResponse.put(TransID, null);
+    sentMessage("sendflash:" + TransID +data+ "\r\n");
+  }
 
   public void sentMessage(String st) throws SerialPortException {    
     System.out.print("send:" + st);
@@ -251,6 +257,9 @@ public class VSTimeConnector {
         if (baseStationID == null) {
           baseStationID = params[1];
         }
+      } else if (commands[0].equalsIgnoreCase("bootflashok")) {
+        int trans_id = Integer.parseInt(params[0]);
+        flashResponse.put(trans_id, "OK");
       } else if (commands[0].equalsIgnoreCase("echotrans")) {
         //echotrans:<ID>,<CRC>\r\n  
         if (params.length >= 2) {

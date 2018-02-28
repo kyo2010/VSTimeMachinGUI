@@ -5,12 +5,29 @@
  */
 package vs.time.kkv.connector.MainlPannels;
 
+import com.ibm.icu.util.Calendar;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
+import org.apache.commons.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
 import static vs.time.kkv.connector.MainlPannels.InfoForm.form;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSColor;
+import vs.time.kkv.connector.TimeMachine.VSFlash;
+import vs.time.kkv.connector.TimeMachine.VSFlashControl;
+import vs.time.kkv.models.VS_SETTING;
 
 /**
  *
@@ -18,6 +35,8 @@ import vs.time.kkv.connector.TimeMachine.VSColor;
  */
 public class VSTeamConsole extends javax.swing.JFrame {
 
+  public VSFlashControl flashControl = new VSFlashControl();
+  
   /**
    * Creates new form VSTeamConsole
    */
@@ -26,7 +45,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     DefaultCaret caret = (DefaultCaret)jText.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
   }
-  
+    
   public MainForm mainForm = null;
   public static VSTeamConsole _form = null;
   public static boolean isOpened = false;
@@ -36,13 +55,16 @@ public class VSTeamConsole extends javax.swing.JFrame {
     if (_form == null) {
       _form = new VSTeamConsole();      
       if (mainForm != null) {
-        mainForm.setFormOnCenter(_form);
+        mainForm.setFormOnCenter(_form);        
+        _form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
       }
+      _form.updateJSONFile();
     }
      if (mainForm != null) _form.mainForm = mainForm;        
     _form.jcbShowPing.setSelected(showPing);
     _form.jtLastTransID.setText( ""+ mainForm.lastTranponderID );
     _form.setVisible(false);    
+    _form.jpFlash.setVisible(false);
     return _form;
   }  
 
@@ -75,6 +97,12 @@ public class VSTeamConsole extends javax.swing.JFrame {
     jButton1 = new javax.swing.JButton();
     jButton2 = new javax.swing.JButton();
     jButton3 = new javax.swing.JButton();
+    bFlash = new javax.swing.JButton();
+    jLabel3 = new javax.swing.JLabel();
+    jTransFlash = new javax.swing.JTextField();
+    jcFlashVersion = new javax.swing.JComboBox<>();
+    butLoadFlash = new javax.swing.JButton();
+    jpFlash = new javax.swing.JProgressBar();
     jScrollPane1 = new javax.swing.JScrollPane();
     jText = new javax.swing.JTextArea();
 
@@ -144,6 +172,22 @@ public class VSTeamConsole extends javax.swing.JFrame {
       }
     });
 
+    bFlash.setText("Flash");
+    bFlash.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bFlashActionPerformed(evt);
+      }
+    });
+
+    jLabel3.setText("Transponder ID :");
+
+    butLoadFlash.setText("Get Flash from WEB");
+    butLoadFlash.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butLoadFlashActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -151,6 +195,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jpFlash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(jPanel1Layout.createSequentialGroup()
@@ -169,15 +214,27 @@ public class VSTeamConsole extends javax.swing.JFrame {
                 .addGap(8, 8, 8)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
               .addComponent(butSend, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-              .addComponent(jtLastTransID))
-            .addContainerGap())
+              .addComponent(jtLastTransID)))
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(jButton1)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jButton1)
+              .addComponent(jLabel3))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton2)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton3)
-            .addGap(111, 111, 111))))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jTransFlash, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcFlashVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bFlash)))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(butLoadFlash)
+            .addGap(0, 43, Short.MAX_VALUE)))
+        .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,12 +251,20 @@ public class VSTeamConsole extends javax.swing.JFrame {
           .addComponent(jLabel2)
           .addComponent(jtLastTransID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jbClear))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton1)
           .addComponent(jButton2)
           .addComponent(jButton3))
-        .addContainerGap())
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(bFlash)
+          .addComponent(jLabel3)
+          .addComponent(jTransFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jcFlashVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(butLoadFlash))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jpFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     jText.setEditable(false);
@@ -223,8 +288,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     pack();
@@ -249,7 +315,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     // TODO add your handling code here:    
     if (mainForm.vsTimeConnector!=null){
       try{
-        mainForm.vsTimeConnector.sentMessage(jtCommand.getText());
+        mainForm.vsTimeConnector.sentMessage(jtCommand.getText()+"\r\n");
         if (jcbAutoClear.isSelected()){
           jtCommand.setText("");
         }  
@@ -301,6 +367,178 @@ public class VSTeamConsole extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_jButton3ActionPerformed
 
+  
+  
+    public class UploadTimer extends Timer {
+
+    public String url, filename;
+
+    public UploadTimer(final String url, final String filename) {      
+      super(100, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+          new File (VSFlashControl.flashDir).mkdirs();
+          OutputStream outStream = null;
+          URLConnection connection = null;
+          InputStream is = null;
+          File targetFile = null;
+          URL server = null;
+          //Setting up proxies
+          /*Properties systemSettings = System.getProperties();
+            systemSettings.put("proxySet", "true");
+            systemSettings.put("https.proxyHost", "https proxy of my organisation");
+            systemSettings.put("https.proxyPort", "8080");
+            //The same way we could also set proxy for http
+            System.setProperty("java.net.useSystemProxies", "true");*/
+          //code to fetch file
+          try {
+            jpFlash.setVisible(true);
+            jpFlash.setValue(0);
+            server = new URL(url);
+            connection = server.openConnection();
+            is = connection.getInputStream();
+            jpFlash.setMaximum(is.available());
+                        
+            byte[] buffer = new byte[1000];            
+            targetFile = new File(VSFlashControl.flashDir+"/"+filename+".tmp"); 
+            outStream = new FileOutputStream(targetFile);
+            int count = 0;
+            int m=0;
+            while ( (m=is.read(buffer))>0){
+              count++;                         
+              outStream.write(buffer,0,m);
+              jpFlash.setValue(1000*count);
+            }           
+            File distFile = new File(VSFlashControl.flashDir+"/"+filename);
+            distFile.delete();
+            FileUtils.copyFile(targetFile, distFile);
+            targetFile.renameTo(new File(VSFlashControl.flashDir+"/"+filename));
+            addText(filename+" has been updated from :"+url);
+            updateJSONFile();            
+          } catch (MalformedURLException e) {            
+            addText(e.toString());
+          } catch (IOException e) {
+            addText(e.toString());
+          } finally {
+            if (outStream != null) {
+              try{
+                outStream.close();
+              }catch(Exception ein){}  
+            }
+          }
+          jpFlash.setVisible(false);
+        }
+      });
+      this.filename = filename;
+      this.url = url;
+      setRepeats(false);
+      start();
+    }
+  };
+    
+  public void updateJSONFile(){
+    flashControl.parseJSON();
+    jcFlashVersion.setModel(new javax.swing.DefaultComboBoxModel(flashControl.getVersions()));
+  }
+  
+  private void butLoadFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butLoadFlashActionPerformed
+    // TODO add your handling code here:
+    try{      
+      new UploadTimer(VSFlashControl.flahURL,VSFlashControl.flashFile);
+    }catch(Exception e){
+      addText(e.toString());
+    }    
+  }//GEN-LAST:event_butLoadFlashActionPerformed
+
+  static int LAST_SKIP_INDEX = 0;  // последнюю строчку не шить
+  
+  public FlashTimer flashTimer = null;
+    public class FlashTimer extends Timer {    
+     public FlashTimer(final int transponderID, final VSFlash flash) {      
+      super(20, new ActionListener() {
+        int indexData = 0; 
+        int waitResponse = 0;
+        boolean sended = false;        
+        long startTime = Calendar.getInstance().getTimeInMillis();
+        @Override
+        public void actionPerformed(ActionEvent ae) {         
+          try{
+            if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){
+              if (sended==false || waitResponse>5){                
+                waitResponse = 0;
+                mainForm.vsTimeConnector.sendflash(transponderID, flash.data.getString(indexData));
+                
+                String ff = "11";
+                try{
+                  ff = flash.data.getString(indexData).substring(7, 9); 
+                }catch(Exception e){}  
+                if (ff.equalsIgnoreCase("00")){ // it is data
+                  sended = true;
+                }else{
+                  indexData++;  
+                  waitResponse = 0;
+                }  
+                
+              }
+            }
+            
+            if (sended && mainForm.vsTimeConnector.flashResponse.get(transponderID)!=null){
+              sended=false;
+              waitResponse = 0;
+              indexData++;  
+              jpFlash.setValue(indexData);
+            }else{
+              waitResponse++;
+            }                                    
+            if (sended==false && (indexData+LAST_SKIP_INDEX)>=flash.data.length()){
+              long stop = Calendar.getInstance().getTimeInMillis();
+              addText("Flash "+transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.");
+              stopFlash();
+            }
+          }catch(Exception e){
+            addText(e.toString());
+          }  
+        }
+      });      
+      setRepeats(true);
+      jpFlash.setVisible(true);
+      jpFlash.setMaximum(flash.data.length());
+      jpFlash.setValue(0);
+      start();
+    }
+  };  
+  
+  public void stopFlash(){
+    jpFlash.setVisible(false);
+    flashTimer.stop();
+    flashTimer = null;
+    jpFlash.setVisible(false);
+    bFlash.setText("Flash");
+  }
+  
+  private void bFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFlashActionPerformed
+    // TODO add your handling code here:        
+    if (flashTimer==null){
+      if (mainForm.vsTimeConnector==null){
+        JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);         
+        return;
+      }
+      bFlash.setText("Stop");
+      try{
+        int transponderID =  Integer.parseInt(jTransFlash.getText());
+        if (transponderID!=0){
+          VS_SETTING.setParam(mainForm.con, "LAST_FLASH_ID", jTransFlash.getText());
+          int index = jcFlashVersion.getSelectedIndex();        
+          flashTimer = new FlashTimer(transponderID, flashControl.flashes.get(index));
+        };  
+      }catch(Exception e){
+        addText(e.toString());
+      }
+    }else{
+      stopFlash();
+    }
+  }//GEN-LAST:event_bFlashActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -337,7 +575,11 @@ public class VSTeamConsole extends javax.swing.JFrame {
   }
   
   public static synchronized void addText(String text){
-    _form.jText.append(text+"\n");   
+    if (text.charAt(text.length()-1)=='\n'){
+      _form.jText.append(text);   
+    }else{
+      _form.jText.append(text+"\n");   
+    }  
   }   
   
   public static synchronized void setLastTransID(String text){
@@ -345,18 +587,24 @@ public class VSTeamConsole extends javax.swing.JFrame {
   }   
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton bFlash;
+  private javax.swing.JButton butLoadFlash;
   private javax.swing.JButton butSend;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTextArea jText;
+  private javax.swing.JTextField jTransFlash;
   private javax.swing.JButton jbClear;
+  private javax.swing.JComboBox<String> jcFlashVersion;
   private javax.swing.JCheckBox jcbAutoClear;
   private javax.swing.JCheckBox jcbShowPing;
+  private javax.swing.JProgressBar jpFlash;
   private javax.swing.JTextField jtCommand;
   private javax.swing.JTextField jtLastTransID;
   // End of variables declaration//GEN-END:variables
