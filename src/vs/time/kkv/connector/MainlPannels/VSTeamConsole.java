@@ -102,6 +102,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     jTransFlash = new javax.swing.JTextField();
     jcFlashVersion = new javax.swing.JComboBox<>();
     butLoadFlash = new javax.swing.JButton();
+    bHello = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jText = new javax.swing.JTextArea();
     jpFlash = new javax.swing.JProgressBar();
@@ -187,6 +188,13 @@ public class VSTeamConsole extends javax.swing.JFrame {
       }
     });
 
+    bHello.setText("Hello/Send Time");
+    bHello.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bHelloActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -220,7 +228,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3))
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bHello))
               .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -254,7 +264,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton1)
           .addComponent(jButton2)
-          .addComponent(jButton3))
+          .addComponent(jButton3)
+          .addComponent(bHello))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bFlash)
@@ -540,6 +551,17 @@ public class VSTeamConsole extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_bFlashActionPerformed
 
+  private void bHelloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHelloActionPerformed
+    // TODO add your handling code here:
+    try{
+      mainForm.vsTimeConnector.hello();
+      mainForm.vsTimeConnector.setTime();
+    }catch(Exception e){
+      mainForm._toLog(e);
+      addText(e.toString());
+    }  
+  }//GEN-LAST:event_bHelloActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -591,6 +613,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bFlash;
+  private javax.swing.JButton bHello;
   private javax.swing.JButton butLoadFlash;
   private javax.swing.JButton butSend;
   private javax.swing.JButton jButton1;

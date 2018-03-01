@@ -45,11 +45,11 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       this.port_for_sending = portForSending;
     }
     //ipAddress = InetAddress.getByName("localhost");
-    ipAddress = InetAddress.getLocalHost();
+    //ipAddress = InetAddress.getLocalHost();
     //"192.168.197.100";
     //InetAddress[] all_ipAddress = Inet4Address.get;
     
-    //ipAddress = Inet4Address.getLocalHost();
+    ipAddress = Inet4Address.getLocalHost();
     //System.out.println("IP for WAN : "+ipAddress);
     
     //ipAddress = Inet4Address.getLocalHost();
@@ -116,6 +116,12 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
         } catch (Exception ein) {
           ein.printStackTrace();
           System.err.println("IOException " + ein);
+          try{
+            sock.close();
+          }catch(Exception e){}
+          try{
+            sock = new DatagramSocket(port_for_listining);
+          }catch(Exception e){}
         }
       }
 
