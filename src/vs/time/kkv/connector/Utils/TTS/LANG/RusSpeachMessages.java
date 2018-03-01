@@ -31,25 +31,28 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
   
   public SpeekText pilot(String name){
-    return new SpeekText("Пилот "+name);
+    return new SpeekText("Пилот "+name,3000);
   }
   
   public SpeekText startMessage(String id){
     if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
     if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);
     if (id.equalsIgnoreCase("three")) return new SpeekText("Три",350);
-    if (id.equalsIgnoreCase("attention")) return new SpeekText("Внимание",1000,1000);
+    if (id.equalsIgnoreCase("attention")) return new SpeekText("Внимание, старт после звукового сигнала",5000,5000);
     return new SpeekText(id);      
   }
   
    public SpeekText lapTime(String pilot, int lap, int countLaps) {
     String krug = "";
     if (lap == countLaps) {
-      krug = "финиш";
+      krug = " финиш";
     } else {
-      krug = krugNumber(lap + 1) + " круг";
+      krug =  " круг "+lap;
     }
-    return new SpeekText(pilot +" "+krug);
+    /*return new SpeekText(pilot +" "+krug);*/
+    if (lap==0) return new SpeekText("");
+    if (lap>countLaps) return new SpeekText(pilot);
+    return new SpeekText(pilot +krug);
   }
   
   public String krugNumber(int lap) {

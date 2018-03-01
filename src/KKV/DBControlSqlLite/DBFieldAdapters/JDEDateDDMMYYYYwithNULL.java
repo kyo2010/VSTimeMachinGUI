@@ -4,7 +4,7 @@
  */
 package KKV.DBControlSqlLite.DBFieldAdapters;
 
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.JDEDate;
 
 /**
  *

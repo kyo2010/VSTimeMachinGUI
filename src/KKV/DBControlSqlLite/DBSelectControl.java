@@ -4,8 +4,9 @@
  */
 package KKV.DBControlSqlLite;
 
+import KKV.Utils.UserException;
 import KKV.DBControlSqlLite.DBFieldAdapters.DBFieldAdapter;
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.Tools;
 import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.Connection;

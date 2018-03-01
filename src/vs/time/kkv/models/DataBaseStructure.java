@@ -6,8 +6,8 @@
 package vs.time.kkv.models;
 
 import static KKV.DBControlSqlLite.DBIControl.fillStat;
-import KKV.DBControlSqlLite.UserException;
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.UserException;
+import KKV.Utils.Tools;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

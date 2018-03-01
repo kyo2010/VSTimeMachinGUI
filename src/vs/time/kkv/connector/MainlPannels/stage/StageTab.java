@@ -5,9 +5,11 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
-import KKV.DBControlSqlLite.UserException;
-import KKV.DBControlSqlLite.Utils.JDEDate;
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.UserException;
+import KKV.Export2excel.OutReport;
+import KKV.Export2excel.XLSMaker;
+import KKV.Utils.JDEDate;
+import KKV.Utils.Tools;
 import java.awt.BorderLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -66,6 +68,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultCellEditor;
+import ru.nkv.var.StringVar;
+import ru.nkv.var.Var;
+import ru.nkv.var.VarPool;
+import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -117,15 +123,17 @@ public class StageTab extends javax.swing.JPanel {
       } catch (Exception ex) {
       }
       long max_race_time = 0;
-      if (mainForm.activeRace!=null) max_race_time = mainForm.activeRace.MAX_RACE_TIME;
-      if (max_race_time!=0 && max_race_time!=-1){
-        max_race_time = max_race_time*1000;
-        long diff = (raceTime + 10000 - max_race_time)/1000;
+      if (mainForm.activeRace != null) {
+        max_race_time = mainForm.activeRace.MAX_RACE_TIME;
+      }
+      if (max_race_time != 0 && max_race_time != -1) {
+        max_race_time = max_race_time * 1000;
+        long diff = (raceTime + 10000 - max_race_time) / 1000;
         long diff_ms = max_race_time - raceTime;
-        if (diff==0){
-           mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().raceIsOverIn10sec() );
+        if (diff == 0) {
+          mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceIsOverIn10sec());
         }
-        if (diff_ms<0){
+        if (diff_ms < 0) {
           stopRace();
         }
       }
@@ -154,7 +162,7 @@ public class StageTab extends javax.swing.JPanel {
               //Thread.currentThread().wait(400);              
               //System.out.println("time2: "+Calendar.getInstance().getTimeInMillis());    
             } catch (Exception ein) {
-            } 
+            }
             //mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER,vs_color.getVSColor());            
 
           }
@@ -165,10 +173,10 @@ public class StageTab extends javax.swing.JPanel {
           //}                                     
         }
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER)) {
+          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER) && user.CHECK_FOR_RACE != 1) {
             user.CHECK_FOR_RACE = 1;
             pleasuUpdateTable = true;
-            mainForm.speaker.speak(  mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT) );
+            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
           }
         }
       } catch (Exception ex) {
@@ -200,8 +208,8 @@ public class StageTab extends javax.swing.JPanel {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
-    milisec = Math.round(milisec / 10);
-    return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 2, "0");
+    //milisec = Math.round(milisec / 10);
+    return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 3, "0");
   }
 
   public static String getTimeIntervelForTimer(long time) {
@@ -285,7 +293,7 @@ public class StageTab extends javax.swing.JPanel {
     miExport.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        treeToPDF();
+        treeToXLS();
       }
     });
     miEdit.addActionListener(new ActionListener() {
@@ -409,7 +417,7 @@ public class StageTab extends javax.swing.JPanel {
                 }
                 mainForm.activeGroup = td.group;
                 td.group.stageTab = StageTab.this;
-                for (VS_STAGE_GROUPS user : td.group.users){
+                for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;
                 }
                 timerCaption.setText(getTimeIntervelForTimer(0));
@@ -488,7 +496,7 @@ public class StageTab extends javax.swing.JPanel {
   }*/
   public void stopRace() {
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
-    raceTimer.stop();    
+    raceTimer.stop();
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true);
@@ -573,6 +581,50 @@ public class StageTab extends javax.swing.JPanel {
     String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
     BaseFont bfComic = BaseFont.createFont(path + "\\font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
+  }
+  
+  public void treeToXLS() {
+    try {
+      JDEDate jd = new JDEDate();
+      OutReport out = new OutReport(jd.getDDMMYYYY("-"));
+      //out.setShowExcel(true);
+      out.setReportName(stage.race.RACE_NAME);      
+      int sheet = out.addStream();
+      
+      out.setReportName(sheet, stage.CAPTION);
+      out.setViewFileName(sheet, "view.xml");
+      IVar pool = new VarPool();
+      pool.addChild(new StringVar("VisibleSheet",""));
+      pool.addChild(new StringVar("ConditionalFormatting",""));
+      pool.addChild(new StringVar("ExcelCellNames",""));
+      pool.addChild(new StringVar("ColumsInfo",""));
+      pool.addChild(new StringVar("FIX_ROWS","4"));
+      
+      out.applayPoolToViewFile(sheet, pool);     
+      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
+      out.addToDataFile(sheet, "info:");
+      
+      
+      String head = "head:Group:Pilot:Channel:";
+      out.addToDataFile(sheet, head);
+      
+       for (Integer groupNum : stage.groups.keySet()) {          
+          VS_STAGE_GROUP group = stage.groups.get(groupNum);
+          for (VS_STAGE_GROUPS usr : group.users) {
+            String line = "data:";
+            line+= "Group " + group.GROUP_NUM + ":$$" + usr.PILOT + "$$:" + usr.CHANNEL+":"; 
+            out.addToDataFile(sheet, line);
+          }          
+        }                 
+      
+      out.closeDataStreams();
+      String xlsFile = XLSMaker.makeXLS(out);
+      Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
+    } catch (Exception e) {
+      e.printStackTrace();
+      mainForm._toLog(e);
+    }
   }
 
   public void treeToPDF() {
@@ -1078,8 +1130,78 @@ public class StageTab extends javax.swing.JPanel {
 
   private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
     // TODO add your handling code here:
-    tableToPDF();
+    //tableToPDF();
+    tableToXLS();
   }//GEN-LAST:event_pdfButtonActionPerformed
+
+  public void tableToXLS() {
+    try {
+      JDEDate jd = new JDEDate();
+      OutReport out = new OutReport(jd.getDDMMYYYY("-"));
+      //out.setShowExcel(true);
+      out.setReportName(stage.race.RACE_NAME);      
+      
+      tableToXLS(out);
+      
+      out.closeDataStreams();
+      String xlsFile = XLSMaker.makeXLS(out);
+      Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
+    } catch (Exception e) {
+      e.printStackTrace();
+      mainForm._toLog(e);
+    }
+  }
+  
+  public void tableToXLS(OutReport out) {
+    try {         
+      JDEDate jd = new JDEDate();
+      int sheet = out.addStream();
+      
+      out.setReportName(sheet, stage.CAPTION);
+      out.setViewFileName(sheet, "view.xml");
+      IVar pool = new VarPool();
+      pool.addChild(new StringVar("VisibleSheet",""));
+      pool.addChild(new StringVar("ConditionalFormatting",""));
+      pool.addChild(new StringVar("ExcelCellNames",""));
+      pool.addChild(new StringVar("ColumsInfo",""));
+      pool.addChild(new StringVar("FIX_ROWS","4"));
+      
+      out.applayPoolToViewFile(sheet, pool);     
+      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
+      out.addToDataFile(sheet, "info:");
+      
+      int rowCount = jTable.getRowCount();
+      int colCount = jTable.getColumnCount();
+      String head = "head:";
+      for (int i = 0; i < colCount; i++) {        
+        head += "$$"+jTable.getColumnName(i)+"$$:";         
+      }
+      out.addToDataFile(sheet, head);
+      
+      for (int row = 0; row < rowCount; row++) {
+        String line = "data:";
+        for (int col = 0; col < colCount; col++) {
+            boolean itLapTime = false;
+            if (jTable.getColumnName(col).toLowerCase().indexOf("lap")>=0){
+              itLapTime = true;
+            }
+            Object obj = jTable.getModel().getValueAt(row, col);
+            /*if (itLapTime && obj!=null && !obj.toString().equals("")){
+              try{
+                obj = getTimeIntervel(Long.parseLong(obj.toString()));
+              }catch(Exception e){}  
+            }*/
+            line+= "{"+ this.stageTableAdapter.getColumnCellID(col) +"}$$"+obj+"$$:";
+        }
+        out.addToDataFile(sheet, line);
+      }
+      out.closeDataFile(sheet);
+    } catch (Exception e) {
+      e.printStackTrace();
+      mainForm._toLog(e);
+    }
+  }
 
   private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
     // TODO add your handling code here:

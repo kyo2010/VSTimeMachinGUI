@@ -4,7 +4,7 @@
  */
 package KKV.DBControlSqlLite.DBFieldAdapters;
 
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.Tools;
 import java.sql.Time;
 
 /**

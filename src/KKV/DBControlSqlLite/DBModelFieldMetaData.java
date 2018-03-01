@@ -3,7 +3,7 @@
 
 package KKV.DBControlSqlLite;
 
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.JDEDate;
 import java.math.BigDecimal;
 
 public class DBModelFieldMetaData {

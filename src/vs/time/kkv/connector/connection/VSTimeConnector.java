@@ -5,7 +5,7 @@
  */
 package vs.time.kkv.connector.connection;
 
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.Tools;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -83,7 +83,7 @@ public class VSTimeConnector {
   }
   
   public void checkConnection(){
-    if ((lastPingTime+5*1000)<=Calendar.getInstance().getTimeInMillis()){
+    if ((lastPingTime+10*1000)<=Calendar.getInstance().getTimeInMillis()){
       lastPingTime = Calendar.getInstance().getTimeInMillis();
       try{
          transport.disconnect();

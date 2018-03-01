@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<View>
+  <DocumentArgs
+  Separator = '$$'
+  TopLeftColontitul =""
+  FontName = "Arial,Normal"
+  FontSize = "10" 
+  TopRightColontitul = ""     
+  TopCenterColontitul = ""   
+  BottomLeftColontitul = '&amp;"Arial,Normal"&amp;4(c) 2018, Drone Racing System'   
+  BottomRightColontitul = ""  
+  BottomCenterColontitul = '&amp;"Arial,Normal"&amp;8Page &amp;P of &amp;N'
+  FreezeCols="{FIX_ROWS}"
+  AutoFilterCol="{FIX_ROWS}"
+  AlwaysPrintCols="$1:${FIX_ROWS}"   
+  ERR_AutoFilterRange="$A${FIX_ROWS}:$V${FIX_ROWS}"
+  Landscape="Yes" 
+  {VisibleSheet}
+  />
+  
+  <ConditionalFormatting>
+   <![CDATA[
+    {ConditionalFormatting}
+   ]]>
+  </ConditionalFormatting>
+
+
+  <ExcelNames>
+    <![CDATA[
+      {ExcelCellNames}      
+    ]]>
+  </ExcelNames>
+
+  
+  <ColumsInfo>
+    <![CDATA[
+      {ColumsInfo}
+    ]]>
+  </ColumsInfo>
+
+  <Cell ID="CU2" Format="@" ColUnion="2"/>
+  <Cell ID="CU3" Format="@" ColUnion="3"/>
+  <Cell ID="CU4" Format="@" ColUnion="4"/>
+  <Cell ID="CU5" Format="@" ColUnion="5"/>
+  <Cell ID="TXT" Format="@" Alignment="left" />
+  <Cell ID="TXT_RIGHT" Format="@" Alignment="right" />
+  <Cell ID="TXT_INV" Format="@" Alignment="left" FontColor="white" BackgroundColor="white" />
+  <Cell ID="TXT_BOLD" Format="@" Alignment="left" Bold="Yes" />
+  <Cell ID="TXT_RED" Format="@" Alignment="left" FontColor="white" BackgroundColor="red" />
+  <Cell ID="NUM" Alignment="right" Format="### ### ### ##0.00"/>
+  <Cell ID="NUM_RED" Alignment="right" Format="### ### ### ##0.00"  FontColor="white" BackgroundColor="red"/>
+  <Cell ID="NUM_BOLD" Alignment="right" Format="### ### ### ##0.00" Bold="Yes"/>
+  <Cell ID="NUM%" Alignment="right" Format="##0.00%" />
+  <Cell ID="NUM_RED%" Alignment="right" Format="##0.00%"  FontColor="white" BackgroundColor="red" />
+  <Cell ID="INT" Alignment="right" Type="Num" Precision="0"/>
+  <Cell ID="ERROR_NUM%" Alignment="right" Format="##0.00%" FontColor="white" BackgroundColor="red" />
+  <Cell ID="ERROR_NUM" Alignment="right" FontColor="white" BackgroundColor="red" Format="### ### ### ##0.00"/>
+  <Cell ID="TITLE_RIGTH" Alignment="right" ColUnion="5" IncreaseSize="0" Bold="No"
+        VAlignment = 'top'
+  />
+  
+  <Cell ID="DATE" Type="Euro-date"/>
+  
+  <Cell ID="dateMMDDYYYY" dopstyle="mso-number-format:'Short Date'" />
+
+  <Rows>
+    <Row ID="info"
+      LeftBorder  = "0" RightBorder = "0" Bold="Yes"
+      UpBorder  = "0" DownBorder  = "0"
+      InnerBorder = "0" Alignment="left" IncreaseSize="3" >
+      <Cell ColUnion="3"/>
+    </Row>
+    <Row ID="data" LeftBorder = "1" RightBorder = "1"
+      UpBorder  = "1" DownBorder  = "1"
+      InnerBorder = "1" VAlignment="top">
+
+        <Cell Format="@" />
+        <Cell Format="@" />
+        <Cell Format="@" />
+        <Cell Format="@" />        
+
+    </Row>
+
+    <Row ID="data_space" LeftBorder = "1" RightBorder = "1"
+      UpBorder  = "1" DownBorder  = "1"
+      InnerBorder = "1">
+
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+      <Cell BackgroundColor="white"  FontColor="white" />
+
+    </Row>
+
+    <Row ID="head" LeftBorder = "1" RightBorder = "1"
+      UpBorder  = "1" DownBorder  = "1"
+      InnerBorder = "1" Alignment="center" 
+      FontColor="black" BackgroundColor="#FFFF66"
+      Bold="Yes" >
+    </Row>  
+    <Row ID="head0" LeftBorder = "1" RightBorder = "1"
+      UpBorder  = "1" DownBorder  = "1"
+      InnerBorder = "1" Alignment="center" 
+      FontColor="black" BackgroundColor="#FFFF66"
+      Bold="Yes" >
+    </Row>  
+    
+    <Row ID="space" DownBorder="0" UpBorder="0" LeftBorder="0" RightBorder="0">
+        <Cell DownBorder="0" UpBorder="0" LeftBorder="0" RightBorder="0"/>
+        <Cell DownBorder="0" UpBorder="0" LeftBorder="0" RightBorder="0"/>
+        <Cell DownBorder="0" UpBorder="0" LeftBorder="0" RightBorder="0"/>
+        <Cell DownBorder="0" UpBorder="0" LeftBorder="0" RightBorder="0"/>
+    </Row>
+  </Rows>
+</View>

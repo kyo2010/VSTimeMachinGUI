@@ -2,6 +2,7 @@
  *** The class was generated automatically.  ** */
 package vs.time.kkv.models;
 
+import KKV.Utils.UserException;
 import KKV.DBControlSqlLite.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

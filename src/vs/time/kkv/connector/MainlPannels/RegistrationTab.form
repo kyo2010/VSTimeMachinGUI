@@ -17,7 +17,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jPanel1" max="32767" attributes="0"/>
-          <Component id="jScrollPane1" alignment="0" pref="731" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="947" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -59,6 +59,8 @@
                       <Component id="butRegistPilot" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="butAddNewStage" min="-2" pref="208" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="butExport" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="activeTransponder" min="-2" pref="321" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -73,6 +75,7 @@
                           <Component id="butRegistPilot" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="butAddNewStage" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="activeTransponder" alignment="3" max="32767" attributes="0"/>
+                          <Component id="butExport" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -114,6 +117,14 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="activeTransponderMouseClicked"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="butExport">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Report"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butExportActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

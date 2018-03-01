@@ -7,7 +7,7 @@ package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.DBModelTest;
 import static KKV.DBControlSqlLite.DBModelTest.generateClazz;
-import KKV.DBControlSqlLite.UserException;
+import KKV.Utils.UserException;
 import java.sql.Connection;
 
 /**

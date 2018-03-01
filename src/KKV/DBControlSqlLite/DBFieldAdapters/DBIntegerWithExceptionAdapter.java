@@ -5,7 +5,7 @@
 package KKV.DBControlSqlLite.DBFieldAdapters;
 
 import KKV.DBControlSqlLite.DBModelField;
-import KKV.DBControlSqlLite.UserException;
+import KKV.Utils.UserException;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -5,7 +5,7 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
-import KKV.DBControlSqlLite.UserException;
+import KKV.Utils.UserException;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

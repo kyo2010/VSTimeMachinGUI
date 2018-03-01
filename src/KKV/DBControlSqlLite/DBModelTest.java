@@ -4,17 +4,18 @@
  */
 package KKV.DBControlSqlLite;
 
+import KKV.Utils.UserException;
 import KKV.DBControlSqlLite.DBFieldAdapters.JDEDateAndTime;
 import KKV.DBControlSqlLite.DBModelControl;
 import KKV.DBControlSqlLite.DBModelField;
-import KKV.DBControlSqlLite.Utils.JDEDate;
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.JDEDate;
+import KKV.Utils.Tools;
 import java.io.File;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import KKV.DBControlSqlLite.Utils.TempFileWrite;
+import KKV.Utils.TempFileWrite;
 import org.sqlite.JDBC;
 
 /**

@@ -5,7 +5,7 @@ package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.DBModelField;
 import KKV.DBControlSqlLite.DBModelControl;
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.JDEDate;
 import java.sql.Time;
 
 public class VS_RACE {

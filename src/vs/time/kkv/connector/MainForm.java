@@ -11,8 +11,8 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
-import KKV.DBControlSqlLite.UserException;
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.UserException;
+import KKV.Utils.JDEDate;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -26,7 +26,7 @@ import javax.swing.UIManager;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
-import KKV.DBControlSqlLite.Utils.TempFileWrite;
+import KKV.Utils.TempFileWrite;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.EventQueue;
@@ -157,6 +157,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int lastTranponderID = -1;
   public RaceHttpServer httpServer = null;
   public String LOCAL_HOST = "localhost";
+  
+  public List<StageTab> stageTabs = new ArrayList<StageTab>();
 
   public void setActiveRace(VS_RACE race) {
 
@@ -180,9 +182,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         int index = 1;
         boolean isFound = false;
         StageTab stage1 = null;
+        stageTabs.clear();
         for (VS_STAGE stage : stages) {
           stage.race = race;
           StageTab p = new StageTab(this, stage);
+          stageTabs.add(p);
           String prefix = "";
           if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {
             try {
@@ -206,7 +210,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (stage.IS_LOCK == 1) {
             tabbedPanel.setForegroundAt(index, Color.CYAN);
           }
-
           if (stage.IS_SELECTED == 1) {
             tabbedPanel.setSelectedComponent(p);
             isFound = true;
@@ -888,7 +891,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         if (usr_reg != null) {
           speaker.speak( speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
         } else {
-          speaker.speak( speaker.getSpeachMessages().pilot("pilot " + lap.transponderID));
+          speaker.speak( speaker.getSpeachMessages().pilot(""+lap.transponderID));
         }
       }
 

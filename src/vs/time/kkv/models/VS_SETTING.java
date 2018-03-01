@@ -3,7 +3,7 @@
 
 package vs.time.kkv.models;
 
-import KKV.DBControlSqlLite.UserException;
+import KKV.Utils.UserException;
 import KKV.DBControlSqlLite.DBModelField;
 import KKV.DBControlSqlLite.DBModelControl;
 import java.sql.Connection;

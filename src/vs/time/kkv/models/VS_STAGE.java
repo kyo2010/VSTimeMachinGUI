@@ -3,7 +3,7 @@
 package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.*;
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.JDEDate;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;

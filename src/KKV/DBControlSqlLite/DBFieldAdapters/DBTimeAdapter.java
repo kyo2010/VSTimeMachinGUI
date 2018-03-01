@@ -5,8 +5,8 @@
 package KKV.DBControlSqlLite.DBFieldAdapters;
 
 import KKV.DBControlSqlLite.DBModelField;
-import KKV.DBControlSqlLite.Utils.JDEDate;
-import KKV.DBControlSqlLite.Utils.Tools;
+import KKV.Utils.JDEDate;
+import KKV.Utils.Tools;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -37,10 +37,10 @@ public class ISpeachMessages {
   }
 
   public SpeekText pilot(String name) {
-    return new SpeekText("Pilot " + name);
+    return new SpeekText("Pilot " + name,1500);
   }
   
-   public SpeekText msg(String name) {
+  public SpeekText msg(String name) {
     return new SpeekText(name);
   }
 
@@ -63,11 +63,14 @@ public class ISpeachMessages {
   public SpeekText lapTime(String pilot, int lap, int countLaps) {
     String krug = "";
     if (lap == countLaps) {
-      krug = "finish";
+      krug = " finish";
     } else {
-      krug = krugNumber(lap + 1) + " lap";
+      krug =  " lap "+lap;
     }
-    return new SpeekText(pilot +" "+krug);
+    /*return new SpeekText(pilot +" "+krug);*/
+    if (lap==0) return new SpeekText("");
+    if (lap>countLaps) return new SpeekText(pilot);
+    return new SpeekText(pilot +krug);
   }
 
   public String krugNumber(int lap) {

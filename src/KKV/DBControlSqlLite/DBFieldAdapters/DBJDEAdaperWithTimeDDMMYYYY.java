@@ -5,7 +5,7 @@
 package KKV.DBControlSqlLite.DBFieldAdapters;
 
 import KKV.DBControlSqlLite.DBModelField;
-import KKV.DBControlSqlLite.Utils.JDEDate;
+import KKV.Utils.JDEDate;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.*;

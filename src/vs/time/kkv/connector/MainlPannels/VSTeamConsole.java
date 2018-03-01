@@ -55,7 +55,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     if (_form == null) {
       _form = new VSTeamConsole();      
       if (mainForm != null) {
-        mainForm.setFormOnCenter(_form);        
+        //mainForm.setFormOnCenter(_form);        
         _form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
       }
       _form.updateJSONFile();
@@ -102,9 +102,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
     jTransFlash = new javax.swing.JTextField();
     jcFlashVersion = new javax.swing.JComboBox<>();
     butLoadFlash = new javax.swing.JButton();
-    jpFlash = new javax.swing.JProgressBar();
     jScrollPane1 = new javax.swing.JScrollPane();
     jText = new javax.swing.JTextArea();
+    jpFlash = new javax.swing.JProgressBar();
 
     setTitle("Console");
     setAlwaysOnTop(true);
@@ -149,7 +149,6 @@ public class VSTeamConsole extends javax.swing.JFrame {
     });
 
     jcbAutoClear.setToolTipText("Auto clear text after send");
-    jcbAutoClear.setActionCommand("");
 
     jButton1.setText("SET RED");
     jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -195,7 +194,6 @@ public class VSTeamConsole extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jpFlash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(jPanel1Layout.createSequentialGroup()
@@ -217,34 +215,35 @@ public class VSTeamConsole extends javax.swing.JFrame {
               .addComponent(jtLastTransID)))
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jButton1)
-              .addComponent(jLabel3))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
               .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3))
               .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTransFlash, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcFlashVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bFlash)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(butLoadFlash)
-            .addGap(0, 43, Short.MAX_VALUE)))
+                .addComponent(bFlash)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(butLoadFlash)))
+            .addGap(0, 8, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(jtCommand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(butSend)
-          .addComponent(jcbAutoClear))
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jcbAutoClear)
+          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(jLabel1)
+            .addComponent(jtCommand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(butSend)))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jcbShowPing)
@@ -263,8 +262,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
           .addComponent(jTransFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jcFlashVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(butLoadFlash))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jpFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jText.setEditable(false);
@@ -280,17 +278,20 @@ public class VSTeamConsole extends javax.swing.JFrame {
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jScrollPane1)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jScrollPane1)
+          .addComponent(jpFlash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+        .addGap(5, 5, 5)
+        .addComponent(jpFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     pack();
@@ -464,7 +465,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent ae) {         
           try{
             if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){
-              if (sended==false || waitResponse>5){                
+              if (sended==false || waitResponse>10){                
                 waitResponse = 0;
                 mainForm.vsTimeConnector.sendflash(transponderID, flash.data.getString(indexData));
                 
@@ -472,7 +473,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
                 try{
                   ff = flash.data.getString(indexData).substring(7, 9); 
                 }catch(Exception e){}  
-                if (ff.equalsIgnoreCase("00")){ // it is data
+                if (ff.equalsIgnoreCase("00")){ // it is data, we need confirm
                   sended = true;
                 }else{
                   indexData++;  
@@ -575,11 +576,13 @@ public class VSTeamConsole extends javax.swing.JFrame {
   }
   
   public static synchronized void addText(String text){
-    if (text.charAt(text.length()-1)=='\n'){
+    text = text.trim();
+    _form.jText.append(text+"\n");
+   /* if (text.charAt(text.length()-1)=='\n'){
       _form.jText.append(text);   
     }else{
       _form.jText.append(text+"\n");   
-    }  
+    }*/  
   }   
   
   public static synchronized void setLastTransID(String text){

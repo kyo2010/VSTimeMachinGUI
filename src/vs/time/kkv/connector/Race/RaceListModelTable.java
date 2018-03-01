@@ -6,7 +6,7 @@
 package vs.time.kkv.connector.Race;
 
 import vs.time.kkv.connector.Users.*;
-import KKV.DBControlSqlLite.UserException;
+import KKV.Utils.UserException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;

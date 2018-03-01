@@ -4,6 +4,7 @@
  */
 package KKV.DBControlSqlLite;
 
+import KKV.Utils.UserException;
 import KKV.DBControlSqlLite.DBFieldAdapters.DBFieldAdapter;
 import KKV.DBControlSqlLite.DBFieldAdapters.IDBValueHandler;
 import java.util.ArrayList;

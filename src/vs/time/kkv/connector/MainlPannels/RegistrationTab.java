@@ -5,11 +5,22 @@
  */
 package vs.time.kkv.connector.MainlPannels;
 
+import KKV.Export2excel.OutReport;
+import KKV.Export2excel.XLSMaker;
+import KKV.Utils.JDEDate;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -17,8 +28,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import ru.nkv.var.StringVar;
+import ru.nkv.var.VarPool;
+import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainForm.LastTransponderListener;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
@@ -149,6 +164,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     butRegistPilot = new javax.swing.JButton();
     butAddNewStage = new javax.swing.JButton();
     activeTransponder = new javax.swing.JLabel();
+    butExport = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -176,6 +192,13 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
+    butExport.setText("Report");
+    butExport.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butExportActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -185,6 +208,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addComponent(butRegistPilot)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butExport)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -196,7 +221,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(butRegistPilot)
           .addComponent(butAddNewStage)
-          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butExport)))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -230,7 +256,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 731, Short.MAX_VALUE)
+      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,10 +289,69 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     }
   }//GEN-LAST:event_activeTransponderMouseClicked
 
+  private void butExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butExportActionPerformed
+    // TODO add your handling code here:
+    tableToXLS();
+  }//GEN-LAST:event_butExportActionPerformed
 
+public void tableToXLS() {
+    try {
+      JDEDate jd = new JDEDate();
+      OutReport out = new OutReport(jd.getDDMMYYYY("-"));
+      //out.setShowExcel(true);
+      
+      String sheetName = "Registration";
+      out.setReportName(mainForm.activeRace.RACE_NAME);      
+      int sheet = out.addStream();
+      
+      out.setReportName(sheet, sheetName);
+      out.setViewFileName(sheet, "view.xml");
+      IVar pool = new VarPool();
+      pool.addChild(new StringVar("VisibleSheet",""));
+      pool.addChild(new StringVar("ConditionalFormatting",""));
+      pool.addChild(new StringVar("ExcelCellNames",""));
+      pool.addChild(new StringVar("ColumsInfo",""));
+      pool.addChild(new StringVar("FIX_ROWS","4"));
+      
+      out.applayPoolToViewFile(sheet, pool);     
+      out.addToDataFile(sheet, "info:$$Race : " + mainForm.activeRace.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      out.addToDataFile(sheet, "info:$$Stage : " + sheetName + "$$");
+      out.addToDataFile(sheet, "info:");
+      
+      int rowCount = jtPilotRegistration.getRowCount();
+      int colCount = jtPilotRegistration.getColumnCount();
+      String head = "head:";
+      for (int i = 1; i < colCount; i++) {        
+        head += "$$"+jtPilotRegistration.getColumnName(i)+"$$:";         
+      }
+      out.addToDataFile(sheet, head);
+      
+      for (int row = 0; row < rowCount; row++) {
+        String line = "data:";
+        for (int col = 1; col < colCount; col++) {            
+            Object obj = jtPilotRegistration.getModel().getValueAt(row, col);            
+            line+= "{TXT}$$"+obj+"$$:";
+        }
+        out.addToDataFile(sheet, line);
+      }
+      
+      for (StageTab stageTab : mainForm.stageTabs){
+        stageTab.tableToXLS(out);
+      }
+      
+      out.closeDataStreams();
+      String xlsFile = XLSMaker.makeXLS(out);
+      Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
+    } catch (Exception e) {
+      e.printStackTrace();
+      mainForm._toLog(e);
+    }
+  }
+  
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel activeTransponder;
   private javax.swing.JButton butAddNewStage;
+  private javax.swing.JButton butExport;
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;

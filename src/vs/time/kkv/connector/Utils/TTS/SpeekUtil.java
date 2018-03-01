@@ -118,7 +118,8 @@ public class SpeekUtil extends Thread {
     stack.add(st);
     if (st.wait>0){
       try{
-        wait(st.wait);
+        //wait(st.wait);
+        sleep(st.wait);
       }catch(Exception e){}
     }
   }
