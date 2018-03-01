@@ -406,3 +406,27 @@ workbook autofit
 save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/TestRace 2018-03-01 report rs1.xlsx
 close Excel Application
 end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{F8D3055E-9408-4303-83B6-228606B1122F}_kkv_4593.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/TestRace 2018-03-01 report rs1.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{044CDEB7-CA4B-40C1-9EE3-B5BF4AF3E5B9}_kkv_5990.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/TestRace 2018-03-01 report rs2.xlsx
+close Excel Application
+end
