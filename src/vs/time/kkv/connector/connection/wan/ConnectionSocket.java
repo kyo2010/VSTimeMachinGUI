@@ -42,15 +42,17 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   public int port_for_listining = 8888;
   public int port_for_sending = 8889;
   InetAddress ipAddress = null;
+  public String staticIP = null;
   //InetAddress host = InetAddress.getAllByName(null);
 
-  public ConnectionSocket(VSTimeConnector timeConnector, VSTimeMachineReciver receiver, String network_sid, int portForListing, int portForSending) throws IOException {
+  public ConnectionSocket(VSTimeConnector timeConnector, VSTimeMachineReciver receiver, String network_sid, String staticIP, int portForListing, int portForSending) throws IOException {
     super();
     if (portForListing != 0) {
       this.port_for_listining = portForListing;
       this.port_for_sending = portForSending;
     }
     this.network_sid = network_sid;
+    this.staticIP = staticIP;
     
     this.receiver = receiver;
     this.timeConnector = timeConnector;
@@ -60,10 +62,13 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     //String host = "192.168.197.255";
     //String host = "192.168.197.100";
     
-    KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
-    if (ka!=null) host = ka.multiHostAddress;
-    
-    ipAddress = InetAddress.getByName(host);
+    if (staticIP==null){
+      KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+      if (ka!=null) host = ka.multiHostAddress;    
+      ipAddress = InetAddress.getByName(host);
+    }else{
+      ipAddress = InetAddress.getByName(staticIP);
+    }
 
     start();
   }
@@ -152,11 +157,15 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   public void sendData(String data) {
     
     if (prev_data!=null && prev_data.equalsIgnoreCase(data)){
-      try{
-        KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+      try{        
         String host = "localhost";
-        if (ka!=null) host = ka.multiHostAddress;    
-        ipAddress = InetAddress.getByName(host);
+        if (staticIP==null){
+          KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+          if (ka!=null) host = ka.multiHostAddress;    
+          ipAddress = InetAddress.getByName(host);
+        }else{
+         ipAddress = InetAddress.getByName(staticIP);
+        }
       }catch(Exception e){}      
     }
     

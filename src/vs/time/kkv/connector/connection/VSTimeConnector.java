@@ -43,6 +43,7 @@ public class VSTimeConnector {
   int portForListing;
   int portForSending;
   public String network_sid;
+  public String staticIP = null;
   VSTimeMachineReciver reciver;
   public boolean connected = false;
   public String baseStationID = null;
@@ -95,13 +96,14 @@ public class VSTimeConnector {
     }
   }
 
-  public VSTimeConnector(VSTimeMachineReciver reciver, String port, String network_sid, int portForListing, int portForSending) {
+  public VSTimeConnector(VSTimeMachineReciver reciver, String port, String network_sid, String staticIP, int portForListing, int portForSending) {
     comPort = port;
     lastPingTime = Calendar.getInstance().getTimeInMillis();
     this.portForListing = portForListing;
     this.portForSending = portForSending;
     this.reciver = reciver;
     this.network_sid = network_sid;
+    this.staticIP=staticIP;
     //connect();
   }
 
@@ -114,7 +116,7 @@ public class VSTimeConnector {
 
   public void connect() throws InterruptedException, SerialPortException, IOException {
     if (comPort.equalsIgnoreCase("WLAN")) {
-      transport = new ConnectionSocket(this, reciver, network_sid,portForListing, portForSending);
+      transport = new ConnectionSocket(this, reciver, network_sid, staticIP, portForListing, portForSending);
       connected = true;
       WIFI = true;
     } else {
@@ -242,7 +244,7 @@ public class VSTimeConnector {
           //if (data.indexOf("ping")!=0)
           System.out.print("receive:" + data);
         }
-      },"WLAN", "", 0, 0);
+      },"WLAN", "",null, 0, 0);
     try {
       connector.connect();
     } catch (Exception e) {

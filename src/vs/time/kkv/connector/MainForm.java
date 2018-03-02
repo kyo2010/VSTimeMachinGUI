@@ -62,6 +62,7 @@ import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.Html;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
+import static vs.time.kkv.connector.WLANSetting.singelton;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.DataBaseStructure;
 import vs.time.kkv.models.VS_BANDS;
@@ -658,8 +659,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     String port = ports.getSelectedItem().toString();
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
+      
+      String staticIP = null;
+      if (VS_SETTING.getParam(con, "USE_STATIC_IP","no").equalsIgnoreCase("yes")){
+        staticIP = VS_SETTING.getParam(con, "STATIC_IP","192.168.1.255");
+      };     
+            
       vsTimeConnector = new VSTimeConnector(this, port, 
-              VS_SETTING.getParam(con, "WAN_CONNECTION",""),
+              VS_SETTING.getParam(con, "WAN_CONNECTION",""),staticIP,
               WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
       vsTimeConnector.setSendListener(this);
       try {

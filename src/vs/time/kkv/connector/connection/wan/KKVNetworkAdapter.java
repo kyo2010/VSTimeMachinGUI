@@ -30,14 +30,12 @@ public class KKVNetworkAdapter {
       while (ee.hasMoreElements()) {
         InetAddress i = (InetAddress) ee.nextElement();
         String ip = i.getHostAddress();
-        String ip_host = "";
         int pos = ip.lastIndexOf(".");
         if (pos > 0) {
-          String net = ip.substring(0, pos);
-          ip_host =  net + ".255";          
+          String net = ip.substring(0, pos);          
           result+=" ["+net+".xxx]";
-        }
-        break;
+          break;
+        }        
       }
     } catch (Exception e) {
     }
@@ -50,13 +48,9 @@ public class KKVNetworkAdapter {
       Enumeration e = NetworkInterface.getNetworkInterfaces();
       while (e.hasMoreElements()) {
         NetworkInterface n = (NetworkInterface) e.nextElement();
-        if (n.isLoopback()) {
-          continue;
-        }
+        if (n.isLoopback()) { continue; }
         //if (!n.supportsMulticast()) continue;
-        if (!n.isUp()) {
-          continue;
-        }
+        if (!n.isUp()) { continue; }
         //if (n.isVirtual()) continue;
         Enumeration ee = n.getInetAddresses();
         String sid = getWlanID(n);
@@ -97,10 +91,10 @@ public class KKVNetworkAdapter {
             na_ip.multiHostAddress = ip_host;
             na_ip.ipAddress = ip;
             if (first_adapter == null) {
-              first_adapter = na_ip;
+              first_adapter = na_ip;              
             }
-          }
-          break;
+            break;
+          }         
         }
         if (sid.equalsIgnoreCase(network_sid) && na_ip != null) {
           return na_ip;

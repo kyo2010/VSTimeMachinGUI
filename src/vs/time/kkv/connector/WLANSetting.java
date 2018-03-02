@@ -43,6 +43,13 @@ public class WLANSetting extends javax.swing.JFrame {
     singelton.PORT_FOR_SENDING.setText(""+singelton.PORT_SENDING_INT);
     singelton.jcNetworkInterface.setSelectedItem(VS_SETTING.getParam(mainForm.con, "WAN_CONNECTION",""));
     
+    if (VS_SETTING.getParam(mainForm.con, "USE_STATIC_IP","no").equalsIgnoreCase("yes")){
+      singelton.jcStaticIP.setSelected(true);
+    }else{
+      singelton.jcStaticIP.setSelected(false);
+    };    
+    singelton.jtStaticIP.setText(VS_SETTING.getParam(mainForm.con, "STATIC_IP","192.168.1.255"));
+    
     WLANSetting th = singelton;
     Point p = mainForm.getLocationOnScreen();
     th.setLocation(p.x + mainForm.getWidth() / 2 - th.getSize().width / 2, p.y + mainForm.getHeight() / 2 - th.getSize().height / 2);
@@ -70,6 +77,8 @@ public class WLANSetting extends javax.swing.JFrame {
     jButCancel = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jcNetworkInterface = new javax.swing.JComboBox<>();
+    jcStaticIP = new javax.swing.JCheckBox();
+    jtStaticIP = new javax.swing.JTextField();
 
     setTitle("WLan Setting");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -124,6 +133,17 @@ public class WLANSetting extends javax.swing.JFrame {
 
     jcNetworkInterface.setModel(new javax.swing.DefaultComboBoxModel(KKVNetworkAdapter.getNetworkAddress()));
 
+    jcStaticIP.setText("If you don't see WLAN, Please use static IP");
+    jcStaticIP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+    jcStaticIP.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+    jcStaticIP.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        jcStaticIPStateChanged(evt);
+      }
+    });
+
+    jtStaticIP.setText("192.168.1.255");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -140,10 +160,14 @@ public class WLANSetting extends javax.swing.JFrame {
             .addComponent(jLabel1)
             .addGap(18, 18, 18)
             .addComponent(PORT_FOR_LISTING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel2)
             .addGap(18, 18, 18)
-            .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jcStaticIP, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+            .addComponent(jtStaticIP, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -153,13 +177,17 @@ public class WLANSetting extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
           .addComponent(jcNetworkInterface, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jcStaticIP)
+          .addComponent(jtStaticIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
           .addComponent(PORT_FOR_LISTING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel2))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -182,6 +210,14 @@ public class WLANSetting extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "PORT_SENDING_INT", ""+singelton.PORT_SENDING_INT);
     VS_SETTING.setParam(mainForm.con, "WAN_CONNECTION",""+jcNetworkInterface.getSelectedItem());
     
+    if (singelton.jcStaticIP.isSelected()){      
+      VS_SETTING.setParam(mainForm.con, "USE_STATIC_IP","yes");
+    }else{
+      VS_SETTING.setParam(mainForm.con, "USE_STATIC_IP","no");
+    };        
+    
+    VS_SETTING.setParam(mainForm.con, "STATIC_IP",jtStaticIP.getText());
+    
     if (mainForm.vsTimeConnector!=null){
       mainForm.disconnect();
       mainForm.connect();
@@ -189,6 +225,15 @@ public class WLANSetting extends javax.swing.JFrame {
     
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
+
+  private void jcStaticIPStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jcStaticIPStateChanged
+    // TODO add your handling code here:
+    if (jcStaticIP.isSelected()){
+      jtStaticIP.setVisible(true);
+    }else{
+      jtStaticIP.setVisible(false);
+    }
+  }//GEN-LAST:event_jcStaticIPStateChanged
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JTextField PORT_FOR_LISTING;
@@ -200,5 +245,7 @@ public class WLANSetting extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JComboBox<String> jcNetworkInterface;
+  private javax.swing.JCheckBox jcStaticIP;
+  private javax.swing.JTextField jtStaticIP;
   // End of variables declaration//GEN-END:variables
 }
