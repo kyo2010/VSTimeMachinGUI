@@ -6,6 +6,7 @@
 package vs.time.kkv.connector;
 
 import java.awt.Point;
+import vs.time.kkv.connector.connection.wan.KKVNetworkAdapter;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -34,11 +35,11 @@ public class WLANSetting extends javax.swing.JFrame {
     }
     
     singelton.PORT_LISTING_INT = VS_SETTING.getParam(mainForm.con, "PORT_LISTING_INT", singelton.PORT_LISTING_INT);
-    singelton.PORT_SENDING_INT= VS_SETTING.getParam(mainForm.con, "PORT_SENDING_INT", singelton.PORT_SENDING_INT);
-    
+    singelton.PORT_SENDING_INT= VS_SETTING.getParam(mainForm.con, "PORT_SENDING_INT", singelton.PORT_SENDING_INT);        
     
     singelton.PORT_FOR_LISTING.setText(""+singelton.PORT_LISTING_INT);
     singelton.PORT_FOR_SENDING.setText(""+singelton.PORT_SENDING_INT);
+    singelton.jcNetworkInterface.setSelectedItem(VS_SETTING.getParam(mainForm.con, "WAN_CONNECTION",""));
     
     WLANSetting th = singelton;
     Point p = mainForm.getLocationOnScreen();
@@ -65,6 +66,8 @@ public class WLANSetting extends javax.swing.JFrame {
     jPanel1 = new javax.swing.JPanel();
     jButOk = new javax.swing.JButton();
     jButCancel = new javax.swing.JButton();
+    jLabel3 = new javax.swing.JLabel();
+    jcNetworkInterface = new javax.swing.JComboBox<>();
 
     setTitle("WLan Setting");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -74,8 +77,10 @@ public class WLANSetting extends javax.swing.JFrame {
 
     jLabel2.setText("Control Port");
 
+    PORT_FOR_LISTING.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     PORT_FOR_LISTING.setText("8888");
 
+    PORT_FOR_SENDING.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     PORT_FOR_SENDING.setText("8889");
 
     jButOk.setText("Ok");
@@ -98,8 +103,8 @@ public class WLANSetting extends javax.swing.JFrame {
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jButOk, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
-        .addGap(18, 28, Short.MAX_VALUE)
+        .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jButCancel)
         .addContainerGap())
     );
@@ -113,34 +118,46 @@ public class WLANSetting extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
+    jLabel3.setText("Network Interface");
+
+    jcNetworkInterface.setModel(new javax.swing.DefaultComboBoxModel(KKVNetworkAdapter.getNetworkAddress()));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel1)
-          .addComponent(jLabel2))
-        .addGap(18, 18, 18)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(PORT_FOR_LISTING)
-          .addComponent(PORT_FOR_SENDING))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel3)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jcNetworkInterface, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel1)
+            .addGap(18, 18, 18)
+            .addComponent(PORT_FOR_LISTING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+            .addComponent(jLabel2)
+            .addGap(18, 18, 18)
+            .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addContainerGap())
-      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGap(20, 20, 20)
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jcNetworkInterface, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
-          .addComponent(PORT_FOR_LISTING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel2)
-          .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+          .addComponent(PORT_FOR_LISTING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(PORT_FOR_SENDING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel2))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -161,7 +178,12 @@ public class WLANSetting extends javax.swing.JFrame {
     
     VS_SETTING.setParam(mainForm.con, "PORT_LISTING_INT", ""+singelton.PORT_LISTING_INT);
     VS_SETTING.setParam(mainForm.con, "PORT_SENDING_INT", ""+singelton.PORT_SENDING_INT);
+    VS_SETTING.setParam(mainForm.con, "WAN_CONNECTION",""+jcNetworkInterface.getSelectedItem());
     
+    if (mainForm.vsTimeConnector!=null){
+      mainForm.disconnect();
+      mainForm.connect();
+    }
     
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
@@ -173,6 +195,8 @@ public class WLANSetting extends javax.swing.JFrame {
   private javax.swing.JButton jButOk;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JComboBox<String> jcNetworkInterface;
   // End of variables declaration//GEN-END:variables
 }

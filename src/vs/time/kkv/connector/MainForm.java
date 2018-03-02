@@ -645,6 +645,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     connectButtonActionPerformed(evt);
   }//GEN-LAST:event_menuConnectActionPerformed
 
+  public void connect(){
+    connectButtonActionPerformed(null);
+  }
+  
   private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
     // TODO add your handling code here:
     if (vsTimeConnector != null) {
@@ -654,7 +658,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     String port = ports.getSelectedItem().toString();
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
-      vsTimeConnector = new VSTimeConnector(this, port, WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
+      vsTimeConnector = new VSTimeConnector(this, port, 
+              VS_SETTING.getParam(con, "WAN_CONNECTION",""),
+              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();
@@ -668,6 +674,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_connectButtonActionPerformed
 
+  public void disconnect(){
+    menuDisconnectActionPerformed(null);
+  }
+  
   private void menuDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDisconnectActionPerformed
     if (vsTimeConnector != null) {
       vsTimeConnector.disconnect();
@@ -857,7 +867,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     }
     
-    jLabel3.setText(data + "   " + vsTimeConnector.last_error);
+    jLabel3.setText(data + "   " + (vsTimeConnector!=null?vsTimeConnector.last_error:""));
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
