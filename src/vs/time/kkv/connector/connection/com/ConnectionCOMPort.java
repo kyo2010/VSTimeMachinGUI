@@ -42,14 +42,17 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
   @Override
   public void serialEvent(SerialPortEvent event) {
     if (event.isRXCHAR() && event.getEventValue() > 0) {
-      boolean isPingCommand = false;
       String data = "";
       try {
         data = serialPort.readString(event.getEventValue());
-        int len = data==null?0:data.length();
+        data = data.trim();
+        if (data.indexOf("ping")==-1){
+          int y = 0;
+        }
+       /* int len = data==null?0:data.length();
         if (len>=2 && data.substring(len-2,len).equalsIgnoreCase("\r\n")){
           data = data.substring(0,len-2);
-        };
+        };*/
         String[] commands = data.split(":");
         String[] params = null;
         long crc8 = 0;

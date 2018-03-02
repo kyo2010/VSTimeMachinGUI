@@ -37,6 +37,8 @@ public class WLANSetting extends javax.swing.JFrame {
     singelton.PORT_LISTING_INT = VS_SETTING.getParam(mainForm.con, "PORT_LISTING_INT", singelton.PORT_LISTING_INT);
     singelton.PORT_SENDING_INT= VS_SETTING.getParam(mainForm.con, "PORT_SENDING_INT", singelton.PORT_SENDING_INT);        
     
+    singelton.jcNetworkInterface.setModel(new javax.swing.DefaultComboBoxModel(KKVNetworkAdapter.getNetworkAddress()));
+    
     singelton.PORT_FOR_LISTING.setText(""+singelton.PORT_LISTING_INT);
     singelton.PORT_FOR_SENDING.setText(""+singelton.PORT_SENDING_INT);
     singelton.jcNetworkInterface.setSelectedItem(VS_SETTING.getParam(mainForm.con, "WAN_CONNECTION",""));

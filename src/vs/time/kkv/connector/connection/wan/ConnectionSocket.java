@@ -37,6 +37,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   public boolean finish = false;
   VSTimeMachineReciver receiver = null;
   public VSTimeConnector timeConnector = null;
+  public String network_sid = "";
 
   public int port_for_listining = 8888;
   public int port_for_sending = 8889;
@@ -49,6 +50,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       this.port_for_listining = portForListing;
       this.port_for_sending = portForSending;
     }
+    this.network_sid = network_sid;
     
     this.receiver = receiver;
     this.timeConnector = timeConnector;
@@ -113,6 +115,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
             }
           }
         } catch (SocketException se) {
+          //se.printStackTrace();
           try {
             sock.close();
           } catch (Exception e) {
@@ -122,8 +125,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
           } catch (Exception e) {
           }
         } catch (Exception ein) {
-          ein.printStackTrace();
-          System.err.println("IOException " + ein);
+          ein.printStackTrace();  
           try {
             sock.close();
           } catch (Exception e) {
@@ -143,9 +145,21 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     } catch (Exception e) {
     }
   }
+  
+  String prev_data = null;
 
   @Override
   public void sendData(String data) {
+    
+    if (prev_data!=null && prev_data.equalsIgnoreCase(data)){
+      try{
+        KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+        String host = "localhost";
+        if (ka!=null) host = ka.multiHostAddress;    
+        ipAddress = InetAddress.getByName(host);
+      }catch(Exception e){}      
+    }
+    
     //data = data.trim();//+"\r";
     byte[] b = data.getBytes();
     DatagramPacket dp = new DatagramPacket(b, b.length, ipAddress, this.port_for_sending);
@@ -160,7 +174,8 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       ex.printStackTrace();
       Logger.getLogger(ConnectionSocket.class.getName()).log(Level.SEVERE, null, ex);
     }
-
+ 
+    prev_data = data;
   }
 
   @Override

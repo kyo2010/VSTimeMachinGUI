@@ -470,13 +470,14 @@ public class VSTeamConsole extends javax.swing.JFrame {
       super(20, new ActionListener() {
         int indexData = 0; 
         int waitResponse = 0;
-        boolean sended = false;        
+        boolean sended = false;   
+        boolean recive_confirmation = true;
         long startTime = Calendar.getInstance().getTimeInMillis();
         @Override
         public void actionPerformed(ActionEvent ae) {         
           try{
-            if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){
-              if (sended==false || waitResponse>10){                
+            if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){                            
+              if (sended==false || waitResponse>15){                
                 waitResponse = 0;
                 mainForm.vsTimeConnector.sendflash(transponderID, flash.data.getString(indexData));
                 
@@ -501,6 +502,12 @@ public class VSTeamConsole extends javax.swing.JFrame {
               jpFlash.setValue(indexData);
             }else{
               waitResponse++;
+              
+              if (waitResponse>10 && !recive_confirmation) {
+                indexData++;
+                sended=false;
+                jpFlash.setValue(indexData);
+              }
             }                                    
             if (sended==false && (indexData+LAST_SKIP_INDEX)>=flash.data.length()){
               long stop = Calendar.getInstance().getTimeInMillis();
