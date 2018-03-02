@@ -167,6 +167,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
 
     try {
       DatagramSocket ds = new DatagramSocket();
+      ds.setBroadcast(true);
       ds.send(dp);
       ds.close();
       //System.out.println("send to :'" + ipAddress + "' port:" + this.port_for_sending + " data='" + data + "'");
