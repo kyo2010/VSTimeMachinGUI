@@ -5,6 +5,11 @@
  */
 package vs.time.kkv.connector.Utils.TTS;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import jp.ne.so_net.ga2.no_ji.jcom.IDispatch;
 import jp.ne.so_net.ga2.no_ji.jcom.JComException;
 import jp.ne.so_net.ga2.no_ji.jcom.ReleaseManager;
@@ -21,7 +26,7 @@ public class TextToSpeechCOM implements IKKVSpeek{
   
   public TextToSpeechCOM() {
     try{    
-      speak = new IDispatch(rm, "SAPI.SpVoice");
+      speak = new IDispatch(rm, "SAPI.SpVoice");                
     }catch(Exception e){
       e.printStackTrace();
     }
@@ -31,6 +36,7 @@ public class TextToSpeechCOM implements IKKVSpeek{
     // set s = CreateObject("SAPI.SpVoice")
     // s.Speak Wscript.Arguments(0), 3
     try{
+      // !!!!!! Please load audio forma notify.wav
       speak.method("Speak",new Object[]{text,3});
     } catch(Exception e){
       e.printStackTrace();

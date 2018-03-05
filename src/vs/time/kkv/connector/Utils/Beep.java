@@ -18,6 +18,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import marytts.util.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
 
 /**
@@ -27,18 +28,19 @@ import vs.time.kkv.connector.MainForm;
 public class Beep {
 
   Map<String, PreLoadSound> sounds = new HashMap<String, PreLoadSound>();
-  
+
   //SpeekUtil speaker = null;
-  
   MainForm mainForm;
+
   public Beep(MainForm mainForm) {
     this.mainForm = mainForm;
-    
+
+    sounds.put("notify", new PreLoadSound("notify.wav"));
     sounds.put("beep", new PreLoadSound("beep.wav"));
-    sounds.put("one",  new PreLoadSound("_1.wav"));
-    sounds.put("two",  new PreLoadSound("_2.wav"));
-    sounds.put("three",  new PreLoadSound("_3.wav"));
-    sounds.put("attention",  new PreLoadSound("_attention.wav"));
+    sounds.put("one", new PreLoadSound("_1.wav"));
+    sounds.put("two", new PreLoadSound("_2.wav"));
+    sounds.put("three", new PreLoadSound("_3.wav"));
+    sounds.put("attention", new PreLoadSound("_attention.wav"));
   }
 
   public void paly(String sound_id) {
@@ -47,20 +49,20 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
+        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().startMessage(sound_id));
       }
     } else {
       sound.play();
     }
   }
-  
+
   public void palyAndWait(String sound_id) {
     PreLoadSound sound = sounds.get(sound_id);
     if (sound == null || !sound.isLoaded) {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
+        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().startMessage(sound_id));
       }
     } else {
       sound.playAndWait();
@@ -73,7 +75,7 @@ public class Beep {
       if (sound_id.equalsIgnoreCase("beep")) {
         Beep.beep();
       } else {
-        mainForm.speaker.speak( mainForm.speaker.getSpeachMessages().startMessage(sound_id) );
+        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().startMessage(sound_id));
       }
     } else {
       sound.playInThread();
@@ -87,42 +89,48 @@ public class Beep {
     public boolean isLoaded = false;
 
     public PreLoadSound(String file) {
-      try {        
+      try {
         String dir = new File("sounds").getAbsolutePath();
-        File tadaSound = new File(dir+"\\"+file);
-        
-        FileInputStream fis = new FileInputStream(tadaSound);
-        
-        InputStream bufferedIn = new BufferedInputStream(fis);
-        
-        AudioInputStream audioInputStream = AudioSystem
-                .getAudioInputStream(bufferedIn);
-        AudioFormat audioFormat = audioInputStream
-                .getFormat();
-        DataLine.Info dataLineInfo = new DataLine.Info(
-                Clip.class, audioFormat);
-        clip = (Clip) AudioSystem
-                .getLine(dataLineInfo);
-        clip.open(audioInputStream);
-        //clip.start();
-        isLoaded = true;
+        File tadaSound = new File(dir + "\\" + file);
+        if (FileUtils.exists(tadaSound.getAbsolutePath())) {
+
+          FileInputStream fis = new FileInputStream(tadaSound);
+
+          InputStream bufferedIn = new BufferedInputStream(fis);
+
+          AudioInputStream audioInputStream = AudioSystem
+                  .getAudioInputStream(bufferedIn);
+          AudioFormat audioFormat = audioInputStream
+                  .getFormat();
+          DataLine.Info dataLineInfo = new DataLine.Info(
+                  Clip.class, audioFormat);
+          clip = (Clip) AudioSystem
+                  .getLine(dataLineInfo);
+          clip.open(audioInputStream);
+          //clip.start();
+          isLoaded = true;
+        }
       } catch (Exception e) {
         //e.printStackTrace();
-        Beep.this.mainForm.toLog("reading file is error:"+file);
+        Beep.this.mainForm.toLog("reading file is error:" + file);
       }
     }
 
     public void play() {
       clip.setMicrosecondPosition(0);
-      if (clip!=null) clip.start();
-    }
-    
-    public void playAndWait() {
-      clip.setMicrosecondPosition(0);
-      if (clip!=null) clip.start();
-      while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()){}
+      if (clip != null) {
+        clip.start();
+      }
     }
 
+    public void playAndWait() {
+      clip.setMicrosecondPosition(0);
+      if (clip != null) {
+        clip.start();
+      }
+      while (clip.getMicrosecondLength() != clip.getMicrosecondPosition()) {
+      }
+    }
 
     public void playInThread() {
       this.start();
@@ -131,7 +139,9 @@ public class Beep {
     @Override
     public void run() {
       clip.setMicrosecondPosition(0);
-      if (clip!=null) clip.start();
+      if (clip != null) {
+        clip.start();
+      }
     }
   }
 

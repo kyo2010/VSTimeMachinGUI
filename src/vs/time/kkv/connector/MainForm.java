@@ -45,6 +45,8 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -79,7 +81,7 @@ import vs.time.kkv.models.VS_USERS;
  *
  * @author kyo
  */
-public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver,VSTimeConnector.VSSendListener {
+public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, VSTimeConnector.VSSendListener {
 
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
@@ -107,7 +109,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
   public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
-  
+
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
 
   public String[] getBands() {
@@ -137,7 +139,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public void toLog(Exception e) {
     log.writeFile(e);
   }
-  
+
   public void toLog(String st) {
     log.writeFile(st);
   }
@@ -158,7 +160,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int lastTranponderID = -1;
   public RaceHttpServer httpServer = null;
   public String LOCAL_HOST = "localhost";
-  
+
   public List<StageTab> stageTabs = new ArrayList<StageTab>();
 
   public void setActiveRace(VS_RACE race) {
@@ -302,10 +304,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
     });
-    
+
     speaker = new SpeekUtil(this);
     beep = new Beep(this);
-    
+
     //beep.palyAndWait("attention");
     //beep.paly("three");
     //beep.paly("two");
@@ -316,10 +318,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this);
     }
-    
+
     try {
-      LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();      
-      System.out.println("Local IP: "+LOCAL_HOST);
+      LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();
+      System.out.println("Local IP: " + LOCAL_HOST);
     } catch (UnknownHostException e) {
       toLog(e);
       //e.printStackTrace();
@@ -646,10 +648,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     connectButtonActionPerformed(evt);
   }//GEN-LAST:event_menuConnectActionPerformed
 
-  public void connect(){
+  public void connect() {
     connectButtonActionPerformed(null);
   }
-  
+
   private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
     // TODO add your handling code here:
     if (vsTimeConnector != null) {
@@ -659,14 +661,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     String port = ports.getSelectedItem().toString();
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
-      
+
       String staticIP = null;
-      if (VS_SETTING.getParam(con, "USE_STATIC_IP","no").equalsIgnoreCase("yes")){
-        staticIP = VS_SETTING.getParam(con, "STATIC_IP","192.168.1.255");
-      };     
-            
-      vsTimeConnector = new VSTimeConnector(this, port, 
-              VS_SETTING.getParam(con, "WAN_CONNECTION",""),staticIP,
+      if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
+        staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
+      };
+
+      vsTimeConnector = new VSTimeConnector(this, port,
+              VS_SETTING.getParam(con, "WAN_CONNECTION", ""), staticIP,
               WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
       vsTimeConnector.setSendListener(this);
       try {
@@ -681,10 +683,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_connectButtonActionPerformed
 
-  public void disconnect(){
+  public void disconnect() {
     menuDisconnectActionPerformed(null);
   }
-  
+
   private void menuDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDisconnectActionPerformed
     if (vsTimeConnector != null) {
       vsTimeConnector.disconnect();
@@ -692,7 +694,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     vsTimeConnector = null;
     setStateMenu(false);
     jLabel3.setText("disconnected");
-    speaker.speak(speaker.getSpeachMessages().disconnected());   
+    speaker.speak(speaker.getSpeachMessages().disconnected());
   }//GEN-LAST:event_menuDisconnectActionPerformed
 
   private void menuWLANSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuWLANSettingActionPerformed
@@ -730,11 +732,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_mSystemOptionsActionPerformed
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
-    if (httpServer==null){
-       SystemOptions.runWebServer(this);
+    if (httpServer == null) {
+      SystemOptions.runWebServer(this);
     }
-         
-    String uri = "http://"+LOCAL_HOST+":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
+
+    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
     System.out.println("open url:" + uri);
 
     //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
@@ -779,34 +781,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     return windowsIcon;
   }
 
-  public static void setWindowsIcon(URL url) {    
+  public static void setWindowsIcon(URL url) {
     windowsIcon = new ImageIcon(url);
   }
-  
-  
+
   /**
    * @param args the command line arguments
    */
   public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-
-    try {
-      UIManager.setLookAndFeel(
-              UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
-    }
-
-    //</editor-fold>
-    /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         MainForm mainForm = new MainForm("VS Time Connector");
-        //javax.swing.ImageIcon icon = new javax.swing.ImageIcon( getProperty('fiji.dir')+"/images/vs-logo.png" );
-        
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
 
@@ -816,6 +801,56 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         mainForm.setVisible(true);
       }
     });
+
+    /*TreeSet<String> massiv = new TreeSet<>();
+    String word = "кошка";
+
+    // 60
+    int all_count = 0;
+    int skip_count = 0;
+    //int count_laterr = 4;
+    for (int k1 = 0; k1 < word.length(); k1++) {
+      for (int k2 = 0; k2 < word.length(); k2++) {
+        for (int k3 = 0; k3 < word.length(); k3++) {
+         // for (int k4 = 0; k4 < word.length(); k4++) {
+            //for (int k5 = 0; k5 < word.length(); k5++) {
+              String word2 = "" + word.charAt(k1) + word.charAt(k2) + word.charAt(k3);// + word.charAt(k4);// + word.charAt(k5);
+              boolean skip2 = false;
+              // skips 
+              String last_word = word;
+              for (int i = 0; i < word2.length(); i++) {
+                int pos = last_word.indexOf(word2.charAt(i));
+                if (pos >= 0) {
+                  if (pos == 0) {
+                    last_word = last_word.substring(pos + 1);
+                  } else {
+                    last_word = last_word.substring(0, pos) + last_word.substring(pos + 1);
+                  }
+                } else {
+                  skip2 = true;
+                  break;
+                }
+              }
+
+              if (!skip2) {
+                all_count++;
+                if (massiv.contains(word2)) {
+                  skip_count++;
+                  System.out.println("skip:" + word2);
+                } else {
+                  massiv.add(word2);
+                }
+              }
+            //}
+          //}
+        }
+      }
+
+    }
+    System.out.println("All words : " + all_count);
+    System.out.println("skips : " + skip_count);
+    System.out.println("Right answer : " + massiv.size());*/
+
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -860,21 +895,21 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   @Override
   public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
-    boolean isPingCommand = false;        
-    
+    boolean isPingCommand = false;
+
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
     }
-    
-    if (VSTeamConsole.isOpened){
-      if (isPingCommand && !VSTeamConsole.showPing){
+
+    if (VSTeamConsole.isOpened) {
+      if (isPingCommand && !VSTeamConsole.showPing) {
         // ignore ping
-      }else{
+      } else {
         VSTeamConsole.addText(data);
       }
     }
-    
-    jLabel3.setText(data + "   " + (vsTimeConnector!=null?vsTimeConnector.last_error:""));
+
+    jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
@@ -886,13 +921,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
       long time = Calendar.getInstance().getTimeInMillis();
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
-      if (Math.abs(time - lap.time) < 7000) {
+      /*if (Math.abs(time - lap.time) < 7000) {
         time = lap.time;
-      }
+      }*/
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;
-      if (VSTeamConsole.isOpened){
-        VSTeamConsole.setLastTransID(""+lastTranponderID);
+      if (VSTeamConsole.isOpened) {
+        VSTeamConsole.setLastTransID("" + lastTranponderID);
       }
 
       VS_REGISTRATION usr_reg = null;
@@ -906,9 +941,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       if (activeGroup == null) {
         if (usr_reg != null) {
-          speaker.speak( speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
+          speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
         } else {
-          speaker.speak( speaker.getSpeachMessages().pilot(""+lap.transponderID));
+          speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
         }
       }
 
@@ -984,7 +1019,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   @Override
   public void sendVSText(String text) {
-    if (VSTeamConsole.isOpened){
+    if (VSTeamConsole.isOpened) {
       VSTeamConsole.addText(text);
     }
   }

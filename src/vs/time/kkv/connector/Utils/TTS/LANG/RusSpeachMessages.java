@@ -50,7 +50,7 @@ public class RusSpeachMessages extends ISpeachMessages{
       krug =  " круг "+lap;
     }
     /*return new SpeekText(pilot +" "+krug);*/
-    if (lap==0) return new SpeekText("");
+    if (lap==0) return new SpeekText(pilot + " старт");
     if (lap>countLaps) return new SpeekText(pilot);
     return new SpeekText(pilot +krug);
   }
