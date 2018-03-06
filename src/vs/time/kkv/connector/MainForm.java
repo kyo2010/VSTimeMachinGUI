@@ -239,6 +239,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
    */
   public MainForm(String caption) {
     _mainForm = this;
+    
+    try {
+      UIManager.setLookAndFeel(
+              UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+    }
+    
     setTitle(caption);
     initComponents();
     setStateMenu(false);
@@ -850,7 +857,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     System.out.println("All words : " + all_count);
     System.out.println("skips : " + skip_count);
     System.out.println("Right answer : " + massiv.size());*/
-
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -950,24 +956,33 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (activeRace != null && activeGroup != null) {
         VS_STAGE_GROUPS user = null;
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
-          if (usr.TRANSPONDER == lap.transponderID) {
+          if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
             user = usr;
             break;
+          }
+        }
+        if (user == null) { // find user by TransID
+          for (VS_STAGE_GROUPS usr : activeGroup.users) {
+            
+            if (usr.isTransponderForUser(con,activeRace.RACE_ID,lap.transponderID)) {
+              user = usr;
+              break;
+            }
           }
         }
         if (user == null) {
           try {
             if (usr_reg == null) {
-              VS_USERS global_user = VS_USERS.dbControl.getItem(con, "VSID=?", lap.transponderID);
+              VS_USERS global_user = VS_USERS.dbControl.getItem(con, "VSID=? OR VSID2=? OR VSID3=?", lap.transponderID, lap.transponderID, lap.transponderID);
               if (global_user == null) {
                 global_user = new VS_USERS();
                 global_user.VS_SOUND_EFFECT = 1;
-                global_user.VSID = lap.transponderID;
+                global_user.VSID1 = lap.transponderID;
                 global_user.setName("USER_" + lap.transponderID);
                 VS_USERS.dbControl.insert(con, global_user);
               }
               usr_reg = new VS_REGISTRATION();
-              usr_reg.VS_TRANSPONDER = lap.transponderID;
+              usr_reg.VS_TRANS1 = lap.transponderID;
               usr_reg.VS_USER_NAME = global_user.VS_NAME;
               usr_reg.VS_SOUND_EFFECT = global_user.VS_SOUND_EFFECT;
               usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
@@ -983,7 +998,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             user.parent = activeGroup;
             user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM) + 1;
             user.isError = 2;
-            user.TRANSPONDER = lap.transponderID;
+            user.VS_PRIMARY_TRANS = lap.transponderID;
             user.CHANNEL = "A1";
             VS_STAGE_GROUPS.dbControl.insert(con, user);
             activeGroup.users.add(user);

@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector.Utils.TTS.LANG;
 
+import java.util.List;
+
 /**
  *
  * @author kyo
@@ -84,5 +86,13 @@ public class RusSpeachMessages extends ISpeachMessages{
       return "девятый";
     }
     return "" + lap;
+  }
+  
+   public SpeekText invatieGroup(long num, List<String> pilots){
+    String text = "Приглашается группа "+num+". ";
+    for (String pilot :  pilots){
+      text += pilot+"...";      
+    }
+    return new SpeekText(text, 1000+700*pilots.size());
   }
 }

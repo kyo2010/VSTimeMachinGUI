@@ -187,7 +187,16 @@
                                           <Component id="jcbChannel4" alignment="0" max="32767" attributes="0"/>
                                           <Component id="jcbChannel1" alignment="0" min="-2" pref="44" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jcbColor1" min="-2" pref="88" max="-2" attributes="0"/>
+                                              <Component id="jcbColor2" min="-2" pref="88" max="-2" attributes="0"/>
+                                              <Component id="jcbColor3" min="-2" pref="88" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="jcbColor4" min="-2" pref="88" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="jlChannel5" min="-2" max="-2" attributes="0"/>
@@ -210,9 +219,16 @@
                                               <Component id="jcbChannel8" min="-2" pref="44" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jcbColor5" min="-2" pref="88" max="-2" attributes="0"/>
+                                          <Component id="jcbColor6" min="-2" pref="88" max="-2" attributes="0"/>
+                                          <Component id="jcbColor7" min="-2" pref="88" max="-2" attributes="0"/>
+                                          <Component id="jcbColor8" min="-2" pref="88" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="167" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -239,6 +255,8 @@
                           <Component id="jcbChannel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jlChannel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbChannel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor5" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -246,6 +264,8 @@
                           <Component id="jcbChannel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jlChannel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbChannel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor6" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -253,6 +273,8 @@
                           <Component id="jcbChannel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jlChannel7" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbChannel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor7" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -260,6 +282,8 @@
                           <Component id="jcbChannel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jlChannel8" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbChannel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbColor8" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -410,6 +434,86 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jchGroupByPilotTypeActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor1">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor2">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor3">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor4">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor5">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor6">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor7">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jcbColor8">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.DefaultComboBoxModel(VSColor.getColors())" type="code"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

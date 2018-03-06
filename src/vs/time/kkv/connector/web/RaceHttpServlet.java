@@ -167,7 +167,7 @@ public class RaceHttpServlet extends HttpServlet{
             }
 
             String bgcolor = "#ffffff";
-            VSColor color = VSColor.getColorForChannel(user.CHANNEL);
+            VSColor color = VSColor.getColorForChannel(user.CHANNEL,active_stage.CHANNELS,active_stage.COLORS);
             if (color != null) {
               bgcolor = VSColor.getHTMLColorString(color.color);
             }

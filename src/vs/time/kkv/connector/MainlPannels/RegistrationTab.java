@@ -108,6 +108,18 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jtPilotRegistration.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+          JTable source = (JTable) e.getSource();
+          int row = source.rowAtPoint(e.getPoint());
+          int column = source.columnAtPoint(e.getPoint());
+          if (!source.isRowSelected(row)) {
+            source.changeSelection(row, column, false, false);
+            VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
+            if (regInfo != null) {
+               RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
+            }
+          }
+        }
       }
 
       public void mouseReleased(MouseEvent e) {
@@ -120,36 +132,38 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           }
           popup.show(e.getComponent(), e.getX(), e.getY());
         }
+
       }
 
     });
 
     refreshData();
-  }  
+  }
 
   VS_REGISTRATION usr_reg = null;
   long transponder = -1;
-  
+
   @Override
   public void newTransponder(long transponder) {
     activeTransponder.setVisible(true);
     this.transponder = transponder;
-    activeTransponder.setText(""+mainForm.lastTranponderID);
-    try{
+    activeTransponder.setText("" + mainForm.lastTranponderID);
+    try {
       usr_reg = null;
       usr_reg = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
-                    mainForm.activeRace.RACE_ID, transponder);
-      activeTransponder.setText(usr_reg.VS_USER_NAME+" - "+mainForm.lastTranponderID);
-    }catch(Exception e){}
-  }    
-  
+              mainForm.activeRace.RACE_ID, transponder);
+      activeTransponder.setText(usr_reg.VS_USER_NAME + " - " + mainForm.lastTranponderID);
+    } catch (Exception e) {
+    }
+  }
+
   public void refreshData() {
     activeTransponder.setVisible(false);
     regModelTable.loadData();
     jtPilotRegistration.addNotify();
     mainForm.setTransponderListener(this);
   }
-  
+
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always
@@ -280,9 +294,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private void activeTransponderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_activeTransponderMouseClicked
     // TODO add your handling code here:
     if (SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() >= 2) {
-      RegisterPilotlForm reg = RegisterPilotlForm.init(mainForm, usr_reg==null?-1:usr_reg.ID);      
+      RegisterPilotlForm reg = RegisterPilotlForm.init(mainForm, usr_reg == null ? -1 : usr_reg.ID);
       //reg.
-      if (usr_reg==null && transponder!=-1){
+      if (usr_reg == null && transponder != -1) {
         reg.edTransponder.setText("" + transponder);
       }
       reg.setVisible(true);
@@ -294,51 +308,51 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     tableToXLS();
   }//GEN-LAST:event_butExportActionPerformed
 
-public void tableToXLS() {
+  public void tableToXLS() {
     try {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      
+
       String sheetName = "Registration";
-      out.setReportName(mainForm.activeRace.RACE_NAME);      
+      out.setReportName(mainForm.activeRace.RACE_NAME);
       int sheet = out.addStream();
-      
+
       out.setReportName(sheet, sheetName);
       out.setViewFileName(sheet, "view.xml");
       IVar pool = new VarPool();
-      pool.addChild(new StringVar("VisibleSheet",""));
-      pool.addChild(new StringVar("ConditionalFormatting",""));
-      pool.addChild(new StringVar("ExcelCellNames",""));
-      pool.addChild(new StringVar("ColumsInfo",""));
-      pool.addChild(new StringVar("FIX_ROWS","4"));
-      
-      out.applayPoolToViewFile(sheet, pool);     
-      out.addToDataFile(sheet, "info:$$Race : " + mainForm.activeRace.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      pool.addChild(new StringVar("VisibleSheet", ""));
+      pool.addChild(new StringVar("ConditionalFormatting", ""));
+      pool.addChild(new StringVar("ExcelCellNames", ""));
+      pool.addChild(new StringVar("ColumsInfo", ""));
+      pool.addChild(new StringVar("FIX_ROWS", "4"));
+
+      out.applayPoolToViewFile(sheet, pool);
+      out.addToDataFile(sheet, "info:$$Race : " + mainForm.activeRace.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
       out.addToDataFile(sheet, "info:$$Stage : " + sheetName + "$$");
       out.addToDataFile(sheet, "info:");
-      
+
       int rowCount = jtPilotRegistration.getRowCount();
       int colCount = jtPilotRegistration.getColumnCount();
       String head = "head:";
-      for (int i = 1; i < colCount; i++) {        
-        head += "$$"+jtPilotRegistration.getColumnName(i)+"$$:";         
+      for (int i = 1; i < colCount; i++) {
+        head += "$$" + jtPilotRegistration.getColumnName(i) + "$$:";
       }
       out.addToDataFile(sheet, head);
-      
+
       for (int row = 0; row < rowCount; row++) {
         String line = "data:";
-        for (int col = 1; col < colCount; col++) {            
-            Object obj = jtPilotRegistration.getModel().getValueAt(row, col);            
-            line+= "{TXT}$$"+obj+"$$:";
+        for (int col = 1; col < colCount; col++) {
+          Object obj = jtPilotRegistration.getModel().getValueAt(row, col);
+          line += "{TXT}$$" + obj + "$$:";
         }
         out.addToDataFile(sheet, line);
       }
-      
-      for (StageTab stageTab : mainForm.stageTabs){
+
+      for (StageTab stageTab : mainForm.stageTabs) {
         stageTab.tableToXLS(out);
       }
-      
+
       out.closeDataStreams();
       String xlsFile = XLSMaker.makeXLS(out);
       Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
@@ -347,7 +361,7 @@ public void tableToXLS() {
       mainForm._toLog(e);
     }
   }
-  
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel activeTransponder;
   private javax.swing.JButton butAddNewStage;

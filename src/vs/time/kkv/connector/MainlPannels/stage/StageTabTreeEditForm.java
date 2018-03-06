@@ -235,16 +235,19 @@ public class StageTabTreeEditForm extends javax.swing.JFrame {
         VS_STAGE_GROUPS edit = new VS_STAGE_GROUPS();
         edit.GID = user.GID;
         edit.STAGE_ID=user.STAGE_ID;
-        edit.TRANSPONDER = user.TRANSPONDER;
+        //edit. = user.TRANSPONDER;
+        
         edit.CHANNEL = (String)jcbChannel1.getSelectedItem();
         edit.GROUP_NUM = ((VS_STAGE_GROUP)jcbGroups.getSelectedItem()).GROUP_NUM;
         edit.NUM_IN_GROUP = user.NUM_IN_GROUP;
         VS_REGISTRATION reg_user = (VS_REGISTRATION)jcbPilots.getSelectedItem();
+        edit.REG_ID = reg_user.ID;
+        edit.VS_PRIMARY_TRANS = reg_user.VS_TRANS1;
         edit.PILOT = reg_user.VS_USER_NAME;
-        edit.TRANSPONDER = reg_user.VS_TRANSPONDER;
+        //edit.TRANSPONDER = reg_user.VS_TRANSPONDER;
                 
         if (!StageTabTreeTransferHandler.canBeNewUserInserted(stageTab.mainForm.con, edit)){
-          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + edit.GROUP_NUM + " contains " + edit.PILOT +"(" + edit.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);        
+          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + edit.GROUP_NUM + " contains " + edit.PILOT +"(" + edit.VS_PRIMARY_TRANS+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);        
           return;
         }
         
@@ -256,10 +259,10 @@ public class StageTabTreeEditForm extends javax.swing.JFrame {
         }
         edit.dbControl.update(mainForm.con, edit);
         // refresh laps time
-        List<VS_RACE_LAP> laps = VS_RACE_LAP.dbControl.getList(stageTab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", stageTab.stage.RACE_ID,stageTab.stage.ID,user.GROUP_NUM,user.TRANSPONDER);
+        List<VS_RACE_LAP> laps = VS_RACE_LAP.dbControl.getList(stageTab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", stageTab.stage.RACE_ID,stageTab.stage.ID,user.GROUP_NUM,user.VS_PRIMARY_TRANS);
         for (VS_RACE_LAP lap: laps){
           lap.GROUP_NUM = edit.GROUP_NUM;
-          lap.TRANSPONDER_ID = edit.TRANSPONDER;
+          lap.TRANSPONDER_ID = edit.VS_PRIMARY_TRANS;
           VS_RACE_LAP.dbControl.update(stageTab.mainForm.con, lap);
         }
         //VS_RACE_LAP.dbControl.execSql(stageTab.mainForm.con, "UPDATE "+VS_RACE_LAP.dbControl.tableName+" SET GROUP_NUM=? AND TRANSPONDER_ID=? WHERE RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", edit.GROUP_NUM,edit.);
@@ -275,10 +278,10 @@ public class StageTabTreeEditForm extends javax.swing.JFrame {
         edit.GROUP_NUM = ((VS_STAGE_GROUP)jcbGroups.getSelectedItem()).GROUP_NUM;
         VS_REGISTRATION reg_user = (VS_REGISTRATION)jcbPilots.getSelectedItem();                
         edit.PILOT = reg_user.VS_USER_NAME;
-        edit.TRANSPONDER = reg_user.VS_TRANSPONDER;
+        edit.VS_PRIMARY_TRANS = reg_user.VS_TRANS1;
         
         if (!StageTabTreeTransferHandler.canBeNewUserInserted(stageTab.mainForm.con, edit)){
-          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + edit.GROUP_NUM + " contains " + edit.PILOT +"(" + edit.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);        
+          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + edit.GROUP_NUM + " contains " + edit.PILOT +"(" + edit.VS_PRIMARY_TRANS+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);        
           return;
         }
         

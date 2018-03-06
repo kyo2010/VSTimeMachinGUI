@@ -150,12 +150,28 @@ public class StageTab extends javax.swing.JPanel {
       }
       Timer timer = (Timer) e.getSource();
       InfoForm.init(mainForm, "Check", 100).setVisible(true);
+      
+      if (checkerCycle* timer.getInitialDelay() < 1500) {
+        try{
+          mainForm.vsTimeConnector.setColor(0, 0);
+        }catch(Exception ein){}  
+        checkerCycle++;
+        return;
+      }
+      
+      
       try {
         if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
-            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL);
-            mainForm.vsTimeConnector.seachTransponder(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
+            List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);            
+            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL,stage.CHANNELS,stage.COLORS);
+            for (Integer transID : userTrans){
+              mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
+              try{
+                wait(100); 
+              }catch(Exception ein){}          
+            }
             checkingGrpup.users.get(pilot_num).color = vs_color;
             try {
               System.out.println("time1: " + Calendar.getInstance().getTimeInMillis());
@@ -173,30 +189,37 @@ public class StageTab extends javax.swing.JPanel {
           //}                                     
         }
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-          if (mainForm.vsTimeConnector.isTransponderSeached(user.TRANSPONDER) && user.CHECK_FOR_RACE != 1) {
-            user.CHECK_FOR_RACE = 1;
-            pleasuUpdateTable = true;
-            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
+          List<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID);
+          for (Integer transID : userTrans) {
+            if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
+              if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
+                user.CHECK_FOR_RACE = 1;
+                user.VS_PRIMARY_TRANS = transID;
+                pleasuUpdateTable = true;
+                mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
+              }
+            }
           }
         }
       } catch (Exception ex) {
       }
       checkerCycle++;
-
       boolean all_ok = true;
       for (VS_STAGE_GROUPS user : checkingGrpup.users) {
         if (user.CHECK_FOR_RACE != 1) {
           all_ok = false;
         }
-      };
-
-      if (checkerCycle * timer.getInitialDelay() > 15000 || all_ok) {
+      }
+      if (checkerCycle* timer.getInitialDelay() > 15000 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
             user.CHECK_FOR_RACE = 0;
           }
-        };
+          try{
+            VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
+          }catch(Exception ein){}  
+        };        
         pleasuUpdateTable = true;
         checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
@@ -366,10 +389,29 @@ public class StageTab extends javax.swing.JPanel {
           if (td == null || !td.isGrpup) {
             return;
           }
-          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) {
+          if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
+            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
+              return;
+            }
+            List<String> pilots = new ArrayList<String>();
+            if (td!=null && td.group!=null && td.group.users!=null){
+               for (VS_STAGE_GROUPS user : td.group.users) {
+                pilots.add(user.PILOT);
+              }
+              mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
+            }
+          }
+          
+          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach
 
             if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
               JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information", JOptionPane.INFORMATION_MESSAGE);
+              return;
+            }
+            
+            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
 
@@ -582,42 +624,41 @@ public class StageTab extends javax.swing.JPanel {
     BaseFont bfComic = BaseFont.createFont(path + "\\font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
   }
-  
+
   public void treeToXLS() {
     try {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(stage.race.RACE_NAME);      
+      out.setReportName(stage.race.RACE_NAME);
       int sheet = out.addStream();
-      
+
       out.setReportName(sheet, stage.CAPTION);
       out.setViewFileName(sheet, "view.xml");
       IVar pool = new VarPool();
-      pool.addChild(new StringVar("VisibleSheet",""));
-      pool.addChild(new StringVar("ConditionalFormatting",""));
-      pool.addChild(new StringVar("ExcelCellNames",""));
-      pool.addChild(new StringVar("ColumsInfo",""));
-      pool.addChild(new StringVar("FIX_ROWS","4"));
-      
-      out.applayPoolToViewFile(sheet, pool);     
-      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      pool.addChild(new StringVar("VisibleSheet", ""));
+      pool.addChild(new StringVar("ConditionalFormatting", ""));
+      pool.addChild(new StringVar("ExcelCellNames", ""));
+      pool.addChild(new StringVar("ColumsInfo", ""));
+      pool.addChild(new StringVar("FIX_ROWS", "4"));
+
+      out.applayPoolToViewFile(sheet, pool);
+      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
       out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
       out.addToDataFile(sheet, "info:");
-      
-      
+
       String head = "head:Group:Pilot:Channel:";
       out.addToDataFile(sheet, head);
-      
-       for (Integer groupNum : stage.groups.keySet()) {          
-          VS_STAGE_GROUP group = stage.groups.get(groupNum);
-          for (VS_STAGE_GROUPS usr : group.users) {
-            String line = "data:";
-            line+= "Group " + group.GROUP_NUM + ":$$" + usr.PILOT + "$$:" + usr.CHANNEL+":"; 
-            out.addToDataFile(sheet, line);
-          }          
-        }                 
-      
+
+      for (Integer groupNum : stage.groups.keySet()) {
+        VS_STAGE_GROUP group = stage.groups.get(groupNum);
+        for (VS_STAGE_GROUPS usr : group.users) {
+          String line = "data:";
+          line += "Group " + group.GROUP_NUM + ":$$" + usr.PILOT + "$$:" + usr.CHANNEL + ":";
+          out.addToDataFile(sheet, line);
+        }
+      }
+
       out.closeDataStreams();
       String xlsFile = XLSMaker.makeXLS(out);
       Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
@@ -802,7 +843,7 @@ public class StageTab extends javax.swing.JPanel {
               }
               List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
               for (VS_STAGE_GROUPS usr : groups) {
-                VS_REGISTRATION reg = users.get("" + usr.TRANSPONDER);
+                VS_REGISTRATION reg = usr.getRegistration(mainForm.con, stage.RACE_ID);
                 if (reg != null) {
                   usr.PILOT = reg.VS_USER_NAME;
                   if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
@@ -917,7 +958,8 @@ public class StageTab extends javax.swing.JPanel {
             gr.PILOT = user.VS_USER_NAME;
             gr.NUM_IN_GROUP = count_man_in_group;
             gr.CHANNEL = channels[count_man_in_group - 1];
-            gr.TRANSPONDER = user.VS_TRANSPONDER;
+            gr.REG_ID = user.ID;
+            gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
             prev_type_pilot = user.PILOT_TYPE;
             VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
           }
@@ -1139,10 +1181,10 @@ public class StageTab extends javax.swing.JPanel {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(stage.race.RACE_NAME);      
-      
+      out.setReportName(stage.race.RACE_NAME);
+
       tableToXLS(out);
-      
+
       out.closeDataStreams();
       String xlsFile = XLSMaker.makeXLS(out);
       Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + xlsFile + "\"");   //open the file chart.pdf 
@@ -1151,48 +1193,48 @@ public class StageTab extends javax.swing.JPanel {
       mainForm._toLog(e);
     }
   }
-  
+
   public void tableToXLS(OutReport out) {
-    try {         
+    try {
       JDEDate jd = new JDEDate();
       int sheet = out.addStream();
-      
+
       out.setReportName(sheet, stage.CAPTION);
       out.setViewFileName(sheet, "view.xml");
       IVar pool = new VarPool();
-      pool.addChild(new StringVar("VisibleSheet",""));
-      pool.addChild(new StringVar("ConditionalFormatting",""));
-      pool.addChild(new StringVar("ExcelCellNames",""));
-      pool.addChild(new StringVar("ColumsInfo",""));
-      pool.addChild(new StringVar("FIX_ROWS","4"));
-      
-      out.applayPoolToViewFile(sheet, pool);     
-      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of "+ jd.getDDMMYYYY("-") + "$$");
+      pool.addChild(new StringVar("VisibleSheet", ""));
+      pool.addChild(new StringVar("ConditionalFormatting", ""));
+      pool.addChild(new StringVar("ExcelCellNames", ""));
+      pool.addChild(new StringVar("ColumsInfo", ""));
+      pool.addChild(new StringVar("FIX_ROWS", "4"));
+
+      out.applayPoolToViewFile(sheet, pool);
+      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
       out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
       out.addToDataFile(sheet, "info:");
-      
+
       int rowCount = jTable.getRowCount();
       int colCount = jTable.getColumnCount();
       String head = "head:";
-      for (int i = 0; i < colCount; i++) {        
-        head += "$$"+jTable.getColumnName(i)+"$$:";         
+      for (int i = 0; i < colCount; i++) {
+        head += "$$" + jTable.getColumnName(i) + "$$:";
       }
       out.addToDataFile(sheet, head);
-      
+
       for (int row = 0; row < rowCount; row++) {
         String line = "data:";
         for (int col = 0; col < colCount; col++) {
-            boolean itLapTime = false;
-            if (jTable.getColumnName(col).toLowerCase().indexOf("lap")>=0){
-              itLapTime = true;
-            }
-            Object obj = jTable.getModel().getValueAt(row, col);
-            /*if (itLapTime && obj!=null && !obj.toString().equals("")){
+          boolean itLapTime = false;
+          if (jTable.getColumnName(col).toLowerCase().indexOf("lap") >= 0) {
+            itLapTime = true;
+          }
+          Object obj = jTable.getModel().getValueAt(row, col);
+          /*if (itLapTime && obj!=null && !obj.toString().equals("")){
               try{
                 obj = getTimeIntervel(Long.parseLong(obj.toString()));
               }catch(Exception e){}  
             }*/
-            line+= "{"+ this.stageTableAdapter.getColumnCellID(col) +"}$$"+obj+"$$:";
+          line += "{" + this.stageTableAdapter.getColumnCellID(col) + "}$$" + obj + "$$:";
         }
         out.addToDataFile(sheet, line);
       }
@@ -1221,7 +1263,9 @@ public class StageTab extends javax.swing.JPanel {
 
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
-    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+    jTable
+            .setDefaultRenderer(Object.class,
+                    stageTableAdapter);
 
     for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
@@ -1249,7 +1293,7 @@ public class StageTab extends javax.swing.JPanel {
             int user_index = evt.getKeyChar() - '0' - 1;
             long time = Calendar.getInstance().getTimeInMillis();
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
-            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, mainForm.raceTime, usr);
+            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, mainForm.raceTime, usr);
             if (lap != null) {
               if (time - lap.TIME_FROM_START > 5000) {
                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete last time" + usr.PILOT + " ?", "Delete lap time?", JOptionPane.YES_NO_OPTION);
@@ -1258,7 +1302,7 @@ public class StageTab extends javax.swing.JPanel {
                 }
               }
               try {
-                stage.delLap(mainForm, usr.GROUP_NUM, usr.TRANSPONDER, lap.LAP, lap);
+                stage.delLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, lap.LAP, lap);
                 usr.IS_RECALULATED = 0;
                 usr.BEST_LAP = 0;
                 usr.IS_FINISHED = 0;

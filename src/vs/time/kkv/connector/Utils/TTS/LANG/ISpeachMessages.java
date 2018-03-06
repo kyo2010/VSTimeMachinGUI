@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector.Utils.TTS.LANG;
 
+import java.util.List;
+
 /**
  *
  * @author kyo
@@ -102,6 +104,14 @@ public class ISpeachMessages {
       return "ninth";
     }
     return "" + lap;
+  }
+  
+  public SpeekText invatieGroup(long num, List<String> pilots){
+    String text = "Invate Group "+num+". Pilots : ";
+    for (String pilot :  pilots){
+      text += pilot+"...";      
+    }
+    return new SpeekText(text, 1000+800*pilots.size());
   }
 
 }

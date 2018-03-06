@@ -27,6 +27,7 @@ public class VS_STAGE {
   public String CAPTION;   //  NOT_DETECTED
   public int COUNT_PILOTS_IN_GROUP;   //  NOT_DETECTED
   public String CHANNELS;   //  NOT_DETECTED
+  public String COLORS= "";
   public int MIN_LAP_TIME;
   public int LAPS;
   public int IS_GROUP_CREATED;
@@ -59,6 +60,7 @@ public class VS_STAGE {
     new DBModelField("CAPTION").setDbFieldName("\"CAPTION\""),
     new DBModelField("COUNT_PILOTS_IN_GROUP").setDbFieldName("\"COUNT_PILOTS_IN_GROUP\""),
     new DBModelField("CHANNELS").setDbFieldName("\"CHANNELS\""),
+    new DBModelField("COLORS").setDbFieldName("\"COLORS\""),
     new DBModelField("LAPS").setDbFieldName("\"LAPS\""),
     new DBModelField("MIN_LAP_TIME").setDbFieldName("\"MIN_LAP_TIME\""),
     new DBModelField("IS_GROUP_CREATED").setDbFieldName("\"IS_GROUP_CREATED\""),
@@ -85,21 +87,29 @@ public class VS_STAGE {
       int GROUP_INDEX = 0;
       Map<Long, Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
-      Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANSPONDER", "VS_RACE_ID=?", race_id);
+      Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS1", "VS_RACE_ID=?", race_id);
+      Map<String, VS_REGISTRATION> regs2 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);      
+      Map<String, VS_REGISTRATION> regs3 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);
+      
       for (VS_STAGE_GROUPS usr : users) {
         long db_group_index = usr.GROUP_NUM;
-        VS_REGISTRATION reg_user = regs.get("" + usr.TRANSPONDER);
+        VS_REGISTRATION reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);
+        if (reg_user==null) reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
+        if (reg_user==null) reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);        
+        
         if (reg_user == null) {
           reg_user = new VS_REGISTRATION();
           reg_user.PILOT_TYPE = 0;
           reg_user.NUM = VS_REGISTRATION.maxNum(conn, race_id) + 1;
           reg_user.VS_RACE_ID = RACE_ID;
-          reg_user.VS_TRANSPONDER = usr.TRANSPONDER;
+          reg_user.VS_TRANS1 = usr.VS_PRIMARY_TRANS;
+          reg_user.VS_TRANS2 = 0;
+          reg_user.VS_TRANS3 = 0;
           reg_user.VS_SOUND_EFFECT = 1;
           reg_user.IS_ACTIVE = 0;
           reg_user.VS_USER_NAME = usr.PILOT;
           VS_REGISTRATION.dbControl.insert(conn, reg_user);
-          regs.put("" + usr.TRANSPONDER, reg_user);
+          regs.put("" + usr.VS_PRIMARY_TRANS, reg_user);
         }
         usr.PILOT = reg_user.VS_USER_NAME;
         usr.PILOT_TYPE = reg_user.PILOT_TYPE;
@@ -229,7 +239,7 @@ public class VS_STAGE {
       VS_RACE_LAP lap = new VS_RACE_LAP();
       lap.BASE_ID = 0;
       lap.GROUP_NUM = usr.GROUP_NUM;
-      lap.TRANSPONDER_ID = usr.TRANSPONDER;
+      lap.TRANSPONDER_ID = usr.VS_PRIMARY_TRANS;
       lap.RACE_ID = mainForm.activeGroup.stage.RACE_ID;
       lap.STAGE_ID = mainForm.activeGroup.stage.ID;
       lap.TIME_START = mainForm.raceTime;
@@ -258,7 +268,7 @@ public class VS_STAGE {
       } else {        
         if (lap_time >= MIN_LAP_TIME * 1000) {
           try {
-            mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.TRANSPONDER + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
+            mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.VS_PRIMARY_TRANS + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
           } catch (Exception ein) {
           }
           VS_RACE_LAP.dbControl.insert(mainForm.con, lap);

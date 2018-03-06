@@ -91,7 +91,7 @@ public class UserListModelTable extends AbstractTableModel {
     if (rows.size() > rowIndex) {
       VS_USERS usr = rows.get(rowIndex);
       if (columnIndex == 0) {
-        return usr.VSID;
+        return usr.VSID1;
       }
       if (columnIndex == 1) {
         return usr.VS_NAME;
@@ -114,7 +114,7 @@ public class UserListModelTable extends AbstractTableModel {
   public void showEditDialog(int row){
     if (row<rows.size()){
       VS_USERS usr = rows.get(row);      
-      UserControlForm.init(mainForm, false, usr.VSID).setVisible(true);
+      UserControlForm.init(mainForm, false, usr.VSID1).setVisible(true);
     }  
   }
   

@@ -83,7 +83,7 @@ public class RegistrationModelTable extends AbstractTableModel {
   @Override
   public Class<?> getColumnClass(int columnIndex) {
     if (columnIndex==0) return Boolean.class;
-    if (columnIndex==2) return String.class;
+    //if (columnIndex==2) return String.class;
     return String.class;
   }
 
@@ -105,7 +105,7 @@ public class RegistrationModelTable extends AbstractTableModel {
         }
       }
       if (columnIndex == 3) {
-        return race.VS_TRANSPONDER;
+        return race.VS_TRANS1;
       }
       if (columnIndex == 4) {
         return race.VS_USER_NAME;

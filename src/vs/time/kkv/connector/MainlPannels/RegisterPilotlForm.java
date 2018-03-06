@@ -34,14 +34,13 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   MainForm mainForm = null;
   long reg_Id = -1;
   VS_REGISTRATION usr = null;
-  
 
   /**
    * Creates new form UserControlForm
    */
   private RegisterPilotlForm(MainForm mainForm) {
     initComponents();
-    this.mainForm = mainForm;        
+    this.mainForm = mainForm;
   }
 
   private static RegisterPilotlForm form = null;
@@ -64,25 +63,39 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
 
     if (reg_Id != -1) {
       try {
-        usr = VS_REGISTRATION.dbControl.getItem(mainForm.con, "ID=?",reg_Id);        
+        usr = VS_REGISTRATION.dbControl.getItem(mainForm.con, "ID=?", reg_Id);
         edUser.setText(usr.VS_USER_NAME);
-        chEnabledSound.setSelected(usr.VS_SOUND_EFFECT==1);                
+        chEnabledSound.setSelected(usr.VS_SOUND_EFFECT == 1);
       } catch (Exception e) {
         mainForm.error_log.writeFile(e);
         JOptionPane.showMessageDialog(this, "Loading user is error. " + getName().toString(), "Error", JOptionPane.ERROR_MESSAGE);
       }
-    }else{
-       usr = new VS_REGISTRATION();
+    } else {
+      usr = new VS_REGISTRATION();
     }
 
     if (reg_Id != -1) {
-      edTransponder.setText("" + usr.VS_TRANSPONDER);
+      edTransponder.setText("" + usr.VS_TRANS1);
+      edTransponder2.setText("" + usr.VS_TRANS2);
+      edTransponder3.setText("" + usr.VS_TRANS3);
+      if (usr.VS_TRANS2 == 0) {
+        edTransponder2.setText("");
+      }
+      if (usr.VS_TRANS3 == 0) {
+        edTransponder3.setText("");
+      }
       jcbPilotType.setSelectedIndex(usr.PILOT_TYPE);
+      edFirstName.setText(usr.FIRST_NAME);
+      edSecondName.setText(usr.SECOND_NAME);            
     } else {
       edTransponder.setText("");
+      edTransponder2.setText("");
+      edTransponder3.setText("");
       edUser.setText("");
+      edFirstName.setText("");
+      edSecondName.setText("");      
       chEnabledSound.setSelected(true);
-    }      
+    }
   }
 
   /**
@@ -105,6 +118,14 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     butUsedLastTransponderID = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jcbPilotType = new javax.swing.JComboBox();
+    jLabel4 = new javax.swing.JLabel();
+    jLabel5 = new javax.swing.JLabel();
+    edTransponder2 = new javax.swing.JTextField();
+    edTransponder3 = new javax.swing.JTextField();
+    jLabel6 = new javax.swing.JLabel();
+    jLabel7 = new javax.swing.JLabel();
+    edFirstName = new javax.swing.JTextField();
+    edSecondName = new javax.swing.JTextField();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -148,6 +169,18 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
 
     jcbPilotType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.PILOT_TYPES));
 
+    jLabel4.setText("Transponder ID:");
+
+    jLabel5.setText("Transponder ID:");
+
+    edTransponder2.setText("0000");
+
+    edTransponder3.setText("0000");
+
+    jLabel6.setText("First Name:");
+
+    jLabel7.setText("Second Name:");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -155,28 +188,49 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel1)
-          .addComponent(jLabel2)
-          .addComponent(jLabel3))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(jLabel6))
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(butUsedLastTransponderID))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-              .addComponent(jcbPilotType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(edUser))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(butPilots, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addGap(55, 55, 55)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(edFirstName)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(edUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(butPilots, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel7)
+              .addComponent(jLabel3))
+            .addGap(33, 33, 33)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(edSecondName)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addComponent(chEnabledSound, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         .addContainerGap())
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addGap(50, 50, 50)
-        .addComponent(chEnabledSound, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,19 +240,34 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           .addComponent(jLabel1)
           .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(butUsedLastTransponderID))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jLabel4)
+          .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel5)
+          .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(edUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(butPilots))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel3)
-          .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jLabel6)
+          .addComponent(edFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel7)
+          .addComponent(edSecondName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton1)
-          .addComponent(chEnabledSound)))
+          .addComponent(chEnabledSound))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     bSave.setText("Save");
@@ -247,7 +316,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -259,92 +328,136 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   }//GEN-LAST:event_bCancelActionPerformed
 
   private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-    try {      
-      // Check for constarin
-      VS_REGISTRATION check = null;
+    try {
+
+      VS_REGISTRATION check1 = null;
       VS_REGISTRATION check2 = null;
-      if (usr==null) usr = new VS_REGISTRATION();
-      usr.VS_TRANSPONDER = Integer.parseInt(edTransponder.getText());
+      VS_REGISTRATION check3 = null;
+
+      // Check for constarin
+      if (usr == null) {
+        usr = new VS_REGISTRATION();
+      }
+      usr.VS_TRANS1 = Integer.parseInt(edTransponder.getText());
+      usr.VS_TRANS2 = 0;
+      usr.VS_TRANS3 = 0;
+      try {
+        usr.VS_TRANS2 = Integer.parseInt(edTransponder2.getText());
+      } catch (Exception ein) {
+      }
+      try {
+        usr.VS_TRANS3 = Integer.parseInt(edTransponder3.getText());
+      } catch (Exception ein) {
+      }
       usr.VS_RACE_ID = mainForm.activeRace.RACE_ID;
       usr.IS_ACTIVE = 1;
       usr.VS_USER_NAME = edUser.getText();
-      usr.VS_SOUND_EFFECT = chEnabledSound.isSelected()?1:0;
+      usr.FIRST_NAME = edFirstName.getText();
+      usr.SECOND_NAME = edSecondName.getText();
+      usr.VS_SOUND_EFFECT = chEnabledSound.isSelected() ? 1 : 0;
       usr.PILOT_TYPE = jcbPilotType.getSelectedIndex();
-      if (usr.ID!=-1) {        
-        
-        check = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=? and ID<>?", usr.VS_RACE_ID, usr.VS_TRANSPONDER,usr.ID);
-        check2 = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_USER_NAME=? and ID<>?", usr.VS_RACE_ID, usr.VS_USER_NAME,usr.ID);
-        if (check2!=null) {
-          int res = JOptionPane.showConfirmDialog(this, "Pilot '"+usr.VS_USER_NAME+"' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
-          return; 
+      if (usr.ID != -1) {
+
+        String sql_check = "VS_RACE_ID=? and (VS_TRANSPONDER=? or VS_TRANS2=? or VS_TRANS3=?) and ID<>?";
+        check1 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS1, usr.VS_TRANS1, usr.VS_TRANS1, usr.ID);
+        if (usr.VS_TRANS2 != 0 && usr.VS_TRANS2 != -1) {
+          check2 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS2, usr.VS_TRANS2, usr.VS_TRANS2, usr.ID);
         }
-        if (check!=null){
-          int res = JOptionPane.showConfirmDialog(this, "Transponder '"+usr.VS_TRANSPONDER+"' has been registred.\nPlease change the transponder ID?", "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          return;          
-        }                
-        VS_REGISTRATION.dbControl.update(mainForm.con,usr);        
-        
+        if (usr.VS_TRANS3 != 0 && usr.VS_TRANS3 != -1) {
+          check3 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS3, usr.VS_TRANS3, usr.VS_TRANS3, usr.ID);
+        }  
+        VS_REGISTRATION checkUserName = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_USER_NAME=? and ID<>?", usr.VS_RACE_ID, usr.VS_USER_NAME, usr.ID);
+        if (checkUserName != null) {
+          JOptionPane.showConfirmDialog(this, "Pilot '" + usr.VS_USER_NAME + "' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check1 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check2 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check3 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+
+        VS_REGISTRATION.dbControl.update(mainForm.con, usr);
+
         /*// add user to all stages
         for (int s_idx=0; s_idx<mainForm.getTabbedPanels().getComponentCount(); s_idx++){
                   
         }*/
-        
-      } else {      
-        usr.NUM = VS_REGISTRATION.maxNum(mainForm.con, usr.VS_RACE_ID)+1;      
-        check = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=?", usr.VS_RACE_ID, usr.VS_TRANSPONDER);
-        check2 = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_USER_NAME=?", usr.VS_RACE_ID, usr.VS_USER_NAME);
-        
-        if (check2!=null) {
-          int res = JOptionPane.showConfirmDialog(this, "Pilot '"+usr.VS_USER_NAME+"' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
-          return; 
+      } else {
+        usr.NUM = VS_REGISTRATION.maxNum(mainForm.con, usr.VS_RACE_ID) + 1;
+        String sql_check = "VS_RACE_ID=? and (VS_TRANSPONDER=? or VS_TRANS2=? or VS_TRANS3=?)";
+        check1 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS1, usr.VS_TRANS1, usr.VS_TRANS1);
+        if (usr.VS_TRANS2 != 0 && usr.VS_TRANS2 != -1) {
+          check2 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS2, usr.VS_TRANS2, usr.VS_TRANS2);
         }
+        if (usr.VS_TRANS3 != 0 && usr.VS_TRANS3 != -1) {
+          check3 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS3, usr.VS_TRANS3, usr.VS_TRANS3);
+        }  
+        VS_REGISTRATION checkUserName = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_USER_NAME=?", usr.VS_RACE_ID, usr.VS_USER_NAME);
         
-        if (check!=null){
-          int res = JOptionPane.showConfirmDialog(this, "Transponder is registred.\nDo you want to rewrite?", "Transponder is registred.", JOptionPane.YES_NO_OPTION);
-          if (res==JOptionPane.YES_OPTION){
-            usr.ID = check.ID;
-            usr.NUM = check.NUM;            
-            VS_REGISTRATION.dbControl.update(mainForm.con,usr);
-          }else{
-            return;
-          }      
-        }else{        
+        if (checkUserName != null) {
+          JOptionPane.showConfirmDialog(this, "Pilot '" + usr.VS_USER_NAME + "' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check1 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check2 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
+        if (check3 != null) {
+          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          return;
+        }
           VS_REGISTRATION.dbControl.insert(mainForm.con, usr);
-        } 
-      }  
+          
+      }
       setVisible(false);
-      if (mainForm!=null && mainForm.regForm!=null){        
+      if (mainForm != null && mainForm.regForm != null) {
         mainForm.regForm.refreshData();
       }
-    } catch (Exception e) {  
+    } catch (Exception e) {
       mainForm.error_log.writeFile(e);
-    }  
+    }
   }//GEN-LAST:event_bSaveActionPerformed
 
-  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().msg(edUser.getText()));
-  }//GEN-LAST:event_jButton1ActionPerformed
+  private void butUsedLastTransponderIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butUsedLastTransponderIDActionPerformed
+    // TODO add your handling code here:
+    if (mainForm.lastTranponderID != -1) {
+      edTransponder.setText("" + mainForm.lastTranponderID);
+    }
+  }//GEN-LAST:event_butUsedLastTransponderIDActionPerformed
 
   private void butPilotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butPilotsActionPerformed
     //UserList.init(mainForm).setVisible(true);
-    UserList.init(mainForm,new UserList.UserListListener() {
+    UserList.init(mainForm, new UserList.UserListListener() {
       @Override
       public boolean selectUserAndCloseWindow(VS_USERS user) {
-        if (user!=null){
+        if (user != null) {
           edUser.setText(user.VS_NAME);
-          edTransponder.setText(""+user.VSID);
+          edTransponder.setText("" + user.VSID1);
+          edTransponder2.setText("" + user.VSID2);
+          edTransponder3.setText("" + user.VSID3);
+          edFirstName.setText(""+user.FIRST_NAME);
+          edSecondName.setText(""+user.SECOND_NAME);
         }
         return true;
       }
     }).setVisible(true);
   }//GEN-LAST:event_butPilotsActionPerformed
 
-  private void butUsedLastTransponderIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butUsedLastTransponderIDActionPerformed
-    // TODO add your handling code here:
-    if (mainForm.lastTranponderID!=-1){
-      edTransponder.setText(""+mainForm.lastTranponderID);
-    }
-  }//GEN-LAST:event_butUsedLastTransponderIDActionPerformed
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().msg(edUser.getText()));
+  }//GEN-LAST:event_jButton1ActionPerformed
 
   /**
    * @param args the command line arguments
@@ -352,7 +465,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   public static void main(String args[]) {
     /* Set the Nimbus look and feel */
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
      */
     try {
@@ -388,12 +501,20 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JButton butPilots;
   private javax.swing.JButton butUsedLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
+  private javax.swing.JTextField edFirstName;
+  private javax.swing.JTextField edSecondName;
   public javax.swing.JTextField edTransponder;
+  public javax.swing.JTextField edTransponder2;
+  public javax.swing.JTextField edTransponder3;
   private javax.swing.JTextField edUser;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
+  private javax.swing.JLabel jLabel5;
+  private javax.swing.JLabel jLabel6;
+  private javax.swing.JLabel jLabel7;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JComboBox jcbPilotType;

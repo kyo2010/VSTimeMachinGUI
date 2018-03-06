@@ -219,13 +219,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
         List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.RACE_ID=? and stage.STAGE_TYPE=?) order by " + order_by, tab.stage.RACE_ID, MainForm.STAGE_QUALIFICATION);
         HashMap<String, VS_STAGE_GROUPS> pilots = new HashMap<String, VS_STAGE_GROUPS>();
-        Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=?", tab.stage.RACE_ID);
+        Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANS1", "VS_RACE_ID=?", tab.stage.RACE_ID);
 
         int index = 1;
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
 
         for (VS_STAGE_GROUPS pilot : groups) {
-          VS_REGISTRATION reg = regs.get("" + pilot.TRANSPONDER);
+          //VS_REGISTRATION reg = regs.get("" + pilot.VS_PRIMARY_TRANS);
+          VS_REGISTRATION reg = pilot.getRegistration(tab.mainForm.con, tab.stage.RACE_ID);
           if (reg != null) {
             pilot.PILOT = reg.VS_USER_NAME;
             pilot.PILOT_TYPE = reg.PILOT_TYPE;
@@ -282,14 +283,15 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         List<VS_STAGE_GROUPS> all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=? and stage.RACE_ID=?) ", MainForm.STAGE_RACE, union_stage_id,tab.stage.RACE_ID);
         List<VS_STAGE_GROUPS> results = new ArrayList<VS_STAGE_GROUPS>();
         HashMap<String, VS_STAGE_GROUPS> pilots = new HashMap<String, VS_STAGE_GROUPS>();
-        Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=?", tab.stage.RACE_ID);
+        Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANS1", "VS_RACE_ID=?", tab.stage.RACE_ID);
 
         rows = new ArrayList<StageTableData>();
         int index = 1;
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
 
         for (VS_STAGE_GROUPS pilot : all_groups) {
-          VS_REGISTRATION reg = regs.get("" + pilot.TRANSPONDER);
+          //VS_REGISTRATION reg = regs.get("" + pilot.TRANSPONDER);
+          VS_REGISTRATION reg = pilot.getRegistration(tab.mainForm.con, tab.stage.RACE_ID);
           if (reg != null) {
             pilot.PILOT = reg.VS_USER_NAME;
             pilot.PILOT_TYPE = reg.PILOT_TYPE;
@@ -427,7 +429,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           // lap time
           VS_RACE_LAP lap = null;
           try {
-            lap = tab.stage.laps.get("" + td.pilot.GROUP_NUM).get("" + td.pilot.TRANSPONDER).get("" + getLapNumberFromCol(columnIndex));
+            lap = tab.stage.laps.get("" + td.pilot.GROUP_NUM).get("" + td.pilot.VS_PRIMARY_TRANS).get("" + getLapNumberFromCol(columnIndex));
           } catch (Exception e) {
           }
           if (lap == null) {
@@ -632,11 +634,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         long time = getTimerInterval(val);
         boolean isError = false;
         if (time != -1) {
-          VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.TRANSPONDER, getLapNumberFromCol(col));
+          VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.VS_PRIMARY_TRANS, getLapNumberFromCol(col));
           if (lap == null) {
             isError = true;
           }
-          VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.TRANSPONDER, "" + getLapNumberFromCol(col), lap);
+          VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + getLapNumberFromCol(col), lap);
         } else {
           isError = true;
         }
@@ -657,14 +659,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         boolean isError = false;
         if (time != -1) {
           VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?",
-                  tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.TRANSPONDER);
+                  tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.VS_PRIMARY_TRANS);
           long lapTime = time / tab.stage.LAPS;
           for (int i = 0; i < tab.stage.LAPS; i++) {
             if (i + 1 == tab.stage.LAPS) {
               lapTime = time - lapTime * (tab.stage.LAPS - 1);
             }
-            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, lapTime, td.pilot.TRANSPONDER, i + 1);
-            VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.TRANSPONDER, "" + (i + 1), lap);
+            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, i + 1);
+            VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + (i + 1), lap);
           }
           td.pilot.parent.recalculateScores(tab.mainForm);
         } else {
@@ -722,6 +724,17 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
         return but;
       }
+      if (column == 3) {
+        JButton but = new JButton("Invate");        
+        if (td.isGrpup && td.group==tab.checkingGrpup) {
+          but.setForeground(table.getSelectionForeground());
+          but.setBackground(new Color(193, 211, 245));
+        } else {
+          but.setForeground(table.getForeground());
+          but.setBackground(UIManager.getColor("Button.background"));
+        }
+        return but;
+      }       
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
         JButton but = new JButton("Check");        
         if (td.isGrpup && td.group==tab.checkingGrpup) {

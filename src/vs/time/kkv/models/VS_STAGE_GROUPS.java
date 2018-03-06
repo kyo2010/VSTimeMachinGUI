@@ -10,6 +10,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 
@@ -32,9 +34,10 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long STAGE_ID;   //  NOT_DETECTED
   public long GROUP_NUM;   //  NOT_DETECTED
   public long NUM_IN_GROUP;   //  NOT_DETECTED
-  public String PILOT;   //  NOT_DETECTED
-  public int TRANSPONDER;   //  NOT_DETECTED
+  public long REG_ID;   //  NOT_DETECTED
+  public int VS_PRIMARY_TRANS;   //  NOT_DETECTED
   public String CHANNEL;   //  NOT_DETECTED
+  public String PILOT;   //  NOT_DETECTED
   public int isError = 0;
   public long LAPS;
   public long BEST_LAP;
@@ -42,14 +45,16 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long RACE_TIME;
   public int IS_RECALULATED = 0;
   public int IS_FINISHED = 0;
-  public int PILOT_TYPE = 0;  
+  public int PILOT_TYPE = 0;
   public int SCORE = 0;
   public int WIN = 0;
   public int LOSE = 0;
   public int ACTIVE_FOR_NEXT_STAGE = 1;
   public int CHECK_FOR_RACE = 0;
   public VSColor color = null;
-  
+
+  private VS_REGISTRATION registration = null;   //  NOT_DETECTED
+
   public int wins = 0;
   public int loses = 0;
 
@@ -59,15 +64,17 @@ public class VS_STAGE_GROUPS implements Transferable {
    * Constructor
    */
   public VS_STAGE_GROUPS() {
-  }; 
+  }
+  ; 
   
   public static DBModelControl<VS_STAGE_GROUPS> dbControl = new DBModelControl<VS_STAGE_GROUPS>(VS_STAGE_GROUPS.class, "VS_STAGE_GROUPS", new DBModelField[]{
     new DBModelField("GID").setDbFieldName("\"GID\"").setAutoIncrement(),
     new DBModelField("STAGE_ID").setDbFieldName("\"STAGE_ID\""),
     new DBModelField("GROUP_NUM").setDbFieldName("\"GROUP_NUM\""),
     new DBModelField("NUM_IN_GROUP").setDbFieldName("\"NUM_IN_GROUP\""),
+    new DBModelField("REG_ID").setDbFieldName("\"REG_ID\""),
     new DBModelField("PILOT").setDbFieldName("\"PILOT\""),
-    new DBModelField("TRANSPONDER").setDbFieldName("\"TRANSPONDER\""),
+    new DBModelField("VS_PRIMARY_TRANS").setDbFieldName("\"TRANSPONDER\""),
     new DBModelField("CHANNEL").setDbFieldName("\"CHANNEL\""),
     new DBModelField("LAPS").setDbFieldName("\"LAPS\""),
     new DBModelField("BEST_LAP").setDbFieldName("\"BEST_LAP\""),
@@ -77,10 +84,55 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("SCORE").setDbFieldName("\"SCORE\""),
     new DBModelField("WIN").setDbFieldName("\"WIN\""),
     new DBModelField("LOSE").setDbFieldName("\"LOSE\""),
-    new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),    
-    new DBModelField("CHECK_FOR_RACE").setDbFieldName("\"CHECK_FOR_RACE\""),    
-    new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),    
-  });
+    new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),
+    new DBModelField("CHECK_FOR_RACE").setDbFieldName("\"CHECK_FOR_RACE\""),
+    new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),});
+
+  public VS_REGISTRATION getRegistration(Connection conn, long raceID){
+    loadRegistration(conn,raceID);
+    return registration;
+  }
+  
+  public void loadRegistration(Connection conn, long raceID) {
+    try {
+      if (registration == null && REG_ID != 0) {
+        registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and ID=?", raceID, REG_ID);
+      }
+      if (REG_ID == -1) {
+        registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and VS_USER_NAME=?", raceID, PILOT);
+        if (registration!=null) REG_ID = registration.ID;
+        dbControl.update(conn, this);
+      }
+    } catch (Exception e) {
+    }
+  }
+  
+  public List<Integer> getUserTransponders(Connection conn, long raceID){
+    loadRegistration(conn, raceID);
+    List<Integer> trans = new ArrayList<>();
+    trans.add(VS_PRIMARY_TRANS);
+    if (registration!=null){
+      if (registration.VS_TRANS1!=0 && registration.VS_TRANS1!=-1)
+        trans.add(registration.VS_TRANS1);
+      if (registration.VS_TRANS2!=0 && registration.VS_TRANS2!=-1)
+        trans.add(registration.VS_TRANS2);
+      if (registration.VS_TRANS3!=0 && registration.VS_TRANS3!=-1)      
+        trans.add(registration.VS_TRANS3); 
+    }
+    return trans;        
+  }
+  
+  
+  public boolean isTransponderForUser(Connection conn, long raceID, int trans){
+    if (this.VS_PRIMARY_TRANS==trans) return true;
+    loadRegistration(conn, raceID);
+    if (registration!=null){
+      if (registration.VS_TRANS1==trans) return true;
+      if (registration.VS_TRANS2==trans) return true;
+      if (registration.VS_TRANS3==trans) return true;
+    } 
+    return false;
+  }
 
   public String toString() {
     return PILOT + " (" + CHANNEL + ")";
@@ -128,21 +180,21 @@ public class VS_STAGE_GROUPS implements Transferable {
         LAPS = 0;
         boolean all_laps_is_exist = false;
         try {
-          boolean hasSkip = false;          
-          for (int lap_num=1; lap_num<=stage.LAPS; lap_num++) {
+          boolean hasSkip = false;
+          for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
-            VS_RACE_LAP lap = stage.laps.get("" + GROUP_NUM).get("" + TRANSPONDER).get(""+lap_num);            
-            if (lap!=null){
+            VS_RACE_LAP lap = stage.laps.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS).get("" + lap_num);
+            if (lap != null) {
               if (lap.TRANSPONDER_TIME < best_time_lap) {
-                best_time_lap = lap.TRANSPONDER_TIME;                
+                best_time_lap = lap.TRANSPONDER_TIME;
               }
               LAPS++;
               _RACE_TIME += lap.TRANSPONDER_TIME;
-              if (lap_num==stage.LAPS && !hasSkip) {
+              if (lap_num == stage.LAPS && !hasSkip) {
                 all_laps_is_exist = true;
-                
+
               }
-            }else{
+            } else {
               hasSkip = true;
             }
           }
@@ -154,15 +206,17 @@ public class VS_STAGE_GROUPS implements Transferable {
         if (all_laps_is_exist) {
           RACE_TIME = _RACE_TIME;
         }
-        if (all_laps_is_exist) IS_FINISHED = 1;
+        if (all_laps_is_exist) {
+          IS_FINISHED = 1;
+        }
         if (IS_FINISHED == 1) {
           if (BEST_LAP == 0) {
             BEST_LAP = MAX_TIME;
           }
           if (!all_laps_is_exist) {
             RACE_TIME = MAX_TIME;
-          }          
-        }        
+          }
+        }
         IS_RECALULATED = 1;
         VS_STAGE_GROUPS.dbControl.update(conn, this);
       }

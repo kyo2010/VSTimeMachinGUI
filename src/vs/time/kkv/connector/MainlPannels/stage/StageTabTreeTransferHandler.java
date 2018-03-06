@@ -174,7 +174,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
       node.GROUP_NUM = parent.GROUP_NUM;
       
        if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
-        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.VS_PRIMARY_TRANS+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
         stageTab.refreshTableData();
         tree.updateUI();
         return false;
@@ -188,7 +188,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
         VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, node);
         nodesToRemove.parent.users.remove(nodesToRemove);
         parent.users.add(node);
-        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.VS_PRIMARY_TRANS,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
       
         stageTab.stage.checkConstarin();
         stageTab.refreshTableData();
@@ -210,7 +210,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
         } 
         
         if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
-          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.VS_PRIMARY_TRANS+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
           stageTab.refreshTableData();
           tree.updateUI();
           return false;
@@ -234,7 +234,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
           usr.parent = parent;
         }
         
-        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.VS_PRIMARY_TRANS,nodesToRemove.GROUP_NUM,node.GROUP_NUM);
       
         stageTab.stage.checkConstarin();
         stageTab.refreshTableData();
@@ -257,7 +257,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
       node.GROUP_NUM = parent.GROUP_NUM;
       stage.groups.put(parent.GROUP_INDEX, parent);
       if (!canBeNewUserInserted(stageTab.mainForm.con, node)) {
-        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.TRANSPONDER+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(stageTab.mainForm, "Group " + node.GROUP_NUM + " contains " + node.PILOT +"(" + node.VS_PRIMARY_TRANS+")", "I cann't do it...", JOptionPane.INFORMATION_MESSAGE);
         stageTab.refreshTableData();
         tree.updateUI();
         return false;
@@ -272,7 +272,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
         nodesToRemove.parent.users.remove(nodesToRemove);
         parent.users.add(node);
         
-        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.TRANSPONDER,nodesToRemove.GROUP_NUM,node.GROUP_NUM);      
+        moveTimeResult(stageTab.mainForm.con,stageTab.stage.RACE_ID,stageTab.stage.ID,node.VS_PRIMARY_TRANS,nodesToRemove.GROUP_NUM,node.GROUP_NUM);      
         
         stageTab.stage.checkConstarin();
         stageTab.refreshTableData();
@@ -306,7 +306,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
 
   public static boolean canBeNewUserInserted(Connection con, VS_STAGE_GROUPS new_user) {
     try {
-      VS_STAGE_GROUPS t1 = VS_STAGE_GROUPS.dbControl.getItem(con, "STAGE_ID=? and GROUP_NUM=? and TRANSPONDER=?", new_user.STAGE_ID, new_user.GROUP_NUM, new_user.TRANSPONDER);
+      VS_STAGE_GROUPS t1 = VS_STAGE_GROUPS.dbControl.getItem(con, "STAGE_ID=? and GROUP_NUM=? and TRANSPONDER=?", new_user.STAGE_ID, new_user.GROUP_NUM, new_user.VS_PRIMARY_TRANS);
       if (t1 == null) {
         return true;
       }

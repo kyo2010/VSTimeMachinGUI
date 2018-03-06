@@ -57,7 +57,7 @@ public class VS_RACE_LAP {
       lap.LAP = LAP;                        
       VS_RACE_LAP.dbControl.insert(con,lap);
       for (VS_STAGE_GROUPS usr : group.users){
-        if (usr.TRANSPONDER==TRANSPONDER_ID){
+        if (usr.VS_PRIMARY_TRANS==TRANSPONDER_ID){
           usr.IS_RECALULATED = 0;   
         }
       }      
