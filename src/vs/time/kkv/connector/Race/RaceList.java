@@ -45,6 +45,7 @@ public class RaceList extends javax.swing.JFrame {
     this.mainForm = _mainForm;
     raceModelTable = new RaceListModelTable(mainForm);
     jtUsers.setModel(raceModelTable);
+    jtUsers.setDefaultRenderer(Object.class,raceModelTable);
 
     jtUsers.getColumnModel().getColumn(2).setMinWidth(300);
 
@@ -100,8 +101,14 @@ public class RaceList extends javax.swing.JFrame {
           } else {
             //popup.setVisible(false);   
           }
-          if (e.getClickCount() == 2) {
-            selectRace();
+          if (e.getClickCount() == 2) {    
+            JTable source = (JTable) e.getSource();
+            int row = source.rowAtPoint(e.getPoint());
+            int column = source.columnAtPoint(e.getPoint());
+          
+            source.changeSelection(row, column, false, false);
+            raceModelTable.showEditDialog(row);
+            
             //raceModelTable.showEditDialog(row);          
             //JOptionPane.showMessageDialog(UserList.this, "Rows:"+jtUsers.getSelectedRow(), "Error", JOptionPane.ERROR_MESSAGE);
           }
@@ -174,6 +181,7 @@ public class RaceList extends javax.swing.JFrame {
     jPanel1 = new javax.swing.JPanel();
     butAddNewRace = new javax.swing.JButton();
     butRaceEdit = new javax.swing.JButton();
+    butSelectRace = new javax.swing.JButton();
     jPanel2 = new javax.swing.JPanel();
     butClose = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -197,6 +205,13 @@ public class RaceList extends javax.swing.JFrame {
       }
     });
 
+    butSelectRace.setText("Select Race");
+    butSelectRace.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butSelectRaceActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -206,6 +221,8 @@ public class RaceList extends javax.swing.JFrame {
         .addComponent(butAddNewRace, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(butRaceEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(butSelectRace)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
@@ -214,7 +231,8 @@ public class RaceList extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(butAddNewRace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(butRaceEdit))
+          .addComponent(butRaceEdit)
+          .addComponent(butSelectRace))
         .addGap(125, 125, 125))
     );
 
@@ -290,6 +308,12 @@ public class RaceList extends javax.swing.JFrame {
     raceModelTable.showEditDialog(row);
   }//GEN-LAST:event_butRaceEditActionPerformed
 
+  private void butSelectRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSelectRaceActionPerformed
+    // TODO add your handling code here:
+    int row = jtUsers.getSelectedRow();
+    selectRace();
+  }//GEN-LAST:event_butSelectRaceActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -330,6 +354,7 @@ public class RaceList extends javax.swing.JFrame {
   private javax.swing.JButton butAddNewRace;
   private javax.swing.JButton butClose;
   private javax.swing.JButton butRaceEdit;
+  private javax.swing.JButton butSelectRace;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;

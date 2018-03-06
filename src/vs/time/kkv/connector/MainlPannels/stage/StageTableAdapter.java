@@ -54,6 +54,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -125,7 +126,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 150),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 90),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 90).setIsEditing(true).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps", 50).setCellID("INT"),
@@ -773,6 +774,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }else if (td.pilot.CHECK_FOR_RACE == 2) {
             label.setBackground(Color.LIGHT_GRAY);
           }else {
+            if (td.pilot.color==null) td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
             if (td.pilot!=null && td.pilot.color!=null){
               label.setBackground(td.pilot.color.getColor());
             }else{  

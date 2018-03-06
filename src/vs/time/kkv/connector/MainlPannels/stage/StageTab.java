@@ -204,6 +204,10 @@ public class StageTab extends javax.swing.JPanel {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
               if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
                 user.CHECK_FOR_RACE = 1;
+                try {
+                  VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
+                } catch (Exception ein) {
+                }
                 user.VS_PRIMARY_TRANS = transID;
                 pleasuUpdateTable = true;
                 mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
@@ -225,11 +229,7 @@ public class StageTab extends javax.swing.JPanel {
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
             user.CHECK_FOR_RACE = 0;
-          }
-          try {
-            VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
-          } catch (Exception ein) {
-          }
+          }          
         };
         pleasuUpdateTable = true;
         checkingGrpup = null;
@@ -1280,9 +1280,7 @@ public class StageTab extends javax.swing.JPanel {
 
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
-    jTable
-            .setDefaultRenderer(Object.class,
-                    stageTableAdapter);
+    jTable.setDefaultRenderer(Object.class,stageTableAdapter);
 
     for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));

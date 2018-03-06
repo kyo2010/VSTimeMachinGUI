@@ -97,6 +97,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
+    butSelect = new javax.swing.JButton();
 
     setTitle("Race Card");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -191,6 +192,13 @@ public class RaceControlForm extends javax.swing.JFrame {
       }
     });
 
+    butSelect.setText("Select");
+    butSelect.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butSelectActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -199,6 +207,8 @@ public class RaceControlForm extends javax.swing.JFrame {
         .addContainerGap()
         .addComponent(bSave)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(butSelect)
+        .addGap(28, 28, 28)
         .addComponent(bCancel)
         .addContainerGap())
     );
@@ -208,7 +218,8 @@ public class RaceControlForm extends javax.swing.JFrame {
         .addGap(10, 10, 10)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
-          .addComponent(bCancel))
+          .addComponent(bCancel)
+          .addComponent(butSelect))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -272,6 +283,13 @@ public class RaceControlForm extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_jcIgnoreFirstLapActionPerformed
 
+  private void butSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSelectActionPerformed
+    // TODO add your handling code here:
+    //mainForm.setActiveRace(race);
+    setVisible(false);
+    RaceList.init(mainForm).selectRace();
+  }//GEN-LAST:event_butSelectActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -311,6 +329,7 @@ public class RaceControlForm extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
+  private javax.swing.JButton butSelect;
   private javax.swing.JLabel jLSeconds;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;

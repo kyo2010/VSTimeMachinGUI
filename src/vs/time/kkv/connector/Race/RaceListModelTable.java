@@ -7,15 +7,21 @@ package vs.time.kkv.connector.Race;
 
 import vs.time.kkv.connector.Users.*;
 import KKV.Utils.UserException;
+import java.awt.Component;
+import java.awt.Font;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_USERS;
@@ -24,7 +30,7 @@ import vs.time.kkv.models.VS_USERS;
  *
  * @author kyo
  */
-public class RaceListModelTable extends AbstractTableModel {
+public class RaceListModelTable extends AbstractTableModel implements TableCellRenderer  {
 
   private List<VS_RACE> rows;
   private MainForm mainForm = null;
@@ -137,5 +143,18 @@ public class RaceListModelTable extends AbstractTableModel {
         }        
       }
     }
-  }    
+  }   
+  
+  
+  private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+  
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    VS_RACE race = getRace(row);
+    if (mainForm.activeRace!=null && race!=null &&mainForm.activeRace.RACE_ID==race.RACE_ID){      
+      label.setFont(label.getFont().deriveFont(Font.BOLD)); 
+    }
+    return label;
+  }
 }

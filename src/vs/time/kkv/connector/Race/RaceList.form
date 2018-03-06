@@ -54,6 +54,8 @@
                   <Component id="butAddNewRace" min="-2" pref="105" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="butRaceEdit" min="-2" pref="127" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="butSelectRace" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -65,6 +67,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="butAddNewRace" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="butRaceEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="butSelectRace" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
               </Group>
@@ -89,6 +92,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butRaceEditActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="butSelectRace">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Select Race"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butSelectRaceActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

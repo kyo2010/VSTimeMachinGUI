@@ -24,13 +24,13 @@ public class VSColor {
   public static VSColor WHITE = new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE);
   
   public static VSColor[] CHANNEL_COLORS_FIXED = new VSColor[]{
-    new VSColor("RED",BYTE_0, BYTE_0, BYTE_1, Color.RED), // 1 channel
-    new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, Color.GREEN), // 2 channel
-    new VSColor("C1",BYTE_0, BYTE_1, BYTE_1, new Color(255, 255, 0)), // 3 channel
-    new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, Color.BLUE), // 4 channel
-    new VSColor("C2",BYTE_1, BYTE_0, BYTE_1, new Color(255, 0, 255)), // 5 channel
-    new VSColor("C3",BYTE_1, BYTE_1, BYTE_0, new Color(0, 255, 255)), // 6 channel
-    new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE), // 7 channel
+    new VSColor("RED",BYTE_0, BYTE_0, BYTE_1, new Color(255, 140, 140)), // 1 channel
+    new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, new Color(140, 255, 140)), // 2 channel
+    new VSColor("YELLOW",BYTE_0, BYTE_1, BYTE_1, new Color(255, 255, 140)), // 3 channel
+    new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, new Color(140, 140, 255)), // 4 channel
+    new VSColor("PINK",BYTE_1, BYTE_0, BYTE_1, new Color(255, 140, 255)), // 5 channel
+    new VSColor("AZURE",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255)), // 6 channel
+    new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, new Color(240, 240, 255)), // 7 channel
     //new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE), // 8 channel
   }; 
   
@@ -95,7 +95,7 @@ public class VSColor {
   }
 
    /** R5  ;   R1;R5;R8   RED;GREEN;YELLOW => R5  */
-  public static VSColor getColorForChannel(String channel, String colors, String channels) {
+  public static VSColor getColorForChannel(String channel, String channels, String colors) {
     try {
       String[] cos = colors.split(";");
       String[] chs = channels.split(";");

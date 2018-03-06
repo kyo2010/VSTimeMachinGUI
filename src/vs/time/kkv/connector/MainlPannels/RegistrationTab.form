@@ -17,7 +17,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jPanel1" max="32767" attributes="0"/>
-          <Component id="jScrollPane1" alignment="0" pref="947" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -61,7 +61,9 @@
                       <Component id="butAddNewStage" min="-2" pref="208" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="butExport" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="butReload" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="133" max="32767" attributes="0"/>
                       <Component id="activeTransponder" min="-2" pref="390" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -76,6 +78,7 @@
                           <Component id="butAddNewStage" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="activeTransponder" alignment="3" max="32767" attributes="0"/>
                           <Component id="butExport" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="butReload" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -125,6 +128,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butExportActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="butReload">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Reload"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butReloadActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

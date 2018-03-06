@@ -154,7 +154,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   public void refreshData() {
     activeTransponder.setVisible(false);
     regModelTable.loadData();
-    jtPilotRegistration.addNotify();
+    jtPilotRegistration.updateUI();
     mainForm.setTransponderListener(this);
   }
 
@@ -173,6 +173,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     butAddNewStage = new javax.swing.JButton();
     activeTransponder = new javax.swing.JLabel();
     butExport = new javax.swing.JButton();
+    butReload = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -207,6 +208,13 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
+    butReload.setText("Reload");
+    butReload.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butReloadActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -218,7 +226,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butExport)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butReload)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
         .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
@@ -230,7 +240,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           .addComponent(butRegistPilot)
           .addComponent(butAddNewStage)
           .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butExport)))
+          .addComponent(butExport)
+          .addComponent(butReload)))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -264,7 +275,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
+      .addComponent(jScrollPane1)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -301,6 +312,12 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     // TODO add your handling code here:
     tableToXLS();
   }//GEN-LAST:event_butExportActionPerformed
+
+  private void butReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butReloadActionPerformed
+    // TODO add your handling code here:
+    regModelTable.loadData();
+    jtPilotRegistration.updateUI();
+  }//GEN-LAST:event_butReloadActionPerformed
 
   public void tableToXLS() {
     try {
@@ -361,6 +378,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butExport;
   private javax.swing.JButton butRegistPilot;
+  private javax.swing.JButton butReload;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;
