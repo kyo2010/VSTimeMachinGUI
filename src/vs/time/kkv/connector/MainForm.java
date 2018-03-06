@@ -171,6 +171,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
 
     activeRace = race;
+    setTitle("Race - "+race.RACE_NAME);
     // Open Tabs
     tabListenerEnabled = false;
     tabbedPanel.removeAll();
@@ -921,10 +922,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       log.writeFile(data, true);
     }
     if (lap != null) {
-      this.lastTranponderID = lap.transponderID;
-      if (transponderListener != null) {
-        transponderListener.newTransponder(lap.transponderID);
-      }
+      this.lastTranponderID = lap.transponderID;      
       long time = Calendar.getInstance().getTimeInMillis();
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
       /*if (Math.abs(time - lap.time) < 7000) {
@@ -939,10 +937,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       VS_REGISTRATION usr_reg = null;
       if (activeRace != null) {
         try {
-          usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
-                  activeRace.RACE_ID, lap.transponderID);
+          usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and (VS_TRANSPONDER=? OR VS_TRANS2=? OR VS_TRANS3=?)",
+                  activeRace.RACE_ID, lap.transponderID, lap.transponderID, lap.transponderID);
         } catch (Exception ein) {
         }
+      }
+      if (transponderListener != null) {
+        transponderListener.newTransponder(lap.transponderID,usr_reg);
       }
 
       if (activeGroup == null) {
@@ -962,8 +963,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (user == null) { // find user by TransID
-          for (VS_STAGE_GROUPS usr : activeGroup.users) {
-            
+          for (VS_STAGE_GROUPS usr : activeGroup.users) {            
             if (usr.isTransponderForUser(con,activeRace.RACE_ID,lap.transponderID)) {
               user = usr;
               break;
@@ -1041,7 +1041,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public interface LastTransponderListener {
 
-    public void newTransponder(long transponder);
+    public void newTransponder(long transponder, VS_REGISTRATION user);
   }
 
   LastTransponderListener transponderListener = null;

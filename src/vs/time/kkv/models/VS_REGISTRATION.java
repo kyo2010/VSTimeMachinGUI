@@ -25,8 +25,8 @@ public class VS_REGISTRATION {
   
   public String FIRST_NAME;   //  NOT_DETECTED
   public String SECOND_NAME;   //  NOT_DETECTED
-  public String WEB_SYSTEM;
-  public String WEB_SID;
+  public String WEB_SYSTEM = "";
+  public String WEB_SID = "";
   
   /** Constructor */ 
   public VS_REGISTRATION() {

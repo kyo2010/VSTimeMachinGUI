@@ -142,7 +142,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
-  Timer checkerTimer = new Timer(400, new ActionListener() {
+  Timer checkerTimer = new Timer(200, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -150,27 +150,37 @@ public class StageTab extends javax.swing.JPanel {
       }
       Timer timer = (Timer) e.getSource();
       InfoForm.init(mainForm, "Check", 100).setVisible(true);
-      
-      if (checkerCycle* timer.getInitialDelay() < 1500) {
-        try{
+
+      if (checkerCycle * timer.getInitialDelay() < 1000) {
+        try {
           mainForm.vsTimeConnector.setColor(0, 0);
-        }catch(Exception ein){}  
+        } catch (Exception ein) {
+        }
+        try {
+          Thread.sleep(150);
+        } catch (Exception ein) {
+        }
+        try {
+          mainForm.vsTimeConnector.setPowerMax();
+        } catch (Exception ein) {
+        }
+
         checkerCycle++;
         return;
       }
-      
-      
+
       try {
         if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
-            List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);            
-            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL,stage.CHANNELS,stage.COLORS);
-            for (Integer transID : userTrans){
+            List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
+            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
+            for (Integer transID : userTrans) {
               mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
-              try{
-                wait(100); 
-              }catch(Exception ein){}          
+              try {
+                Thread.sleep(150);
+              } catch (Exception ein) {
+              }
             }
             checkingGrpup.users.get(pilot_num).color = vs_color;
             try {
@@ -210,16 +220,17 @@ public class StageTab extends javax.swing.JPanel {
           all_ok = false;
         }
       }
-      if (checkerCycle* timer.getInitialDelay() > 15000 || all_ok) {
+      if (checkerCycle * timer.getInitialDelay() > 10000 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
             user.CHECK_FOR_RACE = 0;
           }
-          try{
+          try {
             VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
-          }catch(Exception ein){}  
-        };        
+          } catch (Exception ein) {
+          }
+        };
         pleasuUpdateTable = true;
         checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
@@ -395,21 +406,27 @@ public class StageTab extends javax.swing.JPanel {
               return;
             }
             List<String> pilots = new ArrayList<String>();
-            if (td!=null && td.group!=null && td.group.users!=null){
-               for (VS_STAGE_GROUPS user : td.group.users) {
+            if (td != null && td.group != null && td.group.users != null) {
+              for (VS_STAGE_GROUPS user : td.group.users) {
                 pilots.add(user.PILOT);
               }
               mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
             }
           }
-          
+
           if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach
+            
+            if (checkerTimer.isRunning()){
+              checkerTimer.stop();
+              InfoForm.init(mainForm, "", 100).setVisible(false);
+              return;
+            }
 
             if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
               JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
-            
+
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;

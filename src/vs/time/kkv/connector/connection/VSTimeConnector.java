@@ -126,6 +126,7 @@ public class VSTimeConnector {
     }
     hello();
     setTime();
+    setSensitivityMax();
   }
 
   /**
@@ -139,6 +140,10 @@ public class VSTimeConnector {
   public void setPower(int powerIndex) throws SerialPortException {
     sentMessage("sendpwr:" + powerIndex + "\r\n");
   }
+  
+  public void setPowerMax() throws SerialPortException {
+    setPower(2);
+  }
 
   public void getPower() throws SerialPortException {
     sentMessage("rcvpwr\r\n");
@@ -146,6 +151,14 @@ public class VSTimeConnector {
 
   public void seachTransponder(int transponderID, int color) throws SerialPortException {
     sentMessage("searchtrans:" + transponderID + ","+color+";\r\n");
+  }
+  
+  public void setSensitivity(int sensivity) throws SerialPortException {
+    sentMessage("setsensitivity:"+sensivity+"\r\n");
+  }
+  
+  public void setSensitivityMax() throws SerialPortException {
+    setSensitivity(3);
   }
   
   

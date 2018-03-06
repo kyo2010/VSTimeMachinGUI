@@ -112,13 +112,12 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
           int column = source.columnAtPoint(e.getPoint());
-          if (!source.isRowSelected(row)) {
+          
             source.changeSelection(row, column, false, false);
             VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
             if (regInfo != null) {
                RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
-            }
-          }
+            }          
         }
       }
 
@@ -140,21 +139,16 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     refreshData();
   }
 
-  VS_REGISTRATION usr_reg = null;
   long transponder = -1;
+   VS_REGISTRATION last_user = null;
 
   @Override
-  public void newTransponder(long transponder) {
+  public void newTransponder(long transponder, VS_REGISTRATION user) {
     activeTransponder.setVisible(true);
     this.transponder = transponder;
-    activeTransponder.setText("" + mainForm.lastTranponderID);
-    try {
-      usr_reg = null;
-      usr_reg = VS_REGISTRATION.dbControl.getItem(mainForm.con, "VS_RACE_ID=? and VS_TRANSPONDER=?",
-              mainForm.activeRace.RACE_ID, transponder);
-      activeTransponder.setText(usr_reg.VS_USER_NAME + " - " + mainForm.lastTranponderID);
-    } catch (Exception e) {
-    }
+    String info = (user!=null?(user.VS_USER_NAME + " - "):"") + mainForm.lastTranponderID;
+    activeTransponder.setText( info );    
+    last_user = user;
   }
 
   public void refreshData() {
@@ -225,7 +219,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butExport)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
@@ -294,9 +288,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private void activeTransponderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_activeTransponderMouseClicked
     // TODO add your handling code here:
     if (SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() >= 2) {
-      RegisterPilotlForm reg = RegisterPilotlForm.init(mainForm, usr_reg == null ? -1 : usr_reg.ID);
+      RegisterPilotlForm reg = RegisterPilotlForm.init(mainForm, last_user == null ? -1 : last_user.ID);
       //reg.
-      if (usr_reg == null && transponder != -1) {
+      if (last_user == null && transponder != -1) {
         reg.edTransponder.setText("" + transponder);
       }
       reg.setVisible(true);
