@@ -2,7 +2,7 @@
 GUI for VS TimeMachine
 
 ## Download Windows version:
-https://github.com/kyo2010/VSTimeMachinGUI/raw/master/!dis/DroneRacingSystem.zip
+https://github.com/kyo2010/VSTimeMachinGUI/raw/master2/!dis/DroneRacingSystem.zip
 
 ## SQL lite database file
 races.s3db
