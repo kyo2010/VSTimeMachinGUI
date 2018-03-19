@@ -547,6 +547,7 @@ public class StageTab extends javax.swing.JPanel {
       jSplitPane1.setVisible(false);
       jTree.setVisible(false);
       jScrollPane2.setVisible(false);
+      butGroupExport.setVisible(false);
       //jSplitPane2.set
     }
   }
@@ -647,7 +648,7 @@ public class StageTab extends javax.swing.JPanel {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(stage.race.RACE_NAME);
+      out.setReportName(jd.getDDMMYYYY("-")+"_groups");
       int sheet = out.addStream();
 
       out.setReportName(sheet, stage.CAPTION);
@@ -1005,6 +1006,7 @@ public class StageTab extends javax.swing.JPanel {
     pdfButton = new javax.swing.JButton();
     refreshData = new javax.swing.JButton();
     bNewStage = new javax.swing.JButton();
+    butGroupExport = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -1033,7 +1035,7 @@ public class StageTab extends javax.swing.JPanel {
     });
 
     butConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/options.png"))); // NOI18N
-    butConfig.setText("Config");
+    butConfig.setToolTipText("Config");
     butConfig.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butConfigActionPerformed(evt);
@@ -1046,9 +1048,8 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption.setText("00:00:00");
     timerCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0), 5));
 
-    pdfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/report-icon.png"))); // NOI18N
-    pdfButton.setText("Report");
-    pdfButton.setToolTipText("Create PDF Report");
+    pdfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xls.png"))); // NOI18N
+    pdfButton.setToolTipText("Create Report");
     pdfButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         pdfButtonActionPerformed(evt);
@@ -1072,6 +1073,14 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    butGroupExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xlsGroups.png"))); // NOI18N
+    butGroupExport.setToolTipText("Groups Export");
+    butGroupExport.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butGroupExportActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1079,12 +1088,14 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
         .addComponent(refreshData, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(pdfButton)
+        .addComponent(butGroupExport, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(butConfig)
+        .addComponent(pdfButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bNewStage)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1096,13 +1107,14 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(bNewStage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pdfButton))
+            .addComponent(bNewStage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     jSplitPane2.setDividerLocation(200);
@@ -1198,7 +1210,7 @@ public class StageTab extends javax.swing.JPanel {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(stage.race.RACE_NAME);
+      out.setReportName(jd.getDDMMYYYY("-")+"_stage");
 
       tableToXLS(out);
 
@@ -1371,10 +1383,16 @@ public class StageTab extends javax.swing.JPanel {
     keyPressed(evt);
   }//GEN-LAST:event_topPanelKeyPressed
 
+  private void butGroupExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butGroupExportActionPerformed
+    // TODO add your handling code here:
+    treeToXLS();
+  }//GEN-LAST:event_butGroupExportActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bNewStage;
   private javax.swing.JButton butConfig;
+  private javax.swing.JButton butGroupExport;
   private javax.swing.JButton butRemoveSatge;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;

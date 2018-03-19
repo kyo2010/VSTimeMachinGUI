@@ -52,10 +52,10 @@ public class VSTeamConsole extends javax.swing.JFrame {
   public static boolean showPing = false;
   
   public static VSTeamConsole init(MainForm mainForm) {
-    if (_form == null) {
+    if (_form == null) {   
       _form = new VSTeamConsole();      
       if (mainForm != null) {
-        //mainForm.setFormOnCenter(_form);        
+        mainForm.setFormOnCenter(_form);        
         _form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
       }
       _form.updateJSONFile();

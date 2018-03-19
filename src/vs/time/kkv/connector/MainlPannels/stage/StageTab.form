@@ -55,12 +55,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace pref="43" max="32767" attributes="0"/>
+                  <EmptySpace pref="104" max="32767" attributes="0"/>
                   <Component id="refreshData" min="-2" pref="62" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pdfButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="butGroupExport" min="-2" pref="59" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="butConfig" min="-2" max="-2" attributes="0"/>
+                  <Component id="pdfButton" min="-2" pref="61" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="butConfig" min="-2" pref="72" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bNewStage" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -74,14 +76,15 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="butConfig" alignment="0" max="32767" attributes="0"/>
+                      <Component id="pdfButton" alignment="0" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="butRemoveSatge" alignment="3" max="32767" attributes="0"/>
                           <Component id="bNewStage" alignment="3" max="32767" attributes="0"/>
-                          <Component id="butConfig" alignment="3" max="32767" attributes="0"/>
-                          <Component id="pdfButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
                       <Component id="refreshData" max="32767" attributes="0"/>
+                      <Component id="butGroupExport" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -104,7 +107,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/images/icons/options.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Config"/>
+            <Property name="toolTipText" type="java.lang.String" value="Config"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butConfigActionPerformed"/>
@@ -132,10 +135,9 @@
         <Component class="javax.swing.JButton" name="pdfButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/icons/report-icon.png"/>
+              <Image iconType="3" name="/images/icons/xls.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Report"/>
-            <Property name="toolTipText" type="java.lang.String" value="Create PDF Report"/>
+            <Property name="toolTipText" type="java.lang.String" value="Create Report"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pdfButtonActionPerformed"/>
@@ -162,6 +164,17 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bNewStageActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="butGroupExport">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/xlsGroups.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Groups Export"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butGroupExportActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

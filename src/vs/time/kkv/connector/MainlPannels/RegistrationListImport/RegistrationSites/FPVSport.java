@@ -64,9 +64,9 @@ public class FPVSport extends IRegSite {
           race.RACE_NAME = json_race.getString("name"); 
           races.add(race);
           
-          JSONArray json_users = obj.getJSONArray("pilots");
+          JSONArray json_users = json_race.getJSONArray("pilots");
           for (int j = 0; j < json_users.length(); j++) {
-            JSONObject json_pilot = json_races.getJSONObject(j); 
+            JSONObject json_pilot = json_users.getJSONObject(j); 
             VS_REGISTRATION user = new VS_REGISTRATION();
             user.NUM = j+1;
             user.IS_ACTIVE = 1;
@@ -77,6 +77,9 @@ public class FPVSport extends IRegSite {
             user.VS_USER_NAME = json_pilot.getString("osd_name");
             user.FIRST_NAME= json_pilot.getString("fname");
             user.SECOND_NAME= json_pilot.getString("lname");
+            try{
+              user.VS_TRANS1 = Integer.parseInt(json_pilot.getString("transID"));
+            }catch(Exception ein){}
             race.users.add(user);
           }           
         }catch(Exception e){
@@ -97,7 +100,7 @@ public class FPVSport extends IRegSite {
       for (VS_RACE race : site.getRaces()){
         System.out.println(race.RACE_NAME);
         for (VS_REGISTRATION user : race.users ){
-           System.out.println("  "+ user.VS_USER_NAME+" ["+user.FIRST_NAME+" "+user.SECOND_NAME+"]");
+           System.out.println("  "+ user.VS_USER_NAME+" ["+user.FIRST_NAME+" "+user.SECOND_NAME+"] "+user.VS_TRANS1);
         }
       }
       System.out.println("Finish");

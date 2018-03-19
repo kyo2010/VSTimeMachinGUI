@@ -33,6 +33,7 @@ import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainForm.LastTransponderListener;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -45,7 +46,7 @@ import vs.time.kkv.models.VS_REGISTRATION;
  */
 public class RegistrationTab extends javax.swing.JPanel implements LastTransponderListener {
 
-  MainForm mainForm;
+  public MainForm mainForm;
   RegistrationModelTable regModelTable = null;
   JPopupMenu popup = null;
 
@@ -174,17 +175,20 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     activeTransponder = new javax.swing.JLabel();
     butExport = new javax.swing.JButton();
     butReload = new javax.swing.JButton();
+    butImport = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
-    butRegistPilot.setText("Register Pilot");
+    butRegistPilot.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/user_add.png"))); // NOI18N
+    butRegistPilot.setText("Register");
     butRegistPilot.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butRegistPilotActionPerformed(evt);
       }
     });
 
-    butAddNewStage.setText("Add a New Race Stage");
+    butAddNewStage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/add.png"))); // NOI18N
+    butAddNewStage.setText("New Stage");
     butAddNewStage.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butAddNewStageActionPerformed(evt);
@@ -194,6 +198,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     activeTransponder.setBackground(new java.awt.Color(0, 153, 51));
     activeTransponder.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     activeTransponder.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    activeTransponder.setText("Test");
     activeTransponder.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)));
     activeTransponder.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -201,17 +206,26 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
-    butExport.setText("Report");
+    butExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xls.png"))); // NOI18N
     butExport.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butExportActionPerformed(evt);
       }
     });
 
-    butReload.setText("Reload");
+    butReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/refresh-icon.png"))); // NOI18N
+    butReload.setToolTipText("Refresh");
     butReload.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butReloadActionPerformed(evt);
+      }
+    });
+
+    butImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/import.png"))); // NOI18N
+    butImport.setToolTipText("Pilots Import from Web");
+    butImport.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butImportActionPerformed(evt);
       }
     });
 
@@ -222,26 +236,31 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(butRegistPilot)
+        .addGap(10, 10, 10)
+        .addComponent(butAddNewStage)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(butExport)
+        .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(butReload)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
+        .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
         .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
-        .addGap(5, 5, 5)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(butRegistPilot)
-          .addComponent(butAddNewStage)
-          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butExport)
-          .addComponent(butReload)))
+        .addGap(4, 4, 4)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -281,8 +300,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
+        .addGap(1, 1, 1)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -319,6 +338,11 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jtPilotRegistration.updateUI();
   }//GEN-LAST:event_butReloadActionPerformed
 
+  private void butImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butImportActionPerformed
+    // TODO add your handling code here:
+    RegistrationImportForm.init(this).setVisible(true);
+  }//GEN-LAST:event_butImportActionPerformed
+
   public void tableToXLS() {
     try {
       JDEDate jd = new JDEDate();
@@ -326,7 +350,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       //out.setShowExcel(true);
 
       String sheetName = "Registration";
-      out.setReportName(mainForm.activeRace.RACE_NAME);
+      out.setReportName(jd.getDDMMYYYY("-")+"_reg");
       int sheet = out.addStream();
 
       out.setReportName(sheet, sheetName);
@@ -377,6 +401,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private javax.swing.JLabel activeTransponder;
   private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butExport;
+  private javax.swing.JButton butImport;
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JButton butReload;
   private javax.swing.JPanel jPanel1;

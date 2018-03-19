@@ -430,3 +430,87 @@ workbook autofit
 save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/TestRace 2018-03-01 report rs2.xlsx
 close Excel Application
 end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{798E7354-5150-4DAF-898C-2DEB9FB7D861}_kkv_2035.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/Тестовая гонка 2018-03-19 report rs1.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{F4041252-9435-4117-B030-22731B48C1AE}_kkv_8214.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/Тестовая гонка 2018-03-19 report rs1.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{95BD1EEB-D76F-4F00-AF0F-57493B3229C9}_kkv_6024.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/Тестовая гонка 2018-03-19 report rs2.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{00E8D8FB-416C-4DE0-8D1C-67AA79E338AF}_kkv_2379.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/19-03-2018_groups 2018-03-19 report rs1.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{49FB7BE5-4B89-4ACC-8E63-2C6ECD75D35F}_kkv_3775.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/19-03-2018_stage 2018-03-19 report rs2.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{8DD6C344-E83E-4667-BC1C-57A3DC3EFDB7}_kkv_9365.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/19-03-2018_reg 2018-03-19 report rs3.xlsx
+close Excel Application
+end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{84157383-8B0F-4E74-A17B-7B7E2B71600A}_kkv_6592.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/19-03-2018_reg 2018-03-19 report rs1.xlsx
+close Excel Application
+end

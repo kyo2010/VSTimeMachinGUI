@@ -7,8 +7,17 @@ package vs.time.kkv.connector.MainlPannels.RegistrationListImport;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.JOptionPane;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.FPVSport;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
+import vs.time.kkv.connector.MainlPannels.RegistrationTab;
 import vs.time.kkv.connector.Utils.TTS.TextToSpeachFactory;
+import vs.time.kkv.models.VS_RACE;
+import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -17,26 +26,53 @@ import vs.time.kkv.models.VS_SETTING;
  */
 public class RegistrationImportForm extends javax.swing.JFrame {
 
-  MainForm mainForm = null;
-  
+  RegistrationTab regTab = null;
+
+  List<IRegSite> sites = new ArrayList<>();
+
+  public IRegSite getSite(String name) {
+    for (IRegSite site : sites) {
+      if (site.getSystemName().equalsIgnoreCase(name)) {
+        return site;
+      }
+    }
+    return null;
+  }
+
+  public final String PLEASE_SELECT_WEB_SYSTEM = "none";
+
   /**
    * Creates new form WLANSetting
    */
-  public RegistrationImportForm(MainForm mainForm) {
+  public RegistrationImportForm(RegistrationTab regTab) {
     initComponents();
-    this.mainForm = mainForm;
+    this.regTab = regTab;
     setVisible(false);
-  }
-   
-  static RegistrationImportForm singelton  = null;
-  public static RegistrationImportForm init(MainForm mainForm){
-    if (singelton==null){
-      singelton = new RegistrationImportForm(mainForm);
+
+    sites.add(new FPVSport());
+
+    String[] list = new String[sites.size() + 1];
+    list[0] = PLEASE_SELECT_WEB_SYSTEM;
+    int index = 1;
+    for (IRegSite site : sites) {
+      list[index] = site.getSystemName();
+      index++;
     }
-    
+    jcbSites.setModel(new javax.swing.DefaultComboBoxModel(list));
+  }
+
+  static RegistrationImportForm singelton = null;
+
+  public static RegistrationImportForm init(RegistrationTab regTab) {
+    if (singelton == null) {
+      singelton = new RegistrationImportForm(regTab);
+    }
+
     RegistrationImportForm th = singelton;
-    if (mainForm!=null) mainForm.setFormOnCenter(th);
-    
+    if (regTab != null) {
+      regTab.mainForm.setFormOnCenter(th);
+    }
+
     return singelton;
   }
 
@@ -49,23 +85,17 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabel1 = new javax.swing.JLabel();
-    WEB_PORT = new javax.swing.JTextField();
     jPanel1 = new javax.swing.JPanel();
     jButOk = new javax.swing.JButton();
     jButCancel = new javax.swing.JButton();
-    WebServiceStartOnRun = new javax.swing.JCheckBox();
-    bHTTPServer = new javax.swing.JButton();
-    jLabel2 = new javax.swing.JLabel();
-    jcTTS_API = new javax.swing.JComboBox<>();
+    jLabel3 = new javax.swing.JLabel();
+    jLabel4 = new javax.swing.JLabel();
+    jcbSites = new javax.swing.JComboBox<>();
+    jcbRaces = new javax.swing.JComboBox<>();
 
-    setTitle("System Settings");
+    setTitle("Pilots Import from Web");
     setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
-
-    jLabel1.setText("HTTP Server Port");
-
-    WEB_PORT.setText("80");
 
     jButOk.setText("Ok");
     jButOk.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +118,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
         .addComponent(jButCancel)
         .addContainerGap())
     );
@@ -102,26 +132,18 @@ public class RegistrationImportForm extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    WebServiceStartOnRun.setText("Start HTTP Server automatically");
-    WebServiceStartOnRun.setToolTipText("");
-    WebServiceStartOnRun.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-    WebServiceStartOnRun.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        WebServiceStartOnRunActionPerformed(evt);
+    jLabel3.setText("Web Resource");
+
+    jLabel4.setText("Race");
+
+    jcbSites.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    jcbSites.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+      public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        jcbSitesPropertyChange(evt);
       }
     });
 
-    bHTTPServer.setText("Start HTTP Server");
-    bHTTPServer.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        bHTTPServerActionPerformed(evt);
-      }
-    });
-
-    jLabel2.setText("Text to speach API");
-
-    jcTTS_API.setModel(new javax.swing.DefaultComboBoxModel(TextToSpeachFactory.getTTSNames()));
-    jcTTS_API.setName(""); // NOI18N
+    jcbRaces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -131,37 +153,26 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(62, 62, 62)
-                .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-              .addComponent(WebServiceStartOnRun))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(bHTTPServer))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jLabel2)
-            .addGap(18, 18, 18)
-            .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(jLabel3)
+          .addComponent(jLabel4))
+        .addGap(18, 18, 18)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jcbSites, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jcbRaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGap(20, 20, 20)
+        .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
+          .addComponent(jLabel3)
+          .addComponent(jcbSites, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(WebServiceStartOnRun)
-          .addComponent(bHTTPServer))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel2)
-          .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+          .addComponent(jLabel4)
+          .addComponent(jcbRaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -173,52 +184,71 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   }//GEN-LAST:event_jButCancelActionPerformed
 
   private void jButOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButOkActionPerformed
-    int WEB_PORT_INT = 80;
-    try{
-      WEB_PORT_INT = Integer.parseInt(WEB_PORT.getText());
-    }catch(Exception e){}
-    
-    mainForm.speaker.reset();
-    
+    if (PLEASE_SELECT_WEB_SYSTEM.equalsIgnoreCase(jcbSites.getSelectedItem().toString())) {
+    } else {
+      try {
+        IRegSite site = getSite(jcbSites.getSelectedItem().toString());
+        if (site != null) {
+          site.load();
+          List<VS_RACE> races = site.getRaces();
+          int count_export_pilots = 0;
+          for (VS_RACE race : races) {
+            if (race.RACE_NAME.equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {              
+              if (race.users != null) {                
+                for (VS_REGISTRATION pilot : race.users) {
+
+                }
+              }              
+              break;
+            }
+          }
+          JOptionPane.showMessageDialog(this, "Count export pilots : " + count_export_pilots, "Information", JOptionPane.INFORMATION_MESSAGE);      
+        }
+      } catch (Exception e) {
+        MainForm._toLog(e);
+      }
+    }
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
 
-  private void WebServiceStartOnRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WebServiceStartOnRunActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_WebServiceStartOnRunActionPerformed
-
-  public void buttnCaptionRefresh(){
-    if (mainForm.httpServer==null || !mainForm.httpServer.connected){
-      bHTTPServer.setText("Start HTTP Server");
-    }else{
-      bHTTPServer.setText("Stop HTTP Server");
+  private void jcbSitesPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcbSitesPropertyChange
+    jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
+    if (PLEASE_SELECT_WEB_SYSTEM.equalsIgnoreCase(jcbSites.getSelectedItem().toString())) {
+    } else {
+      try {
+        IRegSite site = getSite(jcbSites.getSelectedItem().toString());
+        if (site != null) {
+          site.load();
+          List<VS_RACE> races = site.getRaces();
+          String[] list = new String[races.size()];
+          int index = 0;
+          for (VS_RACE race : races) {
+            list[index] = race.RACE_NAME;
+            index++;
+          }
+          jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(list));
+        }
+      } catch (Exception e) {
+        MainForm._toLog(e);
+      }
     }
+  }//GEN-LAST:event_jcbSitesPropertyChange
+
+  public void buttnCaptionRefresh() {
+
   }
-  
-  public static void runWebServer(MainForm mainForm){
+
+  public static void runWebServer(MainForm mainForm) {
     mainForm.httpServer = new RaceHttpServer(mainForm, VS_SETTING.getParam(mainForm.con, "WEB_PORT", 80));
   }
-  
-  private void bHTTPServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHTTPServerActionPerformed
-    // TODO add your handling code here:
-    if (mainForm.httpServer==null || !mainForm.httpServer.connected){      
-       runWebServer(mainForm);
-    }else{
-      mainForm.httpServer.disconnect();
-      mainForm.httpServer = null;
-    }    
-    buttnCaptionRefresh();
-  }//GEN-LAST:event_bHTTPServerActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JTextField WEB_PORT;
-  private javax.swing.JCheckBox WebServiceStartOnRun;
-  private javax.swing.JButton bHTTPServer;
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
-  private javax.swing.JLabel jLabel1;
-  private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
   private javax.swing.JPanel jPanel1;
-  private javax.swing.JComboBox<String> jcTTS_API;
+  private javax.swing.JComboBox<String> jcbRaces;
+  private javax.swing.JComboBox<String> jcbSites;
   // End of variables declaration//GEN-END:variables
 }
