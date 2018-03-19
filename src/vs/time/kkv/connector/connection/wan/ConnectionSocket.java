@@ -90,7 +90,8 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
           sock.receive(packet);
 
           byte[] data_b = packet.getData();
-          String data = new String(data_b, 0, packet.getLength());
+          ipAddress = packet.getAddress();
+          String data = new String(data_b, 0, packet.getLength());          
           data = data.trim();
 
           // try{
