@@ -86,14 +86,17 @@ public class VS_STAGE {
       groups.clear();
       int GROUP_INDEX = 0;
       Map<Long, Integer> indexes = new HashMap<>();
-      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
+      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);      
+      
       Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS1", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs2 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);      
-      Map<String, VS_REGISTRATION> regs3 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);
+      Map<String, VS_REGISTRATION> regs3 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS3", "VS_RACE_ID=?", race_id);
       
       for (VS_STAGE_GROUPS usr : users) {
         long db_group_index = usr.GROUP_NUM;
         VS_REGISTRATION reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);
+        if (usr.VS_PRIMARY_TRANS==0){                    
+        }
         if (reg_user==null) reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
         if (reg_user==null) reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);        
         
