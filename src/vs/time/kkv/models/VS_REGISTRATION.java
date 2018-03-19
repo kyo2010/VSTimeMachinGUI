@@ -14,9 +14,9 @@ public class VS_REGISTRATION {
   //public long USER_REG_ID;   //  NOT_DETECTED
   public long NUM;
 //public int VS_TRANSPONDER;   //  NOT_DETECTED
-  public int VS_TRANS1;   //  NOT_DETECTED
-  public int VS_TRANS2;   //  NOT_DETECTED
-  public int VS_TRANS3;   //  NOT_DETECTED
+  public int VS_TRANS1 = 0;   //  NOT_DETECTED
+  public int VS_TRANS2 = 0;   //  NOT_DETECTED
+  public int VS_TRANS3 = 0;   //  NOT_DETECTED
   
   public String VS_USER_NAME;   //  NOT_DETECTED
   public int IS_ACTIVE;   //  NOT_DETECTED

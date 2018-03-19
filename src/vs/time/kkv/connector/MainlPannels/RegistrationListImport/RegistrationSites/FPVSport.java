@@ -33,7 +33,7 @@ import vs.time.kkv.models.VS_REGISTRATION;
 public class FPVSport extends IRegSite {
  
   {
-    REG_SITE_URL = "http://localhost/pilots/getRaces.php";
+    REG_SITE_URL = "http://fpvsport.ru/getRaces.php";
     REG_SITE_NAME = "FPVSport.ru";
   }
   

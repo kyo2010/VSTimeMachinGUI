@@ -7,9 +7,11 @@ package vs.time.kkv.connector.MainlPannels.RegistrationListImport;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.FPVSport;
@@ -195,13 +197,35 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           for (VS_RACE race : races) {
             if (race.RACE_NAME.equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {              
               if (race.users != null) {                
+                Connection con = regTab.mainForm.con;
                 for (VS_REGISTRATION pilot : race.users) {
-
+                  Map<String, VS_REGISTRATION>  regs = VS_REGISTRATION.dbControl.getMap(con, "VS_USER_NAME","VS_RACE_ID=?", regTab.mainForm.activeRace.RACE_ID);                
+                  VS_REGISTRATION reg = regs.get(pilot.VS_USER_NAME);
+                  if (reg==null){
+                    try{
+                      pilot.VS_RACE_ID = regTab.mainForm.activeRace.RACE_ID;
+                      if (pilot.VS_TRANS1!=0){
+                        for (VS_REGISTRATION reg1 : regs.values()){
+                          if (reg1.VS_TRANS1==pilot.VS_TRANS1 || reg1.VS_TRANS2==pilot.VS_TRANS1 ||
+                              reg1.VS_TRANS3==pilot.VS_TRANS1)
+                          {
+                            JOptionPane.showMessageDialog(this, "Transponder for pilot " + pilot.VS_USER_NAME+" is duplocated.\nPilot "+reg1.VS_USER_NAME+" has the same transponder", "Information", JOptionPane.INFORMATION_MESSAGE);      
+                            pilot.VS_TRANS1 = 0;
+                          }
+                        }
+                      }
+                      VS_REGISTRATION.dbControl.insert(con, pilot);
+                      count_export_pilots++;                      
+                    }catch(Exception e){
+                    
+                    }
+                  }
                 }
               }              
               break;
             }
           }
+          regTab.refreshData();
           JOptionPane.showMessageDialog(this, "Count export pilots : " + count_export_pilots, "Information", JOptionPane.INFORMATION_MESSAGE);      
         }
       } catch (Exception e) {
