@@ -7,6 +7,8 @@ import KKV.DBControlSqlLite.DBModelField;
 import KKV.DBControlSqlLite.DBModelControl;
 import KKV.Utils.JDEDate;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VS_RACE {
   
@@ -22,6 +24,8 @@ public class VS_RACE {
   public String CHANNEL2 = "";
   public String CHANNEL3 = "";
   public String CHANNEL4 = "";
+  
+  public List<VS_REGISTRATION> users = new ArrayList<>();
   
   
   /** Constructor */ 

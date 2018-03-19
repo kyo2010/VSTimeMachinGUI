@@ -17,14 +17,18 @@ public class TextToSpeachFactory {
   
   static{
     try{
+      IKKVSpeek api_en = new TextToSpeechCOM_EN();
+      TTS_LIST.add(api_en);
+    }catch(java.lang.UnsatisfiedLinkError | Exception e){      
+    }
+    try{
       TTS_LIST.add(new TextToSpeech());
     }catch(RuntimeException re){
     }catch(Exception e){}
     try{
       TTS_LIST.add(new TextToSpeechCOM());
-    }catch(java.lang.UnsatisfiedLinkError | Exception e){  
-    
-    }
+    }catch(java.lang.UnsatisfiedLinkError | Exception e){      
+    }    
   }
   
   public static String[] getTTSNames(){
