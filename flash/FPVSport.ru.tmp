@@ -31,7 +31,7 @@
         "osd_name" : "KKV",
         "fname" : "Константин",
         "lname" : "Кимлаев",
-        "transID" : "0"
+        "transID" : "555"
        }
       ,{
         "id" : "15",
@@ -48,13 +48,6 @@
     "date_event" : "16.03.2018",
     "pilots" : [
        {
-        "id" : "2",
-        "osd_name" : "KKV",
-        "fname" : "Константин",
-        "lname" : "Кимлаев",
-        "transID" : "0"
-       }
-      ,{
         "id" : "10",
         "osd_name" : "nordman",
         "fname" : "Сергей",
