@@ -923,11 +923,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     if (lap != null) {
       this.lastTranponderID = lap.transponderID;      
-      //long time = Calendar.getInstance().getTimeInMillis();
+      long timeS = Calendar.getInstance().getTimeInMillis();
       long time =  lap.time;
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
-      /*if (Math.abs(time - lap.time) < 7000) {
-        time = lap.time;
+      /*if (Math.abs(time - timeS) > 1000*60*60) {
+        time = timeS;//lap.time;
+        System.out.println("Big gap between Time");
       }*/
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;
@@ -979,7 +980,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                 global_user = new VS_USERS();
                 global_user.VS_SOUND_EFFECT = 1;
                 global_user.VSID1 = lap.transponderID;
-                global_user.setName("USER_" + lap.transponderID);
+                String userName = "USER_" + lap.transponderID;
+                global_user.setName(userName);
+                global_user.FIRST_NAME = userName;
+                global_user.SECOND_NAME = userName;
+                global_user.WEB_SID = "";
+                global_user.WEB_SYSTEM = "";                
                 VS_USERS.dbControl.insert(con, global_user);
               }
               usr_reg = new VS_REGISTRATION();
@@ -989,6 +995,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
               usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
               usr_reg.IS_ACTIVE = 0;
               usr_reg.PILOT_TYPE = 0;
+              usr_reg.FIRST_NAME = global_user.FIRST_NAME;
+              usr_reg.SECOND_NAME = global_user.SECOND_NAME;
+              usr_reg.WEB_SYSTEM = global_user.WEB_SYSTEM;
+              usr_reg.WEB_SID = global_user.WEB_SID;
               usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID) + 1;
               VS_REGISTRATION.dbControl.insert(con, usr_reg);
             }
@@ -1007,6 +1017,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
               try {
                 activeGroup.stageTab.pleasuUpdateTree = true;
               } catch (Exception ein) {
+                ein.printStackTrace();
               }
             }
             if (activeGroup.stageTab != null) {
@@ -1014,8 +1025,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                 activeGroup.stageTab.stageTableAdapter.loadData();
                 activeGroup.stageTab.pleasuUpdateTable = true;
               } catch (Exception ein) {
+                ein.printStackTrace();
               }
-            }
+            }            
           } catch (Exception e) {
             _toLog(e);
           }

@@ -127,6 +127,10 @@ public class VSTimeConnector {
     hello();
     setTime();
     setSensitivityMax();
+    try{
+      wait(300);
+    }catch(Exception e){}
+    setTime();
   }
 
   /**
@@ -294,7 +298,16 @@ public class VSTimeConnector {
         }
       } else if (commands[0].equalsIgnoreCase("timesynchok")) {
         baseStationID = params[0];
+        boolean time_is_ok = false;
+        try{
+          long timeBase = Long.parseLong(params[1]);
+          long current_time = Calendar.getInstance().getTimeInMillis();
+          if (Math.abs(timeBase-current_time)<10000){
+            time_is_ok= true;
+          }          
+        }catch(Exception e){}
         sentMessage("timesynchreceived:" + params[0] + "\r\n");
+        if (!time_is_ok) setTime();        
       } else if (commands[0].equalsIgnoreCase("systime")) {
         sensitivityIndex = Integer.parseInt(params[1]);
         baseStationID = params[2];

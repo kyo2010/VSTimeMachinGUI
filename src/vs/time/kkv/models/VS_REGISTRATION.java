@@ -27,6 +27,7 @@ public class VS_REGISTRATION {
   public String SECOND_NAME;   //  NOT_DETECTED
   public String WEB_SYSTEM = "";
   public String WEB_SID = "";
+  public String PICTURE_FILENAME = "";
   
   /** Constructor */ 
   public VS_REGISTRATION() {
@@ -51,6 +52,7 @@ public class VS_REGISTRATION {
     new DBModelField("SECOND_NAME").setDbFieldName("\"SECOND_NAME\""),
     new DBModelField("WEB_SYSTEM").setDbFieldName("\"WEB_SYSTEM\""),
     new DBModelField("WEB_SID").setDbFieldName("WEB_SID"),
+    new DBModelField("PICTURE_FILENAME").setDbFieldName("PICTURE_FILENAME"),
   });
   
   public static long maxNum(Connection conn, long raceID){

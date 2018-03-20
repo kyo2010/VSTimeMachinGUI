@@ -86,7 +86,6 @@ import vs.time.kkv.models.VS_SETTING;
 public class StageTab extends javax.swing.JPanel {
 
   MainForm mainForm;
-  JTreeTable treeTable = null;
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
@@ -115,9 +114,9 @@ public class StageTab extends javax.swing.JPanel {
         }
         if (pleasuUpdateTable) {
           pleasuUpdateTable = false;
-          if (treeTable != null) {
-            treeTable.notifyAll();
-            treeTable.updateUI();
+          if (jTable != null) {
+            jTable.notifyAll();
+            jTable.updateUI();
           }
         }
       } catch (Exception ex) {
