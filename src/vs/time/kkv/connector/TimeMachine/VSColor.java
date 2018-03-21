@@ -24,12 +24,12 @@ public class VSColor {
   public static VSColor WHITE = new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE);
   
   public static VSColor[] CHANNEL_COLORS_FIXED = new VSColor[]{
-    new VSColor("RED",BYTE_0, BYTE_0, BYTE_1, new Color(255, 140, 140)), // 1 channel
-    new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, new Color(140, 255, 140)), // 2 channel
-    new VSColor("YELLOW",BYTE_0, BYTE_1, BYTE_1, new Color(255, 255, 140)), // 3 channel
-    new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, new Color(140, 140, 255)), // 4 channel
-    new VSColor("PINK",BYTE_1, BYTE_0, BYTE_1, new Color(255, 140, 255)), // 5 channel
-    new VSColor("AZURE",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255)), // 6 channel
+    new VSColor("RED",BYTE_0, BYTE_0, BYTE_1, new Color(255, 140, 140)).setW3css("w3-red"), // 1 channel
+    new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, new Color(140, 255, 140)).setW3css("w3-green"), // 2 channel
+    new VSColor("YELLOW",BYTE_0, BYTE_1, BYTE_1, new Color(255, 255, 140)).setW3css("w3-yellow"), // 3 channel
+    new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, new Color(140, 140, 255)).setW3css("w3-blue"), // 4 channel
+    new VSColor("PURPURE",BYTE_1, BYTE_0, BYTE_1, new Color(255, 140, 255)).setW3css("w3-pink"), // 5 channel
+    new VSColor("AQUA",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255)), // 6 channel
     new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, new Color(240, 240, 255)), // 7 channel
     //new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE), // 8 channel
   }; 
@@ -56,6 +56,14 @@ public class VSColor {
   public Color color;
   public int vscolor = 0;
   public String colorname = "";
+  public String w3css = "";
+
+  public VSColor setW3css(String w3css) {
+    this.w3css = w3css;
+    return this;
+  }
+  
+  
 
   public static String getHTMLColorString(Color color) {
     String red = Integer.toHexString(color.getRed());

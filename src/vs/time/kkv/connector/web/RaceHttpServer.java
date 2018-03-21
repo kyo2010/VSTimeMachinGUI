@@ -5,44 +5,30 @@
  */
 package vs.time.kkv.connector.web;
 
-import KKV.Utils.Tools;
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.http.HttpStatus;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+//import org.apache.tomcat.util.scan.StandardJarScanner;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import ru.nkv.var.StringVar;
-import ru.nkv.var.VarPool;
-import ru.nkv.var.pub.IVar;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import vs.time.kkv.connector.MainForm;
-import vs.time.kkv.connector.MainlPannels.InfoForm;
-import vs.time.kkv.connector.MainlPannels.stage.StageTab;
-import vs.time.kkv.connector.TimeMachine.VSColor;
-import vs.time.kkv.models.VS_RACE;
-import vs.time.kkv.models.VS_REGISTRATION;
-import vs.time.kkv.models.VS_STAGE;
-import vs.time.kkv.models.VS_STAGE_GROUP;
-import vs.time.kkv.models.VS_STAGE_GROUPS;
+//import org.eclipse.jetty.webapp.Configuration;
+
 
 /**
  *
@@ -55,6 +41,8 @@ public class RaceHttpServer  implements  Runnable {
   Thread thread = null;
   int port;
   MainForm mainForm;
+  
+  private static final String WEBROOT_INDEX = "/web1/";
 
   public void disconnect() {
     if (server != null) {
@@ -62,6 +50,8 @@ public class RaceHttpServer  implements  Runnable {
     }
     connected = false;
   }
+  
+  
 
   public RaceHttpServer(MainForm mainForm, int port) {
     this.port = port;
@@ -75,8 +65,67 @@ public class RaceHttpServer  implements  Runnable {
   public void run() {
     try {      
       server = new Server(port); 
-      ServletContextHandler handler = new ServletContextHandler(server, "/"); 
-      handler.addServlet(RaceHttpServlet.class, "/"); 
+      ServletContextHandler handler = new ServletContextHandler(server, "/");    
+      
+      /*ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
+      context.setClassLoader(jspClassLoader);*/
+      
+      //ServletHolder holderDefault = new ServletHolder("default",DefaultServlet.class);
+      //holderDefault.setInitParameter("resourceBase",new File("web").getAbsolutePath());
+      //holderDefault.setInitParameter("dirAllowed","true");      
+      
+     
+      
+      ResourceHandler resource_handler = new ResourceHandler();
+      //resource_handler.setDirectoriesListed(true);
+      resource_handler.setWelcomeFiles(new String[]{ "index.html" });
+      resource_handler.setResourceBase("web");
+      ContextHandler contextHandler= new ContextHandler("/"); 
+      contextHandler.setHandler(resource_handler);      
+         
+
+     // 
+      //handler.addServlet(resource_handler,"/");
+      //server.setHandler(resource_handler);
+      
+      //JspServlet servlet =new 
+      ///handler.addServlet(RaceHttpServlet.class, "/index.html"); 
+      //handler.
+      
+      //HandlerList handlers = new HandlerList( );
+      //handlers.setHandlers( new Handler[] { ServletHolder } );
+      //server.setHandler( handlers );
+                        
+
+      
+      handler.setWelcomeFiles(new String[]{ "index.htm" });
+      handler.addServlet(RaceHttpServlet.class, "/index.htm");
+      handler.addServlet(TVTranslationServlet.class, "/tv.htm");
+      
+     
+      //server.setHandler(handler);
+      
+      
+      
+      
+       HandlerList handlers = new HandlerList( );
+       handlers.setHandlers( new Handler[] {                  
+         contextHandler,
+         handler,         
+       } );
+       server.setHandler( handlers );       
+      
+      
+      
+      //server.setHandler(resource_handler);
+      
+      
+      //WebAppContext ctx = new WebAppContext();      
+      //ctx.setResourceBase("web");  
+      //ctx.setContextPath("/"); 
+      //ctx.addServlet(RaceHttpServlet.class, "/");
+      //server.setHandler(ctx);
+      
       server.start();
     } catch (Exception e) {
     }

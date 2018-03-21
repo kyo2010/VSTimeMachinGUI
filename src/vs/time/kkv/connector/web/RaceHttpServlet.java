@@ -34,23 +34,34 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  *
  * @author kyo
  */
-public class RaceHttpServlet extends HttpServlet{
+public class RaceHttpServlet extends HttpServlet {
 
+  public static boolean USE_CACHE = false;
   String templ = null;
-  
-   public static String createMenuButton(String caption, String href) {
-    return " <button class='button' onclick='location.href=\"" + href + "\"'>" + caption + "</button>\n";
+  String templ_button = null;
+
+  public String createMenuButton(String caption, String href) {
+     if (templ_button == null || USE_CACHE == false) {
+      templ_button = Tools.getTextFromFile("web\\button.template");
+     }  
+     IVar varsPool = new VarPool();
+     varsPool.addChild(new StringVar("URL", href));
+     varsPool.addChild(new StringVar("CAPTION", caption));
+    //return " <button class='w3-button' onclick='location.href=\"" + href + "\"'>" + caption + "</button>\n";
+    return varsPool.applyValues(templ_button);
   }
-  
-  @Override 
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException { 
-      MainForm mainForm = MainForm._mainForm;
-    
-      resp.setStatus(HttpStatus.SC_OK); 
-      resp.setHeader("Content-Type", "text/html; charset=UTF-8");
-      //resp.getWriter().println("EmbeddedJetty");  
-      try {
-      if (templ==null) templ = Tools.getTextFromFile("web\\index.html");
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    MainForm mainForm = MainForm._mainForm;
+
+    resp.setStatus(HttpStatus.SC_OK);
+    resp.setHeader("Content-Type", "text/html; charset=UTF-8");
+    //resp.getWriter().println("EmbeddedJetty");  
+    try {
+      if (templ == null || USE_CACHE == false) {
+        templ = Tools.getTextFromFile("web\\index.template");
+      }
       VS_RACE race = null;
       List<VS_STAGE> stages = null;
       int race_id = -1;
@@ -120,9 +131,9 @@ public class RaceHttpServlet extends HttpServlet{
       String PAGE_CONTENT = "";
       if (active_stage == null) {
         STAGE_CAPTION = "Registration";
-        PAGE_CONTENT += "<table>\n";
-        PAGE_CONTENT += "<tr>\n";
-        PAGE_CONTENT += "  <th>#</th><th>Pilot</th>\n";
+        PAGE_CONTENT += "<table class='w3-table w3-striped w3-bordered' style='width:300px'>\n";
+        PAGE_CONTENT += "<tr class='w3-teal'>\n";
+        PAGE_CONTENT += "  <th width='40px'>#</th><th width='260px'>Pilot</th>\n";
         PAGE_CONTENT += "</tr>\n";
         try {
           List<VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? order by NUM", race_id);
@@ -140,18 +151,26 @@ public class RaceHttpServlet extends HttpServlet{
         try {
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", active_stage.ID);
           long currentGroup = 0;
-          PAGE_CONTENT += "<table>\n";
-          PAGE_CONTENT += "<tr>\n";
+          PAGE_CONTENT += "<table class='w3-table w3-bordered'>\n";
+          PAGE_CONTENT += "<tr class='w3-teal'>\n";
           PAGE_CONTENT += "  <th>#</th><th>Pilot</th><th>Channel</th><th>Best Lap</th><th>Race Lap</th><th>Status</th>\n";
           PAGE_CONTENT += "</tr>\n";
           for (VS_STAGE_GROUPS user : groups) {
             if (currentGroup != user.GROUP_NUM) {
-              PAGE_CONTENT += "<tr>\n";
+              PAGE_CONTENT += "<tr class='w3-light-gray'>\n";
               PAGE_CONTENT += "  <td colspan='6'><b>Group" + user.GROUP_NUM + "</b></td>\n";
               PAGE_CONTENT += "</tr>\n";
               currentGroup = user.GROUP_NUM;
             }
-            PAGE_CONTENT += "<tr>\n";
+            
+            VSColor color = VSColor.getColorForChannel(user.CHANNEL, active_stage.CHANNELS, active_stage.COLORS);
+            String w3css = "";
+            if (color != null) {
+              //bgcolor = VSColor.getHTMLColorString(color.color);
+              w3css = "w3-"+color.colorname.toLowerCase();
+            }
+            
+            PAGE_CONTENT += "<tr class='"+w3css+"'>\n";
             String status = "";
             if (user.GROUP_NUM == activeGroupNum) {
               status = "active";
@@ -166,12 +185,8 @@ public class RaceHttpServlet extends HttpServlet{
               }
             }
 
-            String bgcolor = "#ffffff";
-            VSColor color = VSColor.getColorForChannel(user.CHANNEL,active_stage.CHANNELS,active_stage.COLORS);
-            if (color != null) {
-              bgcolor = VSColor.getHTMLColorString(color.color);
-            }
-            PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' bgcolor='" + bgcolor + "' class='ramka'>" + user.CHANNEL + "</td><td>"
+            ///String bgcolor = "#ffffff";           
+            PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' >" + user.CHANNEL + "</td><td>"
                     + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
                     + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
                     + status + "</td>\n";
@@ -195,11 +210,11 @@ public class RaceHttpServlet extends HttpServlet{
       varsPool.addChild(new StringVar("INFO", INFO));
 
       String html = varsPool.applyValues(templ);
-      resp.getWriter().println(html);  
-      
+      resp.getWriter().println(html);
+
     } catch (Exception e) {
       System.out.println(e);
     }
-  } 
-  
+  }
+
 }
