@@ -333,8 +333,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (UnknownHostException e) {
       toLog(e);
       //e.printStackTrace();
-    }
-    
+    }    
     //bRefresh.;
   }
 
