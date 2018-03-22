@@ -36,6 +36,7 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     //getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
     
     initComponents();
+    pack();
     setVisible(false);    
     //setFocusPainted(false);
     //setBorderPainted(false);
@@ -105,16 +106,15 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-        .addContainerGap())
+        .addGap(0, 0, 0)
+        .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+        .addGap(0, 0, 0))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
         .addComponent(infoLabel)
-        .addContainerGap(25, Short.MAX_VALUE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     pack();

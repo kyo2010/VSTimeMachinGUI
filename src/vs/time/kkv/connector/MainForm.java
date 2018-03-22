@@ -47,6 +47,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -56,6 +57,8 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import jssc.SerialNativeInterface;
+import jssc.SerialPortList;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
@@ -249,6 +252,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     
     setTitle(caption);
     initComponents();
+    
+    bRefreshActionPerformed(null);
+    
     setStateMenu(false);
     addWindowListener(new WindowAdapter() {
       @Override
@@ -269,7 +275,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
 
-    ports.addItem("WLAN");
+    //ports.addItem("WLAN");
     //new ArrayList<String>({ new String[]{"m1","m2"});
 
     try {
@@ -413,9 +419,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     jPanel1.setName("topPanel"); // NOI18N
 
-    ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
+    ports.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     ports.setName("portsBox"); // NOI18N
 
+    connectButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     connectButton.setText("Connect");
     connectButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -423,6 +430,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
 
+    jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jLabel1.setText("Port");
     jLabel1.setToolTipText("");
 
@@ -454,7 +462,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addComponent(connectButton)
         .addComponent(jLabel1)
-        .addComponent(bRefresh))
+        .addComponent(bRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     ports.getAccessibleContext().setAccessibleName("portsBox");
@@ -489,6 +497,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jLabel2.getAccessibleContext().setAccessibleName("statusCaption");
     jLabel3.getAccessibleContext().setAccessibleName("jStatusText");
 
+    tabbedPanel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     tabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
       public void stateChanged(javax.swing.event.ChangeEvent evt) {
         tabbedPanelStateChanged(evt);
@@ -496,7 +505,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
 
     jMenu3.setText("System");
+    jMenu3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+    mSystemOptions.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     mSystemOptions.setText("Options");
     mSystemOptions.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -505,6 +516,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(mSystemOptions);
 
+    mSystemMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     mSystemMonitor.setText("Web Monitor");
     mSystemMonitor.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -513,6 +525,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(mSystemMonitor);
 
+    mConsole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     mConsole.setText("VS Team Console");
     mConsole.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -524,7 +537,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuBar1.add(jMenu3);
 
     jMenu1.setText("Time Machines");
+    jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+    menuWLANSetting.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     menuWLANSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/wlan-setting.png"))); // NOI18N
     menuWLANSetting.setText("WLan Setting");
     menuWLANSetting.addActionListener(new java.awt.event.ActionListener() {
@@ -534,6 +549,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu1.add(menuWLANSetting);
 
+    menuConnect.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     menuConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/USB_connect.png"))); // NOI18N
     menuConnect.setText("Connect");
     menuConnect.addActionListener(new java.awt.event.ActionListener() {
@@ -544,6 +560,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenu1.add(menuConnect);
     menuConnect.getAccessibleContext().setAccessibleName("jMenuConnect");
 
+    menuDisconnect.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     menuDisconnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/usb_disconnect.png"))); // NOI18N
     menuDisconnect.setText("Disconnect");
     menuDisconnect.addActionListener(new java.awt.event.ActionListener() {
@@ -554,6 +571,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenu1.add(menuDisconnect);
     menuDisconnect.getAccessibleContext().setAccessibleName("jMenuDisconnect");
 
+    menuParameters.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     menuParameters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/options.png"))); // NOI18N
     menuParameters.setText("Parameter");
     menuParameters.addActionListener(new java.awt.event.ActionListener() {
@@ -566,7 +584,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuBar1.add(jMenu1);
 
     jMenu2.setText("Pilots");
+    jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+    menuAddUser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     menuAddUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/user_add.png"))); // NOI18N
     menuAddUser.setText("Add Pilot");
     menuAddUser.setName(""); // NOI18N
@@ -577,6 +597,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu2.add(menuAddUser);
 
+    jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/user_list.png"))); // NOI18N
     jMenuItem2.setText("Global Pilot List");
     jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -589,8 +610,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuBar1.add(jMenu2);
 
     menuRace.setText("Race");
+    menuRace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
     miRaceList.setBackground(new java.awt.Color(24, 24, 24));
+    miRaceList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     miRaceList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_add.png"))); // NOI18N
     miRaceList.setText("Race List");
     miRaceList.setPreferredSize(new java.awt.Dimension(42, 50));
@@ -601,6 +624,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     menuRace.add(miRaceList);
 
+    miAddNewRace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     miAddNewRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/race_user_registration.png"))); // NOI18N
     miAddNewRace.setText("Add new Race");
     miAddNewRace.addActionListener(new java.awt.event.ActionListener() {
@@ -610,6 +634,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     menuRace.add(miAddNewRace);
 
+    jmAddStageToRace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jmAddStageToRace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/add.png"))); // NOI18N
     jmAddStageToRace.setText("Add Stage to Race");
     jmAddStageToRace.addActionListener(new java.awt.event.ActionListener() {
@@ -640,7 +665,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         .addGap(4, 4, 4)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -798,9 +823,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_mConsoleActionPerformed
 
   private void bRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshActionPerformed
-    // TODO add your handling code here:
-   ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
-   ports.addItem("WLAN");
+    // TODO add your handling code here:    
+   ports.removeAllItems();
+   Pattern pattern = Pattern.compile("");
+   if(SerialNativeInterface.getOsType() == 3) pattern = Pattern.compile("tty.*USB*");
+   String portNames[] = SerialPortList.getPortNames(pattern);
+   for (String portName : portNames){
+     ports.addItem(portName);
+   }  
+   ports.addItem("WLAN");    
+    
+   //ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
+   //ports.addItem("WLAN");
   }//GEN-LAST:event_bRefreshActionPerformed
 
   public static ImageIcon windowsIcon = null;

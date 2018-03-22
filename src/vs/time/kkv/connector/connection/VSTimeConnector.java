@@ -304,14 +304,14 @@ public class VSTimeConnector {
         baseStationID = params[0];
         boolean time_is_ok = false;
         try{
+          sentMessage("timesynchreceived:" + params[0] + "\r\n");
           long timeBase = Long.parseLong(params[1]);
           long current_time = Calendar.getInstance().getTimeInMillis();
           if (Math.abs(timeBase-current_time)<10000){
             time_is_ok= true;
           }          
-        }catch(Exception e){}
-        sentMessage("timesynchreceived:" + params[0] + "\r\n");
-        if (!time_is_ok) setTime();        
+          if (!time_is_ok) setTime();
+        }catch(Exception e){}                        
       } else if (commands[0].equalsIgnoreCase("systime")) {
         sensitivityIndex = Integer.parseInt(params[1]);
         baseStationID = params[2];
