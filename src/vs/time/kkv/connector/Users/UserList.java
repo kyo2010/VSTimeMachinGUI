@@ -41,12 +41,7 @@ public class UserList extends javax.swing.JFrame {
   public UserList(MainForm mainForm) {
     initComponents();
     this.mainForm = mainForm;    
-    
-    jtUsers.getColumnModel().getColumn(0).setHeaderValue("Trans");
-    jtUsers.getColumnModel().getColumn(1).setHeaderValue("Racer");  
-    jtUsers.getColumnModel().getColumn(1).setPreferredWidth(600);
-    jtUsers.setRowHeight(28);
-   
+        
     jtUsers.addMouseListener(new MouseAdapter() {            
 
       @Override
@@ -106,6 +101,13 @@ public class UserList extends javax.swing.JFrame {
     form.user_listener = user_listener;
     form.userListModelTable = new UserListModelTable(mainForm,user_listener==null?true:false);
     form.jtUsers.setModel( form.userListModelTable );   
+    
+    form.jtUsers.getColumnModel().getColumn(0).setHeaderValue("ID");
+    form.jtUsers.getColumnModel().getColumn(1).setHeaderValue("Trans");
+    form.jtUsers.getColumnModel().getColumn(2).setHeaderValue("Racer");  
+    form.jtUsers.getColumnModel().getColumn(2).setPreferredWidth(600);
+    form.jtUsers.setRowHeight(28);
+    
     return form;
   }    
 

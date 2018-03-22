@@ -21,6 +21,7 @@ public class VS_USERS {
   public String SECOND_NAME;   //  NOT_DETECTED
   public String WEB_SYSTEM;
   public String WEB_SID;
+  public String PHOTO;
   
   
   /** Constructor */ 
@@ -40,6 +41,8 @@ public class VS_USERS {
     new DBModelField("SECOND_NAME").setDbFieldName("\"SECOND_NAME\""),
     new DBModelField("WEB_SYSTEM").setDbFieldName("\"WEB_SYSTEM\""),
     new DBModelField("WEB_SID").setDbFieldName("WEB_SID"),
+    
+    new DBModelField("PHOTO").setDbFieldName("PHOTO"),
     
   });
   

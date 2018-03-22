@@ -4,10 +4,16 @@
 package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.*;
+import KKV.Utils.UserException;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.Time;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public class VS_REGISTRATION {
+  
+  public static final String PHOTO_PATH = "web/pilots_photo/";
   
   public long ID = -1;   //  NOT_DETECTED  
   public long VS_RACE_ID;   //  NOT_DETECTED
@@ -28,6 +34,7 @@ public class VS_REGISTRATION {
   public String WEB_SYSTEM = "";
   public String WEB_SID = "";
   public String PICTURE_FILENAME = "";
+  public String PHOTO = "";  
   
   /** Constructor */ 
   public VS_REGISTRATION() {
@@ -53,6 +60,9 @@ public class VS_REGISTRATION {
     new DBModelField("WEB_SYSTEM").setDbFieldName("\"WEB_SYSTEM\""),
     new DBModelField("WEB_SID").setDbFieldName("WEB_SID"),
     new DBModelField("PICTURE_FILENAME").setDbFieldName("PICTURE_FILENAME"),
+    
+    new DBModelField("PHOTO").setDbFieldName("PHOTO")
+    
   });
   
   public static long maxNum(Connection conn, long raceID){
@@ -65,5 +75,69 @@ public class VS_REGISTRATION {
   
   public String toString(){
     return VS_USER_NAME;
-  }  
+  } 
+  
+  public static void updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr){
+    // Creating global user  
+    VS_USERS global_user = null;
+    try{
+      global_user = VS_USERS.dbControl.getItem(con, "VS_NAME=?", usr.VS_USER_NAME);
+    }catch(Exception e){}  
+    
+      if (global_user==null){
+        global_user = new VS_USERS();
+        global_user.FIRST_NAME = usr.FIRST_NAME;
+        global_user.SECOND_NAME = usr.SECOND_NAME;
+        global_user.VS_NAME = usr.VS_USER_NAME;
+        global_user.VS_NAME_UPPER = global_user.VS_NAME.toUpperCase();
+        global_user.VSID1 =usr.VS_TRANS1;
+        global_user.VSID2 =usr.VS_TRANS2;
+        global_user.VSID3 =usr.VS_TRANS3;
+        global_user.VS_SOUND_EFFECT = usr.VS_SOUND_EFFECT;
+        global_user.WEB_SID = usr.WEB_SID;
+        global_user.WEB_SYSTEM = usr.WEB_SYSTEM;
+        global_user.PHOTO = usr.PHOTO;
+        try{
+          VS_USERS.dbControl.insert(con, global_user);
+        }catch(UserException e){
+          System.out.println(e.error+" "+e.details);      
+        }catch(Exception e){
+          e.printStackTrace();
+        }  
+      }
+      
+      if (global_user!=null && global_user.PHOTO!=null && !global_user.PHOTO.equals("")){
+        //usr.PHOTO = global_user.PHOTO;
+      }           
+      
+      // PHOTO           
+      if (!usr.PHOTO.equalsIgnoreCase("")){                        
+        if (!global_user.PHOTO.equalsIgnoreCase("")) {
+          if (!usr.PHOTO.equalsIgnoreCase(global_user.PHOTO)) new File(global_user.PHOTO).delete();                    
+        }   
+        global_user.PHOTO = usr.PHOTO;
+        String fileName = usr.PHOTO;
+        fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(usr.PHOTO);
+        new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
+        try{
+          FileUtils.copyFile(new File(usr.PHOTO), new File(fileName));
+        }catch(Exception e){}
+        usr.PHOTO = fileName;
+        global_user.PHOTO = fileName;
+        try{
+          VS_REGISTRATION.dbControl.update(con,usr);    
+          VS_USERS.dbControl.update(con,global_user); 
+         }catch(UserException e){
+          System.out.println(e.error+" "+e.details);        
+        }catch(Exception e){}  
+      } else{
+        usr.PHOTO = global_user.PHOTO;
+        try{
+          VS_USERS.dbControl.update(con,global_user);   
+         }catch(UserException e){
+          System.out.println(e.error+" "+e.details);        
+        }catch(Exception e){}  
+      }
+  
+  }
 }

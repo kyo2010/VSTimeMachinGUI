@@ -59,7 +59,23 @@ public class DataBaseStructure {
     new DBAddonStructure(2.3, "ALTER TABLE VS_STAGE ADD COLORS TEXT NOT NULL DEFAULT 'RED;BLUE;GREEN;WHITE';"), 
     new DBAddonStructure(2.4, "ALTER TABLE VS_REGISTRATION ADD PICTURE_FILENAME TEXT NOT NULL DEFAULT '';"), 
     
-        
+    new DBAddonStructure(2.5, "ALTER TABLE VS_USERS ADD PHOTO TEXT NOT NULL DEFAULT '';"), 
+    new DBAddonStructure(2.5, "ALTER TABLE VS_REGISTRATION ADD PHOTO TEXT NOT NULL DEFAULT '';"),     
+    
+    
+    new DBAddonStructure(2.8, "PRAGMA foreign_keys=off;"),
+    new DBAddonStructure(2.8, "BEGIN TRANSACTION;"),    
+    new DBAddonStructure(2.8, "ALTER TABLE VS_USERS RENAME TO VS_USERS_OLD;"),    
+    new DBAddonStructure(2.8, "CREATE TABLE VS_USERS ( "+
+       "ID INTEGER  PRIMARY KEY AUTOINCREMENT, VSID INTEGER, VS_NAME VARCHAR(200), VS_SOUND_EFFECT INTEGER DEFAULT 1,"+
+       "VS_NAME_UPPER TEXT  , VSID2 INTEGER DEFAULT 0, VSID3 INTEGER DEFAULT 0,  FIRST_NAME TEXT DEFAULT ''  NOT NULL,"+
+       "SECOND_NAME TEXT DEFAULT ''  NOT NULL, WEB_SYSTEM TEXT DEFAULT '' NOT NULL, WEB_SID TEXT DEFAULT '' NOT NULL,"+
+       "PHOTO TEXT DEFAULT '' NOT NULL );"),
+    new DBAddonStructure(2.8,"insert into VS_USERS select * from VS_USERS_OLD;"),
+    new DBAddonStructure(2.8, "COMMIT;"),
+    new DBAddonStructure(2.8, "PRAGMA foreign_keys=on;"),
+    new DBAddonStructure(2.8, "DROP TABLE VS_USERS_OLD;"),
+    
   };
 
   public static class DBAddonStructure {

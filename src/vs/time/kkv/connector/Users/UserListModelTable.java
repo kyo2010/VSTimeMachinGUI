@@ -69,7 +69,7 @@ public class UserListModelTable extends AbstractTableModel {
 
   @Override
   public int getColumnCount() {
-    return 2;
+    return 3;
   }
 
   @Override
@@ -79,8 +79,9 @@ public class UserListModelTable extends AbstractTableModel {
 
   @Override
   public String getColumnName(int column) {
-    if (column==0) return "Transponder";
-    if (column==1) return "Pilot";
+    if (column==0) return "ID";
+    if (column==1) return "Transponder";
+    if (column==2) return "Pilot";
     return "";
   }
   
@@ -91,9 +92,12 @@ public class UserListModelTable extends AbstractTableModel {
     if (rows.size() > rowIndex) {
       VS_USERS usr = rows.get(rowIndex);
       if (columnIndex == 0) {
-        return usr.VSID1;
+        return usr.ID;
       }
       if (columnIndex == 1) {
+        return usr.VSID1;
+      }
+      if (columnIndex == 2) {
         return usr.VS_NAME;
       }
     }
@@ -101,7 +105,7 @@ public class UserListModelTable extends AbstractTableModel {
   }
    
   public boolean isCellEditable(int row, int col){
-    if (col==1 && isEdit) {
+    if (col==2 && isEdit) {
       return true;
     }
     if (col==0){
@@ -114,7 +118,7 @@ public class UserListModelTable extends AbstractTableModel {
   public void showEditDialog(int row){
     if (row<rows.size()){
       VS_USERS usr = rows.get(row);      
-      UserControlForm.init(mainForm, false, usr.VSID1).setVisible(true);
+      UserControlForm.init(mainForm, false, usr.ID).setVisible(true);
     }  
   }
   
@@ -129,7 +133,7 @@ public class UserListModelTable extends AbstractTableModel {
   public void setValueAt(Object value, int row, int col) {
     if (rows.size() > row) {
       VS_USERS usr = rows.get(row);      
-      if (col == 1) {
+      if (col == 2) {
         usr.VS_NAME = value.toString();
         usr.VS_NAME_UPPER = value.toString().toUpperCase();
         try {

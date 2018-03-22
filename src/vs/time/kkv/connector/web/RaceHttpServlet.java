@@ -42,7 +42,7 @@ public class RaceHttpServlet extends HttpServlet {
 
   public String createMenuButton(String caption, String href) {
      if (templ_button == null || USE_CACHE == false) {
-      templ_button = Tools.getTextFromFile("web\\button.template");
+      templ_button = Tools.getTextFromFile("web\\button.template.htm");
      }  
      IVar varsPool = new VarPool();
      varsPool.addChild(new StringVar("URL", href));
@@ -60,7 +60,7 @@ public class RaceHttpServlet extends HttpServlet {
     //resp.getWriter().println("EmbeddedJetty");  
     try {
       if (templ == null || USE_CACHE == false) {
-        templ = Tools.getTextFromFile("web\\index.template");
+        templ = Tools.getTextFromFile("web\\index.template.htm");
       }
       VS_RACE race = null;
       List<VS_STAGE> stages = null;

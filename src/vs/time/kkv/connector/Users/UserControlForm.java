@@ -6,10 +6,16 @@
 package vs.time.kkv.connector.Users;
 
 import KKV.DBControlSqlLite.DBModelTest;
+import KKV.Utils.Tools;
 import java.awt.Point;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_USERS;
 
 /**
@@ -20,7 +26,7 @@ public class UserControlForm extends javax.swing.JFrame {
 
   MainForm mainForm = null;
   boolean flagNew = false;
-  int transponderId = -1;
+  int ID = -1;
   VS_USERS usr = null;
 
   /**
@@ -33,7 +39,7 @@ public class UserControlForm extends javax.swing.JFrame {
 
   private static UserControlForm form = null;
 
-  public static UserControlForm init(MainForm mainForm, boolean flagNew, int transponderId) {
+  public static UserControlForm init(MainForm mainForm, boolean flagNew, int ID) {
     if (form == null) {
       form = new UserControlForm(mainForm);
       if (mainForm != null) {
@@ -42,7 +48,7 @@ public class UserControlForm extends javax.swing.JFrame {
     }
     form.setVisible(false);
     form.flagNew = flagNew;
-    form.transponderId = transponderId;   
+    form.ID = ID;   
     form.prepareForm();
 
     return form;
@@ -50,9 +56,11 @@ public class UserControlForm extends javax.swing.JFrame {
 
   public void prepareForm() {
 
-    if (transponderId != -1) {
+    setTitle("Global User");
+    if (ID != -1) {
       try {
-        usr = VS_USERS.dbControl.getItem(mainForm.con, "VSID=?",transponderId);        
+        usr = VS_USERS.dbControl.getItem(mainForm.con, "ID=?",ID);        
+        setTitle("Global User ["+usr.ID+"]");
         edUser.setText(usr.VS_NAME);
         chEnabledSound.setSelected(usr.VS_SOUND_EFFECT==1);                
       } catch (Exception e) {
@@ -62,14 +70,23 @@ public class UserControlForm extends javax.swing.JFrame {
     }else{
        usr = new VS_USERS();
     }
+    
+    PHOTO.setImage(usr.PHOTO);
+    PHOTO.isChaged = false;
 
-    if (transponderId != -1) {
-      edTransponder.setText("" + transponderId);
+    edTransponder2.setText("");
+    edTransponder3.setText("");
+    
+    if (usr.VSID2!=0) edTransponder2.setText(""+usr.VSID2);
+    if (usr.VSID3!=0) edTransponder3.setText(""+usr.VSID3);
+    
+    if (usr.VSID1 != -1) {
+      edTransponder.setText("" +usr.VSID1);      
     } else {
       edTransponder.setText("");
       edUser.setText("");
-      chEnabledSound.setSelected(true);
-    }      
+      chEnabledSound.setSelected(true);      
+    }     
   }
 
   /**
@@ -97,6 +114,7 @@ public class UserControlForm extends javax.swing.JFrame {
     jLabel6 = new javax.swing.JLabel();
     edUserSecondName = new javax.swing.JTextField();
     edUserFirstName = new javax.swing.JTextField();
+    PHOTO = new vs.time.kkv.connector.MainlPannels.ImageImplement();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -107,7 +125,7 @@ public class UserControlForm extends javax.swing.JFrame {
 
     jLabel1.setText("Transponder ID:");
 
-    jLabel2.setText("Pilot name:");
+    jLabel2.setText("OSD name:");
 
     edTransponder.setText("0000");
 
@@ -140,6 +158,24 @@ public class UserControlForm extends javax.swing.JFrame {
     jLabel5.setText("First Name");
 
     jLabel6.setText("Second Name");
+
+    PHOTO.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    PHOTO.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        PHOTOMouseClicked(evt);
+      }
+    });
+
+    javax.swing.GroupLayout PHOTOLayout = new javax.swing.GroupLayout(PHOTO);
+    PHOTO.setLayout(PHOTOLayout);
+    PHOTOLayout.setHorizontalGroup(
+      PHOTOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 130, Short.MAX_VALUE)
+    );
+    PHOTOLayout.setVerticalGroup(
+      PHOTOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 125, Short.MAX_VALUE)
+    );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
@@ -178,31 +214,39 @@ public class UserControlForm extends javax.swing.JFrame {
                   .addComponent(jLabel6))
                 .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(edUser, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                   .addComponent(edUserFirstName)
-                  .addComponent(edUserSecondName))))))
+                  .addComponent(edUserSecondName)
+                  .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(edUser, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, Short.MAX_VALUE)
+                    .addComponent(PHOTO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
-        .addGap(18, 18, 18)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(butUseLastTransponderID))
-        .addGap(4, 4, 4)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel4))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel3)
-          .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel2)
-          .addComponent(edUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGap(18, 18, 18)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel1)
+              .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(butUseLastTransponderID))
+            .addGap(4, 4, 4)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel4))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel3)
+              .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel2)
+              .addComponent(edUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(PHOTO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(edUserFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -246,7 +290,7 @@ public class UserControlForm extends javax.swing.JFrame {
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(17, Short.MAX_VALUE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
           .addComponent(bCancel))
@@ -265,8 +309,11 @@ public class UserControlForm extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(3, 3, 3))
     );
+
+    getAccessibleContext().setAccessibleDescription("");
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
@@ -287,12 +334,35 @@ public class UserControlForm extends javax.swing.JFrame {
       usr.VS_NAME = edUser.getText();
       usr.VS_NAME_UPPER = edUser.getText().toUpperCase();
       usr.VS_SOUND_EFFECT = chEnabledSound.isSelected()?1:0;
+      boolean isNew = false;
       if (usr.ID!=-1) {
         VS_USERS.dbControl.update(mainForm.con,usr);        
       } else { 
+        isNew  =true;
         VS_USERS.dbControl.insert(mainForm.con, usr);
       }  
       setVisible(false);
+      
+      // PHOTO           
+      if (PHOTO.isChaged){                        
+        if (!isNew && !usr.PHOTO.equalsIgnoreCase("")) {
+          new File(usr.PHOTO).delete();                    
+        }        
+        if (PHOTO.imgFileName==null || PHOTO.imgFileName.equals("")){
+          usr.PHOTO = "";
+        }else{
+          String fileName = usr.PHOTO;
+          if (isNew || fileName==null ||fileName.equalsIgnoreCase("")){
+            fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+usr.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
+          }
+          new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
+          FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+        }   
+        VS_USERS.dbControl.update(mainForm.con,usr);
+      }
+      
+      
+      
       UserList.init(mainForm,null).refreshData();
     } catch (Exception e) {
       mainForm.error_log.writeFile(e);
@@ -319,6 +389,21 @@ public class UserControlForm extends javax.swing.JFrame {
       edTransponder.setText(""+mainForm.lastTranponderID);
     }
   }//GEN-LAST:event_butUseLastTransponderIDActionPerformed
+
+  private void PHOTOMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PHOTOMouseClicked
+    // TODO add your handling code here:
+    if (evt.getClickCount() >= 2) {
+      JFileChooser fileopen = new JFileChooser();
+      fileopen.setAcceptAllFileFilterUsed(false);
+      fileopen.setFileFilter(PHOTO.picFilter);
+      int ret = fileopen.showDialog(this, "Âûבונטעו פאיכ ס פמעמדנאפטוי");
+      if (ret == JFileChooser.APPROVE_OPTION) {
+        File file = fileopen.getSelectedFile();
+        PHOTO.setImage(file.getAbsolutePath());                  
+      }
+
+    }
+  }//GEN-LAST:event_PHOTOMouseClicked
 
   /**
    * @param args the command line arguments
@@ -356,6 +441,7 @@ public class UserControlForm extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private vs.time.kkv.connector.MainlPannels.ImageImplement PHOTO;
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
   private javax.swing.JButton butUseLastTransponderID;

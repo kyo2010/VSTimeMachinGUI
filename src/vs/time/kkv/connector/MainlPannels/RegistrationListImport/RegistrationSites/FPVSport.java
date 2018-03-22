@@ -34,6 +34,7 @@ public class FPVSport extends IRegSite {
  
   {
     REG_SITE_URL = "http://fpvsport.ru/getRaces.php";
+    //REG_SITE_URL = "http://jteam.ru/pilots/getRaces.php";
     REG_SITE_NAME = "FPVSport.ru";
   }
   
@@ -77,6 +78,16 @@ public class FPVSport extends IRegSite {
             user.VS_USER_NAME = json_pilot.getString("osd_name");
             user.FIRST_NAME= json_pilot.getString("fname");
             user.SECOND_NAME= json_pilot.getString("lname");
+            user.PICTURE_FILENAME = "";
+            user.PHOTO = "";
+            try{            
+              user.PICTURE_FILENAME = json_pilot.getString("PICTURE").trim();
+              boolean PICTURE_OK = "1".equalsIgnoreCase(json_pilot.getString("PICTURE_OK"));
+              if (PICTURE_OK && !user.PICTURE_FILENAME.equalsIgnoreCase("")){
+                user.PHOTO = user.PICTURE_FILENAME;
+              }
+            }catch(Exception e){            
+            };              
             try{
               user.VS_TRANS1 = Integer.parseInt(json_pilot.getString("transID"));
             }catch(Exception ein){}

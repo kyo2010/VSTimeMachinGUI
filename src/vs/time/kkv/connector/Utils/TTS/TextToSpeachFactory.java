@@ -19,15 +19,17 @@ public class TextToSpeachFactory {
     try{
       IKKVSpeek api_en = new TextToSpeechCOM_EN();
       TTS_LIST.add(api_en);
-    }catch(java.lang.UnsatisfiedLinkError | Exception e){      
+    }catch(RuntimeException re){  
+    }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
     }
     try{
       TTS_LIST.add(new TextToSpeech());
     }catch(RuntimeException re){
-    }catch(Exception e){}
+    }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){}
     try{
       TTS_LIST.add(new TextToSpeechCOM());
-    }catch(java.lang.UnsatisfiedLinkError | Exception e){      
+    }catch(RuntimeException re){  
+    }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
     }    
   }
   

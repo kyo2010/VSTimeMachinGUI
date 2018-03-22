@@ -28,11 +28,13 @@ import vs.time.kkv.models.VS_REGISTRATION;
  */
 public abstract class IRegSite {
 
+  public static String TMP_PHOTO_NAME = "flash/PHOTO";
+  
   public String REG_SITE_URL = "";
   public String REG_SITE_NAME = "";
   List<VS_RACE> races = new ArrayList<VS_RACE>();
-  
-  public String getJSONFileName(){
+
+  public String getJSONFileName() {
     return VSFlashControl.flashDir + "/" + REG_SITE_NAME;
   }
 
@@ -53,6 +55,50 @@ public abstract class IRegSite {
       }
     }
     return null;
+  }
+
+  public String getImageFromWeb(String url) {
+    String fileName = "";
+    try {
+      new File(TMP_PHOTO_NAME).mkdirs();
+      OutputStream outStream = null;
+      URLConnection connection = null;
+      InputStream is = null;
+      File targetFile = null;
+      URL server = null;
+      try {
+        server = new URL(url);
+        connection = server.openConnection();
+        is = connection.getInputStream();
+        
+        int pos = url.lastIndexOf("/");
+        String newFileName = TMP_PHOTO_NAME + "/" +url.substring(pos+1);
+        
+        byte[] buffer = new byte[1000];
+        targetFile = new File( newFileName );
+        outStream = new FileOutputStream(targetFile);
+        int count = 0;
+        int m = 0;
+        while ((m = is.read(buffer)) > 0) {
+          count++;
+          outStream.write(buffer, 0, m);
+        }
+        fileName = newFileName;
+      } catch (MalformedURLException e) {
+        MainForm._toLog(e);
+      } catch (IOException e) {
+        MainForm._toLog(e);
+      } finally {
+        if (outStream != null) {
+          try {
+            outStream.close();
+          } catch (Exception ein) {
+          }
+        }
+      }
+    } catch (Exception e) {
+    }
+    return fileName;
   }
 
   public void refreshJSON() throws UserException {

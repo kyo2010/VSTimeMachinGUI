@@ -45,7 +45,7 @@ public class TVTranslationServlet  extends HttpServlet {
     //resp.getWriter().println("EmbeddedJetty");  
     try {
       if (templ == null || USE_CACHE == false) {
-        templ = Tools.getTextFromFile("web\\tv.template");
+        templ = Tools.getTextFromFile("web\\tv.template.htm");
       }
       VS_RACE race = null;
       List<VS_STAGE> stages = null;

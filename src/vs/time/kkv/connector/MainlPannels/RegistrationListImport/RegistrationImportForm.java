@@ -213,8 +213,13 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                             pilot.VS_TRANS1 = 0;
                           }
                         }
-                      }
+                      }                      
+                      if (pilot.PHOTO!=null && !pilot.PHOTO.equals("")){
+                        pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
+                      }                            
                       VS_REGISTRATION.dbControl.insert(con, pilot);
+                      VS_REGISTRATION.updateGlobalUserPHOTO(con,pilot);
+                      
                       count_export_pilots++;                      
                     }catch(Exception e){
                     
