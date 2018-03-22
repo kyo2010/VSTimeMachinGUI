@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -126,10 +127,13 @@ public class VSTimeConnector {
     }
     hello();
     setTime();
+    try{
+      sleep(300);
+    }catch(Exception e){} 
     setSensitivityMax();
     try{
-      wait(300);
-    }catch(Exception e){}
+      sleep(300);
+    }catch(Exception e){}    
     setTime();
   }
 

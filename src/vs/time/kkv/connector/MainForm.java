@@ -334,6 +334,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       toLog(e);
       //e.printStackTrace();
     }
+    
+    //bRefresh.;
   }
 
   public void setStateMenu(boolean isConnected) {
@@ -363,6 +365,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     ports = new javax.swing.JComboBox();
     connectButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
+    bRefresh = new javax.swing.JButton();
     jPanel2 = new javax.swing.JPanel();
     ping = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
@@ -424,6 +427,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jLabel1.setText("Port");
     jLabel1.setToolTipText("");
 
+    bRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/refresh-icon_s.png"))); // NOI18N
+    bRefresh.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bRefreshActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -431,9 +441,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jLabel1)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(bRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(connectButton)
         .addGap(0, 0, Short.MAX_VALUE))
     );
@@ -442,7 +454,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
         .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addComponent(connectButton)
-        .addComponent(jLabel1))
+        .addComponent(jLabel1)
+        .addComponent(bRefresh))
     );
 
     ports.getAccessibleContext().setAccessibleName("portsBox");
@@ -628,13 +641,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         .addGap(4, 4, 4)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
 
     jPanel1.getAccessibleContext().setAccessibleName("topPanel");
+    jPanel1.getAccessibleContext().setAccessibleDescription("");
+    tabbedPanel.getAccessibleContext().setAccessibleName("");
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
@@ -783,6 +798,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     VSTeamConsole.init(this).setVisible(true);
   }//GEN-LAST:event_mConsoleActionPerformed
 
+  private void bRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshActionPerformed
+    // TODO add your handling code here:
+   ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
+   ports.addItem("WLAN");
+  }//GEN-LAST:event_bRefreshActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -861,6 +882,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton bRefresh;
   private javax.swing.JButton connectButton;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
@@ -926,10 +948,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       long timeS = Calendar.getInstance().getTimeInMillis();
       long time =  lap.time;
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
-      /*if (Math.abs(time - timeS) > 1000*60*60) {
+      if (Math.abs(time - timeS) > 1000*60*60) {
         time = timeS;//lap.time;
         System.out.println("Big gap between Time");
-      }*/
+      }
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;
       if (VSTeamConsole.isOpened) {
