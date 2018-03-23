@@ -157,7 +157,7 @@ public class RaceHttpServlet extends HttpServlet {
           PAGE_CONTENT += "</tr>\n";
           for (VS_STAGE_GROUPS user : groups) {
             if (currentGroup != user.GROUP_NUM) {
-              PAGE_CONTENT += "<tr class='w3-light-gray'>\n";
+              PAGE_CONTENT += "<tr class='w3-light-gray w3-xlarge'>\n";
               PAGE_CONTENT += "  <td colspan='6'><b>Group" + user.GROUP_NUM + "</b></td>\n";
               PAGE_CONTENT += "</tr>\n";
               currentGroup = user.GROUP_NUM;
@@ -186,7 +186,7 @@ public class RaceHttpServlet extends HttpServlet {
             }
 
             ///String bgcolor = "#ffffff";           
-            PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' >" + user.CHANNEL + "</td><td>"
+            PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' ><b>" + user.CHANNEL + "</b></td><td>"
                     + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
                     + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
                     + status + "</td>\n";

@@ -405,12 +405,13 @@ public class StageTab extends javax.swing.JPanel {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
-            List<String> pilots = new ArrayList<String>();
-            mainForm.invateGroup = td.group;
+            List<String> pilots = new ArrayList<String>();            
             if (td != null && td.group != null && td.group.users != null) {
               for (VS_STAGE_GROUPS user : td.group.users) {
                 pilots.add(user.PILOT);
+                user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
               }
+              mainForm.invateGroup = td.group;
               mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
             }
             try{
@@ -443,6 +444,7 @@ public class StageTab extends javax.swing.JPanel {
             for (VS_STAGE_GROUPS user : checkingGrpup.users) {
               user.CHECK_FOR_RACE = 2;
               user.FIRST_LAP = 0;
+              user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
             }
             pleasuUpdateTable = true;
             checkerCycle = 0;
@@ -481,6 +483,7 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
                 mainForm.activeGroup = td.group;
+                mainForm.invateGroup = null;                
                 td.group.stageTab = StageTab.this;
                 for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;
@@ -1017,6 +1020,7 @@ public class StageTab extends javax.swing.JPanel {
     refreshData = new javax.swing.JButton();
     bNewStage = new javax.swing.JButton();
     butGroupExport = new javax.swing.JButton();
+    jchTV = new javax.swing.JCheckBox();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -1091,6 +1095,18 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    jchTV.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+    jchTV.setSelected(true);
+    jchTV.setToolTipText("Show Table on TV");
+    jchTV.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+    jchTV.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+    jchTV.setLabel("TV");
+    jchTV.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        jchTVStateChanged(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1098,7 +1114,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+        .addComponent(jchTV)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(refreshData, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butGroupExport, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1114,9 +1132,10 @@ public class StageTab extends javax.swing.JPanel {
     );
     topPanelLayout.setVerticalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
+      .addGroup(topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
-        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jchTV, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1402,6 +1421,15 @@ public class StageTab extends javax.swing.JPanel {
     treeToXLS();
   }//GEN-LAST:event_butGroupExportActionPerformed
 
+  private void jchTVStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchTVStateChanged
+    // TODO add your handling code here:
+    if (jchTV.isSelected()){
+      mainForm.activeStage = stage;
+    }else{
+      mainForm.activeStage = null;
+    }
+  }//GEN-LAST:event_jchTVStateChanged
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bNewStage;
@@ -1414,6 +1442,7 @@ public class StageTab extends javax.swing.JPanel {
   private javax.swing.JSplitPane jSplitPane2;
   public javax.swing.JTable jTable;
   public javax.swing.JTree jTree;
+  public javax.swing.JCheckBox jchTV;
   private javax.swing.JButton pdfButton;
   private javax.swing.JButton refreshData;
   private javax.swing.JLabel timerCaption;
