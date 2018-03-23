@@ -88,7 +88,8 @@ public class VSTimeConnector {
 
   public void checkConnection() {
     if (transport != null) {
-      if ((lastPingTime + 10 * transport.getTimeOutForReconnect()) <= Calendar.getInstance().getTimeInMillis()) {
+      long time = Calendar.getInstance().getTimeInMillis();
+      if ((lastPingTime + 1000 * transport.getTimeOutForReconnect()) <= time) {
         lastPingTime = Calendar.getInstance().getTimeInMillis();
         try {
           transport.disconnect();
@@ -176,6 +177,7 @@ public class VSTimeConnector {
       connected = true;
       WIFI = false;
     }
+    lastPingTime = Calendar.getInstance().getTimeInMillis();
     new AfterConnectionCommsnds(this);
   }
 
