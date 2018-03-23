@@ -399,12 +399,14 @@ public class StageTab extends javax.swing.JPanel {
           if (td == null || !td.isGrpup) {
             return;
           }
+          /*** INAVITATION */
           if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
             List<String> pilots = new ArrayList<String>();
+            mainForm.invateGroup = td.group;
             if (td != null && td.group != null && td.group.users != null) {
               for (VS_STAGE_GROUPS user : td.group.users) {
                 pilots.add(user.PILOT);

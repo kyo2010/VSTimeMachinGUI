@@ -155,8 +155,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public Connection con = null;
   public SpeekUtil speaker = null;
   public Beep beep = null;
+  
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
+  public VS_STAGE_GROUP invateGroup = null;
+  
   public RegistrationTab regForm = null;
   public long raceTime = 0;
   public long unRaceTime = Calendar.getInstance().getTimeInMillis();
@@ -771,6 +774,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
     // TODO add your handling code here:       
     //JOptionPane.showMessageDialog(this, ""+tabbedPanel.getSelectedComponent(), "test", JOptionPane.ERROR_MESSAGE);
+    invateGroup = null;
   }//GEN-LAST:event_tabbedPanelStateChanged
 
   private void mSystemOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemOptionsActionPerformed
