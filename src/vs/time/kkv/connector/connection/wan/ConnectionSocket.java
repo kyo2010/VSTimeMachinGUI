@@ -239,4 +239,8 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     }
 
   }
+  
+  public int getTimeOutForReconnect(){
+    return 20;
+  };
 }

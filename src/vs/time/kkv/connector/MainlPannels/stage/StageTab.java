@@ -413,6 +413,11 @@ public class StageTab extends javax.swing.JPanel {
               }
               mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
             }
+            try{
+              if (mainForm.vsTimeConnector!=null && mainForm.vsTimeConnector.connected){
+                mainForm.vsTimeConnector. setTimeWithDeklay();
+              }
+            }catch(Exception ein){}
           }
 
           if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach
@@ -1196,11 +1201,15 @@ public class StageTab extends javax.swing.JPanel {
   }//GEN-LAST:event_butRemoveSatgeActionPerformed
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
-    // TODO add your handling code here:
+    // TODO add your handling code here:    
+    
     if (mainForm.activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
       return;
     }
+    
+    // refresh data tab
+    refreshDataActionPerformed(evt);    
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 

@@ -53,9 +53,10 @@ public class VSTimeConnector {
   public ConnectionVSTimeMachine transport = null;
   public int lastTransponderID = -1;
   public boolean WIFI = false;
-  public String last_error = "";   
+  public String last_error = "";
   public VSSendListener sendListener = null;
   public Map<Integer, String> flashResponse = new HashMap<Integer, String>();
+  public boolean waitFirstPing = false;
 
   public VSSendListener getSendListener() {
     return sendListener;
@@ -65,12 +66,12 @@ public class VSTimeConnector {
     this.sendListener = sendListener;
     return this;
   }
-  
-  
-  public interface VSSendListener{
+
+  public interface VSSendListener {
+
     public void sendVSText(String text);
   }
-  
+
   public Map<Integer, VS_EchoTrans> transpondersIsAlive = new HashMap<Integer, VS_EchoTrans>();
   long lastPingTime = 0;
 
@@ -79,21 +80,25 @@ public class VSTimeConnector {
   }
 
   public boolean isTransponderSeached(int trans_id) {
-    if (transpondersIsAlive.get(trans_id)!=null) {
+    if (transpondersIsAlive.get(trans_id) != null) {
       return true;
     }
     return false;
   }
-  
-  public void checkConnection(){
-    if ((lastPingTime+10*1000)<=Calendar.getInstance().getTimeInMillis()){
-      lastPingTime = Calendar.getInstance().getTimeInMillis();
-      try{
-         transport.disconnect();
-      }catch(Exception e){}
-      try{
-         connect();
-      }catch(Exception e){}
+
+  public void checkConnection() {
+    if (transport != null) {
+      if ((lastPingTime + 10 * transport.getTimeOutForReconnect()) <= Calendar.getInstance().getTimeInMillis()) {
+        lastPingTime = Calendar.getInstance().getTimeInMillis();
+        try {
+          transport.disconnect();
+        } catch (Exception e) {
+        }
+        try {
+          connect();
+        } catch (Exception e) {
+        }
+      }
     }
   }
 
@@ -104,7 +109,7 @@ public class VSTimeConnector {
     this.portForSending = portForSending;
     this.reciver = reciver;
     this.network_sid = network_sid;
-    this.staticIP=staticIP;
+    this.staticIP = staticIP;
     //connect();
   }
 
@@ -113,6 +118,52 @@ public class VSTimeConnector {
     if (transport != null) {
       transport.disconnect();
     }
+  }
+
+  public class AfterConnectionCommsnds extends Thread {
+
+    VSTimeConnector conector = null;
+
+    public AfterConnectionCommsnds(VSTimeConnector conector) {
+      this.conector = conector;
+      start();
+    }
+
+    @Override
+    public void run() {
+      if (comPort.equalsIgnoreCase("WLAN")) {
+        long time = Calendar.getInstance().getTimeInMillis();
+        System.out.println("waiting first ping...");
+        waitFirstPing = true;
+        int countRepeats = 0;
+        while (waitFirstPing && countRepeats < 100) {
+          countRepeats++;
+          try {
+            sleep(100);
+          } catch (Exception e) {
+          }
+        }
+        long time2 = Calendar.getInstance().getTimeInMillis();
+        System.out.println("first ping is " + (waitFirstPing == false ? "ok" : "not found.") + " Waiting time is " + ((time2 - time) / 1000) + " sec.");
+      }
+
+      try {
+        conector.hello();
+        conector.setTime();
+        try {
+          sleep(300);
+        } catch (Exception e) {
+        }
+        conector.setSensitivityMax();
+        try {
+          sleep(300);
+        } catch (Exception e) {
+        }
+        conector.setTime();
+      } catch (Exception e) {
+      }
+    }
+
   }
 
   public void connect() throws InterruptedException, SerialPortException, IOException {
@@ -125,16 +176,7 @@ public class VSTimeConnector {
       connected = true;
       WIFI = false;
     }
-    hello();
-    setTime();
-    try{
-      sleep(300);
-    }catch(Exception e){} 
-    setSensitivityMax();
-    try{
-      sleep(300);
-    }catch(Exception e){}    
-    setTime();
+    new AfterConnectionCommsnds(this);
   }
 
   /**
@@ -148,7 +190,7 @@ public class VSTimeConnector {
   public void setPower(int powerIndex) throws SerialPortException {
     sentMessage("sendpwr:" + powerIndex + "\r\n");
   }
-  
+
   public void setPowerMax() throws SerialPortException {
     setPower(2);
   }
@@ -158,18 +200,16 @@ public class VSTimeConnector {
   }
 
   public void seachTransponder(int transponderID, int color) throws SerialPortException {
-    sentMessage("searchtrans:" + transponderID + ","+color+";\r\n");
+    sentMessage("searchtrans:" + transponderID + "," + color + ";\r\n");
   }
-  
+
   public void setSensitivity(int sensivity) throws SerialPortException {
-    sentMessage("setsensitivity:"+sensivity+"\r\n");
+    sentMessage("setsensitivity:" + sensivity + "\r\n");
   }
-  
+
   public void setSensitivityMax() throws SerialPortException {
     setSensitivity(3);
   }
-  
-  
 
   /**
    * первие 3 бита это цвета: 3 бит красный, 2 зеленый, 1 голубой self.clr1 = 1;
@@ -185,8 +225,8 @@ public class VSTimeConnector {
    */
   public void setColor(int transponderID, int color) throws SerialPortException {
     //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");
-    sentMessage("sendcolor:" + color + "," + transponderID  + "\r\n");
-    
+    sentMessage("sendcolor:" + color + "," + transponderID + "\r\n");
+
   }
 
   Boolean waitingVSTMParams = false;
@@ -225,32 +265,43 @@ public class VSTimeConnector {
     sentMessage("settime:" + Calendar.getInstance().getTime().getTime() + "\r\n");
   }
 
+  public void setTimeWithDeklay() throws SerialPortException, InterruptedException {
+    setTime();
+    try {
+      sleep(300);
+    } catch (Exception e) {
+    }
+    setTime();
+  }
+
   public void clear() throws SerialPortException {
     sentMessage("clear\r\n");
   }
 
   public void hello() throws SerialPortException {
     sentMessage("hello\r\n");
+
   }
 
   public void getInfo(String baseID) throws SerialPortException {
     sentMessage("getinfo:" + baseID + "\r\n");
   }
-  
+
   public void sendflash(int TransID, String data) throws SerialPortException {
     flashResponse.put(TransID, null);
-    sentMessage("sendflash:" + TransID +data+ "\r\n");
+    sentMessage("sendflash:" + TransID + data + "\r\n");
   }
 
-  public void sentMessage(String st) throws SerialPortException {    
+  public void sentMessage(String st) throws SerialPortException {
     System.out.print("send:" + st);
     if (transport != null) {
       transport.sendData(st);
     }
-    if (sendListener!=null){
-      try{
+    if (sendListener != null) {
+      try {
         sendListener.sendVSText(st);
-      }catch(Exception e){}  
+      } catch (Exception e) {
+      }
     }
   }
 
@@ -260,12 +311,12 @@ public class VSTimeConnector {
   public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException, SerialPortException {
     //Передаём в конструктор имя порта    
     VSTimeConnector connector = new VSTimeConnector(new VSTimeMachineReciver() {
-        @Override
-        public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
-          //if (data.indexOf("ping")!=0)
-          System.out.print("receive:" + data);
-        }
-      },"WLAN", "",null, 0, 0);
+      @Override
+      public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
+        //if (data.indexOf("ping")!=0)
+        System.out.print("receive:" + data);
+      }
+    }, "WLAN", "", null, 0, 0);
     try {
       connector.connect();
     } catch (Exception e) {
@@ -282,36 +333,40 @@ public class VSTimeConnector {
         if (baseStationID == null) {
           baseStationID = params[1];
         }
+        waitFirstPing = false;
       } else if (commands[0].equalsIgnoreCase("bootflashok")) {
         int trans_id = Integer.parseInt(params[0]);
         flashResponse.put(trans_id, "OK");
       } else if (commands[0].equalsIgnoreCase("echotrans")) {
         //echotrans:<ID>,<CRC>\r\n  
         if (params.length >= 2) {
-          int last_index = params.length-1;
+          int last_index = params.length - 1;
           long crc8_f = Long.parseLong(params[last_index]);
           String firmWareVersion = "not detected";
-          if (params.length > 2){
+          if (params.length > 2) {
             firmWareVersion = params[1];
           }
           int trans_id = Integer.parseInt(params[0]);
-          if (crc8 == crc8_f) {            
+          if (crc8 == crc8_f) {
             transpondersIsAlive.put(trans_id, new VS_EchoTrans(trans_id, firmWareVersion));
-            sentMessage("echook:"+trans_id+"\r\n");
-          }          
+            sentMessage("echook:" + trans_id + "\r\n");
+          }
         }
       } else if (commands[0].equalsIgnoreCase("timesynchok")) {
         baseStationID = params[0];
         boolean time_is_ok = false;
-        try{
+        try {
           sentMessage("timesynchreceived:" + params[0] + "\r\n");
           long timeBase = Long.parseLong(params[1]);
           long current_time = Calendar.getInstance().getTimeInMillis();
-          if (Math.abs(timeBase-current_time)<10000){
-            time_is_ok= true;
-          }          
-          if (!time_is_ok) setTime();
-        }catch(Exception e){}                        
+          if (Math.abs(timeBase - current_time) < 10000) {
+            time_is_ok = true;
+          }
+          if (!time_is_ok) {
+            setTime();
+          }
+        } catch (Exception e) {
+        }
       } else if (commands[0].equalsIgnoreCase("systime")) {
         sensitivityIndex = Integer.parseInt(params[1]);
         baseStationID = params[2];

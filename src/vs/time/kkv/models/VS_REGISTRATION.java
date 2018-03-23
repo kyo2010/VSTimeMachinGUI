@@ -24,13 +24,13 @@ public class VS_REGISTRATION {
   public int VS_TRANS2 = 0;   //  NOT_DETECTED
   public int VS_TRANS3 = 0;   //  NOT_DETECTED
   
-  public String VS_USER_NAME;   //  NOT_DETECTED
-  public int IS_ACTIVE;   //  NOT_DETECTED
-  public int VS_SOUND_EFFECT;
-  public int PILOT_TYPE;  
+  public String VS_USER_NAME = "";   //  NOT_DETECTED
+  public int IS_ACTIVE = 1;   //  NOT_DETECTED
+  public int VS_SOUND_EFFECT = 1;
+  public int PILOT_TYPE = 0;  
   
-  public String FIRST_NAME;   //  NOT_DETECTED
-  public String SECOND_NAME;   //  NOT_DETECTED
+  public String FIRST_NAME = "";   //  NOT_DETECTED
+  public String SECOND_NAME= "";   //  NOT_DETECTED
   public String WEB_SYSTEM = "";
   public String WEB_SID = "";
   public String PICTURE_FILENAME = "";

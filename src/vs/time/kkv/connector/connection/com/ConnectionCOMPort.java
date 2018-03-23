@@ -94,5 +94,10 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       }
     }
   }
+  
+  @Override
+  public int getTimeOutForReconnect(){
+    return 5;
+  };
 
 }

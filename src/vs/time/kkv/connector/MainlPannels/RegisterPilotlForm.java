@@ -489,17 +489,17 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       
       // PHOTO           
       if (PHOTO.isChaged){                        
-        if (!isNew && !usr.PHOTO.equalsIgnoreCase("")) {
+        if (!isNew && !usr.PHOTO.equalsIgnoreCase("") && !usr.PHOTO.equalsIgnoreCase(PHOTO.imgFileName)) {
           new File(usr.PHOTO).delete();                    
         }        
         if (PHOTO.imgFileName==null || PHOTO.imgFileName.equals("")){
           usr.PHOTO = "";
           global_user.PHOTO = "";
         }else{
-          String fileName = usr.PHOTO;
-          if (isNew || fileName==null ||fileName.equalsIgnoreCase("")){
-            fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
-          }
+          //String fileName = usr.PHOTO;
+          //if (isNew || fileName==null ||fileName.equalsIgnoreCase("")){
+            String fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
+         // }
           new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
           FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
           usr.PHOTO = fileName;

@@ -12,4 +12,5 @@ package vs.time.kkv.connector.connection;
 public interface ConnectionVSTimeMachine {
   public void sendData(String data);
   public void disconnect();
+  public int getTimeOutForReconnect();
 }
