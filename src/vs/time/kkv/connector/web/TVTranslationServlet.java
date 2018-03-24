@@ -58,7 +58,7 @@ public class TVTranslationServlet extends HttpServlet {
       String webInfo = "";
       if (pilot != null) {
         reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
-        int pWidth = 280;
+        int pWidth = 240;
         if (isRace) {
           pWidth = 150;
         }

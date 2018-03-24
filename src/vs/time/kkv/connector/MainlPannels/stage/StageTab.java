@@ -416,7 +416,7 @@ public class StageTab extends javax.swing.JPanel {
             }
             try{
               if (mainForm.vsTimeConnector!=null && mainForm.vsTimeConnector.connected){
-                mainForm.vsTimeConnector. setTimeWithDeklay();
+                mainForm.vsTimeConnector.setTime();
               }
             }catch(Exception ein){}
           }
@@ -860,7 +860,7 @@ public class StageTab extends javax.swing.JPanel {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               //checkGroupConstrain();
-              Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+              //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
               for (VS_STAGE_GROUPS usr : groups) {
                 if (user_names.contains(usr.PILOT)) {
