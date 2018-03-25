@@ -20,17 +20,17 @@
         "fname" : "Артем",
         "lname" : "Волков",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
        }
       ,{
         "id" : "17",
-        "osd_name" : "vol931",
+        "osd_name" : "ILYA:)",
         "fname" : "Илья",
         "lname" : "Волков",
         "transID" : "есть ",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
        }
       ,{
         "id" : "6",
@@ -51,6 +51,15 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
       ,{
+        "id" : "18",
+        "osd_name" : "RUBOT",
+        "fname" : "Роман",
+        "lname" : "Климов",
+        "transID" : "VS team",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
+       }
+      ,{
         "id" : "26",
         "osd_name" : "wakella",
         "fname" : "Ваня",
@@ -65,7 +74,7 @@
         "fname" : "Максим",
         "lname" : "Регель",
         "transID" : "",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
        }
       ,{
@@ -99,17 +108,17 @@
         "fname" : "Артем",
         "lname" : "Волков",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
        }
       ,{
         "id" : "17",
-        "osd_name" : "vol931",
+        "osd_name" : "ILYA:)",
         "fname" : "Илья",
         "lname" : "Волков",
         "transID" : "есть ",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
        }
       ,{
         "id" : "25",
@@ -127,7 +136,16 @@
         "lname" : "Кимлаев",
         "transID" : "1320",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-22.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-25.jpg"
+       }
+      ,{
+        "id" : "18",
+        "osd_name" : "RUBOT",
+        "fname" : "Роман",
+        "lname" : "Климов",
+        "transID" : "VS team",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
        }
       ,{
         "id" : "15",
@@ -162,7 +180,7 @@
         "fname" : "Максим",
         "lname" : "Регель",
         "transID" : "",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
        }
       ,{
@@ -214,17 +232,17 @@
         "fname" : "Артем",
         "lname" : "Волков",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
        }
       ,{
         "id" : "17",
-        "osd_name" : "vol931",
+        "osd_name" : "ILYA:)",
         "fname" : "Илья",
         "lname" : "Волков",
         "transID" : "есть ",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
        }
       ,{
         "id" : "9",
@@ -232,17 +250,8 @@
         "fname" : "Степан",
         "lname" : "Глухов",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
-       }
-      ,{
-        "id" : "6",
-        "osd_name" : "VladimirG",
-        "fname" : "Владимир",
-        "lname" : "Голубев",
-        "transID" : "",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_91B2F347-D9C7-41B3-A232-A7CDA9DEEA79.jpeg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
        }
       ,{
         "id" : "29",
@@ -260,7 +269,7 @@
         "lname" : "Кимлаев",
         "transID" : "1320",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-22.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-25.jpg"
        }
       ,{
         "id" : "18",
@@ -268,7 +277,7 @@
         "fname" : "Роман",
         "lname" : "Климов",
         "transID" : "VS team",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
        }
       ,{
@@ -286,6 +295,15 @@
         "fname" : "Артем",
         "lname" : "Шубин",
         "transID" : "VS Team",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
+        "id" : "19",
+        "osd_name" : "Gavrfpv",
+        "fname" : "Гавриил",
+        "lname" : "Щицын ",
+        "transID" : "",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
        }

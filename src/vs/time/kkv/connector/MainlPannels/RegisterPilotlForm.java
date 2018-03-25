@@ -413,15 +413,27 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           return;
         }
         if (check1 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS1+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check1.VS_TRANS1 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check1);            
+          };
           return;
         }
         if (check2 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS2+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check2.VS_TRANS2 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check2);            
+          };
           return;
         }
         if (check3 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS3+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check3.VS_TRANS3 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check3);            
+          };
           return;
         }
 
@@ -449,15 +461,27 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           return;
         }
         if (check1 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS1+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check1.VS_TRANS1 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check1);            
+          };
           return;
         }
         if (check2 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS2+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check2.VS_TRANS2 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check2);            
+          };
+          
           return;
         }
         if (check3 != null) {
-          JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS3+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+            check3.VS_TRANS3 = 0;
+            VS_REGISTRATION.dbControl.update(mainForm.con, check3);            
+          };
           return;
         }
         VS_REGISTRATION.dbControl.insert(mainForm.con, usr);
@@ -501,7 +525,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
             String fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
          // }
           new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
-          FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+          //FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+          ImageImplement.savePhotoAndResize(PHOTO.imgFileName,fileName);
           usr.PHOTO = fileName;
           global_user.PHOTO = fileName;
         }   

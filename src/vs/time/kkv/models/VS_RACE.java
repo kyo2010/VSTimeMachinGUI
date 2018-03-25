@@ -24,6 +24,9 @@ public class VS_RACE {
   public String CHANNEL2 = "";
   public String CHANNEL3 = "";
   public String CHANNEL4 = "";
+  public String WEB_SYSTEM_SID = "";
+  public String WEB_SYSTEM_CAPTION = "";
+          
   
   public List<VS_REGISTRATION> users = new ArrayList<>();
   
@@ -44,7 +47,10 @@ public class VS_RACE {
     new DBModelField("CHANNEL3").setDbFieldName("\"CHANNEL3\""),
     new DBModelField("CHANNEL4").setDbFieldName("\"CHANNEL4\""),
     new DBModelField("PLEASE_IGNORE_FIRST_LAP").setDbFieldName("\"PLEASE_IGNORE_FIRST_LAP\""),
-    new DBModelField("MAX_RACE_TIME").setDbFieldName("\"MAX_RACE_TIME\""),    
+    new DBModelField("MAX_RACE_TIME").setDbFieldName("\"MAX_RACE_TIME\""),
+
+    new DBModelField("WEB_SYSTEM_SID").setDbFieldName("\"WEB_SYSTEM_SID\""),
+    new DBModelField("WEB_SYSTEM_CAPTION").setDbFieldName("\"WEB_SYSTEM_CAPTION\""),    
   });
   
 }

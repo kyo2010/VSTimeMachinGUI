@@ -9,8 +9,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
+import javafx.scene.image.PixelReader;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -40,8 +42,7 @@ public class ImageImplement extends JPanel {
     int PREFERRED_HEIGHT = getHeight();
     img = null;
     try {
-      //img = ImageIO.read(new File(this.imgFileName));
-      if (imgFileName != null && !imgFileName.equals("")) {
+     if (imgFileName != null && !imgFileName.equals("")) {
         ImageIcon icon = new ImageIcon(imgFileName);
         if (icon.getIconWidth() > PREFERRED_WIDTH) {
           icon = new ImageIcon(icon.getImage().getScaledInstance(
@@ -91,5 +92,32 @@ public class ImageImplement extends JPanel {
         return "Images files (*.jpg,*.png,*.gif)";
     }
   };
+  
+  public static BufferedImage imageToBufferedImage(Image im) {
+     BufferedImage bi = new BufferedImage
+        (im.getWidth(null),im.getHeight(null),BufferedImage.TYPE_INT_RGB);
+     Graphics bg = bi.getGraphics();
+     bg.drawImage(im, 0, 0, null);
+     bg.dispose();
+     return bi;
+  }
+
+  
+  public static void savePhotoAndResize(String fileFrom, String fileTo){
+    try{
+        ImageIcon icon = new ImageIcon(fileFrom);               
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        int size = Math.min(w,h);                
+        BufferedImage fragment = imageToBufferedImage(icon.getImage());
+        BufferedImage newImage = fragment.getSubimage((w-size)/2, (h-size)/2, size, size);          
+        new File(fileTo).delete();
+        ImageIO.write(newImage, "jpg", new File(fileTo));        
+    }catch(Exception e){
+      System.out.println(e.toString());
+      e.printStackTrace();
+    }
+  
+  }
 
 }

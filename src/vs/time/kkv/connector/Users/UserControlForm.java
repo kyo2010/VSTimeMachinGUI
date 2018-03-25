@@ -15,6 +15,7 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.ImageImplement;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_USERS;
 
@@ -356,7 +357,8 @@ public class UserControlForm extends javax.swing.JFrame {
             fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+usr.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
           }
           new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
-          FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+          //FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+          ImageImplement.savePhotoAndResize(PHOTO.imgFileName,fileName);
         }   
         VS_USERS.dbControl.update(mainForm.con,usr);
       }

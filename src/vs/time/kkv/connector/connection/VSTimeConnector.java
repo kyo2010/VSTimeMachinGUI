@@ -149,18 +149,23 @@ public class VSTimeConnector {
       }
 
       try {
-        conector.hello();
-        conector.setTime();
-        try {
-          sleep(300);
-        } catch (Exception e) {
-        }
+        //conector.hello();
         conector.setSensitivityMax();
         try {
-          sleep(300);
+          sleep(200);
         } catch (Exception e) {
         }
         conector.setTime();
+        try {
+          sleep(300);
+        } catch (Exception e) {
+        }
+        //conector.setSensitivityMax();
+        //try {
+        //  sleep(300);
+        //} catch (Exception e) {
+        //}
+        //conector.setTime();
       } catch (Exception e) {
       }
     }
@@ -267,14 +272,14 @@ public class VSTimeConnector {
     sentMessage("settime:" + Calendar.getInstance().getTime().getTime() + "\r\n");
   }
 
-  public void setTimeWithDeklay() throws SerialPortException, InterruptedException {
+  /*public void setTimeWithDeklay() throws SerialPortException, InterruptedException {
     setTime();
     try {
       sleep(300);
     } catch (Exception e) {
     }
     setTime();
-  }
+  }*/
 
   public void clear() throws SerialPortException {
     sentMessage("clear\r\n");

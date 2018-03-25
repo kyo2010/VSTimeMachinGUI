@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.Time;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import vs.time.kkv.connector.MainlPannels.ImageImplement;
 
 public class VS_REGISTRATION {
   
@@ -120,7 +121,8 @@ public class VS_REGISTRATION {
         fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(usr.PHOTO);
         new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
         try{
-          FileUtils.copyFile(new File(usr.PHOTO), new File(fileName));
+         // FileUtils.copyFile(new File(usr.PHOTO), new File(fileName));
+         ImageImplement.savePhotoAndResize(usr.PHOTO,fileName);
         }catch(Exception e){}
         usr.PHOTO = fileName;
         global_user.PHOTO = fileName;

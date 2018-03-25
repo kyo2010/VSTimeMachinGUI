@@ -74,7 +74,10 @@ public class DataBaseStructure {
     new DBAddonStructure(2.8,"insert into VS_USERS select * from VS_USERS_OLD;"),
     new DBAddonStructure(2.8, "COMMIT;"),
     new DBAddonStructure(2.8, "PRAGMA foreign_keys=on;"),
-    new DBAddonStructure(2.8, "DROP TABLE VS_USERS_OLD;"),
+    new DBAddonStructure(2.8, "DROP TABLE VS_USERS_OLD;"),                 
+    
+    new DBAddonStructure(2.9, "ALTER TABLE VS_RACE ADD WEB_SYSTEM_SID TRXT NOT NULL DEFAULT '';"), 
+    new DBAddonStructure(2.9, "ALTER TABLE VS_RACE ADD WEB_SYSTEM_CAPTION TRXT NOT NULL DEFAULT '';"), 
     
   };
 

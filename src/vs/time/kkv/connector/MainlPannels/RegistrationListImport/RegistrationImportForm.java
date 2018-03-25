@@ -7,6 +7,8 @@ package vs.time.kkv.connector.MainlPannels.RegistrationListImport;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,13 +63,22 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       index++;
     }
     jcbSites.setModel(new javax.swing.DefaultComboBoxModel(list));
+    jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
+    
+    jcbSites.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+          //JOptionPane.showMessageDialog(null, "sel:"+jcbSites.getSelectedItem()); 
+          siteSelected();
+        }
+      });
   }
 
   static RegistrationImportForm singelton = null;
 
   public static RegistrationImportForm init(RegistrationTab regTab) {
     if (singelton == null) {
-      singelton = new RegistrationImportForm(regTab);
+      singelton = new RegistrationImportForm(regTab);      
     }
 
     RegistrationImportForm th = singelton;
@@ -75,7 +86,18 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       regTab.mainForm.setFormOnCenter(th);
     }
 
+    singelton.prepare();
+
     return singelton;
+  }
+
+  public String setAutoLoadEvent = null;
+
+  public void prepare() {
+    if (regTab.mainForm.activeRace.WEB_SYSTEM_SID != null && !regTab.mainForm.activeRace.WEB_SYSTEM_SID.equals("")) {
+      setAutoLoadEvent = regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION.trim();
+      jcbSites.setSelectedItem(regTab.mainForm.activeRace.WEB_SYSTEM_SID);
+    }
   }
 
   /**
@@ -94,6 +116,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     jLabel4 = new javax.swing.JLabel();
     jcbSites = new javax.swing.JComboBox<>();
     jcbRaces = new javax.swing.JComboBox<>();
+    chbUpdatePhoto = new javax.swing.JCheckBox();
 
     setTitle("Pilots Import from Web");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -139,34 +162,43 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     jLabel4.setText("Race");
 
     jcbSites.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jcbSites.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-      public void propertyChange(java.beans.PropertyChangeEvent evt) {
-        jcbSitesPropertyChange(evt);
+    jcbSites.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        jcbSitesItemStateChanged(evt);
       }
     });
 
     jcbRaces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+    chbUpdatePhoto.setSelected(true);
+    chbUpdatePhoto.setText("Refresh PHOTO from Web");
+    chbUpdatePhoto.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel3)
-          .addComponent(jLabel4))
-        .addGap(18, 18, 18)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jcbSites, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jcbRaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap())
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(chbUpdatePhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel3)
+              .addComponent(jLabel4))
+            .addGap(18, 18, 18)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jcbSites, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(jcbRaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap())))
+      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
           .addComponent(jcbSites, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -174,7 +206,9 @@ public class RegistrationImportForm extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel4)
           .addComponent(jcbRaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(chbUpdatePhoto)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -195,43 +229,58 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           List<VS_RACE> races = site.getRaces();
           int count_export_pilots = 0;
           for (VS_RACE race : races) {
-            if (race.RACE_NAME.equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {              
-              if (race.users != null) {                
+            if (race.RACE_NAME.trim().equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {
+              if (race.users != null) {
                 Connection con = regTab.mainForm.con;
                 for (VS_REGISTRATION pilot : race.users) {
-                  Map<String, VS_REGISTRATION>  regs = VS_REGISTRATION.dbControl.getMap(con, "VS_USER_NAME","VS_RACE_ID=?", regTab.mainForm.activeRace.RACE_ID);                
+                  Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(con, "VS_USER_NAME", "VS_RACE_ID=?", regTab.mainForm.activeRace.RACE_ID);
                   VS_REGISTRATION reg = regs.get(pilot.VS_USER_NAME);
-                  if (reg==null){
-                    try{
+                  if (reg == null) {
+                    try {
                       pilot.VS_RACE_ID = regTab.mainForm.activeRace.RACE_ID;
-                      if (pilot.VS_TRANS1!=0){
-                        for (VS_REGISTRATION reg1 : regs.values()){
-                          if (reg1.VS_TRANS1==pilot.VS_TRANS1 || reg1.VS_TRANS2==pilot.VS_TRANS1 ||
-                              reg1.VS_TRANS3==pilot.VS_TRANS1)
-                          {
-                            JOptionPane.showMessageDialog(this, "Transponder for pilot " + pilot.VS_USER_NAME+" is duplocated.\nPilot "+reg1.VS_USER_NAME+" has the same transponder", "Information", JOptionPane.INFORMATION_MESSAGE);      
+                      if (pilot.VS_TRANS1 != 0) {
+                        for (VS_REGISTRATION reg1 : regs.values()) {
+                          if (reg1.VS_TRANS1 == pilot.VS_TRANS1 || reg1.VS_TRANS2 == pilot.VS_TRANS1
+                                  || reg1.VS_TRANS3 == pilot.VS_TRANS1) {
+                            JOptionPane.showMessageDialog(this, "Transponder for pilot " + pilot.VS_USER_NAME + " is duplocated.\nPilot " + reg1.VS_USER_NAME + " has the same transponder", "Information", JOptionPane.INFORMATION_MESSAGE);
                             pilot.VS_TRANS1 = 0;
                           }
                         }
-                      }                      
-                      if (pilot.PHOTO!=null && !pilot.PHOTO.equals("")){
+                      }
+                      if (pilot.PHOTO != null && !pilot.PHOTO.equals("")) {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
-                      }                            
+                      }
                       VS_REGISTRATION.dbControl.insert(con, pilot);
-                      VS_REGISTRATION.updateGlobalUserPHOTO(con,pilot);
-                      
-                      count_export_pilots++;                      
-                    }catch(Exception e){
-                    
+                      VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
+
+                      count_export_pilots++;
+                    } catch (Exception e) {
+
+                    }
+                  } else {
+                    if (chbUpdatePhoto.isSelected()) {
+
+                      if (pilot.PHOTO != null && !pilot.PHOTO.equals("")) {
+                        pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
+                        reg.PHOTO = pilot.PHOTO;
+                        VS_REGISTRATION.dbControl.update(con, reg);
+                        VS_REGISTRATION.updateGlobalUserPHOTO(con, reg);
+                      }
+
                     }
                   }
                 }
-              }              
+              }
               break;
             }
           }
+          regTab.mainForm.activeRace.WEB_SYSTEM_SID = jcbSites.getSelectedItem().toString();
+          regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = jcbRaces.getSelectedItem().toString();
+
+          VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
+
           regTab.refreshData();
-          JOptionPane.showMessageDialog(this, "Count export pilots : " + count_export_pilots, "Information", JOptionPane.INFORMATION_MESSAGE);      
+          JOptionPane.showMessageDialog(this, "Count export pilots : " + count_export_pilots, "Information", JOptionPane.INFORMATION_MESSAGE);
         }
       } catch (Exception e) {
         MainForm._toLog(e);
@@ -240,8 +289,13 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
 
-  private void jcbSitesPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcbSitesPropertyChange
-    jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
+  private void jcbSitesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbSitesItemStateChanged
+    // TODO add your handling code here:
+
+  }//GEN-LAST:event_jcbSitesItemStateChanged
+
+  public void siteSelected() {
+    //jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
     if (PLEASE_SELECT_WEB_SYSTEM.equalsIgnoreCase(jcbSites.getSelectedItem().toString())) {
     } else {
       try {
@@ -251,27 +305,37 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           List<VS_RACE> races = site.getRaces();
           String[] list = new String[races.size()];
           int index = 0;
+          int selIndex = 0;
           for (VS_RACE race : races) {
-            list[index] = race.RACE_NAME;
+            list[index] = race.RACE_NAME.trim();
+            if (setAutoLoadEvent!=null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME)) {
+              selIndex = index;
+            }
             index++;
           }
           jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(list));
+          if (selIndex != 0) {
+            jcbRaces.setSelectedIndex(selIndex);
+          }
+          //jcbRaces.setSelectedItem(setAutoLoadEvent);
+          /*  if (setAutoLoadEvent!=null){
+            jcbRaces.setSelectedItem(setAutoLoadEvent);
+          }
+          setAutoLoadEvent = null;*/
         }
       } catch (Exception e) {
         MainForm._toLog(e);
+        jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
       }
     }
-  }//GEN-LAST:event_jcbSitesPropertyChange
+  }
 
   public void buttnCaptionRefresh() {
 
   }
 
-  public static void runWebServer(MainForm mainForm) {
-    mainForm.httpServer = new RaceHttpServer(mainForm, VS_SETTING.getParam(mainForm.con, "WEB_PORT", 80));
-  }
-
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox chbUpdatePhoto;
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
   private javax.swing.JLabel jLabel3;
