@@ -19,6 +19,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
+import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -55,30 +57,34 @@ public class RegistrationModelTable extends AbstractTableModel {
 
   @Override
   public int getColumnCount() {
-    return 5;
+    return STAGE_COLUMNS_STAGE.length;
   }
+  
+  static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
+    new STAGE_COLUMN(10, "Act", 50),
+    new STAGE_COLUMN(20, "NUM", 50),
+    new STAGE_COLUMN(30, "Pilot Type", 90),
+    new STAGE_COLUMN(40, "Trans", 90),
+    new STAGE_COLUMN(50, "OSD Name", 200),
+    new STAGE_COLUMN(60, "First Name", 200),
+    new STAGE_COLUMN(70, "Second Name", 200),
+  };
+  
 
   @Override
   public String getColumnName(int columnIndex) {
-    if (columnIndex == 0) {
-        return "Act";
-    }  
-    if (columnIndex == 1) {
-        return "NUM";
+    if (STAGE_COLUMNS_STAGE.length>columnIndex){
+      return STAGE_COLUMNS_STAGE[columnIndex].caption;
     }
-    if (columnIndex == 2) {
-        return "Pilot Type";
-    }
-    if (columnIndex == 3) {
-       return "Trans";
-    }
-    if (columnIndex == 4) {
-       return "Name";
-    }      
     return "";
-  }
+  }    
   
-  
+  public int getColumnWidth(int columnIndex) {
+    if (STAGE_COLUMNS_STAGE.length>columnIndex){
+      return STAGE_COLUMNS_STAGE[columnIndex].width;
+    }
+    return 0;
+  }    
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
@@ -109,6 +115,12 @@ public class RegistrationModelTable extends AbstractTableModel {
       }
       if (columnIndex == 4) {
         return race.VS_USER_NAME;
+      }
+      if (columnIndex == 5) {
+        return race.FIRST_NAME;
+      }
+      if (columnIndex == 6) {
+        return race.SECOND_NAME;
       }
     }
     return "";

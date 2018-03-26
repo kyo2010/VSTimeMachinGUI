@@ -58,10 +58,16 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     this.mainForm = _mainForm;
     regModelTable = new RegistrationModelTable(this);
     jtPilotRegistration.setModel(regModelTable);
+    
+    //jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+    //jtPilotRegistration.getColumnModel().getColumn(4).setPreferredWidth(800);    
+    
     jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    jtPilotRegistration.getColumnModel().getColumn(4).setPreferredWidth(800);
-    jtPilotRegistration.setRowHeight(28);
+    for (int i=0; i<regModelTable.getColumnCount(); i++){
+      jtPilotRegistration.getColumnModel().getColumn(i).setPreferredWidth(regModelTable.getColumnWidth(i));
+    }    
     jtPilotRegistration.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));
+    jtPilotRegistration.setRowHeight(28);
 
     popup = new JPopupMenu();
     JMenuItem miEdit = new JMenuItem("Edit");
@@ -257,10 +263,10 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
             .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+              .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

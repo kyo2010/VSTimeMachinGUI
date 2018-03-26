@@ -80,10 +80,10 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="butImport" pref="0" max="32767" attributes="0"/>
                               <Component id="activeTransponder" max="32767" attributes="0"/>
+                              <Component id="butReload" alignment="0" min="-2" pref="55" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="butRegistPilot" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                                   <Component id="butAddNewStage" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
-                                  <Component id="butReload" alignment="0" min="-2" pref="55" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
