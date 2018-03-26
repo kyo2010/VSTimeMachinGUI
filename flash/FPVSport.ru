@@ -208,7 +208,7 @@
         "lname" : "Щицын ",
         "transID" : "",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-0000-03-42_Gavrfpv.jpg"
+        "PICTURE" : ""
        }
     ]
    }
@@ -305,7 +305,7 @@
         "lname" : "Щицын ",
         "transID" : "",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-0000-03-42_Gavrfpv.jpg"
+        "PICTURE" : ""
        }
     ]
    }
