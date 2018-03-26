@@ -36,6 +36,7 @@ public class VS_REGISTRATION {
   public String WEB_SID = "";
   public String PICTURE_FILENAME = "";
   public String PHOTO = "";  
+  public String WEB_PHOTO_URL = "";
   
   /** Constructor */ 
   public VS_REGISTRATION() {
@@ -62,8 +63,8 @@ public class VS_REGISTRATION {
     new DBModelField("WEB_SID").setDbFieldName("WEB_SID"),
     new DBModelField("PICTURE_FILENAME").setDbFieldName("PICTURE_FILENAME"),
     
-    new DBModelField("PHOTO").setDbFieldName("PHOTO")
-    
+    new DBModelField("PHOTO").setDbFieldName("PHOTO"),
+    new DBModelField("WEB_PHOTO_URL").setDbFieldName("WEB_PHOTO_URL"),        
   });
   
   public static long maxNum(Connection conn, long raceID){

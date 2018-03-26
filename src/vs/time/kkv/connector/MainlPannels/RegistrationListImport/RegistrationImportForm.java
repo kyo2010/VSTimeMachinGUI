@@ -228,6 +228,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           site.load();
           List<VS_RACE> races = site.getRaces();
           int count_export_pilots = 0;
+          int count_updated_photos_pilots = 0;
           for (VS_RACE race : races) {
             if (race.RACE_NAME.trim().equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {
               if (race.users != null) {
@@ -249,7 +250,9 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                       }
                       if (pilot.PHOTO != null && !pilot.PHOTO.equals("")) {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
+                        count_updated_photos_pilots++;
                       }
+                      
                       VS_REGISTRATION.dbControl.insert(con, pilot);
                       VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
 
@@ -260,9 +263,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                   } else {
                     if (chbUpdatePhoto.isSelected()) {
 
-                      if (pilot.PHOTO != null && !pilot.PHOTO.equals("")) {
+                      if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
                         reg.PHOTO = pilot.PHOTO;
+                        reg.WEB_PHOTO_URL = pilot.WEB_PHOTO_URL;
+                        count_updated_photos_pilots++;
                         VS_REGISTRATION.dbControl.update(con, reg);
                         VS_REGISTRATION.updateGlobalUserPHOTO(con, reg);
                       }
@@ -280,7 +285,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
 
           regTab.refreshData();
-          JOptionPane.showMessageDialog(this, "Count export pilots : " + count_export_pilots, "Information", JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(this, "Export pilots : " + count_export_pilots+"\n"+
+                                              count_updated_photos_pilots+" photos were updated", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
       } catch (Exception e) {
         MainForm._toLog(e);
@@ -308,7 +314,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           int selIndex = 0;
           for (VS_RACE race : races) {
             list[index] = race.RACE_NAME.trim();
-            if (setAutoLoadEvent!=null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME)) {
+            if (setAutoLoadEvent!=null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME.trim())) {
               selIndex = index;
             }
             index++;

@@ -82,6 +82,7 @@ public class FPVSport extends IRegSite {
             user.PHOTO = "";
             try{            
               user.PICTURE_FILENAME = json_pilot.getString("PICTURE").trim();
+              user.WEB_PHOTO_URL = user.PICTURE_FILENAME;
               boolean PICTURE_OK = "1".equalsIgnoreCase(json_pilot.getString("PICTURE_OK"));
               //boolean PICTURE_OK  =true;
               if (PICTURE_OK && !user.PICTURE_FILENAME.equalsIgnoreCase("")){

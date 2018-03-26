@@ -97,7 +97,7 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
    
    public SpeekText findTransponders(long num){
-    String text = "Внимание, Группа "+num+". Идет поиск транспондеров. Проверьте питание.";    
-    return new SpeekText(text, 1000);
+    String text = "Внимание, Группа "+num+". Идет поиск транспондеров. Проверьте питание ваших дронов.";    
+    return new SpeekText(text, 2000);
   }
 }

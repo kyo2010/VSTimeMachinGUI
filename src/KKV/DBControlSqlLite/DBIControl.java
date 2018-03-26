@@ -49,6 +49,8 @@ public class DBIControl<Model> {
   public String tableName = "";
   public String addonJoins = ""; // additional joins for constarins and orders
   
+  public static boolean SHOW_DEBUG_INFO = false;
+  
   public String initSQl = null;
    public DBIControl setInitSQl(String initSQl) {
     this.initSQl = initSQl;
@@ -142,6 +144,7 @@ public class DBIControl<Model> {
           fillStat(sql, stat, args);
         }   
       }  
+      
       //rs = stat.executeQuery();
       stat.execute();
     } catch (SQLException se) {
@@ -164,23 +167,29 @@ public class DBIControl<Model> {
     }
   }
 
-  public static PreparedStatement fillStat(String sql, PreparedStatement stat, Object... args) throws UserException {
-    try {
+  public static PreparedStatement fillStat(String sql, PreparedStatement stat, Object... args) throws UserException {        
+    String params = "";
+    try {     
       if (args != null) {
-        int argIndex = 1;
+        int argIndex = 1;        
         for (Object arg : args) {
           if (arg != null) {
             Class cl = arg.getClass();
             if (cl.equals(String.class)) {
               stat.setString(argIndex, ((String) arg).trim());
+             params+="'"+((String) arg).trim()+"' ; ";
             }else if (cl.equals(Integer.class) || cl.equals(int.class)) {
               stat.setInt(argIndex, (Integer) arg);
+              params+=(Integer) arg+" ; ";
             }else if (cl.equals(Long.class) || cl.equals(long.class)) {
               stat.setLong(argIndex, (Long) arg);
+              params+=(Long) arg+" ; ";
             }else if (cl.equals(Double.class) || cl.equals(double.class)) {
               stat.setDouble(argIndex, (Double) arg);
+              params+=(Double) arg+" ; ";
             }else if (cl.equals(Timestamp.class)) {
               stat.setTimestamp(argIndex, (Timestamp) arg);
+              params+=((Timestamp) arg) +" ; ";
             }else{
               throw new UserException("Error","Object type '"+cl.getSimpleName()+"' can't set to statement! \nsql:"+sql);
             }
@@ -190,6 +199,8 @@ public class DBIControl<Model> {
       } else {
         //do nothing
       }
+      //org.sqlite. stat1 = (PrepStmt)stat;
+      if ( SHOW_DEBUG_INFO ) System.out.println("sql : "+sql+ " *** PARAMS:"+params);
     } catch (UserException ue) {
       throw ue;     
     } catch (Exception e) {

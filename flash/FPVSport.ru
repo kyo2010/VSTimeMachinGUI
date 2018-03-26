@@ -136,7 +136,7 @@
         "lname" : "Кимлаев",
         "transID" : "1320",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-25.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-26.jpg"
        }
       ,{
         "id" : "18",
@@ -207,8 +207,8 @@
         "fname" : "Гавриил",
         "lname" : "Щицын ",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-0000-03-42_Gavrfpv.jpg"
        }
     ]
    }
@@ -269,7 +269,7 @@
         "lname" : "Кимлаев",
         "transID" : "1320",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-25.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-26.jpg"
        }
       ,{
         "id" : "18",
@@ -304,8 +304,8 @@
         "fname" : "Гавриил",
         "lname" : "Щицын ",
         "transID" : "",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-0000-03-42_Gavrfpv.jpg"
        }
     ]
    }

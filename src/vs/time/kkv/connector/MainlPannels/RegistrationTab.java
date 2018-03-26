@@ -76,6 +76,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     popup.add(miAdd);
     JMenuItem miDelete = new JMenuItem("Delete");
     popup.add(miDelete);
+    JMenuItem miDeleteAll = new JMenuItem("Delete All");
+    popup.add(miDeleteAll);
+    
     miEdit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -108,6 +111,21 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
             }
           }
         }
+      }
+    });
+    
+    miDeleteAll.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+          int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to delete all registrations?", "Confirmation", JOptionPane.YES_NO_OPTION);
+          if (res == JOptionPane.YES_OPTION) {
+            try {
+              VS_REGISTRATION.dbControl.execSql(mainForm.con, "DELETE from "+VS_REGISTRATION.dbControl.getTableAlias()+" where VS_RACE_ID=?",mainForm.activeRace.RACE_ID);
+              RegistrationTab.this.refreshData();
+            } catch (Exception ex) {
+              mainForm.error_log.writeFile(ex);
+            }
+          }
       }
     });
     jtPilotRegistration.add(popup);
