@@ -89,9 +89,26 @@ public class FPVSport extends IRegSite {
                 user.PHOTO = user.PICTURE_FILENAME;
               }
             }catch(Exception e){            
-            };              
+            };         
+            String trns_st = json_pilot.getString("transID");            
             try{
-              user.VS_TRANS1 = Integer.parseInt(json_pilot.getString("transID"));
+              String[] trans = trns_st.split(";");
+              try{             
+                if (trans!=null && trans.length>0)
+                  user.VS_TRANS1 = Integer.parseInt(trans[0].trim());
+              }catch(Exception ein1){}
+              
+              try{      
+                if (trans!=null && trans.length>1)
+                  user.VS_TRANS2 = Integer.parseInt(trans[1].trim());
+              }catch(Exception ein1){}
+              
+              try{
+                 if (trans!=null && trans.length>2)
+                   user.VS_TRANS3 = Integer.parseInt(trans[2].trim());
+              }catch(Exception ein1){}
+              
+              
             }catch(Exception ein){}
             race.users.add(user);
           }           

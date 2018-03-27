@@ -51,6 +51,15 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
       ,{
+        "id" : "30",
+        "osd_name" : "X555",
+        "fname" : "Кирилл",
+        "lname" : "Задремайлов",
+        "transID" : "",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1414-03-20_X555.JPG"
+       }
+      ,{
         "id" : "18",
         "osd_name" : "RUBOT",
         "fname" : "Роман",
@@ -69,11 +78,20 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
        }
       ,{
+        "id" : "27",
+        "osd_name" : "Dany_Orlov",
+        "fname" : "Даниель",
+        "lname" : "Орлов",
+        "transID" : "Поставлю)",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
         "id" : "28",
         "osd_name" : "zoLa",
         "fname" : "Максим",
         "lname" : "Регель",
-        "transID" : "",
+        "transID" : "1344",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
        }
@@ -83,8 +101,17 @@
         "fname" : "Александр",
         "lname" : "Сорокин",
         "transID" : "66",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
+       }
+      ,{
+        "id" : "31",
+        "osd_name" : "Polymorpf",
+        "fname" : "Вадим",
+        "lname" : "Чайкин",
+        "transID" : "1311",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-27-1010-03-38_Polymorpf.jpg"
        }
     ]
    }
@@ -130,11 +157,20 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
       ,{
+        "id" : "30",
+        "osd_name" : "X555",
+        "fname" : "Кирилл",
+        "lname" : "Задремайлов",
+        "transID" : "",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1414-03-20_X555.JPG"
+       }
+      ,{
         "id" : "2",
         "osd_name" : "KKV",
         "fname" : "Константин",
         "lname" : "Кимлаев",
-        "transID" : "1320",
+        "transID" : "1320;1322",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-26.jpg"
        }
@@ -157,6 +193,15 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_GarryBu.jpg"
        }
       ,{
+        "id" : "32",
+        "osd_name" : "argus",
+        "fname" : "Михаил ",
+        "lname" : "Колодочка ",
+        "transID" : "300",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
         "id" : "26",
         "osd_name" : "wakella",
         "fname" : "Ваня",
@@ -166,20 +211,11 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
        }
       ,{
-        "id" : "27",
-        "osd_name" : "Dany_Orlov",
-        "fname" : "Даниель",
-        "lname" : "Орлов",
-        "transID" : "Поставлю)",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
-       }
-      ,{
         "id" : "28",
         "osd_name" : "zoLa",
         "fname" : "Максим",
         "lname" : "Регель",
-        "transID" : "",
+        "transID" : "1344",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
        }
@@ -189,8 +225,8 @@
         "fname" : "Александр",
         "lname" : "Сорокин",
         "transID" : "66",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
        }
       ,{
         "id" : "23",
@@ -267,7 +303,7 @@
         "osd_name" : "KKV",
         "fname" : "Константин",
         "lname" : "Кимлаев",
-        "transID" : "1320",
+        "transID" : "1320;1322",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-26.jpg"
        }

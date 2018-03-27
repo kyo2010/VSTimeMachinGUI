@@ -261,8 +261,21 @@ public class RegistrationImportForm extends javax.swing.JFrame {
 
                     }
                   } else {
+                    if (reg.VS_TRANS1!=pilot.VS_TRANS1 || reg.VS_TRANS2!=pilot.VS_TRANS2 || reg.VS_TRANS3!=pilot.VS_TRANS3){
+                      /*pilot.ID = reg.ID;
+                      pilot.VS_RACE_ID = reg.VS_RACE_ID;
+                      if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {                        
+                      }else{
+                        pilot.PHOTO = reg.PHOTO;
+                        pilot.PHOTO = reg.PHOTO;
+                        VS_REGISTRATION.dbControl.update(con, pilot);
+                      }*/
+                      reg.VS_TRANS1=pilot.VS_TRANS1;
+                      reg.VS_TRANS2=pilot.VS_TRANS2;
+                      reg.VS_TRANS3=pilot.VS_TRANS3;
+                      VS_REGISTRATION.dbControl.update(con, reg);                      
+                    }
                     if (chbUpdatePhoto.isSelected()) {
-
                       if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
                         reg.PHOTO = pilot.PHOTO;
