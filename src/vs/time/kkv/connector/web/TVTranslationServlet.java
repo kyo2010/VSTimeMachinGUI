@@ -49,23 +49,24 @@ public class TVTranslationServlet extends HttpServlet {
       this.index = index;
     }
 
-    public boolean addPilotInfo(IVar varsPool, boolean isRace) {
+    public boolean addPilotInfo(IVar varsPool, boolean isRace) {      
       boolean res = true;
       String webPhoto = "";
       String webName = "";
       String webChannel = "";
       String webColor = "";
       String webInfo = "";
+      try{      
       if (pilot != null) {
         reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
         int pWidth = 240;
         if (isRace) {
           pWidth = 150;
         }
-        if (!reg.PHOTO.equalsIgnoreCase("")){
+        if (!reg.PHOTO.equalsIgnoreCase("")) {
           webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
-        }else{
-        
+        } else {
+
         }
 
         if (pilot.color != null) {
@@ -98,13 +99,17 @@ public class TVTranslationServlet extends HttpServlet {
 
         webChannel = "<div class='w3-badge w3-" + webColor + "'><b>" + pilot.CHANNEL + "</b></div>";
       }
+      
+      }catch(Exception ein){
+        res = false;
+      }
 
       varsPool.addChild(new StringVar("PILOT" + index + "_PHOTO", webPhoto));
       varsPool.addChild(new StringVar("PILOT" + index + "_NAME", webName));
       varsPool.addChild(new StringVar("CH" + index, webChannel));
       varsPool.addChild(new StringVar("COLOR" + index, webColor));
       varsPool.addChild(new StringVar("INFO" + index, webInfo));
-
+      
       return res;
     }
 
@@ -150,65 +155,79 @@ public class TVTranslationServlet extends HttpServlet {
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
   }
-  
+
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
     String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
-    String CONTENT = "";    
-    
+    String CONTENT = "";
+
     boolean showGroupNumber = false;
-    if (stage.groups.size()>1) showGroupNumber = true;
-    
-    
+    if (stage.groups.size() > 1) {
+      showGroupNumber = true;
+    }
+
     CONTENT = "<div class='w3-container'><p>";
     CONTENT += "<table class='w3-table w3-bordered w3-border w3-xxxlarge'>";
     CONTENT += "<tr class='w3-blue'>";
-    if (showGroupNumber)  CONTENT += "<th>G</th>";
+    if (showGroupNumber) {
+      CONTENT += "<th>G</th>";
+    }
     CONTENT += "<th> </th>";
     CONTENT += "<th>Имя</th>";
     CONTENT += "<th>Канал</th>";
     CONTENT += "<th>Общее время</th>";
     CONTENT += "<th>Лучший круг</th>";
     CONTENT += "</tr>";
-    
+
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;
     long best_time = VS_STAGE_GROUPS.MAX_TIME;
-    for (int numGroup : stage.groups.keySet()){
+    for (int numGroup : stage.groups.keySet()) {
       VS_STAGE_GROUP group = stage.groups.get(numGroup);
-      for (VS_STAGE_GROUPS user : group.users){
-        if (user.BEST_LAP<best_lap && user.BEST_LAP!=0) best_lap = user.BEST_LAP;
-        if (user.RACE_TIME<best_time && user.RACE_TIME!=0) best_time = user.RACE_TIME;
-      } 
-    }  
-    if (best_time == VS_STAGE_GROUPS.MAX_TIME) best_time++;
-    if (best_lap == VS_STAGE_GROUPS.MAX_TIME) best_lap++;
-        
-    for (int numGroup : stage.groups.keySet()){
+      for (VS_STAGE_GROUPS user : group.users) {
+        if (user.BEST_LAP < best_lap && user.BEST_LAP != 0) {
+          best_lap = user.BEST_LAP;
+        }
+        if (user.RACE_TIME < best_time && user.RACE_TIME != 0) {
+          best_time = user.RACE_TIME;
+        }
+      }
+    }
+    if (best_time == VS_STAGE_GROUPS.MAX_TIME) {
+      best_time++;
+    }
+    if (best_lap == VS_STAGE_GROUPS.MAX_TIME) {
+      best_lap++;
+    }
+
+    for (int numGroup : stage.groups.keySet()) {
       VS_STAGE_GROUP group = stage.groups.get(numGroup);
-      int index =0;
-      for (VS_STAGE_GROUPS user : group.users){
+      int index = 0;
+      for (VS_STAGE_GROUPS user : group.users) {
         VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
         String surname = "";
-        if (reg!=null) surname = reg.SECOND_NAME+ ((reg.FIRST_NAME.length()>0)?(" "+reg.FIRST_NAME.substring(0, 1)+"."):"")+ " ";
+        if (reg != null) {
+          surname = reg.SECOND_NAME + ((reg.FIRST_NAME.length() > 0) ? (" " + reg.FIRST_NAME.substring(0, 1) + ".") : "") + " ";
+        }
         CONTENT += "<tr class='w3-white'>";
-        if (showGroupNumber && index==0)  CONTENT += "<th rowspan='"+group.users.size()+"'>"+group.GROUP_NUM+"</th>";
-        CONTENT += "<th>"+(index+1)+"</th>";
-        CONTENT += "<th>"+  surname + user.PILOT+"</th>";
-        CONTENT += "<th>"+user.CHANNEL+"</th>";
-        CONTENT += "<th "+ (user.RACE_TIME==best_time?"class='w3-red'":"") +">"+(user.RACE_TIME==0?"":StageTab.getTimeIntervel(user.RACE_TIME))+"</th>";
-        CONTENT += "<th "+ (user.BEST_LAP==best_lap?"class='w3-red'":"") +">"+(user.BEST_LAP==0?"":StageTab.getTimeIntervel(user.BEST_LAP))+"</th>";        
+        if (showGroupNumber && index == 0) {
+          CONTENT += "<th rowspan='" + group.users.size() + "'>" + group.GROUP_NUM + "</th>";
+        }
+        CONTENT += "<th>" + (index + 1) + "</th>";
+        CONTENT += "<th>" + surname + user.PILOT + "</th>";
+        CONTENT += "<th>" + user.CHANNEL + "</th>";
+        CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
+        CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
         CONTENT += "</tr>";
         index++;
-      }    
-    }      
+      }
+    }
     CONTENT += "</table></p>";
     CONTENT += "</div>";
-    
+
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("CONTENT", CONTENT));
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
   }
-        
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -222,9 +241,9 @@ public class TVTranslationServlet extends HttpServlet {
         showGroup(req, resp, mainForm.activeGroup, true);
       } else if (mainForm.invateGroup != null) {
         showGroup(req, resp, mainForm.invateGroup, false);
-      } else if (mainForm.activeStage!=null){
-        showStage(req, resp,mainForm.activeStage);
-      }else {
+      } else if (mainForm.activeStage != null) {
+        showStage(req, resp, mainForm.activeStage);
+      } else {
         String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
         String CONTENT = "";
         IVar varsPool = new VarPool();
@@ -232,8 +251,8 @@ public class TVTranslationServlet extends HttpServlet {
         String outHtml = varsPool.applyValues(html);
         resp.getWriter().println(outHtml);
       }
-
     } catch (Exception e) {
+      resp.getWriter().println(e.toString() + ". " +Tools.traceError(e));
       System.out.println(e);
     }
   }

@@ -79,12 +79,12 @@
                               <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jcbPilotType" min="-2" pref="114" max="-2" attributes="0"/>
+                                  <Component id="jcbPilotType" min="-2" pref="109" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="chEnabledSound" min="-2" pref="67" max="-2" attributes="0"/>
+                                  <Component id="chEnabledSound" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jButton1" min="-2" pref="94" max="-2" attributes="0"/>
                               </Group>
@@ -93,7 +93,7 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="edFirstName" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">

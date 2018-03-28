@@ -963,7 +963,7 @@ public class StageTab extends javax.swing.JPanel {
             }
           }
         } else {
-          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
           int count_man_in_group = 0;
           int GRUP_NUM = 1;
           String[] channels = stage.CHANNELS.split(";");

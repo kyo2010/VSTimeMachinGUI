@@ -85,7 +85,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   final static int LAP_WEIGHT = 90;
   static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 90),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 90).setIsEditing(true).setCellID("TXT_RIGHT"),
@@ -94,7 +94,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   };
 
   static STAGE_COLUMN[] STAGE_COLUMNS_STAGE_RACE = new STAGE_COLUMN[]{
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT"),
@@ -106,7 +106,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   static STAGE_COLUMN[] STAGE_COLUMNS_RESULT = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_NUM, "Num", 50).setCellID("INT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 90).setCellID("TXT_RIGHT"),
@@ -115,7 +115,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   static STAGE_COLUMN[] STAGE_COLUMNS_RACE_RESULT = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_NUM, "Num", 50).setCellID("INT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT"),
@@ -400,7 +400,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           return tab.getTimeIntervel(lap.TRANSPONDER_TIME);
         }
         if (sc != null && sc.ID == STAGE_COLUMN.CID_PILOT) {
-          return td.pilot.PILOT;
+          String addon = "";
+          try{
+            VS_REGISTRATION reg = td.pilot.getRegistration(tab.mainForm.con, tab.mainForm.activeRace.RACE_ID);
+            if (reg!=null){
+              addon = " / "+reg.FIRST_NAME +" "+ reg.SECOND_NAME;
+            }
+          }catch(Exception e){}
+          return td.pilot.PILOT +addon;
         }
 
         td.pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, false);
