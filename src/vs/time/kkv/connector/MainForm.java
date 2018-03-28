@@ -334,7 +334,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     TimerForm.init(this).setVisible(true);
 
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
-      SystemOptions.runWebServer(this);
+      SystemOptions.runWebServer(this,true);
     }
 
     try {
@@ -805,7 +805,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
     if (httpServer == null) {
-      SystemOptions.runWebServer(this);
+      SystemOptions.runWebServer(this,true);
     }
 
     String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
@@ -865,7 +865,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private void jMenuItemTVMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTVMonitorActionPerformed
     // TODO add your handling code here:
     if (httpServer == null) {
-      SystemOptions.runWebServer(this);
+      SystemOptions.runWebServer(this,true);
     }
 
     String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80)+"/tv.htm";

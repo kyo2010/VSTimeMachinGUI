@@ -243,7 +243,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                   
                   VS_REGISTRATION reg = null;
                   for (VS_REGISTRATION reg1 : regs.values()){
-                    if (reg1.VS_USER_NAME.trim().equalsIgnoreCase(pilot.VS_USER_NAME)){
+                    if (reg1.VS_USER_NAME.trim().equalsIgnoreCase(pilot.VS_USER_NAME.trim())){
                       reg = reg1;
                       break;
                     }

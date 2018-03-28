@@ -37,7 +37,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jSplitPane1" max="32767" attributes="0"/>
-                  <Component id="jSplitPane2" max="32767" attributes="0"/>
+                  <Component id="jSplitPane2" pref="506" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -55,7 +55,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace pref="51" max="32767" attributes="0"/>
+                  <EmptySpace pref="144" max="32767" attributes="0"/>
+                  <Component id="bRestartWebServer" min="-2" pref="62" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jchTV" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="refreshData" min="-2" pref="62" max="-2" attributes="0"/>
@@ -78,7 +80,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jchTV" alignment="1" max="32767" attributes="0"/>
+                      <Component id="bRestartWebServer" max="32767" attributes="0"/>
                       <Component id="butConfig" alignment="0" max="32767" attributes="0"/>
                       <Component id="pdfButton" alignment="0" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -88,6 +90,7 @@
                       <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
                       <Component id="refreshData" max="32767" attributes="0"/>
                       <Component id="butGroupExport" max="32767" attributes="0"/>
+                      <Component id="jchTV" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -196,6 +199,20 @@
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JButton" name="bRestartWebServer">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/web-restart.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bRestartWebServerActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
           </AuxValues>
         </Component>
       </SubComponents>

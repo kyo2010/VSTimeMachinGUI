@@ -72,6 +72,7 @@ import ru.nkv.var.StringVar;
 import ru.nkv.var.Var;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
+import vs.time.kkv.connector.SystemOptions;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -228,7 +229,7 @@ public class StageTab extends javax.swing.JPanel {
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
             user.CHECK_FOR_RACE = 0;
-          }          
+          }
         };
         pleasuUpdateTable = true;
         checkingGrpup = null;
@@ -399,13 +400,15 @@ public class StageTab extends javax.swing.JPanel {
           if (td == null || !td.isGrpup) {
             return;
           }
-          /*** INAVITATION */
+          /**
+           * * INAVITATION
+           */
           if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
             }
-            List<String> pilots = new ArrayList<String>();            
+            List<String> pilots = new ArrayList<String>();
             if (td != null && td.group != null && td.group.users != null) {
               for (VS_STAGE_GROUPS user : td.group.users) {
                 pilots.add(user.PILOT);
@@ -414,16 +417,17 @@ public class StageTab extends javax.swing.JPanel {
               mainForm.invateGroup = td.group;
               mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
             }
-            try{
-              if (mainForm.vsTimeConnector!=null && mainForm.vsTimeConnector.connected){
+            try {
+              if (mainForm.vsTimeConnector != null && mainForm.vsTimeConnector.connected) {
                 mainForm.vsTimeConnector.setTime();
               }
-            }catch(Exception ein){}
+            } catch (Exception ein) {
+            }
           }
 
           if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach
-            
-            if (checkerTimer.isRunning()){
+
+            if (checkerTimer.isRunning()) {
               checkerTimer.stop();
               InfoForm.init(mainForm, "", 100).setVisible(false);
               return;
@@ -484,7 +488,7 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
                 mainForm.activeGroup = td.group;
-                mainForm.invateGroup = null;                
+                mainForm.invateGroup = null;
                 td.group.stageTab = StageTab.this;
                 for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;
@@ -658,7 +662,7 @@ public class StageTab extends javax.swing.JPanel {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(jd.getDDMMYYYY("-")+"_groups");
+      out.setReportName(jd.getDDMMYYYY("-") + "_groups");
       int sheet = out.addStream();
 
       out.setReportName(sheet, stage.CAPTION);
@@ -969,8 +973,8 @@ public class StageTab extends javax.swing.JPanel {
           String[] channels = stage.CHANNELS.split(";");
           int prev_type_pilot = -1;
           for (VS_REGISTRATION user : users) {
-            if (user.VS_TRANS1==0){
-              JOptionPane.showMessageDialog(this, "Please set Transponder ID for "+user.VS_USER_NAME);                            
+            if (user.VS_TRANS1 == 0) {
+              JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
               return;
             }
             // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
@@ -1022,6 +1026,7 @@ public class StageTab extends javax.swing.JPanel {
     bNewStage = new javax.swing.JButton();
     butGroupExport = new javax.swing.JButton();
     jchTV = new javax.swing.JCheckBox();
+    javax.swing.JButton bRestartWebServer = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -1108,6 +1113,13 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    bRestartWebServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/web-restart.png"))); // NOI18N
+    bRestartWebServer.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bRestartWebServerActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1115,7 +1127,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
+        .addComponent(bRestartWebServer, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jchTV)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(refreshData, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1136,7 +1150,7 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jchTV, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(bRestartWebServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1144,7 +1158,8 @@ public class StageTab extends javax.swing.JPanel {
             .addComponent(bNewStage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     jSplitPane2.setDividerLocation(200);
@@ -1199,7 +1214,7 @@ public class StageTab extends javax.swing.JPanel {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jSplitPane1)
-          .addComponent(jSplitPane2)))
+          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -1222,14 +1237,14 @@ public class StageTab extends javax.swing.JPanel {
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
     // TODO add your handling code here:    
-    
+
     if (mainForm.activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
       return;
     }
-    
+
     // refresh data tab
-    refreshDataActionPerformed(evt);    
+    refreshDataActionPerformed(evt);
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
@@ -1244,7 +1259,7 @@ public class StageTab extends javax.swing.JPanel {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
-      out.setReportName(jd.getDDMMYYYY("-")+"_stage");
+      out.setReportName(jd.getDDMMYYYY("-") + "_stage");
 
       tableToXLS(out);
 
@@ -1326,7 +1341,7 @@ public class StageTab extends javax.swing.JPanel {
 
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
-    jTable.setDefaultRenderer(Object.class,stageTableAdapter);
+    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
 
     for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
@@ -1424,12 +1439,21 @@ public class StageTab extends javax.swing.JPanel {
 
   private void jchTVStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jchTVStateChanged
     // TODO add your handling code here:
-    if (jchTV.isSelected()){
+    if (jchTV.isSelected()) {
       mainForm.activeStage = stage;
-    }else{
+    } else {
       mainForm.activeStage = null;
     }
   }//GEN-LAST:event_jchTVStateChanged
+
+  private void bRestartWebServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRestartWebServerActionPerformed
+    // TODO add your handling code here
+    try {
+      SystemOptions.runWebServer(mainForm, false);
+    } catch (Exception e) {
+    }
+    SystemOptions.runWebServer(mainForm, true);
+  }//GEN-LAST:event_bRestartWebServerActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

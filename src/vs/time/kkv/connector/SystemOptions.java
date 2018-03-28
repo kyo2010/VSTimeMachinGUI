@@ -205,17 +205,21 @@ public class SystemOptions extends javax.swing.JFrame {
     }
   }
   
-  public static void runWebServer(MainForm mainForm){
-    mainForm.httpServer = new RaceHttpServer(mainForm, VS_SETTING.getParam(mainForm.con, "WEB_PORT", 80));
+  public static void runWebServer(MainForm mainForm, boolean runOrStop){
+    if (runOrStop){
+      mainForm.httpServer = new RaceHttpServer(mainForm, VS_SETTING.getParam(mainForm.con, "WEB_PORT", 80));
+    }else{
+      mainForm.httpServer.disconnect();
+      mainForm.httpServer = null;
+    } 
   }
   
   private void bHTTPServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHTTPServerActionPerformed
     // TODO add your handling code here:
     if (mainForm.httpServer==null || !mainForm.httpServer.connected){      
-       runWebServer(mainForm);
+       runWebServer(mainForm,true);
     }else{
-      mainForm.httpServer.disconnect();
-      mainForm.httpServer = null;
+      runWebServer(mainForm,false);
     }    
     buttnCaptionRefresh();
   }//GEN-LAST:event_bHTTPServerActionPerformed

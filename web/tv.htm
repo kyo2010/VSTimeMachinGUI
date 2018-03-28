@@ -1,0 +1,50 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; no-cache; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Cache-Control" Content="no-cache">
+  <meta http-equiv="Pragma" Content="no-cache">
+  <meta http-equiv="Expires" Content="0">
+  <!--<meta http-equiv="refresh" content="3"> -->
+  <link rel="stylesheet" href="css/w3.css"/>
+  <title>TV Monitor</title>  
+</head>
+<body background="images/chromokey.png">
+
+<p name="place" id="place" style="margin: 0px"></p>
+
+  <script type="text/javascript">
+   function loadHTML(url){
+     var req = null;
+     if(window.XMLHttpRequest){           
+       req = new XMLHttpRequest();
+       if (req.overrideMimeType) {
+         req.overrideMimeType('text/xml');
+       }
+       req.open("GET", url, false);
+       req.send(null);
+    }else if(window.ActiveXObject){
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+      if(req){
+        req.open("GET", url, false);
+        req.send();
+      }
+    }
+    if (req != null && req.responseText != undefined){
+      return req.responseText;
+    }else{
+      return new String('');
+    } 
+  }
+  updateTable();
+  setInterval('updateTable()', 1000)
+  function updateTable(){
+    var place = document.getElementById("place");
+    //alert(place);
+    place.innerHTML = loadHTML("tv.ajax?time"+Date.now());
+  }
+</script>
+
+
+</body>
+</html>

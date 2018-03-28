@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector.web;
 
+import KKV.Utils.Tools;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,8 +48,15 @@ public class RaceHttpServer  implements  Runnable {
   public void disconnect() {
     if (server != null) {
       server.getServer().setStopAtShutdown(true);
+      try{
+        Thread.sleep(1000);
+      }catch(Exception e){}
+      try{
+        server.stop();
+      }catch(Exception e){}  
     }
     connected = false;
+    System.out.println("Web has been stopped");
   }
   
   
@@ -107,14 +115,8 @@ public class RaceHttpServer  implements  Runnable {
       
       handler.setWelcomeFiles(new String[]{ "index.htm" });
       handler.addServlet(RaceHttpServlet.class, "/index.htm");
-      handler.addServlet(TVTranslationServlet.class, "/tv.htm");
-      
-     
-      //server.setHandler(handler);
-      
-      
-      
-      
+      handler.addServlet(TVTranslationServlet.class, "/tv.ajax");           
+      //server.setHandler(handler);                       
        HandlerList handlers = new HandlerList( );
        handlers.setHandlers( new Handler[] {                  
          pContextHandler,
@@ -135,8 +137,11 @@ public class RaceHttpServer  implements  Runnable {
       //server.setHandler(ctx);
       
       server.start();
-    } catch (Exception e) {
+    } catch (Exception e) {     
+      System.out.println(e.toString()+" "+Tools.traceError(e));
+      mainForm.toLog(e);
     }
+    System.out.println("Web has been started");
   }
 
 }
