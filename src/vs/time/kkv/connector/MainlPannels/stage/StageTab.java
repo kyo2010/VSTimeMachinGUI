@@ -455,7 +455,7 @@ public class StageTab extends javax.swing.JPanel {
             checkerCycle = 0;
             checkerTimer.start();
           }
-          if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) {
+          if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) { // Start Race
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
@@ -465,6 +465,19 @@ public class StageTab extends javax.swing.JPanel {
               stopRace();
               //timerCaption.setVisible(false);              
             } else {
+
+              try {
+                if (VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1) {
+                  if (mainForm.invateGroup == null || mainForm.invateGroup.stage.ID != td.group.stage.ID
+                          || mainForm.invateGroup.GROUP_INDEX != td.group.GROUP_INDEX) 
+                  
+                  {
+                    JOptionPane.showMessageDialog(mainForm, "Please Invate the Group " + td.group.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                  }
+                }
+              } catch (Exception ein) {
+              }
 
               if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to re-flight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
@@ -488,7 +501,7 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
                 mainForm.activeGroup = td.group;
-                mainForm.invateGroup = null;
+                //mainForm.invateGroup = null;
                 td.group.stageTab = StageTab.this;
                 for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;

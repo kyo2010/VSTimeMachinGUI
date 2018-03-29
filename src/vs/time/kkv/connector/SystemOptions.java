@@ -36,6 +36,7 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.WEB_PORT.setText(VS_SETTING.getParam(mainForm.con, "WEB_PORT", "80"));      
     singelton.WebServiceStartOnRun.setSelected( VS_SETTING.getParam(mainForm.con, "START_HTTPD_ON_RUN", 0)==1?true:false );
     singelton.jcTTS_API.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
+    singelton.checkRaceGroup.setSelected( VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1)==1?true:false );    
     
     SystemOptions th = singelton;
     Point p = mainForm.getLocationOnScreen();
@@ -65,6 +66,7 @@ public class SystemOptions extends javax.swing.JFrame {
     bHTTPServer = new javax.swing.JButton();
     jLabel2 = new javax.swing.JLabel();
     jcTTS_API = new javax.swing.JComboBox<>();
+    checkRaceGroup = new javax.swing.JCheckBox();
 
     setTitle("System Settings");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -130,6 +132,9 @@ public class SystemOptions extends javax.swing.JFrame {
     jcTTS_API.setModel(new javax.swing.DefaultComboBoxModel(TextToSpeachFactory.getTTSNames()));
     jcTTS_API.setName(""); // NOI18N
 
+    checkRaceGroup.setText("Check : Race Group = Invate Group");
+    checkRaceGroup.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -138,6 +143,9 @@ public class SystemOptions extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(checkRaceGroup)
+            .addGap(0, 0, Short.MAX_VALUE))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
               .addGroup(layout.createSequentialGroup()
@@ -168,7 +176,9 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(checkRaceGroup)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -187,7 +197,10 @@ public class SystemOptions extends javax.swing.JFrame {
     
     VS_SETTING.setParam(mainForm.con, "WEB_PORT", ""+WEB_PORT_INT);
     VS_SETTING.setParam(mainForm.con, "START_HTTPD_ON_RUN", ""+ (WebServiceStartOnRun.isSelected() ? 1 : 0));
-    VS_SETTING.setParam(mainForm.con, "TTS_API", ""+jcTTS_API.getSelectedItem());
+    VS_SETTING.setParam(mainForm.con, "TTS_API", ""+jcTTS_API.getSelectedItem());    
+    VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", ""+ (checkRaceGroup.isSelected() ? 1 : 0));       
+    
+    
     mainForm.speaker.reset();
     
     setVisible(false);
@@ -228,6 +241,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JTextField WEB_PORT;
   private javax.swing.JCheckBox WebServiceStartOnRun;
   private javax.swing.JButton bHTTPServer;
+  private javax.swing.JCheckBox checkRaceGroup;
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
   private javax.swing.JLabel jLabel1;
