@@ -1,6 +1,13 @@
  {
 "data":[
    {
+    "id" : "22",
+    "name" : "2018.04.14 DH:Aurora",
+    "date_event" : "14.04.2018",
+    "pilots" : [
+    ]
+   }
+  ,{
     "id" : "21",
     "name" : "2018.03.29 «Кубок по микро дрон-рейсингу. Весна 2018» в рамках Международной выставки 3 день ",
     "date_event" : "29.03.2018",
@@ -13,6 +20,15 @@
         "transID" : "1",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
+       }
+      ,{
+        "id" : "38",
+        "osd_name" : "Daniel_orlov",
+        "fname" : "Daniel",
+        "lname" : "Orlov",
+        "transID" : "1304",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1313-03-45_Dany_orlov.jpeg"
        }
       ,{
         "id" : "33",
@@ -46,7 +62,7 @@
         "osd_name" : "RUStepan",
         "fname" : "Степан",
         "lname" : "Глухов",
-        "transID" : "",
+        "transID" : "1273",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
        }
@@ -92,8 +108,8 @@
         "fname" : "Александр",
         "lname" : "Кунашук",
         "transID" : "1329",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1414-03-56_Modelist017.jpg"
        }
       ,{
         "id" : "27",
@@ -154,7 +170,7 @@
         "osd_name" : "Gavrfpv",
         "fname" : "Гавриил",
         "lname" : "Щицын ",
-        "transID" : "",
+        "transID" : "1289",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
        }
@@ -270,8 +286,8 @@
         "fname" : "Александр",
         "lname" : "Кунашук",
         "transID" : "1329",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1414-03-56_Modelist017.jpg"
        }
       ,{
         "id" : "28",
@@ -323,7 +339,7 @@
         "osd_name" : "Gavrfpv",
         "fname" : "Гавриил",
         "lname" : "Щицын ",
-        "transID" : "",
+        "transID" : "1289",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
        }
@@ -366,7 +382,7 @@
         "osd_name" : "RUStepan",
         "fname" : "Степан",
         "lname" : "Глухов",
-        "transID" : "",
+        "transID" : "1273",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
        }
@@ -420,7 +436,7 @@
         "osd_name" : "Gavrfpv",
         "fname" : "Гавриил",
         "lname" : "Щицын ",
-        "transID" : "",
+        "transID" : "1289",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
        }

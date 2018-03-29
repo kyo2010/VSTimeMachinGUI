@@ -53,7 +53,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int CHECK_FOR_RACE = 0;
   public VSColor color = null;
 
-  private VS_REGISTRATION registration = null;   //  NOT_DETECTED
+  public VS_REGISTRATION registration = null;   //  NOT_DETECTED
 
   public int wins = 0;
   public int loses = 0;

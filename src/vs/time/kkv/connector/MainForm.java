@@ -1076,7 +1076,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
             user = usr;
             break;
-          }
+          }          
         }
         if (user == null) { // find user by TransID
           for (VS_STAGE_GROUPS usr : activeGroup.users) {            

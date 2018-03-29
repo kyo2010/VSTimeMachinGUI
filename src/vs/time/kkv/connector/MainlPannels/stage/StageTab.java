@@ -450,6 +450,10 @@ public class StageTab extends javax.swing.JPanel {
               user.CHECK_FOR_RACE = 2;
               user.FIRST_LAP = 0;
               user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
+              try{
+                user.registration = null;
+                user.loadRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+              }catch(Exception ein){}
             }
             pleasuUpdateTable = true;
             checkerCycle = 0;

@@ -65,21 +65,21 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     }
     jcbSites.setModel(new javax.swing.DefaultComboBoxModel(list));
     jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
-    
+
     jcbSites.addItemListener(new ItemListener() {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-          //JOptionPane.showMessageDialog(null, "sel:"+jcbSites.getSelectedItem()); 
-          siteSelected();
-        }
-      });
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        //JOptionPane.showMessageDialog(null, "sel:"+jcbSites.getSelectedItem()); 
+        siteSelected();
+      }
+    });
   }
 
   static RegistrationImportForm singelton = null;
 
   public static RegistrationImportForm init(RegistrationTab regTab) {
     if (singelton == null) {
-      singelton = new RegistrationImportForm(regTab);      
+      singelton = new RegistrationImportForm(regTab);
     }
 
     RegistrationImportForm th = singelton;
@@ -235,26 +235,37 @@ public class RegistrationImportForm extends javax.swing.JFrame {
               if (race.users != null) {
                 Connection con = regTab.mainForm.con;
                 for (VS_REGISTRATION pilot : race.users) {
-                  
+
                   pilot.VS_USER_NAME = pilot.VS_USER_NAME.trim();
                   pilot.FIRST_NAME = pilot.FIRST_NAME.trim();
                   pilot.SECOND_NAME = pilot.SECOND_NAME.trim();
-                  
+
                   Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(con, "VS_USER_NAME", "VS_RACE_ID=?", regTab.mainForm.activeRace.RACE_ID);
+
+                  /*if (pilot.VS_USER_NAME.trim().equalsIgnoreCase("Daniel_orlov")){
+                    int y = 0;
+                  }*/
                   
                   VS_REGISTRATION reg = null;
-                  for (VS_REGISTRATION reg1 : regs.values()){
-                    if (reg1.VS_USER_NAME.trim().equalsIgnoreCase(pilot.VS_USER_NAME.trim())){
+                  for (VS_REGISTRATION reg1 : regs.values()) {
+                    if (reg1.VS_USER_NAME.trim().equalsIgnoreCase(pilot.VS_USER_NAME.trim())) {
                       reg = reg1;
                       break;
                     }
+                    try {
+                      if (!"".equalsIgnoreCase(reg1.WEB_SID) && reg1.WEB_SID.trim().equalsIgnoreCase(pilot.WEB_SID.trim())) {
+                        reg = reg1;
+                        break;
+                      }
+                    } catch (Exception ein) {
+                    }
                   }
-                  
+
                   //VS_REGISTRATION reg = regs.get(pilot.VS_USER_NAME);
                   if (reg == null) {
                     try {
                       pilot.VS_RACE_ID = regTab.mainForm.activeRace.RACE_ID;
-                      pilot.NUM = VS_REGISTRATION.maxNum(con,  pilot.VS_RACE_ID) + 1;
+                      pilot.NUM = VS_REGISTRATION.maxNum(con, pilot.VS_RACE_ID) + 1;
                       if (pilot.VS_TRANS1 != 0) {
                         for (VS_REGISTRATION reg1 : regs.values()) {
                           if (reg1.VS_TRANS1 == pilot.VS_TRANS1 || reg1.VS_TRANS2 == pilot.VS_TRANS1
@@ -268,17 +279,17 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
                         count_updated_photos_pilots++;
                       }
-                      
+
                       VS_REGISTRATION.dbControl.insert(con, pilot);
-                      VS_USERS global_user = VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);                      
+                      VS_USERS global_user = VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
 
                       count_export_pilots++;
                     } catch (Exception e) {
 
                     }
                   } else {
-                    if ( pilot.VS_TRANS1!=0 &&
-                         (reg.VS_TRANS1!=pilot.VS_TRANS1 || reg.VS_TRANS2!=pilot.VS_TRANS2 || reg.VS_TRANS3!=pilot.VS_TRANS3)){
+                    if (pilot.VS_TRANS1 != 0
+                            && (reg.VS_TRANS1 != pilot.VS_TRANS1 || reg.VS_TRANS2 != pilot.VS_TRANS2 || reg.VS_TRANS3 != pilot.VS_TRANS3)) {
                       /*pilot.ID = reg.ID;
                       pilot.VS_RACE_ID = reg.VS_RACE_ID;
                       if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {                        
@@ -287,19 +298,19 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                         pilot.PHOTO = reg.PHOTO;
                         VS_REGISTRATION.dbControl.update(con, pilot);
                       }*/
-                      reg.VS_TRANS1=pilot.VS_TRANS1;
-                      reg.VS_TRANS2=pilot.VS_TRANS2;
-                      reg.VS_TRANS3=pilot.VS_TRANS3;
-                      VS_REGISTRATION.dbControl.update(con, reg);                      
-                    }
+                      reg.VS_TRANS1 = pilot.VS_TRANS1;
+                      reg.VS_TRANS2 = pilot.VS_TRANS2;
+                      reg.VS_TRANS3 = pilot.VS_TRANS3;
+                      VS_REGISTRATION.dbControl.update(con, reg);
+                    }                    
                     if (chbUpdatePhoto.isSelected()) {
                       //if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {
-                        pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
-                        reg.PHOTO = pilot.PHOTO;
-                        reg.WEB_PHOTO_URL = pilot.WEB_PHOTO_URL;
-                        count_updated_photos_pilots++;
-                        VS_REGISTRATION.dbControl.update(con, reg);
-                        VS_REGISTRATION.updateGlobalUserPHOTO(con, reg);
+                      pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
+                      reg.PHOTO = pilot.PHOTO;
+                      reg.WEB_PHOTO_URL = pilot.WEB_PHOTO_URL;
+                      count_updated_photos_pilots++;
+                      VS_REGISTRATION.dbControl.update(con, reg);
+                      VS_REGISTRATION.updateGlobalUserPHOTO(con, reg);
                       //}
 
                     }
@@ -315,8 +326,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
 
           regTab.refreshData();
-          JOptionPane.showMessageDialog(this, "Export pilots : " + count_export_pilots+"\n"+
-                                              count_updated_photos_pilots+" photos were updated", "Information", JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(this, "Export pilots : " + count_export_pilots + "\n"
+                  + count_updated_photos_pilots + " photos were updated", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
       } catch (Exception e) {
         MainForm._toLog(e);
@@ -344,7 +355,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           int selIndex = 0;
           for (VS_RACE race : races) {
             list[index] = race.RACE_NAME.trim();
-            if (setAutoLoadEvent!=null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME.trim())) {
+            if (setAutoLoadEvent != null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME.trim())) {
               selIndex = index;
             }
             index++;
