@@ -98,7 +98,7 @@ public class VS_STAGE_GROUPS implements Transferable {
       if (registration == null && REG_ID != 0) {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and ID=?", raceID, REG_ID);
       }
-      if (registration == null && REG_ID == -1) {
+      if (registration == null && (REG_ID == -1 || REG_ID==0) ) {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and VS_USER_NAME=?", raceID, PILOT.trim());
         if (registration!=null) {
           REG_ID = registration.ID;

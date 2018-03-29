@@ -58,12 +58,15 @@ public class TVTranslationServlet extends HttpServlet {
       String webInfo = "";
       try{      
       if (pilot != null) {
+        if (pilot.PILOT.equals("KKV")){
+          int y = 0;
+        }
         reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
         int pWidth = 240;
         if (isRace) {
           pWidth = 150;
         }
-        if (!reg.PHOTO.equalsIgnoreCase("")) {
+        if (reg!=null && !reg.PHOTO.equalsIgnoreCase("")) {
           webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
         } else {
 

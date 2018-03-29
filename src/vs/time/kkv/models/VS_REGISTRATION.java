@@ -79,7 +79,7 @@ public class VS_REGISTRATION {
     return VS_USER_NAME;
   } 
   
-  public static void updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr){
+  public static VS_USERS updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr){
     // Creating global user  
     VS_USERS global_user = null;
     try{
@@ -141,6 +141,6 @@ public class VS_REGISTRATION {
           System.out.println(e.error+" "+e.details);        
         }catch(Exception e){}  
       }
-  
+    return global_user;
   }
 }

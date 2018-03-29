@@ -85,8 +85,10 @@ public abstract class IRegSite {
         }
         fileName = newFileName;
       } catch (MalformedURLException e) {
+        MainForm._toLog("url error:"+url);
         MainForm._toLog(e);
       } catch (IOException e) {
+        MainForm._toLog("url error:"+url);
         MainForm._toLog(e);
       } finally {
         if (outStream != null) {

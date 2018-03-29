@@ -60,6 +60,15 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
       ,{
+        "id" : "30",
+        "osd_name" : "X555",
+        "fname" : "Кирилл",
+        "lname" : "Задремайлов",
+        "transID" : "1324",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1414-03-20_X555.JPG"
+       }
+      ,{
         "id" : "18",
         "osd_name" : "RUBOT",
         "fname" : "Роман",
@@ -76,6 +85,15 @@
         "transID" : "",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
+       }
+      ,{
+        "id" : "35",
+        "osd_name" : "Modelist017",
+        "fname" : "Александр",
+        "lname" : "Кунашук",
+        "transID" : "1329",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
        }
       ,{
         "id" : "27",
@@ -100,7 +118,7 @@
         "osd_name" : "maloii",
         "fname" : "Александр",
         "lname" : "Сорокин",
-        "transID" : "66",
+        "transID" : "1282",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
        }
@@ -121,6 +139,24 @@
         "transID" : "VS Team",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1111-03-03_whitewind.jpg"
+       }
+      ,{
+        "id" : "36",
+        "osd_name" : "VictorBRRC",
+        "fname" : "Виктор",
+        "lname" : "Шуньков",
+        "transID" : "1332",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1515-03-33_shunkov.jpg"
+       }
+      ,{
+        "id" : "19",
+        "osd_name" : "Gavrfpv",
+        "fname" : "Гавриил",
+        "lname" : "Щицын ",
+        "transID" : "",
+        "PICTURE_OK" : "1",
+        "PICTURE" : ""
        }
     ]
    }
@@ -251,7 +287,7 @@
         "osd_name" : "maloii",
         "fname" : "Александр",
         "lname" : "Сорокин",
-        "transID" : "66",
+        "transID" : "1282",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
        }
@@ -278,7 +314,7 @@
         "osd_name" : "VictorBRRC",
         "fname" : "Виктор",
         "lname" : "Шуньков",
-        "transID" : "",
+        "transID" : "1332",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1515-03-33_shunkov.jpg"
        }

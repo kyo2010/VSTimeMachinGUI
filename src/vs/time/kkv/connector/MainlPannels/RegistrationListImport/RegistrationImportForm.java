@@ -23,6 +23,7 @@ import vs.time.kkv.connector.Utils.TTS.TextToSpeachFactory;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_SETTING;
+import vs.time.kkv.models.VS_USERS;
 
 /**
  *
@@ -253,6 +254,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                   if (reg == null) {
                     try {
                       pilot.VS_RACE_ID = regTab.mainForm.activeRace.RACE_ID;
+                      pilot.NUM = VS_REGISTRATION.maxNum(con,  pilot.VS_RACE_ID) + 1;
                       if (pilot.VS_TRANS1 != 0) {
                         for (VS_REGISTRATION reg1 : regs.values()) {
                           if (reg1.VS_TRANS1 == pilot.VS_TRANS1 || reg1.VS_TRANS2 == pilot.VS_TRANS1
@@ -268,7 +270,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                       }
                       
                       VS_REGISTRATION.dbControl.insert(con, pilot);
-                      VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
+                      VS_USERS global_user = VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);                      
 
                       count_export_pilots++;
                     } catch (Exception e) {

@@ -138,6 +138,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       _mainForm.log.writeFile(e);
     }
   }
+  
+  public static void _toLog(String msg) {
+    if (_mainForm != null) {
+      _mainForm.log.writeFile(msg);
+    }
+  }
 
   public void toLog(Exception e) {
     log.writeFile(e);
