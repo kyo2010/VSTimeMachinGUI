@@ -106,7 +106,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int RACE_TYPE_WHOOP = 0;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 2;
-  public final static String[] RACE_TYPES = new String[]{"Whoop Race", "Double elemenation", "Single elemination"};
+  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race"};
 
   public static final int SCORE_WHOOP_NONE = 0;
   public static final int SCORE_WHOOP_WON = 1;
