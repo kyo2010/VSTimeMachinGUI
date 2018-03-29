@@ -228,7 +228,8 @@ class StageTabTreeTransferHandler extends TransferHandler {
           if (usr == node) {
             node.GID = -1;
             VS_STAGE_GROUPS.dbControl.insert(stageTab.mainForm.con, usr);
-          } else {
+          } else {        
+            //System.out.println("VS_STAGE_GROUPS - tree / node");
             VS_STAGE_GROUPS.dbControl.update(stageTab.mainForm.con, usr);
           }
           usr.parent = parent;

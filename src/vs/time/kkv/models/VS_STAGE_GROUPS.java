@@ -182,6 +182,9 @@ public class VS_STAGE_GROUPS implements Transferable {
         LAPS = 0;
         boolean all_laps_is_exist = false;
         try {
+          if (stage.ID==114){
+            int y = 0;
+          }          
           boolean hasSkip = false;
           for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
@@ -220,6 +223,8 @@ public class VS_STAGE_GROUPS implements Transferable {
           }
         }
         IS_RECALULATED = 1;
+        //System.out.println("VS_STAGE_GROUPS - recal lap");
+        //System.out.println(GID+" "+PILOT+" "+stage.CAPTION+" "+RACE_TIME);
         VS_STAGE_GROUPS.dbControl.update(conn, this);
       }
     } catch (Exception e) {

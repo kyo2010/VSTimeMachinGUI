@@ -168,6 +168,7 @@ public class VS_STAGE_GROUP implements Transferable {
         count++;
         SCORE--;
         try {
+          //System.out.println("VS_STAGE_GROUPS - set win/lose2");
           VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
         } catch (Exception e) {
           MainForm._toLog(e);

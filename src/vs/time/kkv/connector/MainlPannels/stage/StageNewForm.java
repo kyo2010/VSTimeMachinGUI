@@ -61,6 +61,10 @@ public class StageNewForm extends javax.swing.JFrame {
     form.setVisible(false);
     form.stage = stage;
     form.prepareForm();
+    form.setTitle("New Stage");
+    if (stage!=null){
+      form.setTitle("Edit Stage "+stage.CAPTION+" ["+stage.ID+"] "+stage.RACE_ID);
+    }
 
     return form;
   }
@@ -380,7 +384,7 @@ public class StageNewForm extends javax.swing.JFrame {
                   .addComponent(jcbColor6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                   .addComponent(jcbColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                   .addComponent(jcbColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGap(0, 167, Short.MAX_VALUE))))
+            .addGap(0, 149, Short.MAX_VALUE))))
     );
     stagePanelLayout.setVerticalGroup(
       stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -652,7 +656,7 @@ public class StageNewForm extends javax.swing.JFrame {
       }
       stage.PARENT_STAGE = parentStage.getSelectedItem().toString();      
       try {
-        parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=?", stage.PARENT_STAGE);
+        parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
       } catch (Exception e) {
       }
       if (parent_stage!=null){

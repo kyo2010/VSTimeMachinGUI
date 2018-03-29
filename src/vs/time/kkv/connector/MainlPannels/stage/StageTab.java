@@ -205,6 +205,7 @@ public class StageTab extends javax.swing.JPanel {
               if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
                 user.CHECK_FOR_RACE = 1;
                 try {
+                  //System.out.println("VS_STAGE_GROUPS - check timer");
                   VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
                 } catch (Exception ein) {
                 }
@@ -870,11 +871,11 @@ public class StageTab extends javax.swing.JPanel {
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
-          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
-            for (VS_STAGE_GROUPS usr : groups) {
+          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {            
+            /*for (VS_STAGE_GROUPS usr : groups) {
               usr.IS_FINISHED = 1;
               usr.recalculateLapTimes(mainForm.con, stage, true);
-            }
+            }*/
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE /*&& parent_stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT*/) {
             //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
@@ -1017,7 +1018,7 @@ public class StageTab extends javax.swing.JPanel {
             VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
           }
         }
-
+        System.out.println("Satge has been created : "+stage.ID);
         stage.IS_GROUP_CREATED = 1;
         VS_STAGE.dbControl.update(mainForm.con, stage);
       }
