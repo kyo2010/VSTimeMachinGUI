@@ -58,9 +58,9 @@ public class TVTranslationServlet extends HttpServlet {
       String webInfo = "";
       try{      
       if (pilot != null) {
-        if (pilot.PILOT.equals("KKV")){
-          int y = 0;
-        }
+        //if (pilot.PILOT.equals("RUBOT")){
+        //  int y = 0;
+        //}
         reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
         int pWidth = 240;
         if (isRace) {
@@ -138,14 +138,14 @@ public class TVTranslationServlet extends HttpServlet {
         channel = channels[i];
       }
 
-      if (group != null && group.users != null && group.users.size() > i) {
+      //if (group != null && group.users != null && group.users.size() > i) {
         for (VS_STAGE_GROUPS usr : group.users) {
           if (usr.CHANNEL.equalsIgnoreCase(channel)) {
             pilot = usr;
             break;
           }
         }
-      }
+      //}
       pInfos[i] = new PilotInfo(i + 1, pilot);
     }
 
