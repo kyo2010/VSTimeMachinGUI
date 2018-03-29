@@ -138,7 +138,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       _mainForm.log.writeFile(e);
     }
   }
-  
+
   public static void _toLog(String msg) {
     if (_mainForm != null) {
       _mainForm.log.writeFile(msg);
@@ -161,12 +161,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public Connection con = null;
   public SpeekUtil speaker = null;
   public Beep beep = null;
-  
+
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public VS_STAGE_GROUP invateGroup = null;
-  public VS_STAGE activeStage = null;  
-    
+  public VS_STAGE activeStage = null;
+
   public RegistrationTab regForm = null;
   public long raceTime = 0;
   public long unRaceTime = Calendar.getInstance().getTimeInMillis();
@@ -184,7 +184,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
 
     activeRace = race;
-    setTitle("Race - "+race.RACE_NAME);
+    setTitle("Race - " + race.RACE_NAME);
     // Open Tabs
     tabListenerEnabled = false;
     tabbedPanel.removeAll();
@@ -253,18 +253,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
    */
   public MainForm(String caption) {
     _mainForm = this;
-    
+
     try {
       UIManager.setLookAndFeel(
               UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
     }
-    
+
     setTitle(caption);
     initComponents();
-    
+
     bRefreshActionPerformed(null);
-    
+
     setStateMenu(false);
     addWindowListener(new WindowAdapter() {
       @Override
@@ -287,7 +287,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     //ports.addItem("WLAN");
     //new ArrayList<String>({ new String[]{"m1","m2"});
-
     try {
       con = DBModelTest.getConnectionForTest();
 
@@ -340,7 +339,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     TimerForm.init(this).setVisible(true);
 
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
-      SystemOptions.runWebServer(this,true);
+      SystemOptions.runWebServer(this, true);
     }
 
     try {
@@ -349,7 +348,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (UnknownHostException e) {
       toLog(e);
       //e.printStackTrace();
-    }    
+    }
     //bRefresh.;
   }
 
@@ -794,13 +793,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     invateGroup = null;
     activeStage = null;
     Object tabObject = evt.getSource();
-    if (tabObject instanceof JTabbedPane){
+    if (tabObject instanceof JTabbedPane) {
       Object obj = tabbedPanel.getSelectedComponent();
-      if (obj!=null && obj instanceof StageTab){    
+      if (obj != null && obj instanceof StageTab) {
         StageTab tab = (StageTab) obj;
-        if (tab.jchTV.isSelected())
+        if (tab.jchTV.isSelected()) {
           activeStage = tab.stage;
-      }  
+        }
+      }
     }
   }//GEN-LAST:event_tabbedPanelStateChanged
 
@@ -811,7 +811,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
     if (httpServer == null) {
-      SystemOptions.runWebServer(this,true);
+      SystemOptions.runWebServer(this, true);
     }
 
     String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
@@ -855,26 +855,28 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void bRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshActionPerformed
     // TODO add your handling code here:    
-   ports.removeAllItems();
-   Pattern pattern = Pattern.compile("");
-   if(SerialNativeInterface.getOsType() == 3) pattern = Pattern.compile("tty.*USB*");
-   String portNames[] = SerialPortList.getPortNames(pattern);
-   for (String portName : portNames){
-     ports.addItem(portName);
-   }  
-   ports.addItem("WLAN");    
-    
-   //ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
-   //ports.addItem("WLAN");
+    ports.removeAllItems();
+    Pattern pattern = Pattern.compile("");
+    if (SerialNativeInterface.getOsType() == 3) {
+      pattern = Pattern.compile("tty.*USB*");
+    }
+    String portNames[] = SerialPortList.getPortNames(pattern);
+    for (String portName : portNames) {
+      ports.addItem(portName);
+    }
+    ports.addItem("WLAN");
+
+    //ports.setModel(new javax.swing.DefaultComboBoxModel(jssc.SerialPortList.getPortNames()));
+    //ports.addItem("WLAN");
   }//GEN-LAST:event_bRefreshActionPerformed
 
   private void jMenuItemTVMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTVMonitorActionPerformed
     // TODO add your handling code here:
     if (httpServer == null) {
-      SystemOptions.runWebServer(this,true);
+      SystemOptions.runWebServer(this, true);
     }
 
-    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80)+"/tv.htm";
+    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80) + "/tv.htm";
     System.out.println("open url:" + uri);
 
     //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
@@ -1036,11 +1038,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       log.writeFile(data, true);
     }
     if (lap != null) {
-      this.lastTranponderID = lap.transponderID;      
+      this.lastTranponderID = lap.transponderID;
       long timeS = Calendar.getInstance().getTimeInMillis();
-      long time =  lap.time;
+      long time = lap.time;
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
-      if (Math.abs(time - timeS) > 1000*60*60) {
+      if (Math.abs(time - timeS) > 1000 * 60 * 60) {
         time = timeS;//lap.time;
         System.out.println("Big gap between Time");
       }
@@ -1059,7 +1061,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
       if (transponderListener != null) {
-        transponderListener.newTransponder(lap.transponderID,usr_reg);
+        transponderListener.newTransponder(lap.transponderID, usr_reg);
       }
 
       if (activeGroup == null) {
@@ -1076,11 +1078,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
             user = usr;
             break;
-          }          
+          }
         }
         if (user == null) { // find user by TransID
-          for (VS_STAGE_GROUPS usr : activeGroup.users) {            
-            if (usr.isTransponderForUser(con,activeRace.RACE_ID,lap.transponderID)) {
+          for (VS_STAGE_GROUPS usr : activeGroup.users) {
+            if (usr.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
               user = usr;
               break;
             }
@@ -1099,49 +1101,68 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                 global_user.FIRST_NAME = userName;
                 global_user.SECOND_NAME = userName;
                 global_user.WEB_SID = "";
-                global_user.WEB_SYSTEM = "";                
+                global_user.WEB_SYSTEM = "";
                 VS_USERS.dbControl.insert(con, global_user);
               }
-              usr_reg = new VS_REGISTRATION();
-              usr_reg.VS_TRANS1 = lap.transponderID;
-              usr_reg.VS_USER_NAME = global_user.VS_NAME;
-              usr_reg.VS_SOUND_EFFECT = global_user.VS_SOUND_EFFECT;
-              usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
-              usr_reg.IS_ACTIVE = 0;
-              usr_reg.PILOT_TYPE = 0;
-              usr_reg.FIRST_NAME = global_user.FIRST_NAME;
-              usr_reg.SECOND_NAME = global_user.SECOND_NAME;
-              usr_reg.WEB_SYSTEM = global_user.WEB_SYSTEM;
-              usr_reg.WEB_SID = global_user.WEB_SID;
-              usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID) + 1;
-              VS_REGISTRATION.dbControl.insert(con, usr_reg);
-            }
-            user = new VS_STAGE_GROUPS();
-            user.GROUP_NUM = activeGroup.GROUP_NUM;
-            user.STAGE_ID = activeGroup.stage.ID;
-            user.PILOT = usr_reg.VS_USER_NAME;
-            user.parent = activeGroup;
-            user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM) + 1;
-            user.isError = 2;
-            user.VS_PRIMARY_TRANS = lap.transponderID;
-            user.CHANNEL = "A1";
-            VS_STAGE_GROUPS.dbControl.insert(con, user);
-            activeGroup.users.add(user);
-            if (activeGroup.stageTab != null) {
               try {
-                activeGroup.stageTab.pleasuUpdateTree = true;
+                usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? AND VS_USER_NAME=?", activeRace.RACE_ID, global_user.VS_NAME);
               } catch (Exception ein) {
-                ein.printStackTrace();
+              }
+              if (usr_reg == null) {
+                usr_reg = new VS_REGISTRATION();
+                usr_reg.VS_TRANS1 = lap.transponderID;
+                usr_reg.VS_USER_NAME = global_user.VS_NAME;
+                usr_reg.VS_SOUND_EFFECT = global_user.VS_SOUND_EFFECT;
+                usr_reg.VS_RACE_ID = activeGroup.stage.RACE_ID;
+                usr_reg.IS_ACTIVE = 0;
+                usr_reg.PILOT_TYPE = 0;
+                usr_reg.FIRST_NAME = global_user.FIRST_NAME;
+                usr_reg.SECOND_NAME = global_user.SECOND_NAME;
+                usr_reg.WEB_SYSTEM = global_user.WEB_SYSTEM;
+                usr_reg.WEB_SID = global_user.WEB_SID;
+                usr_reg.NUM = VS_REGISTRATION.maxNum(con, usr_reg.VS_RACE_ID) + 1;
+                VS_REGISTRATION.dbControl.insert(con, usr_reg);
               }
             }
-            if (activeGroup.stageTab != null) {
-              try {
-                activeGroup.stageTab.stageTableAdapter.loadData();
-                activeGroup.stageTab.pleasuUpdateTable = true;
-              } catch (Exception ein) {
-                ein.printStackTrace();
+
+            try {
+              for (VS_STAGE_GROUPS usr : activeGroup.users) {
+                if (usr.PILOT.equals(usr_reg.VS_USER_NAME)) {
+                  user = usr;
+                  usr.registration = usr_reg;
+                  break;
+                }
               }
-            }            
+            } catch (Exception ein) {
+            }
+            if (user == null) {
+              user = new VS_STAGE_GROUPS(); 
+              user.GROUP_NUM = activeGroup.GROUP_NUM;
+              user.STAGE_ID = activeGroup.stage.ID;
+              user.PILOT = usr_reg.VS_USER_NAME;
+              user.parent = activeGroup;
+              user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM) + 1;
+              user.isError = 2;
+              user.VS_PRIMARY_TRANS = lap.transponderID;
+              user.CHANNEL = "A1";
+              VS_STAGE_GROUPS.dbControl.insert(con, user);
+              activeGroup.users.add(user);
+              if (activeGroup.stageTab != null) {
+                try {
+                  activeGroup.stageTab.pleasuUpdateTree = true;
+                } catch (Exception ein) {
+                  ein.printStackTrace();
+                }
+              }
+              if (activeGroup.stageTab != null) {
+                try {
+                  activeGroup.stageTab.stageTableAdapter.loadData();
+                  activeGroup.stageTab.pleasuUpdateTable = true;
+                } catch (Exception ein) {
+                  ein.printStackTrace();
+                }
+              }
+            }
           } catch (Exception e) {
             _toLog(e);
           }
