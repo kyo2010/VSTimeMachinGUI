@@ -266,7 +266,10 @@ public class StageTab extends javax.swing.JPanel {
 
     timerCaption.setVisible(false);
 
-    if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+    if ( stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || 
+         stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT || 
+         stage.STAGE_TYPE==MainForm.STAGE_RACE_REPORT) 
+    {
       isOneTable = true;
     }
 
@@ -474,8 +477,7 @@ public class StageTab extends javax.swing.JPanel {
               try {
                 if (VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1) {
                   if (mainForm.invateGroup == null || mainForm.invateGroup.stage.ID != td.group.stage.ID
-                          || mainForm.invateGroup.GROUP_INDEX != td.group.GROUP_INDEX) 
-                  
+                          || mainForm.invateGroup.GROUP_INDEX != td.group.GROUP_INDEX)                   
                   {
                     JOptionPane.showMessageDialog(mainForm, "Please Invate the Group " + td.group.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
                     return;
@@ -568,9 +570,7 @@ public class StageTab extends javax.swing.JPanel {
           }
         }
       }
-
       public void mouseReleased(MouseEvent e) {
-
       }
 
     });
@@ -839,7 +839,6 @@ public class StageTab extends javax.swing.JPanel {
         try //try statement 
         {
           Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName + "\"");   //open the file chart.pdf 
-
         } catch (Exception e) //catch any exceptions here 
         {
           System.out.println("Error" + e);  //print the error 
@@ -865,6 +864,7 @@ public class StageTab extends javax.swing.JPanel {
           }
         }
 
+        if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) return;
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
 
         if (parent_stage != null) {

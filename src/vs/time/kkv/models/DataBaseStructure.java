@@ -80,6 +80,9 @@ public class DataBaseStructure {
     new DBAddonStructure(2.9, "ALTER TABLE VS_RACE ADD WEB_SYSTEM_CAPTION TRXT NOT NULL DEFAULT '';"), 
         
     new DBAddonStructure(3.0, "ALTER TABLE VS_REGISTRATION ADD WEB_PHOTO_URL  TEXT NOT NULL DEFAULT '';"),         
+    
+    new DBAddonStructure(3.1, "ALTER TABLE VS_USERS ADD REGION TEXT NOT NULL DEFAULT '';"), 
+    new DBAddonStructure(3.1, "ALTER TABLE VS_REGISTRATION ADD REGION TEXT NOT NULL DEFAULT '';"),     
   };
 
   public static class DBAddonStructure {

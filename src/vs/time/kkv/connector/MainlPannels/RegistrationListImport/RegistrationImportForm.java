@@ -302,6 +302,13 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                       reg.VS_TRANS2 = pilot.VS_TRANS2;
                       reg.VS_TRANS3 = pilot.VS_TRANS3;
                       VS_REGISTRATION.dbControl.update(con, reg);
+                    }
+                    if (!pilot.FIRST_NAME.equals(reg.FIRST_NAME) || !pilot.SECOND_NAME.equals(reg.SECOND_NAME) || 
+                           !pilot.REGION.equals(reg.REGION) ){
+                      reg.FIRST_NAME = pilot.FIRST_NAME;
+                      reg.SECOND_NAME = pilot.SECOND_NAME;
+                      reg.REGION = pilot.REGION;
+                      VS_REGISTRATION.dbControl.update(con, reg);
                     }                    
                     if (chbUpdatePhoto.isSelected()) {
                       //if (pilot.PHOTO != null && !pilot.PHOTO.equals("") && !reg.WEB_PHOTO_URL.equals(pilot.WEB_PHOTO_URL)) {

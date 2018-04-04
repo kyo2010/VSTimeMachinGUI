@@ -99,6 +99,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       jcbPilotType.setSelectedIndex(usr.PILOT_TYPE);
       edFirstName.setText(usr.FIRST_NAME);
       edSecondName.setText(usr.SECOND_NAME);
+      edRegion.setText(usr.REGION);
     } else {
       edTransponder.setText("");
       edTransponder2.setText("");
@@ -106,6 +107,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       edUser.setText("");
       edFirstName.setText("");
       edSecondName.setText("");
+      edRegion.setText("");
       chEnabledSound.setSelected(true);
     }
   }
@@ -124,12 +126,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     edTransponder = new javax.swing.JTextField();
     edUser = new javax.swing.JTextField();
-    chEnabledSound = new javax.swing.JCheckBox();
-    jButton1 = new javax.swing.JButton();
     butPilots = new javax.swing.JButton();
     butUsedLastTransponderID = new javax.swing.JButton();
-    jLabel3 = new javax.swing.JLabel();
-    jcbPilotType = new javax.swing.JComboBox();
     jLabel4 = new javax.swing.JLabel();
     jLabel5 = new javax.swing.JLabel();
     edTransponder2 = new javax.swing.JTextField();
@@ -139,9 +137,15 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     edFirstName = new javax.swing.JTextField();
     edSecondName = new javax.swing.JTextField();
     PHOTO = new vs.time.kkv.connector.MainlPannels.ImageImplement();
+    jLabel8 = new javax.swing.JLabel();
+    edRegion = new javax.swing.JTextField();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
+    jLabel3 = new javax.swing.JLabel();
+    jcbPilotType = new javax.swing.JComboBox();
+    chEnabledSound = new javax.swing.JCheckBox();
+    jButton1 = new javax.swing.JButton();
 
     setTitle("Pilot Card");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -152,17 +156,6 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     jLabel2.setText("OSD name:");
 
     edTransponder.setText("0000");
-
-    chEnabledSound.setText("sound");
-    chEnabledSound.setToolTipText("");
-    chEnabledSound.setAutoscrolls(true);
-
-    jButton1.setText("Speek Name");
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton1ActionPerformed(evt);
-      }
-    });
 
     butPilots.setText("...");
     butPilots.addActionListener(new java.awt.event.ActionListener() {
@@ -177,10 +170,6 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         butUsedLastTransponderIDActionPerformed(evt);
       }
     });
-
-    jLabel3.setText("Pilot type:");
-
-    jcbPilotType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.PILOT_TYPES));
 
     jLabel4.setText("Transponder ID:");
 
@@ -212,6 +201,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       .addGap(0, 143, Short.MAX_VALUE)
     );
 
+    jLabel8.setText("Region:");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -239,19 +230,6 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
             .addComponent(PHOTO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel7)
-              .addComponent(jLabel3))
-            .addGap(33, 33, 33)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(chEnabledSound)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-              .addComponent(edSecondName)))
-          .addGroup(jPanel1Layout.createSequentialGroup()
             .addComponent(jLabel2)
             .addGap(54, 54, 54)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,7 +238,15 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
                 .addComponent(edUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(butPilots, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(153, 153, 153)))))
+                .addGap(153, 153, 153))))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel7)
+              .addComponent(jLabel8))
+            .addGap(33, 33, 33)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(edRegion)
+              .addComponent(edSecondName))))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
@@ -303,10 +289,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           .addComponent(edSecondName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel3)
-          .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton1)
-          .addComponent(chEnabledSound))
+          .addComponent(jLabel8)
+          .addComponent(edRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -345,18 +329,49 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         .addContainerGap())
     );
 
+    jLabel3.setText("Pilot type:");
+
+    jcbPilotType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.PILOT_TYPES));
+
+    chEnabledSound.setText("sound");
+    chEnabledSound.setToolTipText("");
+    chEnabledSound.setAutoscrolls(true);
+
+    jButton1.setText("Speek Name");
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1ActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabel3)
+        .addGap(33, 33, 33)
+        .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(chEnabledSound)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jButton1)
+          .addComponent(chEnabledSound))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -396,6 +411,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       usr.SECOND_NAME = edSecondName.getText();
       usr.VS_SOUND_EFFECT = chEnabledSound.isSelected() ? 1 : 0;
       usr.PILOT_TYPE = jcbPilotType.getSelectedIndex();
+      usr.REGION = edRegion.getText();
       boolean isNew = false;
       if (usr.ID != -1) {
 
@@ -504,6 +520,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         global_user.WEB_SID = usr.WEB_SID;
         global_user.WEB_SYSTEM = usr.WEB_SYSTEM;
         global_user.PHOTO = usr.PHOTO;
+        global_user.REGION = usr.REGION;
         VS_USERS.dbControl.insert(mainForm.con, global_user);
       }
       
@@ -564,6 +581,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           if (user.VSID3!=0) edTransponder3.setText("" + user.VSID3);
           edFirstName.setText("" + user.FIRST_NAME);
           edSecondName.setText("" + user.SECOND_NAME);           
+          edRegion.setText(user.REGION);
           PHOTO.setImage(user.PHOTO);
           PHOTO.isChaged = false;
         }
@@ -635,6 +653,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JButton butUsedLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
   private javax.swing.JTextField edFirstName;
+  private javax.swing.JTextField edRegion;
   private javax.swing.JTextField edSecondName;
   public javax.swing.JTextField edTransponder;
   public javax.swing.JTextField edTransponder2;
@@ -648,6 +667,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
+  private javax.swing.JLabel jLabel8;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JComboBox jcbPilotType;

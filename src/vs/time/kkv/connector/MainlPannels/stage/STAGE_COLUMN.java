@@ -24,6 +24,7 @@ package vs.time.kkv.connector.MainlPannels.stage;
     public static final int CID_LAP = 100;
     public static final int CID_QUAL_STATUS = 110;
     public static final int CID_RACE_STATUS = 120;
+    public static final int CID_REGION = 130;
     
     public String caption;
     public int width;

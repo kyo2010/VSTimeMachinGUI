@@ -57,6 +57,7 @@ public class UserControlForm extends javax.swing.JFrame {
 
   public void prepareForm() {
 
+    edRegion.setText("");    
     setTitle("Global User");
     if (ID != -1) {
       try {
@@ -68,6 +69,7 @@ public class UserControlForm extends javax.swing.JFrame {
         mainForm.error_log.writeFile(e);
         JOptionPane.showMessageDialog(this, "Loading user is error. " + getName().toString(), "Error", JOptionPane.ERROR_MESSAGE);
       }
+      edRegion.setText(usr.REGION);
     }else{
        usr = new VS_USERS();
     }
@@ -104,8 +106,6 @@ public class UserControlForm extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     edTransponder = new javax.swing.JTextField();
     edUser = new javax.swing.JTextField();
-    chEnabledSound = new javax.swing.JCheckBox();
-    jButton1 = new javax.swing.JButton();
     butUseLastTransponderID = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
@@ -116,6 +116,10 @@ public class UserControlForm extends javax.swing.JFrame {
     edUserSecondName = new javax.swing.JTextField();
     edUserFirstName = new javax.swing.JTextField();
     PHOTO = new vs.time.kkv.connector.MainlPannels.ImageImplement();
+    jLabel7 = new javax.swing.JLabel();
+    edRegion = new javax.swing.JTextField();
+    chEnabledSound = new javax.swing.JCheckBox();
+    jButton1 = new javax.swing.JButton();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -129,17 +133,6 @@ public class UserControlForm extends javax.swing.JFrame {
     jLabel2.setText("OSD name:");
 
     edTransponder.setText("0000");
-
-    chEnabledSound.setText("sound");
-    chEnabledSound.setToolTipText("");
-    chEnabledSound.setAutoscrolls(true);
-
-    jButton1.setText("Speek Name");
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton1ActionPerformed(evt);
-      }
-    });
 
     butUseLastTransponderID.setText("Use the last ID");
     butUseLastTransponderID.addActionListener(new java.awt.event.ActionListener() {
@@ -178,6 +171,19 @@ public class UserControlForm extends javax.swing.JFrame {
       .addGap(0, 125, Short.MAX_VALUE)
     );
 
+    jLabel7.setText("Region");
+
+    chEnabledSound.setText("sound");
+    chEnabledSound.setToolTipText("");
+    chEnabledSound.setAutoscrolls(true);
+
+    jButton1.setText("Speek Name");
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1ActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -185,20 +191,18 @@ public class UserControlForm extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(32, 32, 32)
-            .addComponent(chEnabledSound, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(18, 18, 18)
-            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jLabel3)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jLabel4)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(edTransponder3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(edTransponder2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(0, 0, Short.MAX_VALUE))
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addContainerGap()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,14 +211,17 @@ public class UserControlForm extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(edTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(butUseLastTransponderID))
+                .addComponent(butUseLastTransponderID)
+                .addGap(0, 0, Short.MAX_VALUE))
               .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addComponent(jLabel2)
                   .addComponent(jLabel5)
-                  .addComponent(jLabel6))
+                  .addComponent(jLabel6)
+                  .addComponent(jLabel7))
                 .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(edRegion)
                   .addComponent(edUserFirstName)
                   .addComponent(edUserSecondName)
                   .addGroup(jPanel1Layout.createSequentialGroup()
@@ -222,6 +229,12 @@ public class UserControlForm extends javax.swing.JFrame {
                     .addGap(18, 18, Short.MAX_VALUE)
                     .addComponent(PHOTO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
         .addContainerGap())
+      .addGroup(jPanel1Layout.createSequentialGroup()
+        .addGap(41, 41, 41)
+        .addComponent(chEnabledSound, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,8 +271,12 @@ public class UserControlForm extends javax.swing.JFrame {
           .addComponent(edUserSecondName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton1)
-          .addComponent(chEnabledSound))
+          .addComponent(jLabel7)
+          .addComponent(edRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(chEnabledSound)
+          .addComponent(jButton1))
         .addContainerGap())
     );
 
@@ -335,13 +352,14 @@ public class UserControlForm extends javax.swing.JFrame {
       usr.VS_NAME = edUser.getText();
       usr.VS_NAME_UPPER = edUser.getText().toUpperCase();
       usr.VS_SOUND_EFFECT = chEnabledSound.isSelected()?1:0;
+      usr.REGION = edRegion.getText();
       boolean isNew = false;
       if (usr.ID!=-1) {
         VS_USERS.dbControl.update(mainForm.con,usr);        
       } else { 
         isNew  =true;
         VS_USERS.dbControl.insert(mainForm.con, usr);
-      }  
+      }        
       setVisible(false);
       
       // PHOTO           
@@ -448,6 +466,7 @@ public class UserControlForm extends javax.swing.JFrame {
   private javax.swing.JButton bSave;
   private javax.swing.JButton butUseLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
+  private javax.swing.JTextField edRegion;
   private javax.swing.JTextField edTransponder;
   private javax.swing.JTextField edTransponder2;
   private javax.swing.JTextField edTransponder3;
@@ -461,6 +480,7 @@ public class UserControlForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
+  private javax.swing.JLabel jLabel7;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   // End of variables declaration//GEN-END:variables

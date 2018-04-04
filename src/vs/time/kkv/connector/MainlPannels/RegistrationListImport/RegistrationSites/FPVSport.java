@@ -107,7 +107,9 @@ public class FPVSport extends IRegSite {
                  if (trans!=null && trans.length>2)
                    user.VS_TRANS3 = Integer.parseInt(trans[2].trim());
               }catch(Exception ein1){}
-              
+              try{
+                user.REGION = json_pilot.getString("region");
+              }catch(Exception ein1){}
               
             }catch(Exception ein){}
             race.users.add(user);

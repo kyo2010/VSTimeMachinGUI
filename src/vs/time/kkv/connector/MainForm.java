@@ -91,6 +91,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_QUALIFICATION_RESULT = 2;
   public static final int STAGE_RACE = 3;
   public static final int STAGE_RACE_RESULT = 4;
+  public static final int STAGE_RACE_REPORT = 5;
 
   public static final int STAGE_SORT_BY_RACE_TIME = 0;
   public static final int STAGE_SORT_BY_LAP_TIME = 1;
@@ -101,7 +102,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", "Qualification Result", "Race", "Race Result"};
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", 
+                                                          "Qualification Result", "Race", 
+                                                          "Race Result","Race Report"};
 
   public static final int RACE_TYPE_WHOOP = 0;
   public static final int RACE_TYPE_DOUBLE = 1;
@@ -220,6 +223,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             tabbedPanel.setForegroundAt(index, Color.RED);
+          }
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
+            tabbedPanel.setForegroundAt(index, new Color(00, 99, 00));
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
             tabbedPanel.setForegroundAt(index, Color.MAGENTA);
