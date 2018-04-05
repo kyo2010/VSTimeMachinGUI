@@ -13,6 +13,7 @@ import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
 import KKV.Utils.UserException;
 import KKV.Utils.JDEDate;
+import KKV.Utils.ParseIniFile;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -37,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -59,6 +61,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jssc.SerialNativeInterface;
 import jssc.SerialPortList;
+import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
+import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
@@ -117,6 +121,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
 
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
+  public String activeLang = "EN";
+  public ParseIniFile langFile = null;
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -308,6 +314,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
     }
+    applayLanguage();
+    
     jmAddStageToRace.setVisible(false);
     try {
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
@@ -354,8 +362,34 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (UnknownHostException e) {
       toLog(e);
       //e.printStackTrace();
+    }               
+  }    
+  
+  public void applayLanguage(){
+    activeLang = VS_SETTING.getParam(con, "LANG", "EN");
+    try{
+      langFile = new ParseIniFile("locale/"+activeLang+".ini");
+    }catch(Exception e){
+      langFile = null;
     }
-    //bRefresh.;
+    
+    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_STAGE, this );
+    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_STAGE_RACE, this );
+    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_RESULT, this );
+    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_REPORT, this );
+    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this );
+    STAGE_COLUMN.changeLocale( RegistrationModelTable.STAGE_COLUMNS_STAGE, this );   
+    
+  }
+  
+  public String getLocaleString(String caption){
+    if (langFile!=null){
+      try{
+        String val = langFile.getParam(caption);      
+        if (val!=null) return val;
+      }catch(Exception e){}
+    }      
+    return caption;  
   }
 
   public void setStateMenu(boolean isConnected) {

@@ -52,6 +52,12 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int ACTIVE_FOR_NEXT_STAGE = 1;
   public int CHECK_FOR_RACE = 0;
   public VSColor color = null;
+  
+  public long QUAL_TIME = 0;
+  public long QUAL_POS = 0;
+  public long RACE_TIME_FINAL = 0;
+  public long RACE_TIME_HALF_FINAL = 0;
+  public long RACE_TIME_QUART_FINAL = 0;
 
   public VS_REGISTRATION registration = null;   //  NOT_DETECTED
 
@@ -86,7 +92,16 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("LOSE").setDbFieldName("\"LOSE\""),
     new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),
     new DBModelField("CHECK_FOR_RACE").setDbFieldName("\"CHECK_FOR_RACE\""),
-    new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),});
+    new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),
+  
+    new DBModelField("QUAL_TIME").setDbFieldName("\"QUAL_TIME\""),
+    new DBModelField("QUAL_POS").setDbFieldName("\"QUAL_POS\""),
+    new DBModelField("RACE_TIME_FINAL").setDbFieldName("\"RACE_TIME_FINAL\""),
+    new DBModelField("RACE_TIME_HALF_FINAL").setDbFieldName("\"RACE_TIME_HALF_FINAL\""),
+    new DBModelField("RACE_TIME_QUART_FINAL").setDbFieldName("\"RACE_TIME_QUART_FINAL\""),
+     
+    
+  });
 
   public VS_REGISTRATION getRegistration(Connection conn, long raceID){
     loadRegistration(conn,raceID);

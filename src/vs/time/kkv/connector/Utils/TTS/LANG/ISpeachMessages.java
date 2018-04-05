@@ -111,7 +111,7 @@ public class ISpeachMessages {
     for (String pilot :  pilots){
       text += pilot+"...";      
     }
-    return new SpeekText(text, 1000+800*pilots.size());
+    return new SpeekText(text, 1000+1000*pilots.size());
   }
   
   public SpeekText findTransponders(long num){

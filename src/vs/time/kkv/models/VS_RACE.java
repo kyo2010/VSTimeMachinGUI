@@ -26,6 +26,8 @@ public class VS_RACE {
   public String CHANNEL4 = "";
   public String WEB_SYSTEM_SID = "";
   public String WEB_SYSTEM_CAPTION = "";
+  public String JUDGE = "";
+  public String SECRETARY = "";
           
   
   public List<VS_REGISTRATION> users = new ArrayList<>();
@@ -51,6 +53,9 @@ public class VS_RACE {
 
     new DBModelField("WEB_SYSTEM_SID").setDbFieldName("\"WEB_SYSTEM_SID\""),
     new DBModelField("WEB_SYSTEM_CAPTION").setDbFieldName("\"WEB_SYSTEM_CAPTION\""),    
+    
+    new DBModelField("JUDGE").setDbFieldName("\"JUDGE\""),    
+    new DBModelField("SECRETARY").setDbFieldName("\"SECRETARY\""),    
   });
   
 }

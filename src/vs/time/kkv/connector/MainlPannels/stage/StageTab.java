@@ -59,6 +59,9 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.AttributedCharacterIterator;
@@ -76,6 +79,7 @@ import vs.time.kkv.connector.SystemOptions;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
+import vs.time.kkv.connector.Utils.MultiLineHeaderRenderer;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_SETTING;
@@ -271,10 +275,11 @@ public class StageTab extends javax.swing.JPanel {
          stage.STAGE_TYPE==MainForm.STAGE_RACE_REPORT) 
     {
       isOneTable = true;
+      butCopyGropusToClipboard.setVisible(false);
     }
 
     refreshData(false);
-    refreshDataActionPerformed(null);
+    refreshDataActionPerformedWitoutRecalulation();
 
     //treeTable = new JTreeTable(new StageTableAdapter2(this));
     //jScrollPane1.add(treeTable);
@@ -415,7 +420,10 @@ public class StageTab extends javax.swing.JPanel {
             List<String> pilots = new ArrayList<String>();
             if (td != null && td.group != null && td.group.users != null) {
               for (VS_STAGE_GROUPS user : td.group.users) {
-                pilots.add(user.PILOT);
+                VS_REGISTRATION reg = td.pilot.getRegistration(mainForm.con ,mainForm.activeRace.RACE_ID);
+                String pilot = user.PILOT;
+                if (reg!=null) pilot = reg.FIRST_NAME+" "+reg.SECOND_NAME;
+                pilots.add(pilot);
                 user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
               }
               mainForm.invateGroup = td.group;
@@ -1045,6 +1053,9 @@ public class StageTab extends javax.swing.JPanel {
     butGroupExport = new javax.swing.JButton();
     jchTV = new javax.swing.JCheckBox();
     javax.swing.JButton bRestartWebServer = new javax.swing.JButton();
+    butCopyToClipboard = new javax.swing.JButton();
+    butCopyGropusToClipboard = new javax.swing.JButton();
+    butCopyToWeb = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -1111,7 +1122,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    butGroupExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xlsGroups.png"))); // NOI18N
+    butGroupExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xlsGroups2.png"))); // NOI18N
     butGroupExport.setToolTipText("Groups Export");
     butGroupExport.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1138,6 +1149,25 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    butCopyToClipboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clipboard_paste.png"))); // NOI18N
+    butCopyToClipboard.setToolTipText("Copy to clipboard");
+    butCopyToClipboard.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butCopyToClipboardActionPerformed(evt);
+      }
+    });
+
+    butCopyGropusToClipboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clipboard_paste_group.png"))); // NOI18N
+    butCopyGropusToClipboard.setToolTipText("Groups - copy to clipboard");
+    butCopyGropusToClipboard.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butCopyGropusToClipboardActionPerformed(evt);
+      }
+    });
+
+    butCopyToWeb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/export.png"))); // NOI18N
+    butCopyToWeb.setToolTipText("Copy to Web Site");
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1145,7 +1175,13 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+        .addComponent(butCopyToWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butCopyToClipboard, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bRestartWebServer, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jchTV)
@@ -1168,6 +1204,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bRestartWebServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1179,6 +1218,8 @@ public class StageTab extends javax.swing.JPanel {
           .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
+
+    butCopyToWeb.setVisible(false);
 
     jSplitPane2.setDividerLocation(200);
 
@@ -1302,18 +1343,27 @@ public class StageTab extends javax.swing.JPanel {
       pool.addChild(new StringVar("ConditionalFormatting", ""));
       pool.addChild(new StringVar("ExcelCellNames", ""));
       pool.addChild(new StringVar("ColumsInfo", ""));
-      pool.addChild(new StringVar("FIX_ROWS", "4"));
-
-      out.applayPoolToViewFile(sheet, pool);
-      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
-      out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
+     
+      
+      if (stage.STAGE_TYPE==MainForm.STAGE_RACE_REPORT){      
+        pool.addChild(new StringVar("FIX_ROWS", "5"));      
+        out.addToDataFile(sheet, "info:$$"+mainForm.getLocaleString("Confirm by")+"$$::$$"+mainForm.getLocaleString("Race")+" : " + stage.race.RACE_NAME + "$$:");
+        out.addToDataFile(sheet, "info:$$"+mainForm.getLocaleString("General Judge")+"$$::$$"+mainForm.getLocaleString("Stage")+" : " + stage.CAPTION + "$$:");      
+        out.addToDataFile(sheet, "info2::$$" + stage.race.JUDGE + "$$::$$"+ mainForm.getLocaleString("Race date")+" : "+ stage.race.RACE_DATE.getDateAsDDMMYYYY("-")+"$$:");
+      }else{
+        pool.addChild(new StringVar("FIX_ROWS", "4"));      
+        out.addToDataFile(sheet, "info:$$"+mainForm.getLocaleString("Race") +" : "+stage.race.RACE_NAME + "$$:");
+        out.addToDataFile(sheet, "info:$$"+mainForm.getLocaleString("Stage")+" : " + stage.CAPTION + "$$:");               
+      }  
+            
       out.addToDataFile(sheet, "info:");
+      out.applayPoolToViewFile(sheet, pool);
 
       int rowCount = jTable.getRowCount();
       int colCount = jTable.getColumnCount();
       String head = "head:";
       for (int i = 0; i < colCount; i++) {
-        head += "$$" + jTable.getColumnName(i) + "$$:";
+        head += "$$" + jTable.getColumnName(i).replaceAll("\n", "<br>") + "$$:";
       }
       out.addToDataFile(sheet, head);
 
@@ -1333,7 +1383,14 @@ public class StageTab extends javax.swing.JPanel {
           line += "{" + this.stageTableAdapter.getColumnCellID(col) + "}$$" + obj + "$$:";
         }
         out.addToDataFile(sheet, line);
+      }      
+      
+      if (stage.STAGE_TYPE==MainForm.STAGE_RACE_REPORT){      
+        out.addToDataFile(sheet, "info:");
+        out.addToDataFile(sheet, "info:");
+        out.addToDataFile(sheet, "info3:$$" + mainForm.getLocaleString("Secretary") + "$$::$$"+ stage.race.SECRETARY+"$$:");
       }
+      
       out.closeDataFile(sheet);
     } catch (Exception e) {
       e.printStackTrace();
@@ -1342,6 +1399,35 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
+    // TODO add your handling code here:
+    if (mainForm.activeGroup != null) {
+      JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
+      return;
+    }
+
+    for (Integer grup_index : stage.groups.keySet()){
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      for (VS_STAGE_GROUPS usr : st_gr.users){
+        usr.IS_RECALULATED = 0;
+        try{        
+          VS_STAGE_GROUPS.dbControl.update(mainForm.con, usr);
+        }catch(Exception e){}  
+      }
+    }
+    
+    refreshDataActionPerformedWitoutRecalulation();
+
+    /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
+      StageTableAdapter.STAGE_COLUMN[] columns = stageTableAdapter.getColumns();
+      for (int index=0; index<columns.length; index++){        
+        if (columns[index].ID==StageTableAdapter.STAGE_COLUMN.CID_SCORE && stage.RACE_TYPE==MainForm.RACE_TYPE_WHOOP){
+          jTable.getColumnModel().getColumn(index).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.SCORES_WHOOP)));
+        }
+      }
+    }*/
+  }//GEN-LAST:event_refreshDataActionPerformed
+
+  public void refreshDataActionPerformedWitoutRecalulation() {                                            
     // TODO add your handling code here:
     if (mainForm.activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
@@ -1361,8 +1447,10 @@ public class StageTab extends javax.swing.JPanel {
     jTable.setModel(stageTableAdapter);
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
 
+    MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();        
     for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
+      jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
     }
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -1376,8 +1464,8 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     }*/
-  }//GEN-LAST:event_refreshDataActionPerformed
-
+  }             
+  
   private void keyPressed(java.awt.event.KeyEvent evt) {
     if (raceTimer.isRunning()) {
       //JOptionPane.showMessageDialog(mainForm, "key:"+evt.getKeyChar(), "Information", JOptionPane.INFORMATION_MESSAGE);              
@@ -1473,10 +1561,75 @@ public class StageTab extends javax.swing.JPanel {
     SystemOptions.runWebServer(mainForm, true);
   }//GEN-LAST:event_bRestartWebServerActionPerformed
 
+  public int getMaxPilotName(){
+    int result = 5;
+    for (Integer grup_index : stage.groups.keySet()){
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      for (VS_STAGE_GROUPS usr : st_gr.users){                
+        if (usr.PILOT.trim().length()>result) result = usr.PILOT.trim().length();
+      }      
+    }
+    return result;
+  }
+  
+  private void butCopyToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyToClipboardActionPerformed
+    // TODO add your handling code here:
+    
+    int len = getMaxPilotName();
+    
+    String sep = " | ";
+    StringBuffer text = new StringBuffer();
+    text.append(mainForm.getLocaleString("Race")+" : "+mainForm.activeRace.RACE_NAME+"\n");
+    text.append(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+"\n");
+    text.append("\n");
+    
+    for (Integer grup_index : stage.groups.keySet()){
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      for (VS_STAGE_GROUPS usr : st_gr.users){        
+        text.append(mainForm.getLocaleString("Group")+usr.GROUP_NUM+sep+ Tools.padr(usr.PILOT.trim(), len)+sep+usr.CHANNEL +sep+getTimeIntervel(usr.RACE_TIME)+sep+getTimeIntervel(usr.BEST_LAP)+"\n");
+      }
+      text.append("\n");
+    }   
+    
+     StringSelection data = new StringSelection(text.toString());
+      Clipboard cb = Toolkit.getDefaultToolkit()
+         .getSystemClipboard();
+      cb.setContents(data, data);
+
+  }//GEN-LAST:event_butCopyToClipboardActionPerformed
+
+  private void butCopyGropusToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyGropusToClipboardActionPerformed
+    // TODO add your handling code here:
+    
+    int len = getMaxPilotName();
+    String sep = " | ";
+    StringBuffer text = new StringBuffer();
+    
+    text.append(mainForm.getLocaleString("Race")+" : "+mainForm.activeRace.RACE_NAME+"\n");
+    text.append(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+"\n");
+    text.append("\n");
+    
+    for (Integer grup_index : stage.groups.keySet()){
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      for (VS_STAGE_GROUPS usr : st_gr.users){        
+        text.append(mainForm.getLocaleString("Group")+usr.GROUP_NUM+sep+Tools.padr(usr.PILOT.trim(), len)+sep+usr.CHANNEL+"\n");
+      }
+      text.append("\n");
+    }   
+    
+     StringSelection data = new StringSelection(text.toString());
+      Clipboard cb = Toolkit.getDefaultToolkit()
+         .getSystemClipboard();
+      cb.setContents(data, data);
+  }//GEN-LAST:event_butCopyGropusToClipboardActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bNewStage;
   private javax.swing.JButton butConfig;
+  private javax.swing.JButton butCopyGropusToClipboard;
+  private javax.swing.JButton butCopyToClipboard;
+  private javax.swing.JButton butCopyToWeb;
   private javax.swing.JButton butGroupExport;
   private javax.swing.JButton butRemoveSatge;
   private javax.swing.JScrollPane jScrollPane1;

@@ -93,7 +93,7 @@ public class RusSpeachMessages extends ISpeachMessages{
     for (String pilot :  pilots){
       text += pilot+"...";      
     }
-    return new SpeekText(text, 1000+700*pilots.size());
+    return new SpeekText(text, 1000+1000*pilots.size());
   }
    
    public SpeekText findTransponders(long num){

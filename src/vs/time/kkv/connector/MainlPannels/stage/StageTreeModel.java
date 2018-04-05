@@ -28,7 +28,7 @@ public class StageTreeModel implements TreeModel {
   @Override
   public Object getRoot() {
     return tab.stage; 
-  }
+  }   
 
   @Override
   public Object getChild(Object parent, int index) {

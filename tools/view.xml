@@ -5,17 +5,19 @@
   Separator = '$$'
   TopLeftColontitul =""
   FontName = "Arial,Normal"
-  FontSize = "10" 
+  FontSize = "12" 
   TopRightColontitul = ""     
   TopCenterColontitul = ""   
   BottomLeftColontitul = '&amp;"Arial,Normal"&amp;4(c) 2018, Drone Racing System'   
   BottomRightColontitul = ""  
   BottomCenterColontitul = '&amp;"Arial,Normal"&amp;8Page &amp;P of &amp;N'
-  FreezeCols="{FIX_ROWS}"
-  AutoFilterCol="{FIX_ROWS}"
+  _FreezeCols="{FIX_ROWS}"
+  _AutoFilterCol="{FIX_ROWS}"
   AlwaysPrintCols="$1:${FIX_ROWS}"   
   ERR_AutoFilterRange="$A${FIX_ROWS}:$V${FIX_ROWS}"
-  Landscape="Yes" 
+  Landscape="No"
+  FitToPage="Yes" 
+  
   {VisibleSheet}
   />
   
@@ -69,11 +71,32 @@
       LeftBorder  = "0" RightBorder = "0" Bold="Yes"
       UpBorder  = "0" DownBorder  = "0"
       InnerBorder = "0" Alignment="left" IncreaseSize="3" >
-      <Cell ColUnion="3"/>
+      <Cell ColUnion="4"/>
+      <Cell ColUnion="2"/>
+      <Cell ColUnion="4"/>
     </Row>
-    <Row ID="data" LeftBorder = "1" RightBorder = "1"
-      UpBorder  = "1" DownBorder  = "1"
-      InnerBorder = "1" VAlignment="top">
+    <Row ID="info2"
+      LeftBorder  = "0" RightBorder = "0" Bold="Yes"
+      UpBorder  = "0" DownBorder  = "0"
+      InnerBorder = "0" Alignment="left" IncreaseSize="3" >
+      <Cell ColUnion="3" DownBorder  = "3" />
+      <Cell/>
+      <Cell ColUnion="2"/>
+      <Cell ColUnion="4"/>
+    </Row>
+    
+    <Row ID="info3"
+      LeftBorder  = "0" RightBorder = "0" Bold="Yes"
+      UpBorder  = "0" DownBorder  = "0"
+      InnerBorder = "0" Alignment="left" IncreaseSize="3" >
+      <Cell ColUnion="3" />
+      <Cell ColUnion="3" DownBorder  = "3"/>  
+      <Cell ColUnion="4"/>
+    </Row>
+    
+    <Row ID="data" LeftBorder = "2" RightBorder = "2"
+      UpBorder  = "2" DownBorder  = "2"
+      InnerBorder = "2" VAlignment="top" VAlignment1="center">
 
         <Cell Format="@" />
         <Cell Format="@" />
@@ -82,9 +105,9 @@
 
     </Row>
 
-    <Row ID="data_space" LeftBorder = "1" RightBorder = "1"
-      UpBorder  = "1" DownBorder  = "1"
-      InnerBorder = "1">
+    <Row ID="data_space" LeftBorder = "2" RightBorder = "2"
+      UpBorder  = "2" DownBorder  = "2"
+      InnerBorder = "2">
 
       <Cell BackgroundColor="white"  FontColor="white" />
       <Cell BackgroundColor="white"  FontColor="white" />
@@ -97,15 +120,15 @@
 
     </Row>
 
-    <Row ID="head" LeftBorder = "1" RightBorder = "1"
-      UpBorder  = "1" DownBorder  = "1"
-      InnerBorder = "1" Alignment="center" 
-      FontColor="black" BackgroundColor="#FFFF66"
+    <Row ID="head" LeftBorder = "2" RightBorder = "2"
+      UpBorder  = "2" DownBorder  = "2"
+      InnerBorder = "2" Alignment="center" VAlignment="top"
+      FontColor="black" BackgroundColor1="#FFFF66"
       Bold="Yes" >
     </Row>  
-    <Row ID="head0" LeftBorder = "1" RightBorder = "1"
-      UpBorder  = "1" DownBorder  = "1"
-      InnerBorder = "1" Alignment="center" 
+    <Row ID="head0" LeftBorder = "2" RightBorder = "2"
+      UpBorder  = "2" DownBorder  = "2"
+      InnerBorder = "2" Alignment="center" 
       FontColor="black" BackgroundColor="#FFFF66"
       Bold="Yes" >
     </Row>  

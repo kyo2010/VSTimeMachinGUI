@@ -55,7 +55,13 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace pref="144" max="32767" attributes="0"/>
+                  <EmptySpace pref="55" max="32767" attributes="0"/>
+                  <Component id="butCopyToWeb" min="-2" pref="62" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="butCopyGropusToClipboard" min="-2" pref="59" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="butCopyToClipboard" min="-2" pref="60" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="bRestartWebServer" min="-2" pref="62" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jchTV" min="-2" max="-2" attributes="0"/>
@@ -80,6 +86,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="butCopyToWeb" alignment="1" max="32767" attributes="0"/>
+                      <Component id="butCopyGropusToClipboard" max="32767" attributes="0"/>
+                      <Component id="butCopyToClipboard" max="32767" attributes="0"/>
                       <Component id="bRestartWebServer" max="32767" attributes="0"/>
                       <Component id="butConfig" alignment="0" max="32767" attributes="0"/>
                       <Component id="pdfButton" alignment="0" max="32767" attributes="0"/>
@@ -175,7 +184,7 @@
         <Component class="javax.swing.JButton" name="butGroupExport">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/icons/xlsGroups.png"/>
+              <Image iconType="3" name="/images/icons/xlsGroups2.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Groups Export"/>
           </Properties>
@@ -213,6 +222,39 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JButton" name="butCopyToClipboard">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/clipboard_paste.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Copy to clipboard"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butCopyToClipboardActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="butCopyGropusToClipboard">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/clipboard_paste_group.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Groups - copy to clipboard"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butCopyGropusToClipboardActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="butCopyToWeb">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/icons/export.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Copy to Web Site"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="butCopyToWeb.setVisible(false);"/>
           </AuxValues>
         </Component>
       </SubComponents>

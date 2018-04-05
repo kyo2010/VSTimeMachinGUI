@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
+import vs.time.kkv.connector.MainForm;
+
 /**
  *
  * @author kyo
@@ -25,8 +27,14 @@ package vs.time.kkv.connector.MainlPannels.stage;
     public static final int CID_QUAL_STATUS = 110;
     public static final int CID_RACE_STATUS = 120;
     public static final int CID_REGION = 130;
+    public static final int CID_QUAL_POS = 140;
+    public static final int CID_QUAL_TIME = 150;
+    public static final int CID_RACE_TIME_FINAL = 160;
+    public static final int CID_RACE_TIME_HALF_FINAL = 170;
+    public static final int CID_RACE_TIME_QUART_FINAL = 180;
     
     public String caption;
+    private String captionOriginal;
     public int width;
     public int ID;
     public boolean isEditing = false;
@@ -34,6 +42,7 @@ package vs.time.kkv.connector.MainlPannels.stage;
 
     public STAGE_COLUMN(int ID, String caption, int width) {
       this.ID = ID;
+      this.captionOriginal = caption;
       this.caption = caption;
       this.width = width;
     }
@@ -46,5 +55,11 @@ package vs.time.kkv.connector.MainlPannels.stage;
     public STAGE_COLUMN setCellID(String cellID) {
       this.cellID = cellID;
       return this;
-    }        
+    }
+    
+    public static void changeLocale(STAGE_COLUMN[] columns, MainForm mainForm){
+      for (STAGE_COLUMN col : columns){
+        col.caption = mainForm.getLocaleString(col.captionOriginal);
+      }
+    }
   }

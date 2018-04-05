@@ -60,9 +60,9 @@ public class RegistrationModelTable extends AbstractTableModel {
     return STAGE_COLUMNS_STAGE.length;
   }
   
-  static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
+  public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(10, "Act", 50),
-    new STAGE_COLUMN(20, "NUM", 50),
+    new STAGE_COLUMN(20, "Num", 50),
     new STAGE_COLUMN(30, "Pilot Type", 90),
     new STAGE_COLUMN(40, "Trans", 90),
     new STAGE_COLUMN(50, "OSD Name", 200),
