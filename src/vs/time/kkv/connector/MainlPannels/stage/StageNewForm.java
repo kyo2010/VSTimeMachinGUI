@@ -720,8 +720,7 @@ public class StageNewForm extends javax.swing.JFrame {
           stage.dbControl.insert(mainForm.con, stage);
           stage.ID = -1;
           stage.CAPTION = caption+"_3";
-          stage.dbControl.insert(mainForm.con, stage);
-          
+          stage.dbControl.insert(mainForm.con, stage);          
           stage.CAPTION = caption+" result";
           stage.ID = -1;
           stage.STAGE_TYPE = MainForm.STAGE_RACE_RESULT;

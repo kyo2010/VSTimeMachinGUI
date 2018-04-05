@@ -110,9 +110,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                                                           "Qualification Result", "Race", 
                                                           "Race Result","Race Report"};
 
-  public static final int RACE_TYPE_WHOOP = 0;
+  public static final int RACE_TYPE_WHOOP = 2;
   public static final int RACE_TYPE_DOUBLE = 1;
-  public static final int RACE_TYPE_SINGLE = 2;
+  public static final int RACE_TYPE_SINGLE = 0;
   public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race"};
 
   public static final int SCORE_WHOOP_NONE = 0;
@@ -965,7 +965,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
 
     /*TreeSet<String> massiv = new TreeSet<>();
-    String word = "кошка";
+    String word = "пїЅпїЅпїЅпїЅпїЅ";
 
     // 60
     int all_count = 0;

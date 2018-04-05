@@ -218,18 +218,6 @@ public class VSTimeConnector {
     setSensitivity(3);
   }
 
-  /**
-   * первие 3 бита это цвета: 3 бит красный, 2 зеленый, 1 голубой self.clr1 = 1;
-   * - UIColor.blueColor; self.clr2 = 2; - UIColor.greenColor; self.clr3 = 3; -
-   * UIColor.cyanColor; self.clr4 = 4; - UIColor.redColor; self.clr5 = 5; -
-   * UIColor.magentaColor; self.clr6 = 6; - UIColor.yellowColor; self.clr7 = 7;
-   * - UIColor.whiteColor; self.clr8 = 0; - UIColor.blackColor;
-   *
-   * если надо мигать в воротах то 6 бит надо установить в 1
-   * if(self.competition.flashInGate == 1){ color |= ( 1 << 6 ); }
-   *
-   * Установка цвета: задержка в 200ms будет, и три повтора
-   */
   public void setColor(int transponderID, int color) throws SerialPortException {
     //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");
     sentMessage("sendcolor:" + color + "," + transponderID + "\r\n");
@@ -316,7 +304,7 @@ public class VSTimeConnector {
    * @param args the command line arguments
    */
   public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException, SerialPortException {
-    //Передаём в конструктор имя порта    
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ    
     VSTimeConnector connector = new VSTimeConnector(new VSTimeMachineReciver() {
       @Override
       public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {

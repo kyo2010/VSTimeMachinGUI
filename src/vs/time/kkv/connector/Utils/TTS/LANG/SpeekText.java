@@ -12,8 +12,8 @@ package vs.time.kkv.connector.Utils.TTS.LANG;
 public class SpeekText {
 
     public String textToSpeach;
-    public long time = 1500; // сколько времени говорить
-    public long wait = 0;    // сколько времени ждать, пока не скажет
+    public long time = 1500; 
+    public long wait = 0;    
 
     public SpeekText(String textToSpeach) {
       this.textToSpeach = textToSpeach;

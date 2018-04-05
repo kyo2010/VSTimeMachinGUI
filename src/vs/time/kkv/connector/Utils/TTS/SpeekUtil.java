@@ -30,10 +30,11 @@ public class SpeekUtil extends Thread {
   public static final String VOICE_KEVIN = "kevin";
   public static final String VOICE_KEVIN16 = "kevin16";
 
-  private static String alpha = new String("абвгдеёжзиыйклмнопрстуфхцчшщьэюя");
+  private static String alpha = new String("Р°Р±РІРіРґРµС‘Р¶Р·РёС‹Р№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЊСЌСЋСЏ");
   private static String[] _alpha = {"a", "b", "v", "g", "d", "e", "yo", "g", "z", "i", "y", "i",
     "k", "l", "m", "n", "o", "p", "r", "s", "t", /*"u"*/ "oo",
     "f", "h", "tz", "ch", "sh", "sh", "'", "e", "yu", "ya"};
+
 
   private final Voice voice;
   public IKKVSpeek defaultSpeaker = null;
@@ -134,8 +135,8 @@ public class SpeekUtil extends Thread {
 
     //SpeekUtil speaker = new SpeekUtil();
     //speaker.speak("Kolpakov, finish");
-    //speaker.speak("Konstantin второй круг");
-    //speaker.speak("Konstantin третий круг");
+    //speaker.speak("Konstantin пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ");
+    //speaker.speak("Konstantin пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ");
     //speaker.speak("Konstantin finish");
   }
 

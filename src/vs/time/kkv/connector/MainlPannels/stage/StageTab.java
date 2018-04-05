@@ -419,11 +419,12 @@ public class StageTab extends javax.swing.JPanel {
             List<String> pilots = new ArrayList<String>();
             if (td != null && td.group != null && td.group.users != null) {
               for (VS_STAGE_GROUPS user : td.group.users) {
-                VS_REGISTRATION reg = td.pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+                VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
                 String pilot = user.PILOT;
                 if (reg != null) {
                   pilot = reg.FIRST_NAME + " " + reg.SECOND_NAME;
                 }
+                if (pilot.trim().equals("")) pilot = user.PILOT;
                 pilots.add(pilot);
                 user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
               }

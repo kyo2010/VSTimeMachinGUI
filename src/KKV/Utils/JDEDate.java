@@ -865,8 +865,8 @@ public class JDEDate {
         if ("Марта".equalsIgnoreCase(st)) return Calendar.MARCH;
         if ("Апреля".equalsIgnoreCase(st)) return Calendar.APRIL;
         if ("Мая".equalsIgnoreCase(st)) return Calendar.MAY;
-        if ("�?юня".equalsIgnoreCase(st)) return Calendar.JUNE;
-        if ("�?юля".equalsIgnoreCase(st)) return Calendar.JULY;
+        if ("Июня".equalsIgnoreCase(st)) return Calendar.JUNE;
+        if ("Июля".equalsIgnoreCase(st)) return Calendar.JULY;
         if ("Августа".equalsIgnoreCase(st)) return Calendar.AUGUST;
         if ("Сентября".equalsIgnoreCase(st)) return Calendar.SEPTEMBER;
         if ("Октября".equalsIgnoreCase(st)) return Calendar.OCTOBER;

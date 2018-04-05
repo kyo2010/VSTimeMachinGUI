@@ -92,12 +92,12 @@ public class TVTranslationServlet extends HttpServlet {
           String bestLap = "";
           String info = "";
           if (pilot.BEST_LAP != 0) {
-            bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Лучший круг : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
+            bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Р›СѓС‡С€РёР№ РєСЂСѓРі : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
           }
           if (pilot.IS_FINISHED == 1) {
-            info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Общее время :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
+            info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; РћР±С‰РµРµ РІСЂРµРјСЏ :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
           }
-          webInfo = "<div class='w3-container w3-white'><h3><b>Кругов : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
+          webInfo = "<div class='w3-container w3-white'><h3><b>РљСЂСѓРіРѕРІ : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
         }
 
         webChannel = "<div class='w3-badge w3-" + webColor + "'><b>" + pilot.CHANNEL + "</b></div>";
@@ -175,10 +175,10 @@ public class TVTranslationServlet extends HttpServlet {
       CONTENT += "<th>G</th>";
     }
     CONTENT += "<th> </th>";
-    CONTENT += "<th>Имя</th>";
-    CONTENT += "<th>Канал</th>";
-    CONTENT += "<th>Общее время</th>";
-    CONTENT += "<th>Лучший круг</th>";
+    CONTENT += "<th>"+mainForm.getLocaleString("Pilot")+"</th>";
+    CONTENT += "<th>"+mainForm.getLocaleString("Channel")+"</th>";
+    CONTENT += "<th>"+mainForm.getLocaleString("Race Time")+"</th>";
+    CONTENT += "<th>"+mainForm.getLocaleString("Best Lap")+"</th>";
     CONTENT += "</tr>";
 
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;

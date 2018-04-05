@@ -75,7 +75,7 @@ public class Html extends JFrame {
             WebView webView = new WebView();
             jfxPanel.setScene(new Scene(webView));
             //webView.setZoom(2);           
-            //webView.getEngine().load("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");// Грузит страничку с нета, а мне нужно с прэкта
+            //webView.getEngine().load("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
             webView.getEngine().load("http://yandex.ru");
           }
 
@@ -115,7 +115,7 @@ public class Html extends JFrame {
         Worker<Void> worker = webEngine.getLoadWorker();        
 
         //webView.
-        webEngine.load(uri);// Грузит страничку с нета, а мне нужно с прэкта
+        webEngine.load(uri);// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
         //String html = "<html><h1>Hello</h1><h2>Hello</h2></html>";
         // Load HTML String

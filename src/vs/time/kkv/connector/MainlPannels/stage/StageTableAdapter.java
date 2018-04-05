@@ -259,7 +259,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         try {
           parent_stage = VS_STAGE.dbControl.getItem(tab.mainForm.con, "ID=? and RACE_ID=?", union_stage_id, tab.stage.RACE_ID);
           if (parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
-            // Собирать все Raсe у которых PARENT_STAGE_ID = ntreotq ujyrb
+            // РЎРѕР±РёСЂР°С‚СЊ РІСЃРµ RaСЃe Сѓ РєРѕС‚РѕСЂС‹С… PARENT_STAGE_ID 
             union_stage_id = parent_stage.PARENT_STAGE_ID;
           }
         } catch (Exception e) {

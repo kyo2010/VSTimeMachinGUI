@@ -87,7 +87,7 @@ public class WebPannel extends javax.swing.JFrame  {
             webView = new WebView();
             jPanel.setScene(new Scene(webView));
             //webView.setZoom(2);
-            webView.getEngine().load(initial_address);// Грузит страничку с нета, а мне нужно с прэкта
+            webView.getEngine().load(initial_address);
           }
 
         });     

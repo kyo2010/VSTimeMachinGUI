@@ -429,7 +429,7 @@ public class UserControlForm extends javax.swing.JFrame {
       JFileChooser fileopen = new JFileChooser();
       fileopen.setAcceptAllFileFilterUsed(false);
       fileopen.setFileFilter(PHOTO.picFilter);
-      int ret = fileopen.showDialog(this, "Выберите файл с фотографией");
+      int ret = fileopen.showDialog(this, "Р’С‹Р±РµСЂРёС‚Рµ С„Р°Р№Р» СЃ С„РѕС‚РѕРіСЂР°С„РёРµР№");
       if (ret == JFileChooser.APPROVE_OPTION) {
         File file = fileopen.getSelectedFile();
         PHOTO.setImage(file.getAbsolutePath());                  

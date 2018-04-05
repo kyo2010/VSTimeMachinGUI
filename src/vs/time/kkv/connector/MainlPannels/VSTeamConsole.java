@@ -462,7 +462,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     }    
   }//GEN-LAST:event_butLoadFlashActionPerformed
 
-  static int LAST_SKIP_INDEX = 0;  // последнюю строчку не шить
+  static int LAST_SKIP_INDEX = 0;  
   
   public FlashTimer flashTimer = null;
     public class FlashTimer extends Timer {    

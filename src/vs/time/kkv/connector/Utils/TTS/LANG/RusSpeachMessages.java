@@ -13,83 +13,83 @@ import java.util.List;
  */
 public class RusSpeachMessages extends ISpeachMessages{
   public SpeekText groupFinished(long groupIndex){
-    return new SpeekText("Гонка группы " + groupIndex + " закончена",2000);
+    return new SpeekText("Р“РѕРЅРєР° РіСЂСѓРїРїС‹ " + groupIndex + " Р·Р°РєРѕРЅС‡РµРЅР°",2000);
   };
   
   public SpeekText pilotIsChecked(String pilot){
-    return new SpeekText(pilot+" найден");
+    return new SpeekText(pilot+" РЅР°Р№РґРµРЅ");
   }
   
   public SpeekText raceIsOverIn10sec(){
-   return new SpeekText("Гонка закончится через десять секунд",2000);
+   return new SpeekText("Р“РѕРЅРєР° Р·Р°РєРѕРЅС‡РёС‚СЃСЏ С‡РµСЂРµР· РґРµСЃСЏС‚СЊ СЃРµРєСѓРЅРґ",2000);
   }
   
   public SpeekText connected(){
-    return new SpeekText("соединено");
+    return new SpeekText("СЃРѕРµРґРёРЅРµРЅРѕ");
   }
   
   public SpeekText disconnected(){
-    return new SpeekText("разъединено");
+    return new SpeekText("СЂР°Р·СЉРµРґРёРЅРµРЅРѕ");
   }
   
   public SpeekText pilot(String name){
-    return new SpeekText("Пилот "+name,3000);
+    return new SpeekText("РџРёР»РѕС‚ "+name,3000);
   }
   
   public SpeekText startMessage(String id){
-    if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
-    if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);
-    if (id.equalsIgnoreCase("three")) return new SpeekText("Три",350);
-    if (id.equalsIgnoreCase("attention")) return new SpeekText("Внимание, старт после звукового сигнала",5000,5000);
+    if (id.equalsIgnoreCase("one")) return new SpeekText("РћРґРёРЅ",350);
+    if (id.equalsIgnoreCase("two")) return new SpeekText("Р”РІР°",350);
+    if (id.equalsIgnoreCase("three")) return new SpeekText("РўСЂРё",350);
+    if (id.equalsIgnoreCase("attention")) return new SpeekText("Р’РЅРёРјР°РЅРёРµ, СЃС‚Р°СЂС‚ РїРѕСЃР»Рµ Р·РІСѓРєРѕРІРѕРіРѕ СЃРёРіРЅР°Р»Р°",5000,5000);
     return new SpeekText(id);      
   }
   
    public SpeekText lapTime(String pilot, int lap, int countLaps) {
     String krug = "";
     if (lap == countLaps) {
-      krug = " финиш";
+      krug = " С„РёРЅРёС€";
     } else {
-      krug =  " круг "+lap;
+      krug =  " РєСЂСѓРі "+lap;
     }
     /*return new SpeekText(pilot +" "+krug);*/
-    if (lap==0) return new SpeekText(pilot + " старт");
+    if (lap==0) return new SpeekText(pilot + " СЃС‚Р°СЂС‚");
     if (lap>countLaps) return new SpeekText(pilot);
     return new SpeekText(pilot +krug);
   }
   
   public String krugNumber(int lap) {
     if (lap == 1) {
-      return "первый";
+      return "РїРµСЂРІС‹Р№";
     }
     if (lap == 2) {
-      return "второй";
+      return "РІС‚РѕСЂРѕР№";
     }
     if (lap == 3) {
-      return "третий";
+      return "С‚СЂРµС‚РёР№";
     }
     if (lap == 4) {
-      return "четвертый";
+      return "С‡РµС‚РІРµСЂС‚С‹Р№";
     }
     if (lap == 5) {
-      return "пятый";
+      return "РїСЏС‚С‹Р№";
     }
     if (lap == 6) {
-      return "шестой";
+      return "С€РµСЃС‚РѕР№";
     }
     if (lap == 7) {
-      return "седьмой";
+      return "СЃРµРґСЊРјРѕР№";
     }
     if (lap == 8) {
-      return "восьмой";
+      return "РІРѕСЃСЊРјРѕР№";
     }
     if (lap == 9) {
-      return "девятый";
+      return "РґРµРІСЏС‚С‹Р№";
     }
     return "" + lap;
   }
   
    public SpeekText invatieGroup(long num, List<String> pilots){
-    String text = "Приглашается группа "+num+". ";
+    String text = "РџСЂРёРіР»Р°С€Р°РµС‚СЃСЏ РіСЂСѓРїРїР° "+num+". ";
     for (String pilot :  pilots){
       text += pilot+"...";      
     }
@@ -97,7 +97,7 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
    
    public SpeekText findTransponders(long num){
-    String text = "Внимание, Группа "+num+". Идет поиск транспондеров. Проверьте питание ваших дронов.";    
+    String text = "Р’РЅРёРјР°РЅРёРµ, Р“СЂСѓРїРїР° "+num+". РРґРµС‚ РїРѕРёСЃРє С‚СЂР°РЅСЃРїРѕРЅРґРµСЂРѕРІ. РџСЂРѕРІРµСЂСЊС‚Рµ РїРёС‚Р°РЅРёРµ РІР°С€РёС… РґСЂРѕРЅРѕРІ.";    
     return new SpeekText(text, 2000);
   }
 }

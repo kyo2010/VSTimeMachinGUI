@@ -52,9 +52,9 @@ public class TextToSpeechCOM implements IKKVSpeek{
   
   public static void main(String[] args){
     TextToSpeechCOM tts = new TextToSpeechCOM();
-    tts.say("Привет финиш");
+    tts.say("С‚РµСЃС‚");
     pause();
-    tts.say("Hello первый круг");
+    tts.say("Hello С‚РµСЃС‚");
     pause();
     tts.say("Hi world");
     try{
