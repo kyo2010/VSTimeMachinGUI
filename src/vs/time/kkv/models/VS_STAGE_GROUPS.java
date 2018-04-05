@@ -58,6 +58,11 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long RACE_TIME_FINAL = 0;
   public long RACE_TIME_HALF_FINAL = 0;
   public long RACE_TIME_QUART_FINAL = 0;
+  
+  public long GROUP_FINAL = 0;
+  public long GROUP_HALF_FINAL = 0;
+  public long GROUP_QUART_FINAL = 0;
+  
 
   public VS_REGISTRATION registration = null;   //  NOT_DETECTED
 
@@ -100,6 +105,10 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("RACE_TIME_HALF_FINAL").setDbFieldName("\"RACE_TIME_HALF_FINAL\""),
     new DBModelField("RACE_TIME_QUART_FINAL").setDbFieldName("\"RACE_TIME_QUART_FINAL\""),
      
+    new DBModelField("GROUP_FINAL").setDbFieldName("\"GROUP_FINAL\""),
+    new DBModelField("GROUP_HALF_FINAL").setDbFieldName("\"GROUP_HALF_FINAL\""),
+    new DBModelField("GROUP_QUART_FINAL").setDbFieldName("\"GROUP_QUART_FINAL\""),
+    
     
   });
 

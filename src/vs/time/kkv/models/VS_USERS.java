@@ -23,6 +23,7 @@ public class VS_USERS {
   public String WEB_SID;
   public String PHOTO;
   public String REGION = "";
+  public String FAI = "";
   
   
   /** Constructor */ 
@@ -45,6 +46,7 @@ public class VS_USERS {
     
     new DBModelField("PHOTO").setDbFieldName("PHOTO"),
     new DBModelField("REGION").setDbFieldName("REGION"),
+    new DBModelField("FAI").setDbFieldName("FAI"),    
     
   });
   

@@ -32,6 +32,7 @@ import vs.time.kkv.connector.MainForm;
     public static final int CID_RACE_TIME_FINAL = 160;
     public static final int CID_RACE_TIME_HALF_FINAL = 170;
     public static final int CID_RACE_TIME_QUART_FINAL = 180;
+    public static final int CID_FAI = 190;
     
     public String caption;
     private String captionOriginal;

@@ -33,6 +33,7 @@
         "lname" : "Безлепкин",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-0909-03-35_BEZIK.jpg"
@@ -44,6 +45,7 @@
         "lname" : "Дзёма",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
@@ -62,6 +64,7 @@
         "lname" : "Безлепкин",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-0909-03-35_BEZIK.jpg"
@@ -73,6 +76,7 @@
         "lname" : "Борискин",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -84,6 +88,7 @@
         "lname" : "Дзёма",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
@@ -95,6 +100,7 @@
         "lname" : "Кимлаев",
         "transID" : "1322;1320",
         "country" : "Россия",
+        "FAI" : "0000123",
         "region" : "г. Москва",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-28.jpg"
@@ -106,6 +112,7 @@
         "lname" : "Сорокин",
         "transID" : "1282",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
@@ -124,6 +131,7 @@
         "lname" : "Дехтярь",
         "transID" : "1342",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
@@ -135,6 +143,7 @@
         "lname" : "Климов",
         "transID" : "1286;1290",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
@@ -146,6 +155,7 @@
         "lname" : "Князев",
         "transID" : "1292",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_GarryBu.jpg"
@@ -157,6 +167,7 @@
         "lname" : "Лыжин",
         "transID" : "13",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-03-1010-04-35_sdeds84.jpeg"
@@ -168,6 +179,7 @@
         "lname" : "Регель",
         "transID" : "1336",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
@@ -179,6 +191,7 @@
         "lname" : "Шубин",
         "transID" : "VS Team",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1111-03-03_whitewind.jpg"
@@ -190,6 +203,7 @@
         "lname" : "Щицын ",
         "transID" : "1289",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
@@ -209,12 +223,25 @@
     "date_event" : "29.03.2018",
     "pilots" : [
        {
+        "id" : "30",
+        "osd_name" : "X555",
+        "fname" : " ",
+        "lname" : " ",
+        "transID" : "1324",
+        "country" : "Россия",
+        "FAI" : "",
+        "region" : "г. Москва",
+        "PICTURE_OK" : "1",
+        "PICTURE" : ""
+       }
+      ,{
         "id" : "14",
         "osd_name" : "afx",
         "fname" : "Евгений",
         "lname" : "AFX",
         "transID" : "1",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -226,6 +253,7 @@
         "lname" : "Orlov",
         "transID" : "1304",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1313-03-45_Dany_orlov.jpeg"
@@ -237,6 +265,7 @@
         "lname" : "Бахвалов",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-27-2323-03-32_________________.jpg"
@@ -248,6 +277,7 @@
         "lname" : "Волков",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
@@ -259,6 +289,7 @@
         "lname" : "Волков",
         "transID" : "есть ",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
@@ -270,6 +301,7 @@
         "lname" : "Глухов",
         "transID" : "1273",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
@@ -281,20 +313,10 @@
         "lname" : "Дехтярь",
         "transID" : "1342",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
-       }
-      ,{
-        "id" : "30",
-        "osd_name" : "X555",
-        "fname" : "Кирилл",
-        "lname" : "Задремайлов",
-        "transID" : "1324",
-        "country" : "Россия",
-        "region" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : ""
        }
       ,{
         "id" : "18",
@@ -303,6 +325,7 @@
         "lname" : "Климов",
         "transID" : "1286;1290",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
@@ -314,6 +337,7 @@
         "lname" : "Коновалов",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
@@ -325,6 +349,7 @@
         "lname" : "Кунашук",
         "transID" : "1329",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1414-03-56_Modelist017.jpg"
@@ -336,6 +361,7 @@
         "lname" : "Орлов",
         "transID" : "Поставлю)",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -347,6 +373,7 @@
         "lname" : "Регель",
         "transID" : "1336",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
@@ -358,6 +385,7 @@
         "lname" : "Сорокин",
         "transID" : "1282",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
@@ -369,6 +397,7 @@
         "lname" : "Чайкин",
         "transID" : "1311",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-27-1010-03-38_Polymorpf.jpg"
@@ -380,6 +409,7 @@
         "lname" : "Шубин",
         "transID" : "VS Team",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1111-03-03_whitewind.jpg"
@@ -391,6 +421,7 @@
         "lname" : "Шуньков",
         "transID" : "1332",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1515-03-33_shunkov.jpg"
@@ -402,6 +433,7 @@
         "lname" : "Щицын ",
         "transID" : "1289",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
@@ -414,12 +446,25 @@
     "date_event" : "28.03.2018",
     "pilots" : [
        {
+        "id" : "30",
+        "osd_name" : "X555",
+        "fname" : " ",
+        "lname" : " ",
+        "transID" : "1324",
+        "country" : "Россия",
+        "FAI" : "",
+        "region" : "г. Москва",
+        "PICTURE_OK" : "1",
+        "PICTURE" : ""
+       }
+      ,{
         "id" : "14",
         "osd_name" : "afx",
         "fname" : "Евгений",
         "lname" : "AFX",
         "transID" : "1",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -431,6 +476,7 @@
         "lname" : "Бахвалов",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-27-2323-03-32_________________.jpg"
@@ -442,6 +488,7 @@
         "lname" : "Волков",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
@@ -453,6 +500,7 @@
         "lname" : "Волков",
         "transID" : "есть ",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
@@ -464,20 +512,10 @@
         "lname" : "Дехтярь",
         "transID" : "1342",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
-       }
-      ,{
-        "id" : "30",
-        "osd_name" : "X555",
-        "fname" : "Кирилл",
-        "lname" : "Задремайлов",
-        "transID" : "1324",
-        "country" : "Россия",
-        "region" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : ""
        }
       ,{
         "id" : "2",
@@ -486,6 +524,7 @@
         "lname" : "Кимлаев",
         "transID" : "1322;1320",
         "country" : "Россия",
+        "FAI" : "0000123",
         "region" : "г. Москва",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-28.jpg"
@@ -497,6 +536,7 @@
         "lname" : "Климов",
         "transID" : "1286;1290",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
@@ -508,6 +548,7 @@
         "lname" : "Князев",
         "transID" : "1292",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_GarryBu.jpg"
@@ -519,6 +560,7 @@
         "lname" : "Колодочка ",
         "transID" : "300",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -530,6 +572,7 @@
         "lname" : "Коновалов",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
@@ -541,6 +584,7 @@
         "lname" : "Кунашук",
         "transID" : "1329",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-1414-03-56_Modelist017.jpg"
@@ -552,6 +596,7 @@
         "lname" : "Регель",
         "transID" : "1336",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_____________.jpg"
@@ -563,6 +608,7 @@
         "lname" : "Сорокин",
         "transID" : "1282",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
@@ -574,6 +620,7 @@
         "lname" : "Цисарь",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -585,6 +632,7 @@
         "lname" : "Шубин",
         "transID" : "VS Team",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1111-03-03_whitewind.jpg"
@@ -596,6 +644,7 @@
         "lname" : "Шуньков",
         "transID" : "1332",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1515-03-33_shunkov.jpg"
@@ -607,6 +656,7 @@
         "lname" : "Щицын ",
         "transID" : "1289",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
@@ -625,6 +675,7 @@
         "lname" : "AFX",
         "transID" : "1",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -636,6 +687,7 @@
         "lname" : "Волков",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_ArtemVol.jpeg"
@@ -647,6 +699,7 @@
         "lname" : "Волков",
         "transID" : "есть ",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_vol931.jpeg"
@@ -658,6 +711,7 @@
         "lname" : "Глухов",
         "transID" : "1273",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
@@ -669,6 +723,7 @@
         "lname" : "Еремеев",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
@@ -680,6 +735,7 @@
         "lname" : "Кимлаев",
         "transID" : "1322;1320",
         "country" : "Россия",
+        "FAI" : "0000123",
         "region" : "г. Москва",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-03-28.jpg"
@@ -691,6 +747,7 @@
         "lname" : "Климов",
         "transID" : "1286;1290",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
@@ -702,6 +759,7 @@
         "lname" : "Князев",
         "transID" : "1292",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_GarryBu.jpg"
@@ -713,6 +771,7 @@
         "lname" : "Шубин",
         "transID" : "VS Team",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-28-1111-03-03_whitewind.jpg"
@@ -724,6 +783,7 @@
         "lname" : "Щицын ",
         "transID" : "1289",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : ""
@@ -742,6 +802,7 @@
         "lname" : "Перескоков",
         "transID" : "",
         "country" : "Россия",
+        "FAI" : "",
         "region" : "none",
         "PICTURE_OK" : "0",
         "PICTURE" : ""

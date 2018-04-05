@@ -89,7 +89,7 @@
       LeftBorder  = "0" RightBorder = "0" Bold="Yes"
       UpBorder  = "0" DownBorder  = "0"
       InnerBorder = "0" Alignment="left" IncreaseSize="3" >
-      <Cell ColUnion="3" />
+      <Cell ColUnion="3" Alignment="right" />
       <Cell ColUnion="3" DownBorder  = "3"/>  
       <Cell ColUnion="4"/>
     </Row>

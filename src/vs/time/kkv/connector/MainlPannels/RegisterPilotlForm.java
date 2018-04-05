@@ -83,6 +83,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       usr = new VS_REGISTRATION();
     }        
     
+    edFAI.setText(usr.FAI);
     PHOTO.setImage(usr.PHOTO);
     PHOTO.isChaged = false;       
 
@@ -139,6 +140,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     PHOTO = new vs.time.kkv.connector.MainlPannels.ImageImplement();
     jLabel8 = new javax.swing.JLabel();
     edRegion = new javax.swing.JTextField();
+    jLabel9 = new javax.swing.JLabel();
+    edFAI = new javax.swing.JTextField();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -203,6 +206,10 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
 
     jLabel8.setText("Region:");
 
+    jLabel9.setText("FAI:");
+
+    edFAI.setText("jTextField1");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -242,11 +249,15 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel7)
-              .addComponent(jLabel8))
+              .addComponent(jLabel8)
+              .addComponent(jLabel9))
             .addGap(33, 33, 33)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(edRegion)
-              .addComponent(edSecondName))))
+              .addComponent(edSecondName)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(edFAI, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)))))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
@@ -291,6 +302,10 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel8)
           .addComponent(edRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel9)
+          .addComponent(edFAI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -364,8 +379,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, 0)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
           .addComponent(jcbPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -406,6 +421,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       }
       usr.VS_RACE_ID = mainForm.activeRace.RACE_ID;
       usr.IS_ACTIVE = 1;
+      usr.FAI = edFAI.getText();
       usr.VS_USER_NAME = edUser.getText();
       usr.FIRST_NAME = edFirstName.getText();
       usr.SECOND_NAME = edSecondName.getText();
@@ -521,8 +537,10 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         global_user.WEB_SYSTEM = usr.WEB_SYSTEM;
         global_user.PHOTO = usr.PHOTO;
         global_user.REGION = usr.REGION;
+        global_user.FAI = usr.FAI;
         VS_USERS.dbControl.insert(mainForm.con, global_user);
       }
+      global_user.FAI = usr.FAI;
       
       if (global_user!=null && global_user.PHOTO!=null && !global_user.PHOTO.equals("")){
         usr.PHOTO = global_user.PHOTO;
@@ -577,6 +595,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           edTransponder.setText("" + user.VSID1);
           edTransponder2.setText("");
           edTransponder3.setText("");
+          edFAI.setText(user.FAI);
           if (user.VSID2!=0) edTransponder2.setText("" + user.VSID2);
           if (user.VSID3!=0) edTransponder3.setText("" + user.VSID3);
           edFirstName.setText("" + user.FIRST_NAME);
@@ -652,6 +671,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JButton butPilots;
   private javax.swing.JButton butUsedLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
+  private javax.swing.JTextField edFAI;
   private javax.swing.JTextField edFirstName;
   private javax.swing.JTextField edRegion;
   private javax.swing.JTextField edSecondName;
@@ -668,6 +688,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
   private javax.swing.JLabel jLabel8;
+  private javax.swing.JLabel jLabel9;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JComboBox jcbPilotType;

@@ -110,6 +110,9 @@ public class FPVSport extends IRegSite {
               try{
                 user.REGION = json_pilot.getString("region");
               }catch(Exception ein1){}
+              try{
+                user.FAI = json_pilot.getString("FAI");
+              }catch(Exception ein1){}
               
             }catch(Exception ein){}
             race.users.add(user);
