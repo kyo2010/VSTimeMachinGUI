@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSFlashControl;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -32,6 +33,8 @@ public abstract class IRegSite {
   
   public String REG_SITE_URL = "";
   public String REG_SITE_NAME = "";
+  public String REG_SITE_URL_FOR_UPLOAD = "";
+  
   List<VS_RACE> races = new ArrayList<VS_RACE>();
 
   public String getJSONFileName() {
@@ -40,6 +43,14 @@ public abstract class IRegSite {
 
   public String getSystemName() {
     return REG_SITE_NAME;
+  }
+  
+  public boolean isSuportedToWebUpload(){
+    return false;
+  }
+  
+  public boolean uploadToWebSystem(StageTab tab, boolean removeAllStages){
+    return false;
   }
 
   public abstract void load() throws UserException;

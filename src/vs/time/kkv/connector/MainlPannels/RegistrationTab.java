@@ -34,6 +34,7 @@ import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainForm.LastTransponderListener;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -200,6 +201,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     butExport = new javax.swing.JButton();
     butReload = new javax.swing.JButton();
     butImport = new javax.swing.JButton();
+    butUploadToSite = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -253,6 +255,14 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
+    butUploadToSite.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/export.png"))); // NOI18N
+    butUploadToSite.setToolTipText("Save All Result to Web");
+    butUploadToSite.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butUploadToSiteActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -265,26 +275,28 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butUploadToSite, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
         .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addGap(4, 4, 4)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-            .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+          .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(butUploadToSite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -325,7 +337,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(1, 1, 1)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -366,6 +378,26 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     // TODO add your handling code here:
     RegistrationImportForm.init(this).setVisible(true);
   }//GEN-LAST:event_butImportActionPerformed
+
+  private void butUploadToSiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butUploadToSiteActionPerformed
+    // TODO add your handling code here:
+    
+    IRegSite site = null;
+    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+      site = RegistrationImportForm.getSite(mainForm.activeRace.WEB_SYSTEM_SID);
+      if (site==null) return;
+      if (site.isSuportedToWebUpload()){        
+      }else{
+        JOptionPane.showMessageDialog(null,"Update race data is not supported for site :"+site.REG_SITE_NAME);
+      }
+    }
+    
+    int index = 1;
+    for (StageTab stageTab : mainForm.stageTabs) {
+      site.uploadToWebSystem(stageTab, index==1?true:false);
+      index++;
+    }    
+  }//GEN-LAST:event_butUploadToSiteActionPerformed
 
   public void tableToXLS() {
     try {
@@ -428,6 +460,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private javax.swing.JButton butImport;
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JButton butReload;
+  private javax.swing.JButton butUploadToSite;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;

@@ -75,6 +75,8 @@ import ru.nkv.var.StringVar;
 import ru.nkv.var.Var;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.SystemOptions;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
@@ -90,7 +92,7 @@ import vs.time.kkv.models.VS_SETTING;
  */
 public class StageTab extends javax.swing.JPanel {
 
-  MainForm mainForm;
+  public MainForm mainForm;
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
@@ -592,6 +594,12 @@ public class StageTab extends javax.swing.JPanel {
       jScrollPane2.setVisible(false);
       butGroupExport.setVisible(false);
       //jSplitPane2.set
+    }
+    
+    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+      butCopyToWeb.setVisible(true);
+    }else{
+      butCopyToWeb.setVisible(false);
     }
   }
 
@@ -1172,6 +1180,11 @@ public class StageTab extends javax.swing.JPanel {
 
     butCopyToWeb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/export.png"))); // NOI18N
     butCopyToWeb.setToolTipText("Copy to Web Site");
+    butCopyToWeb.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butCopyToWebActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
@@ -1658,6 +1671,19 @@ public class StageTab extends javax.swing.JPanel {
             .getSystemClipboard();
     cb.setContents(data, data);
   }//GEN-LAST:event_butCopyGropusToClipboardActionPerformed
+
+  private void butCopyToWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyToWebActionPerformed
+    // TODO add your handling code here:
+    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+      IRegSite site = RegistrationImportForm.getSite(mainForm.activeRace.WEB_SYSTEM_SID);
+      if (site==null) return;
+      if (site.isSuportedToWebUpload()){
+        site.uploadToWebSystem(this,false);
+      }else{
+        JOptionPane.showMessageDialog(null,"Update race data is not supported for site :"+site.REG_SITE_NAME);
+      }
+    }
+  }//GEN-LAST:event_butCopyToWebActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

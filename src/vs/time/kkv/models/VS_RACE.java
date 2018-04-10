@@ -26,6 +26,7 @@ public class VS_RACE {
   public String CHANNEL4 = "";
   public String WEB_SYSTEM_SID = "";
   public String WEB_SYSTEM_CAPTION = "";
+  public String WEB_RACE_ID = "";
   public String JUDGE = "";
   public String SECRETARY = "";
           
@@ -56,6 +57,8 @@ public class VS_RACE {
     
     new DBModelField("JUDGE").setDbFieldName("\"JUDGE\""),    
     new DBModelField("SECRETARY").setDbFieldName("\"SECRETARY\""),    
+    
+    new DBModelField("WEB_RACE_ID").setDbFieldName("\"WEB_RACE_ID\""),    
   });
   
 }

@@ -3,6 +3,7 @@ package KKV.Utils;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,6 +26,7 @@ public class Tools {
 
   /**
    * Метод для тетисрования
+   *
    * @param args аргументы
    */
   public static void main(String[] args) {
@@ -34,7 +36,6 @@ public class Tools {
     //System.out.println(createName("test_"));
     //System.out.println(createName("test_",10));
     //System.out.println(createName("test_",5));
-    
     System.out.println(lTrimZero("test"));
     System.out.println(lTrimZero("0test"));
     System.out.println(lTrimZero("0123"));
@@ -44,36 +45,55 @@ public class Tools {
     System.out.println(lTrimZero(null));
   }
 
-  /** Удаляет слева нули */
+  /**
+   * Удаляет слева нули
+   */
   public static String lTrimZero(String value) {
-    if (value==null) return "";
+    if (value == null) {
+      return "";
+    }
     int pos = -1;
-    for (int i=0; i<value.length(); i++){
-      if (value.charAt(i)!='0') break;
+    for (int i = 0; i < value.length(); i++) {
+      if (value.charAt(i) != '0') {
+        break;
+      }
       pos = i;
     }
-    if (pos!=-1) value = value.substring(pos+1);
-    return value;
-  }
-  
-  /** Удаляет слева пробелы */
-  public static String lTrim(String value) {
-    if (value==null) return "";
-    int pos = -1;
-    for (int i=0; i<value.length(); i++){
-      if (value.charAt(i)!=' ') break;
-      pos = i;
+    if (pos != -1) {
+      value = value.substring(pos + 1);
     }
-    if (pos!=-1) value = value.substring(pos+1);
     return value;
   }
 
-  /** Конструктор */
+  /**
+   * Удаляет слева пробелы
+   */
+  public static String lTrim(String value) {
+    if (value == null) {
+      return "";
+    }
+    int pos = -1;
+    for (int i = 0; i < value.length(); i++) {
+      if (value.charAt(i) != ' ') {
+        break;
+      }
+      pos = i;
+    }
+    if (pos != -1) {
+      value = value.substring(pos + 1);
+    }
+    return value;
+  }
+
+  /**
+   * Конструктор
+   */
   public Tools() {
   }
 
   /**
    * Округление до заданной величины
+   *
    * @param value число для округления
    * @param valRound величина, до которой нужно округлить
    * @return округленное значение
@@ -90,6 +110,7 @@ public class Tools {
 
   /**
    * Округление до заданной величины
+   *
    * @param sum число, которое нужно округлить
    * @param dec количество знаков после запятой
    * @return строку с округленным числом
@@ -112,7 +133,9 @@ public class Tools {
     return res;
   }
 
-  /** Возвращает строку из n пробелов
+  /**
+   * Возвращает строку из n пробелов
+   *
    * @param len количество пробелов
    * @return строку пробелов
    */
@@ -122,6 +145,7 @@ public class Tools {
 
   /**
    * Возвращает строку, реплицированную символом до заданной длины
+   *
    * @param symb символ для репликации
    * @param len количество символов
    * @return строку из символов
@@ -136,6 +160,7 @@ public class Tools {
 
   /**
    * Возвращает строку, реплицированную символом до заданной длины
+   *
    * @param symb символ для репликации
    * @param len количество символов
    * @return строку из символов
@@ -150,6 +175,7 @@ public class Tools {
 
   /**
    * Проверка на пустую строку
+   *
    * @param ln строка для проверки
    * @return true, если строка состоит только из пробелов
    */
@@ -159,6 +185,7 @@ public class Tools {
 
   /**
    * Проверка на пустую строку
+   *
    * @param ln строка для проверки
    * @return true, если строка состоит только из пробелов
    */
@@ -168,6 +195,7 @@ public class Tools {
 
   /**
    * Проверка на пустое значение
+   *
    * @param val число для проверки
    * @return true, если число = 0
    */
@@ -177,6 +205,7 @@ public class Tools {
 
   /**
    * Возвращает строки, где возникло исключение
+   *
    * @param e исключение
    * @return строка с описанием исключения
    */
@@ -185,34 +214,36 @@ public class Tools {
     e.printStackTrace(new PrintStream(myOut));
     return myOut.toString();
   }
-  
+
   synchronized public static String traceErrorWithCaption(Throwable e) {
-    try{
+    try {
       UserException ue = (UserException) e;
-      return ue.error+"<br>"+ue.details;
-    }catch(Exception ein){}
-    
+      return ue.error + "<br>" + ue.details;
+    } catch (Exception ein) {
+    }
+
     OutputStream myOut = new ByteArrayOutputStream();
     e.printStackTrace(new PrintStream(myOut));
-    return e.getMessage()+" "+myOut.toString();
+    return e.getMessage() + " " + myOut.toString();
   }
 
   synchronized public static String traceErrorForWeb(Throwable e) {
     /*OutputStream myOut = new ByteArrayOutputStream();
     e.printStackTrace(new PrintStream(myOut));
     return myOut.toString().replaceAll("\n", "<br>");*/
-    
+
     StringBuffer sb = new StringBuffer();
-    
+
     sb.append(
-            "&nbsp;<font color='blue'><a href='#' onclick='$(info"+e.hashCode()+").style.display=\"block\"'>details</a>"+
-            "<div id='info"+e.hashCode()+"' style='display:none'>"+e.toString()+" "+Tools.traceError(e)+"</div></font>"
+            "&nbsp;<font color='blue'><a href='#' onclick='$(info" + e.hashCode() + ").style.display=\"block\"'>details</a>"
+            + "<div id='info" + e.hashCode() + "' style='display:none'>" + e.toString() + " " + Tools.traceError(e) + "</div></font>"
     );
-     return sb.toString(); 
+    return sb.toString();
   }
 
   /**
    * Левая часть строки
+   *
    * @param str строка
    * @param len количество символов для формирования левой части
    * @return Левая часть строки
@@ -229,6 +260,7 @@ public class Tools {
 
   /**
    * Добивка пробелами справа
+   *
    * @param str строка для добивки пробелами
    * @param len итоговый размер строки
    * @return строку добитую пробелами справа
@@ -242,6 +274,7 @@ public class Tools {
 
   /**
    * Добивка символами слева заданным символом
+   *
    * @param str строка для добивки пробелами
    * @param len итоговый размер строки
    * @param symb символ добивки
@@ -255,6 +288,7 @@ public class Tools {
 
   /**
    * Добивка символами слева
+   *
    * @param str строка для добивки пробелами
    * @param len итоговый размер строки
    * @param symb символ добивки
@@ -268,6 +302,7 @@ public class Tools {
 
   /**
    * Добивка пробелами слева
+   *
    * @param str строка для добивки пробелами
    * @param len итоговый размер строки
    * @return строку добитую пробелами слева
@@ -278,6 +313,7 @@ public class Tools {
 
   /**
    * Добивка пробелами для центровки
+   *
    * @param str строка для добивки пробелами
    * @param len итоговый размер строки
    * @return строку добитую пробелами слева и справа
@@ -301,6 +337,7 @@ public class Tools {
 
   /**
    * Усекает концевые пробелы в строке
+   *
    * @param str Усекаемая строка
    * @return Строка без концевых пробелов
    */
@@ -309,17 +346,20 @@ public class Tools {
     while (str.charAt(--pos) == ' ');
     return str.substring(0, pos + 1);
   }
-  
+
   public synchronized static String removeSpaces(String str) {
     String res = "";
-    for (int i = 0; i<str.length(); i++){
-      if (str.charAt(i)!=' ') res+=str.charAt(i);
+    for (int i = 0; i < str.length(); i++) {
+      if (str.charAt(i) != ' ') {
+        res += str.charAt(i);
+      }
     }
     return res;
   }
 
   /**
    * Сжать строку. Удалить ВСЕ внутренние и внешние пробелы
+   *
    * @param str исходная строка
    * @return результирующая строка
    */
@@ -335,6 +375,7 @@ public class Tools {
 
   /**
    * Возвращает строку цедых чисел через запятую от массива целых чисел
+   *
    * @param intArr массив целых чисел
    * @return строку цедых чисел
    */
@@ -350,7 +391,9 @@ public class Tools {
   }
 
   /**
-   * Возвращает строку, в которой строки перечислены через запятую от массива строк
+   * Возвращает строку, в которой строки перечислены через запятую от массива
+   * строк
+   *
    * @param strArr массив строк
    * @return результирующая строка
    */
@@ -366,7 +409,9 @@ public class Tools {
   }
 
   /**
-   * Возвращает строку, в которой строки перечислены через delim от массива строк
+   * Возвращает строку, в которой строки перечислены через delim от массива
+   * строк
+   *
    * @param strArr
    * @param delim разделитель
    * @return результирующая строка
@@ -383,7 +428,9 @@ public class Tools {
   }
 
   /**
-   * Возвращает строку, в которой строки перечислены через delim от массива строк
+   * Возвращает строку, в которой строки перечислены через delim от массива
+   * строк
+   *
    * @param strArr
    * @param needQuote нужны ли апострофы
    * @return результирующая строка
@@ -400,7 +447,9 @@ public class Tools {
   }
 
   /**
-   * Возвращает массив строк от строки в которой строки перечислены через sym, и строка начинается beg и заканчивается end
+   * Возвращает массив строк от строки в которой строки перечислены через sym, и
+   * строка начинается beg и заканчивается end
+   *
    * @param str исходная строка
    * @param end символ, которым заканчивается строка
    * @param sym разделитель строк
@@ -451,7 +500,9 @@ public class Tools {
   }
 
   /**
-   * Возвращает массив целых от строки цифр, перечисленных через sym, заканчивающихся end
+   * Возвращает массив целых от строки цифр, перечисленных через sym,
+   * заканчивающихся end
+   *
    * @param str исходная строка
    * @param end символ, которым заканчивается строка
    * @param sym разделитель строк
@@ -495,7 +546,9 @@ public class Tools {
 
   }
 
-  /** substr - как в Clipper'e
+  /**
+   * substr - как в Clipper'e
+   *
    * @param line строка
    * @param from начало выделения строки
    * @param kol количество символов
@@ -519,6 +572,7 @@ public class Tools {
 
   /**
    * Сжать строку. Удалить повторяющиеся пробелы
+   *
    * @param str исходная строка
    * @return результирующая строка
    */
@@ -534,6 +588,7 @@ public class Tools {
 
   /**
    * Разбивает строку на составляющие
+   *
    * @param line входная строка
    * @param bound границы разбиения
    * @param num номер подстроки
@@ -606,7 +661,7 @@ public class Tools {
     final String razd = ";";
 
     if (array == null) {
-      throw new UserException("Error","Array is empty");
+      throw new UserException("Error", "Array is empty");
     }
 
     if ((array.substring(array.indexOf("{") + 1, array.indexOf("}"))).toLowerCase().trim().equals("all")) {
@@ -630,8 +685,9 @@ public class Tools {
     return res;
   }
 
-  
-  /** Запись в файл data.out
+  /**
+   * Запись в файл data.out
+   *
    * @param str строка для записи
    * @throws UserException
    */
@@ -639,7 +695,9 @@ public class Tools {
     toFile(new String[]{str});
   }
 
-  /** Запись в файл data.out
+  /**
+   * Запись в файл data.out
+   *
    * @param arr массив строк для записи
    * @throws UserException
    */
@@ -647,7 +705,9 @@ public class Tools {
     toFile(new String[][]{arr});
   }
 
-  /** Запись в файл data.out
+  /**
+   * Запись в файл data.out
+   *
    * @param result массив строк для записи
    * @throws UserException
    */
@@ -673,6 +733,7 @@ public class Tools {
 
   /**
    * Возвращает строку разделенную разделителем
+   *
    * @param arr - массив объектов для toString()
    * @param delim - разделитель
    * @return строка с разделителями
@@ -689,8 +750,9 @@ public class Tools {
   }
 
   /**
-   * Преобразует полное имя пользователя в фамилию с инициалами.
-   * Если преобразовать невозможно, возвращает исходный вариант.
+   * Преобразует полное имя пользователя в фамилию с инициалами. Если
+   * преобразовать невозможно, возвращает исходный вариант.
+   *
    * @param user 'Фамилия �?мя Отчество'
    * @return 'Фамилия �?.О.'
    */
@@ -708,67 +770,63 @@ public class Tools {
 
   /**
    * Создать новое уникальное имя файла.
+   *
    * @param prefix Строка, с которой будет начинаться имя.
    * @return Уникальное имя.
    */
   public synchronized static String createName(String prefix) {
-    return createName(prefix,20).toUpperCase();
+    return createName(prefix, 20).toUpperCase();
   }
 
-  public synchronized static String createName(String prefix, int len)
-  {
-    if (len<=3) len=5;
-    return prefix + 
-            Long.toString(Calendar.getInstance().getTimeInMillis(), 20).toUpperCase()
-            + Tools.padl(""+new Random().nextInt(999),3, "0");
+  public synchronized static String createName(String prefix, int len) {
+    if (len <= 3) {
+      len = 5;
+    }
+    return prefix
+            + Long.toString(Calendar.getInstance().getTimeInMillis(), 20).toUpperCase()
+            + Tools.padl("" + new Random().nextInt(999), 3, "0");
   }
-    
-   public static String getStringFromObject(Object[] objs, int index, String defaultValue) {
-     String value = defaultValue;
-     if (objs!=null && objs.length>index && objs[index]!=null){
-       return objs[index].toString();
-     }
-     return value;
-   }
 
+  public static String getStringFromObject(Object[] objs, int index, String defaultValue) {
+    String value = defaultValue;
+    if (objs != null && objs.length > index && objs[index] != null) {
+      return objs[index].toString();
+    }
+    return value;
+  }
 
-   public static Map <String, String> parseParameters (String params)
-     {
-     Map <String, String> result = new HashMap <String, String> ();
-     if (params.indexOf ("-") < 0)
-       {
-       return result;
-       }
+  public static Map<String, String> parseParameters(String params) {
+    Map<String, String> result = new HashMap<String, String>();
+    if (params.indexOf("-") < 0) {
+      return result;
+    }
 
+    params = " " + params;
+    String tokens[] = params.split(" -");
+    for (String t : tokens) {
+      int q1 = t.indexOf("=\"");
+      int q2 = t.indexOf("\"", q1 + 2);
+      if (q1 < 0 || q2 < 0) {
+        continue;
+      }
+      String key = t.substring(0, q1).trim();
+      String value = t.substring(q1 + 2, q2).trim();
+      if (key == null || key.length() < 1) {
+        continue;
+      }
+      if (value == null) {
+        value = "";
+      }
+      result.put(key, value);
+    }
 
-     params = " " + params;
-     String tokens [] = params.split (" -");
-     for (String t : tokens)
-       {
-       int q1 = t.indexOf ("=\"");
-       int q2 = t.indexOf ("\"", q1 + 2);
-       if (q1 < 0 || q2 < 0)
-         {
-         continue;
-         }
-       String key   = t.substring (0, q1).trim ();
-       String value = t.substring (q1 + 2, q2).trim ();
-       if (key == null || key.length () < 1)
-         {
-         continue;
-         }
-       if (value == null)
-         {
-         value = "";
-         }
-       result.put (key, value);
-       }
+    return result;
+  }
 
-     return result;
-     }
-
-   /** заменяет CellID в строке вида {test##=RC()}**/
-   public static String addCellID(String cell_id, String cell_text) {
+  /**
+   * заменяет CellID в строке вида {test##=RC()}*
+   */
+  public static String addCellID(String cell_id, String cell_text) {
     if (cell_text.indexOf("{#") == 0) {
       cell_text = cell_text.replaceAll("\\{#", "{" + cell_id + "#");
     } else {
@@ -776,55 +834,91 @@ public class Tools {
     }
     return cell_text;
   }
-   
-   public static String getTextFromFile(String fileName){
-     return getTextFromFile(fileName,null);
-   }
 
-   public static String getTextFromFile(String fileName, IVar var){
-     StringBuffer sb = new StringBuffer();
-     try{     
-        FileInputStream fileIn = new FileInputStream( fileName );
-        BufferedReader dataIn =
-                new BufferedReader( new InputStreamReader( fileIn ) );
+  public static String getTextFromFile(String fileName) {
+    return getTextFromFile(fileName, null);
+  }
 
-        String readLine = dataIn.readLine();
-        String nameParam, valueParam;
+  public static String getTextFromFile(String fileName, IVar var) {
+    StringBuffer sb = new StringBuffer();
+    try {
+      FileInputStream fileIn = new FileInputStream(fileName);
+      BufferedReader dataIn
+              = new BufferedReader(new InputStreamReader(fileIn));
 
-        while( readLine != null )
-        {
-           readLine = readLine;
-           sb.append(readLine+"\n");           
-           readLine = dataIn.readLine();
-        }   
-        fileIn.close();
-        dataIn.close();
-      }catch(Exception e) {
-        System.out.println("File '"+fileName+"' read is error. " + Tools.traceError(e));
-      }       
-     
-     if (var!=null){
-       return var.applyValues(sb.toString());
-     }
-     
-     return sb.toString();
-   }
-     
-   public static void deleteDir(File dir) {
+      String readLine = dataIn.readLine();
+      String nameParam, valueParam;
+
+      while (readLine != null) {
+        readLine = readLine;
+        sb.append(readLine + "\n");
+        readLine = dataIn.readLine();
+      }
+      fileIn.close();
+      dataIn.close();
+    } catch (Exception e) {
+      System.out.println("File '" + fileName + "' read is error. " + Tools.traceError(e));
+    }
+
+    if (var != null) {
+      return var.applyValues(sb.toString());
+    }
+
+    return sb.toString();
+  }
+
+  public static void deleteDir(File dir) {
     try {
       File[] files = dir.listFiles();
-      if (files==null) {
+      if (files == null) {
         dir.delete();
         return;
       }//return;
       for (int i = 0; i < files.length; i++) {
-        if (files[i].isDirectory()) deleteDir(files[i]);
-        else files[i].delete();
+        if (files[i].isDirectory()) {
+          deleteDir(files[i]);
+        } else {
+          files[i].delete();
+        }
       }
-      System.out.println("Dir '"+dir.getAbsolutePath()+"' was deleted");
+      System.out.println("Dir '" + dir.getAbsolutePath() + "' was deleted");
       dir.delete();
     } catch (Exception e) {
-      System.out.println(e+" "+Tools.traceError(e));
+      System.out.println(e + " " + Tools.traceError(e));
     }
   }
+
+  //Writing and Saving Configurations
+  public static void setPreference(String Key, String Value) {
+    Properties configFile = new Properties();
+    try {
+      InputStream f = new FileInputStream("configuration.xml");
+      configFile.loadFromXML(f);
+      f.close();
+    } catch (IOException e) {
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(null, e.getMessage());
+    }
+    configFile.setProperty(Key, Value);
+    try {
+      OutputStream f = new FileOutputStream("configuration.xml");
+      configFile.storeToXML(f, "Configuration file for the System");
+    } catch (Exception e) {
+    }
+  }
+  
+  //Reading Configurations    
+  public static String getPreference(String Key) {
+    Properties configFile = new Properties();
+    try {
+      InputStream f = new FileInputStream("configuration.xml");
+      configFile.loadFromXML(f);
+      f.close();
+    } catch (IOException e) {
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(null, e.getMessage());
+    }
+    return (configFile.getProperty(Key));
+  }
+
 }
