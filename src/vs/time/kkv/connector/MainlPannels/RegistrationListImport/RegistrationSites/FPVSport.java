@@ -51,7 +51,8 @@ public class FPVSport extends IRegSite {
   {
     REG_SITE_URL = "http://fpvsport.ru/getRaces.php";
     //REG_SITE_URL = "http://jteam.ru/pilots/getRaces.php";
-    REG_SITE_URL_FOR_UPLOAD = "http://localhost/pilots/uploadStage.php";
+    //REG_SITE_URL_FOR_UPLOAD = "http://localhost/pilots/uploadStage.php";
+    REG_SITE_URL_FOR_UPLOAD = "http://fpvsport.ru/uploadStage.php";
     REG_SITE_NAME = "FPVSport.ru";
   }
 
