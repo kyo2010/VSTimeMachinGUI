@@ -385,11 +385,17 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     IRegSite site = null;
     if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
       site = RegistrationImportForm.getSite(mainForm.activeRace.WEB_SYSTEM_SID);
-      if (site==null) return;
+      if (site==null) {
+        JOptionPane.showMessageDialog(null,"Please make a link with web system");
+        return;
+      }
       if (site.isSuportedToWebUpload()){        
       }else{
         JOptionPane.showMessageDialog(null,"Update race data is not supported for site :"+site.REG_SITE_NAME);
       }
+    }else{
+      JOptionPane.showMessageDialog(null,"Please make a link with web system");
+      return;
     }
     
     int index = 1;
