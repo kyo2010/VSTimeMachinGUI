@@ -9,17 +9,25 @@ import vs.time.kkv.connector.Race.*;
 import vs.time.kkv.connector.Users.*;
 import KKV.DBControlSqlLite.DBModelTest;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_STAGE;
@@ -51,7 +59,22 @@ public class StageNewForm extends javax.swing.JFrame {
     channelControls.add(new ChannelControl(5, jlChannel5, jcbChannel5, jcbColor5));
     channelControls.add(new ChannelControl(6, jlChannel6, jcbChannel6, jcbColor6));
     channelControls.add(new ChannelControl(7, jlChannel7, jcbChannel7, jcbColor7));
-    channelControls.add(new ChannelControl(8, jlChannel8, jcbChannel8, jcbColor8));       
+    channelControls.add(new ChannelControl(8, jlChannel8, jcbChannel8, jcbColor8));
+       
+    columnsList.setCellRenderer(new CheckListRenderer());
+    columnsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    columnsList.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent event) {
+        JList list = (JList) event.getSource();
+        int index = list.locationToIndex(event.getPoint());// Get index of item                                                           // clicked
+        CheckListItem item = (CheckListItem) list.getModel()
+            .getElementAt(index);
+        item.setSelected(!item.isSelected()); // Toggle selected state
+        list.repaint(list.getCellBounds(index, index));// Repaint cell
+      }
+    });       
+
   }
 
   private static StageNewForm form = null;
@@ -67,10 +90,10 @@ public class StageNewForm extends javax.swing.JFrame {
     form.stage = stage;
     form.prepareForm();
     form.setTitle("New Stage");
-    if (stage!=null){
-      form.setTitle("Edit Stage "+stage.CAPTION+" ["+stage.ID+"] "+stage.RACE_ID);
-    }            
-   
+    if (stage != null) {
+      form.setTitle("Edit Stage " + stage.CAPTION + " [" + stage.ID + "] " + stage.RACE_ID);
+    }
+
     return form;
   }
 
@@ -119,16 +142,17 @@ public class StageNewForm extends javax.swing.JFrame {
       jchGroupByPilotType.setSelected(stage.FLAG_BY_PYLOT_TYPE == 1);
       jtLapsCount.setText("" + stage.LAPS);
       jtMinLapTime.setText("" + stage.MIN_LAP_TIME);
-      jtCountOfPilots.setSelectedIndex(stage.COUNT_PILOTS_IN_GROUP - 1);      
+      jtCountOfPilots.setSelectedIndex(stage.COUNT_PILOTS_IN_GROUP - 1);
       String[] channels = stage.CHANNELS.split(";");
       String[] colors = stage.COLORS.split(";");
       int index = 0;
       for (String channel : channels) {
         channelControls.get(index).box.setSelectedItem(channel);
         String color = "WHITE";
-        try{
+        try {
           color = colors[index];
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
         channelControls.get(index).color.setSelectedItem(color);
         index++;
       }
@@ -137,37 +161,40 @@ public class StageNewForm extends javax.swing.JFrame {
         parentStage.setSelectedItem(stage.PARENT_STAGE);
       } catch (Exception e) {
       }
-      jPilotType.setSelectedIndex(stage.PILOT_TYPE);      
+      jPilotType.setSelectedIndex(stage.PILOT_TYPE);
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
-      PilotsForNextRound.setText(""+stage.PILOTS_FOR_NEXT_ROUND);
+      PilotsForNextRound.setText("" + stage.PILOTS_FOR_NEXT_ROUND);
       jRaceType.setSelectedIndex(stage.RACE_TYPE);
     } else {
       VS_RACE race = mainForm.activeRace;
       //jtLapsCount.setText("" + 3);
-      jtLapsCount.setText(""+race.COUNT_OF_LAPS);      
-      jtMinLapTime.setText(""+race.MIN_LAP_TIME);
+      jtLapsCount.setText("" + race.COUNT_OF_LAPS);
+      jtMinLapTime.setText("" + race.MIN_LAP_TIME);
       parentStage.setSelectedItem(last_stage);
       jPilotType.setSelectedIndex(MainForm.PILOT_TYPE_NONE_INDEX);
       butRecrateGropus.setVisible(false);
       String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
-      String st_colors = VS_SETTING.getParam(mainForm.con, "COLORS", "RED;BLUE;GREEN");      
+      String st_colors = VS_SETTING.getParam(mainForm.con, "COLORS", "RED;BLUE;GREEN");
       String[] channels = st_channels.split(";");
       String[] colors = st_colors.split(";");
       int index = 0;
       for (String channel : channels) {
         channelControls.get(index).box.setSelectedItem(channel);
         String color = "WHITE";
-        try{
+        try {
           color = colors[index];
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
         channelControls.get(index).color.setSelectedItem(color);
         index++;
       }
       //jtCountOfPilots.setSelectedIndex(channels.length - 1);      
     }
-    
-    jtCountOfPilotsPropertyChange(null);
-    jcbStageTypeActionPerformed(null);        
+
+    if (stage==null){
+      jtCountOfPilotsPropertyChange(null);
+      jcbStageTypeActionPerformed(null);    
+    }      
   }
 
   /**
@@ -232,8 +259,9 @@ public class StageNewForm extends javax.swing.JFrame {
     jLabel7 = new javax.swing.JLabel();
     PilotsForNextRound = new javax.swing.JTextField();
     tabRaceReport = new javax.swing.JPanel();
-    pColumns = new javax.swing.JPanel();
-    jLabel8 = new javax.swing.JLabel();
+    jLabel9 = new javax.swing.JLabel();
+    jScrollPane2 = new javax.swing.JScrollPane();
+    columnsList = new javax.swing.JList<>();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -561,23 +589,14 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(panelQualificationResultLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(panelQualificationResult2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(315, Short.MAX_VALUE))
+        .addContainerGap(235, Short.MAX_VALUE))
     );
 
     tabPane.addTab("Result Parameters", panelQualificationResult);
 
-    javax.swing.GroupLayout pColumnsLayout = new javax.swing.GroupLayout(pColumns);
-    pColumns.setLayout(pColumnsLayout);
-    pColumnsLayout.setHorizontalGroup(
-      pColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-    pColumnsLayout.setVerticalGroup(
-      pColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 355, Short.MAX_VALUE)
-    );
+    jLabel9.setText("Show the following columns:");
 
-    jLabel8.setText("Show the following columns:");
+    jScrollPane2.setViewportView(columnsList);
 
     javax.swing.GroupLayout tabRaceReportLayout = new javax.swing.GroupLayout(tabRaceReport);
     tabRaceReport.setLayout(tabRaceReportLayout);
@@ -586,23 +605,21 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(tabRaceReportLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(tabRaceReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(pColumns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(tabRaceReportLayout.createSequentialGroup()
-            .addComponent(jLabel8)
-            .addGap(0, 396, Short.MAX_VALUE)))
+            .addComponent(jLabel9)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE))
         .addContainerGap())
     );
     tabRaceReportLayout.setVerticalGroup(
       tabRaceReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(tabRaceReportLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel8)
+        .addComponent(jLabel9)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(pColumns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         .addContainerGap())
     );
-
-    jLabel8.getAccessibleContext().setAccessibleName("");
 
     tabPane.addTab("Columns", tabRaceReport);
 
@@ -733,15 +750,15 @@ public class StageNewForm extends javax.swing.JFrame {
         } catch (Exception e) {
         }
       }
-      stage.PARENT_STAGE = parentStage.getSelectedItem().toString();      
+      stage.PARENT_STAGE = parentStage.getSelectedItem().toString();
       try {
         parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
       } catch (Exception e) {
       }
-      if (parent_stage!=null){
+      if (parent_stage != null) {
         stage.PARENT_STAGE_ID = parent_stage.ID;
       }
-      
+
       stage.SORT_TYPE = jOrderBy.getSelectedIndex();
       stage.CAPTION = jtCaption.getText();
       stage.FLAG_BY_PYLOT_TYPE = jchGroupByPilotType.isSelected() ? 1 : 0;
@@ -758,12 +775,12 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
       stage.RACE_TYPE = jRaceType.getSelectedIndex();
-      
+
       try {
         stage.PILOTS_FOR_NEXT_ROUND = Integer.parseInt(PilotsForNextRound.getText());
       } catch (Exception e) {
-      }      
-      
+      }
+
       stage.PILOT_TYPE = jPilotType.getSelectedIndex();
 
       String channels = "";
@@ -776,44 +793,43 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.COLORS = colors;
       stage.resetSelectedTab(mainForm.con, stage.RACE_ID);
       stage.IS_SELECTED = 1;
-      
-      String colsInfo = "";
-      if (linkingColumnAndChechkBox!=null){
-        for (LinkingColumnAndChechkBox colLink : linkingColumnAndChechkBox){
-          if (colLink.check.isSelected()){
-            colsInfo += "1;";
-          }else{
+
+      String colsInfo = "";      
+      for (int i=0; i<columnsList.getModel().getSize(); i++){
+        CheckListItem ci = columnsList.getModel().getElementAt(i);
+        if (ci.isSelected){
+          colsInfo += "1;";
+          } else {
             colsInfo += "0;";
-          } 
         }
-      }
+      }  
+            
       stage.REP_COLS = colsInfo;
-      
+
       if (stage.ID == -1) {
 
-        if (stage.STAGE_TYPE == MainForm.STAGE_RACE){
-         if (parent_stage!=null) {
+        if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+          if (parent_stage != null) {
             stage.PILOT_TYPE = parent_stage.PILOT_TYPE;
             stage.SORT_TYPE = MainForm.STAGE_SORT_BY_RACE_TIME;
           }
-        } 
-        
-        if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE && 
-                ( stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP ||
-                  stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE
-                )) {         
+        }
+
+        if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE
+                && (stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP
+                || stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE)) {
           stage.SORT_TYPE = MainForm.STAGE_SORT_BY_SCORE_DESC;
           stage.ID = -1;
           String caption = stage.CAPTION;
-          stage.CAPTION = caption+"_1";
+          stage.CAPTION = caption + "_1";
           stage.dbControl.insert(mainForm.con, stage);
           stage.ID = -1;
-          stage.CAPTION = caption+"_2";
+          stage.CAPTION = caption + "_2";
           stage.dbControl.insert(mainForm.con, stage);
           stage.ID = -1;
-          stage.CAPTION = caption+"_3";
-          stage.dbControl.insert(mainForm.con, stage);          
-          stage.CAPTION = caption+" result";
+          stage.CAPTION = caption + "_3";
+          stage.dbControl.insert(mainForm.con, stage);
+          stage.CAPTION = caption + " result";
           stage.ID = -1;
           stage.STAGE_TYPE = MainForm.STAGE_RACE_RESULT;
           stage.SORT_TYPE = MainForm.STAGE_SORT_BY_LOSS_DESC;
@@ -834,7 +850,7 @@ public class StageNewForm extends javax.swing.JFrame {
       mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-        
+
   }//GEN-LAST:event_bSaveActionPerformed
 
   private void jchGroupByPilotTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchGroupByPilotTypeActionPerformed
@@ -854,6 +870,17 @@ public class StageNewForm extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_jcbStageTypePropertyChange
 
+  @Override
+  public void setVisible(boolean b) {
+    super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
+    if (b){
+      tabPane.repaint();
+      tabRaceReport.repaint();
+    }  
+  }
+
+  
+  
   private void jtCountOfPilotsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jtCountOfPilotsPropertyChange
     // TODO add your handling code here:    
     int count_of_pilots = jtCountOfPilots.getSelectedIndex() + 1;
@@ -870,75 +897,51 @@ public class StageNewForm extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_jtCountOfPilotsPropertyChange
   
-  List<LinkingColumnAndChechkBox> linkingColumnAndChechkBox = new ArrayList<>();
-  class LinkingColumnAndChechkBox{
-    int index;
-    STAGE_COLUMN col;
-    JCheckBox check;    
-
-    public LinkingColumnAndChechkBox(int index, STAGE_COLUMN col, JCheckBox check) {
-      this.index = index;
-      this.col = col;
-      this.check = check;
-    }
-    
-  }
-  
   private void jcbStageTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbStageTypeActionPerformed
-    // TODO add your handling code here:
-    //tabPane.setSelectedIndex(0);    
-    //tabRaceReport.setVisible(false);
-    //tabPane.setEnabledAt(2, false);
+    // TODO add your handling code here:    
     
-        // Create Report Check boxes  
-    pColumns.removeAll();   
-    pColumns.setLayout(/*new FlowLayout()*/new BoxLayout(pColumns, BoxLayout.PAGE_AXIS) );   
+    // Create Report Check boxes  
     STAGE_COLUMN[] columns = StageTableAdapter.getDeafultColumns(jcbStageType.getSelectedIndex());
-    linkingColumnAndChechkBox.clear();
-    String[] colsInfo = stage==null?null:stage.REP_COLS.split(";");
+    String[] colsInfo = stage == null ? null : stage.REP_COLS.split(";");
     int index = 0;
-    for ( STAGE_COLUMN col : columns) {      
+    DefaultListModel<CheckListItem> items = new DefaultListModel<CheckListItem>();
+    for (STAGE_COLUMN col : columns) {
       String cpation = col.caption.replaceAll("\\n", " ");
-      JCheckBox check = new JCheckBox(cpation);      
-      check.setSelected(true);
-      if (colsInfo!=null && index<colsInfo.length){
-        if ("0".equals(colsInfo[index])){
-          check.setSelected(false);
+      boolean isCheck = true;
+      if (colsInfo != null && index < colsInfo.length) {
+        if ("0".equals(colsInfo[index])) {
+          isCheck = false;
         }
-      }
-      pColumns.add(check);    
-      linkingColumnAndChechkBox.add(new LinkingColumnAndChechkBox(index, col, check));
+      }     
+      items.addElement(new CheckListItem(cpation,isCheck));
       index++;
     }
-    
-    
-    panelQualificationResult.setVisible(false);
+    columnsList.setModel(items);
+
+    panelQualificationResult2.setVisible(false);
     racePanel.setVisible(false);
-    stagePanel.setVisible(false);    
-            
-   /* if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE) {
+    stagePanel.setVisible(false);
+
+    /* if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE) {
       racePanel.setVisible(true);
     } else {
       racePanel.setVisible(false);
-    }*/   
-
+    }*/
     if (jcbStageType.getSelectedIndex() == MainForm.STAGE_QUALIFICATION_RESULT || jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_RESULT) {
       //LapsCaption.setText("Count pilots for next round: ");
       tabPane.setSelectedIndex(1);
-      panelQualificationResult.setVisible(true);
-    } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_REPORT){
-      //tabRaceReport.setVisible(true);
-      tabPane.setEnabledAt(2, true);
-      panelQualificationResult.setVisible(true);
-      //tabPane.setSelectedIndex(2);
-    } else {     
+      panelQualificationResult2.setVisible(true);
+    } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_REPORT) {     
+      panelQualificationResult2.setVisible(true);
+      tabPane.setSelectedComponent(tabRaceReport);
+    } else {
       racePanel.setVisible(true);
       stagePanel.setVisible(true);
-      panelQualificationResult.setVisible(false);
+      panelQualificationResult2.setVisible(false);
       tabPane.setSelectedIndex(0);
-    }    
+    }
     //updateUI();
-    jPanel1.updateUI();
+    //jPanel1.updateUI();
   }//GEN-LAST:event_jcbStageTypeActionPerformed
 
   private void butRecrateGropusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRecrateGropusActionPerformed
@@ -955,6 +958,42 @@ public class StageNewForm extends javax.swing.JFrame {
       mainForm.toLog(e);
     }
   }//GEN-LAST:event_butRecrateGropusActionPerformed
+
+  class CheckListItem {
+    private String label;
+    private boolean isSelected = false;
+
+    public CheckListItem(String label,boolean isSelected) {
+      this.label = label;
+      this.isSelected = isSelected;
+    }
+
+    public boolean isSelected() {
+      return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+      this.isSelected = isSelected;
+    }
+
+    @Override
+    public String toString() {
+      return label;
+    }
+  }
+
+  class CheckListRenderer extends JCheckBox implements ListCellRenderer {
+    public Component getListCellRendererComponent(JList list, Object value,
+            int index, boolean isSelected, boolean hasFocus) {
+      setEnabled(list.isEnabled());
+      setSelected(((CheckListItem) value).isSelected());
+      setFont(list.getFont());
+      setBackground(list.getBackground());
+      setForeground(list.getForeground());
+      setText(value.toString());
+      return this;
+    }
+  }
 
   /**
    * @param args the command line arguments
@@ -1013,6 +1052,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
   private javax.swing.JButton butRecrateGropus;
+  private javax.swing.JList<CheckListItem> columnsList;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -1020,13 +1060,14 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
-  private javax.swing.JLabel jLabel8;
+  private javax.swing.JLabel jLabel9;
   private javax.swing.JComboBox<String> jOrderBy;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JComboBox<String> jPilotType;
   private javax.swing.JComboBox<String> jRaceType;
   private javax.swing.JLabel jRaceTypeLabel;
+  private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JComboBox jcbChannel1;
   private javax.swing.JComboBox jcbChannel2;
   private javax.swing.JComboBox jcbChannel3;
@@ -1057,7 +1098,6 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JComboBox jtCountOfPilots;
   private javax.swing.JTextField jtLapsCount;
   private javax.swing.JTextField jtMinLapTime;
-  private javax.swing.JPanel pColumns;
   private javax.swing.JPanel panelQualificationResult;
   private javax.swing.JPanel panelQualificationResult2;
   private javax.swing.JComboBox<String> parentStage;
