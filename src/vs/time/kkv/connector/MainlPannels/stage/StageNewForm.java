@@ -8,9 +8,14 @@ package vs.time.kkv.connector.MainlPannels.stage;
 import vs.time.kkv.connector.Race.*;
 import vs.time.kkv.connector.Users.*;
 import KKV.DBControlSqlLite.DBModelTest;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout.ParallelGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -46,7 +51,7 @@ public class StageNewForm extends javax.swing.JFrame {
     channelControls.add(new ChannelControl(5, jlChannel5, jcbChannel5, jcbColor5));
     channelControls.add(new ChannelControl(6, jlChannel6, jcbChannel6, jcbColor6));
     channelControls.add(new ChannelControl(7, jlChannel7, jcbChannel7, jcbColor7));
-    channelControls.add(new ChannelControl(8, jlChannel8, jcbChannel8, jcbColor8));
+    channelControls.add(new ChannelControl(8, jlChannel8, jcbChannel8, jcbColor8));       
   }
 
   private static StageNewForm form = null;
@@ -64,8 +69,8 @@ public class StageNewForm extends javax.swing.JFrame {
     form.setTitle("New Stage");
     if (stage!=null){
       form.setTitle("Edit Stage "+stage.CAPTION+" ["+stage.ID+"] "+stage.RACE_ID);
-    }
-
+    }            
+   
     return form;
   }
 
@@ -176,16 +181,24 @@ public class StageNewForm extends javax.swing.JFrame {
 
     jPanel1 = new javax.swing.JPanel();
     Caption = new javax.swing.JLabel();
-    LapsCaption = new javax.swing.JLabel();
     jtCaption = new javax.swing.JTextField();
-    jtLapsCount = new javax.swing.JTextField();
     jLabel4 = new javax.swing.JLabel();
     jcbStageType = new javax.swing.JComboBox();
-    stagePanel = new javax.swing.JPanel();
+    racePanel = new javax.swing.JPanel();
+    jRaceTypeLabel = new javax.swing.JLabel();
+    jRaceType = new javax.swing.JComboBox<>();
+    jLabel5 = new javax.swing.JLabel();
+    parentStage = new javax.swing.JComboBox<>();
+    tabPane = new javax.swing.JTabbedPane();
+    tabRace = new javax.swing.JPanel();
+    LapsCaption = new javax.swing.JLabel();
+    jtLapsCount = new javax.swing.JTextField();
+    jchGroupByPilotType = new javax.swing.JCheckBox();
     jLabel3 = new javax.swing.JLabel();
-    jtMinLapTime = new javax.swing.JTextField();
     jLabel1 = new javax.swing.JLabel();
     jtCountOfPilots = new javax.swing.JComboBox();
+    jtMinLapTime = new javax.swing.JTextField();
+    stagePanel = new javax.swing.JPanel();
     jlChannel1 = new javax.swing.JLabel();
     jcbChannel1 = new javax.swing.JComboBox();
     jlChannel5 = new javax.swing.JLabel();
@@ -202,7 +215,6 @@ public class StageNewForm extends javax.swing.JFrame {
     jlChannel8 = new javax.swing.JLabel();
     jcbChannel4 = new javax.swing.JComboBox();
     jlChannel4 = new javax.swing.JLabel();
-    jchGroupByPilotType = new javax.swing.JCheckBox();
     jcbColor1 = new javax.swing.JComboBox<>();
     jcbColor2 = new javax.swing.JComboBox<>();
     jcbColor3 = new javax.swing.JComboBox<>();
@@ -212,17 +224,16 @@ public class StageNewForm extends javax.swing.JFrame {
     jcbColor7 = new javax.swing.JComboBox<>();
     jcbColor8 = new javax.swing.JComboBox<>();
     panelQualificationResult = new javax.swing.JPanel();
+    panelQualificationResult2 = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
     jPilotType = new javax.swing.JComboBox<>();
     jLabel6 = new javax.swing.JLabel();
     jOrderBy = new javax.swing.JComboBox<>();
     jLabel7 = new javax.swing.JLabel();
     PilotsForNextRound = new javax.swing.JTextField();
-    racePanel = new javax.swing.JPanel();
-    jRaceTypeLabel = new javax.swing.JLabel();
-    jRaceType = new javax.swing.JComboBox<>();
-    jLabel5 = new javax.swing.JLabel();
-    parentStage = new javax.swing.JComboBox<>();
+    tabRaceReport = new javax.swing.JPanel();
+    pColumns = new javax.swing.JPanel();
+    jLabel8 = new javax.swing.JLabel();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -232,8 +243,6 @@ public class StageNewForm extends javax.swing.JFrame {
     setResizable(false);
 
     Caption.setText("Stage name:");
-
-    LapsCaption.setText("Laps:");
 
     jLabel4.setText("Stage type:");
 
@@ -249,9 +258,47 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
-    jLabel3.setText("Min lap time (sec):");
+    jRaceTypeLabel.setText("Race Type");
 
-    jtMinLapTime.setText("18");
+    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.RACE_TYPES));
+
+    javax.swing.GroupLayout racePanelLayout = new javax.swing.GroupLayout(racePanel);
+    racePanel.setLayout(racePanelLayout);
+    racePanelLayout.setHorizontalGroup(
+      racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(racePanelLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jRaceTypeLabel)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
+    );
+    racePanelLayout.setVerticalGroup(
+      racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(racePanelLayout.createSequentialGroup()
+        .addGroup(racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jRaceTypeLabel)
+          .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(0, 7, Short.MAX_VALUE))
+    );
+
+    jLabel5.setText("Parent Stage");
+
+    parentStage.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+    LapsCaption.setText("Laps:");
+
+    jchGroupByPilotType.setText("Create groups by pilot type");
+    jchGroupByPilotType.setAlignmentY(0.0F);
+    jchGroupByPilotType.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+    jchGroupByPilotType.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    jchGroupByPilotType.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jchGroupByPilotTypeActionPerformed(evt);
+      }
+    });
+
+    jLabel3.setText("Min lap time (sec):");
 
     jLabel1.setText("Count of pilots in group:");
 
@@ -262,6 +309,8 @@ public class StageNewForm extends javax.swing.JFrame {
         jtCountOfPilotsPropertyChange(evt);
       }
     });
+
+    jtMinLapTime.setText("18");
 
     jlChannel1.setText("Channel 1:");
 
@@ -295,16 +344,6 @@ public class StageNewForm extends javax.swing.JFrame {
 
     jlChannel4.setText("Channel 4:");
 
-    jchGroupByPilotType.setText("Create groups by pilot type");
-    jchGroupByPilotType.setAlignmentY(0.0F);
-    jchGroupByPilotType.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-    jchGroupByPilotType.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    jchGroupByPilotType.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jchGroupByPilotTypeActionPerformed(evt);
-      }
-    });
-
     jcbColor1.setModel(new javax.swing.DefaultComboBoxModel(VSColor.getColors()));
 
     jcbColor2.setModel(new javax.swing.DefaultComboBoxModel(VSColor.getColors()));
@@ -328,78 +367,53 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(stagePanelLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jlChannel1)
+          .addComponent(jlChannel2)
+          .addComponent(jlChannel3)
+          .addComponent(jlChannel4))
+        .addGap(20, 20, 20)
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addComponent(jcbChannel2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jcbChannel3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jcbChannel4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jcbChannel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jcbColor1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jcbColor2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jcbColor3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jcbColor4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(18, 18, 18)
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addContainerGap())
+            .addComponent(jlChannel5)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jcbChannel5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addGroup(stagePanelLayout.createSequentialGroup()
-            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(stagePanelLayout.createSequentialGroup()
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel3)
-                  .addComponent(jLabel1))
-                .addGap(20, 20, 20)
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jtCountOfPilots, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jtMinLapTime)))
-              .addGroup(stagePanelLayout.createSequentialGroup()
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jlChannel1)
-                  .addComponent(jlChannel2)
-                  .addComponent(jlChannel3)
-                  .addComponent(jlChannel4))
-                .addGap(20, 20, 20)
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jcbChannel2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jcbChannel3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jcbChannel4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jcbChannel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                  .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbColor1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbColor2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbColor3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                  .addComponent(jcbColor4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addGroup(stagePanelLayout.createSequentialGroup()
-                    .addComponent(jlChannel5)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jcbChannel5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                  .addGroup(stagePanelLayout.createSequentialGroup()
-                    .addComponent(jlChannel6)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jcbChannel6, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                  .addGroup(stagePanelLayout.createSequentialGroup()
-                    .addComponent(jlChannel7)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jcbChannel7, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                  .addGroup(stagePanelLayout.createSequentialGroup()
-                    .addComponent(jlChannel8)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jcbChannel8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jcbColor5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jcbColor6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jcbColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jcbColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGap(0, 149, Short.MAX_VALUE))))
+            .addComponent(jlChannel6)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jcbChannel6, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(stagePanelLayout.createSequentialGroup()
+            .addComponent(jlChannel7)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jcbChannel7, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(stagePanelLayout.createSequentialGroup()
+            .addComponent(jlChannel8)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jcbChannel8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jcbColor5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jcbColor6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jcbColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jcbColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     stagePanelLayout.setVerticalGroup(
       stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, stagePanelLayout.createSequentialGroup()
-        .addGap(4, 4, 4)
-        .addComponent(jchGroupByPilotType)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel3)
-          .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(jtCountOfPilots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addContainerGap()
         .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jlChannel1)
           .addComponent(jcbChannel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -434,6 +448,56 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
+    javax.swing.GroupLayout tabRaceLayout = new javax.swing.GroupLayout(tabRace);
+    tabRace.setLayout(tabRaceLayout);
+    tabRaceLayout.setHorizontalGroup(
+      tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(tabRaceLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+          .addGroup(tabRaceLayout.createSequentialGroup()
+            .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(tabRaceLayout.createSequentialGroup()
+                .addComponent(LapsCaption)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addGroup(tabRaceLayout.createSequentialGroup()
+                .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel3)
+                  .addComponent(jLabel1))
+                .addGap(20, 20, 20)
+                .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                  .addComponent(jtCountOfPilots, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                  .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGap(0, 0, Short.MAX_VALUE)))
+        .addContainerGap())
+      .addComponent(stagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    );
+    tabRaceLayout.setVerticalGroup(
+      tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(tabRaceLayout.createSequentialGroup()
+        .addGap(5, 5, 5)
+        .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(LapsCaption)
+          .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jchGroupByPilotType)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel1)
+          .addComponent(jtCountOfPilots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    tabPane.addTab("Race and Groups", tabRace);
+
     jLabel2.setText("Pilot Type");
 
     jPilotType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -446,18 +510,18 @@ public class StageNewForm extends javax.swing.JFrame {
 
     PilotsForNextRound.setText("4");
 
-    javax.swing.GroupLayout panelQualificationResultLayout = new javax.swing.GroupLayout(panelQualificationResult);
-    panelQualificationResult.setLayout(panelQualificationResultLayout);
-    panelQualificationResultLayout.setHorizontalGroup(
-      panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(panelQualificationResultLayout.createSequentialGroup()
+    javax.swing.GroupLayout panelQualificationResult2Layout = new javax.swing.GroupLayout(panelQualificationResult2);
+    panelQualificationResult2.setLayout(panelQualificationResult2Layout);
+    panelQualificationResult2Layout.setHorizontalGroup(
+      panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(panelQualificationResult2Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addGroup(panelQualificationResultLayout.createSequentialGroup()
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
             .addComponent(jLabel2)
             .addGap(18, 18, 18)
             .addComponent(jPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(panelQualificationResultLayout.createSequentialGroup()
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
             .addComponent(jLabel7)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -467,81 +531,103 @@ public class StageNewForm extends javax.swing.JFrame {
         .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
-    panelQualificationResultLayout.setVerticalGroup(
-      panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(panelQualificationResultLayout.createSequentialGroup()
+    panelQualificationResult2Layout.setVerticalGroup(
+      panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(panelQualificationResult2Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(jPilotType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel6)
           .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel7)
           .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jRaceTypeLabel.setText("Race Type");
-
-    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.RACE_TYPES));
-
-    javax.swing.GroupLayout racePanelLayout = new javax.swing.GroupLayout(racePanel);
-    racePanel.setLayout(racePanelLayout);
-    racePanelLayout.setHorizontalGroup(
-      racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(racePanelLayout.createSequentialGroup()
+    javax.swing.GroupLayout panelQualificationResultLayout = new javax.swing.GroupLayout(panelQualificationResult);
+    panelQualificationResult.setLayout(panelQualificationResultLayout);
+    panelQualificationResultLayout.setHorizontalGroup(
+      panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(panelQualificationResultLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jRaceTypeLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(panelQualificationResult2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addContainerGap())
     );
-    racePanelLayout.setVerticalGroup(
-      racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(racePanelLayout.createSequentialGroup()
-        .addGroup(racePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jRaceTypeLabel)
-          .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(0, 7, Short.MAX_VALUE))
+    panelQualificationResultLayout.setVerticalGroup(
+      panelQualificationResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(panelQualificationResultLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(panelQualificationResult2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(315, Short.MAX_VALUE))
     );
 
-    jLabel5.setText("Parent Stage");
+    tabPane.addTab("Result Parameters", panelQualificationResult);
 
-    parentStage.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    javax.swing.GroupLayout pColumnsLayout = new javax.swing.GroupLayout(pColumns);
+    pColumns.setLayout(pColumnsLayout);
+    pColumnsLayout.setHorizontalGroup(
+      pColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 0, Short.MAX_VALUE)
+    );
+    pColumnsLayout.setVerticalGroup(
+      pColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 355, Short.MAX_VALUE)
+    );
+
+    jLabel8.setText("Show the following columns:");
+
+    javax.swing.GroupLayout tabRaceReportLayout = new javax.swing.GroupLayout(tabRaceReport);
+    tabRaceReport.setLayout(tabRaceReportLayout);
+    tabRaceReportLayout.setHorizontalGroup(
+      tabRaceReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(tabRaceReportLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(tabRaceReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(pColumns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addGroup(tabRaceReportLayout.createSequentialGroup()
+            .addComponent(jLabel8)
+            .addGap(0, 396, Short.MAX_VALUE)))
+        .addContainerGap())
+    );
+    tabRaceReportLayout.setVerticalGroup(
+      tabRaceReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(tabRaceReportLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabel8)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(pColumns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
+    );
+
+    jLabel8.getAccessibleContext().setAccessibleName("");
+
+    tabPane.addTab("Columns", tabRaceReport);
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(stagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addComponent(panelQualificationResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addComponent(racePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(164, 164, 164)
-            .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jLabel4)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel4)
-                  .addComponent(LapsCaption))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(Caption)
-                  .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jtCaption)
-                  .addComponent(parentStage, 0, 517, Short.MAX_VALUE))))
-            .addContainerGap())))
+              .addComponent(Caption)
+              .addComponent(jLabel5))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(jtCaption)
+              .addComponent(parentStage, 0, 517, Short.MAX_VALUE)))
+          .addComponent(tabPane))
+        .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,7 +638,7 @@ public class StageNewForm extends javax.swing.JFrame {
           .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(racePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGap(0, 0, 0)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
           .addComponent(Caption)
           .addComponent(jtCaption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -561,14 +647,7 @@ public class StageNewForm extends javax.swing.JFrame {
           .addComponent(jLabel5)
           .addComponent(parentStage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(LapsCaption)
-          .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(panelQualificationResult, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(tabPane))
     );
 
     bSave.setText("Save");
@@ -608,7 +687,7 @@ public class StageNewForm extends javax.swing.JFrame {
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGap(0, 0, 0)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
           .addComponent(bCancel)
@@ -627,8 +706,8 @@ public class StageNewForm extends javax.swing.JFrame {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     pack();
@@ -697,6 +776,19 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.COLORS = colors;
       stage.resetSelectedTab(mainForm.con, stage.RACE_ID);
       stage.IS_SELECTED = 1;
+      
+      String colsInfo = "";
+      if (linkingColumnAndChechkBox!=null){
+        for (LinkingColumnAndChechkBox colLink : linkingColumnAndChechkBox){
+          if (colLink.check.isSelected()){
+            colsInfo += "1;";
+          }else{
+            colsInfo += "0;";
+          } 
+        }
+      }
+      stage.REP_COLS = colsInfo;
+      
       if (stage.ID == -1) {
 
         if (stage.STAGE_TYPE == MainForm.STAGE_RACE){
@@ -777,26 +869,76 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     }
   }//GEN-LAST:event_jtCountOfPilotsPropertyChange
+  
+  List<LinkingColumnAndChechkBox> linkingColumnAndChechkBox = new ArrayList<>();
+  class LinkingColumnAndChechkBox{
+    int index;
+    STAGE_COLUMN col;
+    JCheckBox check;    
 
+    public LinkingColumnAndChechkBox(int index, STAGE_COLUMN col, JCheckBox check) {
+      this.index = index;
+      this.col = col;
+      this.check = check;
+    }
+    
+  }
+  
   private void jcbStageTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbStageTypeActionPerformed
     // TODO add your handling code here:
-
-    if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE) {
+    //tabPane.setSelectedIndex(0);    
+    //tabRaceReport.setVisible(false);
+    //tabPane.setEnabledAt(2, false);
+    
+        // Create Report Check boxes  
+    pColumns.removeAll();   
+    pColumns.setLayout(/*new FlowLayout()*/new BoxLayout(pColumns, BoxLayout.PAGE_AXIS) );   
+    STAGE_COLUMN[] columns = StageTableAdapter.getDeafultColumns(jcbStageType.getSelectedIndex());
+    linkingColumnAndChechkBox.clear();
+    String[] colsInfo = stage==null?null:stage.REP_COLS.split(";");
+    int index = 0;
+    for ( STAGE_COLUMN col : columns) {      
+      String cpation = col.caption.replaceAll("\\n", " ");
+      JCheckBox check = new JCheckBox(cpation);      
+      check.setSelected(true);
+      if (colsInfo!=null && index<colsInfo.length){
+        if ("0".equals(colsInfo[index])){
+          check.setSelected(false);
+        }
+      }
+      pColumns.add(check);    
+      linkingColumnAndChechkBox.add(new LinkingColumnAndChechkBox(index, col, check));
+      index++;
+    }
+    
+    
+    panelQualificationResult.setVisible(false);
+    racePanel.setVisible(false);
+    stagePanel.setVisible(false);    
+            
+   /* if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE) {
       racePanel.setVisible(true);
     } else {
       racePanel.setVisible(false);
-    }
+    }*/   
 
     if (jcbStageType.getSelectedIndex() == MainForm.STAGE_QUALIFICATION_RESULT || jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_RESULT) {
       //LapsCaption.setText("Count pilots for next round: ");
-      stagePanel.setVisible(false);
+      tabPane.setSelectedIndex(1);
       panelQualificationResult.setVisible(true);
-    } else {
-      //LapsCaption.setText("Laps : ");
+    } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_REPORT){
+      //tabRaceReport.setVisible(true);
+      tabPane.setEnabledAt(2, true);
+      panelQualificationResult.setVisible(true);
+      //tabPane.setSelectedIndex(2);
+    } else {     
+      racePanel.setVisible(true);
       stagePanel.setVisible(true);
       panelQualificationResult.setVisible(false);
-    }
-
+      tabPane.setSelectedIndex(0);
+    }    
+    //updateUI();
+    jPanel1.updateUI();
   }//GEN-LAST:event_jcbStageTypeActionPerformed
 
   private void butRecrateGropusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRecrateGropusActionPerformed
@@ -878,6 +1020,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
+  private javax.swing.JLabel jLabel8;
   private javax.swing.JComboBox<String> jOrderBy;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
@@ -914,9 +1057,14 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JComboBox jtCountOfPilots;
   private javax.swing.JTextField jtLapsCount;
   private javax.swing.JTextField jtMinLapTime;
+  private javax.swing.JPanel pColumns;
   private javax.swing.JPanel panelQualificationResult;
+  private javax.swing.JPanel panelQualificationResult2;
   private javax.swing.JComboBox<String> parentStage;
   private javax.swing.JPanel racePanel;
   private javax.swing.JPanel stagePanel;
+  private javax.swing.JTabbedPane tabPane;
+  private javax.swing.JPanel tabRace;
+  private javax.swing.JPanel tabRaceReport;
   // End of variables declaration//GEN-END:variables
 }

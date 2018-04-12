@@ -100,7 +100,9 @@ public class DataBaseStructure {
     new DBAddonStructure(3.4, "ALTER TABLE VS_USERS ADD FAI TEXT NOT NULL DEFAULT '';"), 
     new DBAddonStructure(3.4, "ALTER TABLE VS_REGISTRATION ADD FAI TEXT NOT NULL DEFAULT '';"), 
     
-    new DBAddonStructure(3.5, "ALTER TABLE VS_RACE ADD WEB_RACE_ID TEXT NOT NULL DEFAULT '';"),      
+    new DBAddonStructure(3.5, "ALTER TABLE VS_RACE ADD WEB_RACE_ID TEXT NOT NULL DEFAULT '';"),   
+    
+    new DBAddonStructure(3.6, "ALTER TABLE VS_STAGE ADD REP_COLS TEXT NOT NULL DEFAULT '';"),
     
   };
 

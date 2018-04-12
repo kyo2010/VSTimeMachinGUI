@@ -143,27 +143,48 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   public String getColumnCellID(int column) {
     String cellID = "TXT_RIGHT";
-    STAGE_COLUMN[] columns = getColumns();
-    if (column < columns.length) {
-      cellID = columns[column].cellID;
+    List<STAGE_COLUMN> columns = getColumns();
+    if (column < columns.size()) {
+      cellID = columns.get(column).cellID;
     }
     return cellID;
   }
 
-  public STAGE_COLUMN[] getColumns() {
-    if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
-      return STAGE_COLUMNS_RESULT;
+  public static STAGE_COLUMN[] getDeafultColumns(int STAGE_TYPE){
+    STAGE_COLUMN[] pattern = null;
+    if (STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+      pattern = STAGE_COLUMNS_RESULT;
+    }else if (STAGE_TYPE == MainForm.STAGE_RACE_REPORT){
+      pattern = STAGE_COLUMNS_REPORT;
+    }else if (STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+      pattern = STAGE_COLUMNS_RACE_RESULT;
+    }else if (STAGE_TYPE == MainForm.STAGE_RACE) {
+      pattern =  STAGE_COLUMNS_STAGE_RACE;
+    }else{
+      pattern = STAGE_COLUMNS_STAGE;
     }
-    if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT){
-      return STAGE_COLUMNS_REPORT;
+    return pattern;
+  }
+  
+  List<STAGE_COLUMN> tabColumns = null;
+  public List<STAGE_COLUMN> getColumns() {
+    if (tabColumns!=null) return tabColumns;    
+    STAGE_COLUMN[] pattern = getDeafultColumns(tab.stage.STAGE_TYPE);           
+    String[] colsInfo = tab.stage.REP_COLS.split(";");
+    tabColumns = new ArrayList<STAGE_COLUMN>();
+    int col_index = 0;
+    for (STAGE_COLUMN col : pattern){
+      boolean please_add = true;
+      if (colsInfo!=null && col_index<colsInfo.length){
+        if ("0".equals(colsInfo[col_index])){
+          please_add = false;
+        }
+      }
+      if (please_add) tabColumns.add(col);
+      col_index++;
     }
-    if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
-      return STAGE_COLUMNS_RACE_RESULT;
-    }
-    if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE) {
-      return STAGE_COLUMNS_STAGE_RACE;
-    }
-    return STAGE_COLUMNS_STAGE;
+
+    return tabColumns;    
   }
 
   public StageTableAdapter(StageTab tab) {
@@ -274,7 +295,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         rows = new ArrayList<StageTableData>();
         int index = 1;
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
-
         for (VS_STAGE_GROUPS pilot : all_groups) {
           //VS_REGISTRATION reg = regs.get("" + pilot.TRANSPONDER);
           VS_REGISTRATION reg = pilot.getRegistration(tab.mainForm.con, tab.stage.RACE_ID);
@@ -461,8 +481,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public int getMinWidth(int col) {
-    if (col < getColumns().length) {
-      return getColumns()[col].width;
+    if (col < getColumns().size()) {
+      return getColumns().get(col).width;
     }
     return LAP_WEIGHT;
   }
@@ -474,15 +494,15 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   @Override
   public int getColumnCount() {
-    return getColumns().length + (show_laps ? tab.stage.LAPS : 0);
+    return getColumns().size() + (show_laps ? tab.stage.LAPS : 0);
   }
 
   @Override
   public String getColumnName(int columnIndex) {
-    if (columnIndex < getColumns().length) {
-      return getColumns()[columnIndex].caption;
+    if (columnIndex < getColumns().size()) {
+      return getColumns().get(columnIndex).caption;
     }
-    return tab.mainForm.getLocaleString("Lap")+ " " + (columnIndex - getColumns().length + 1);
+    return tab.mainForm.getLocaleString("Lap")+ " " + (columnIndex - getColumns().size() + 1);
   }
 
   @Override
@@ -501,8 +521,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         return "";
       } else {
         STAGE_COLUMN sc = null;
-        if (columnIndex < getColumns().length) {
-          sc = getColumns()[columnIndex];
+        if (columnIndex < getColumns().size()) {
+          sc = getColumns().get(columnIndex);
         } else {
           // lap time
           VS_RACE_LAP lap = null;
@@ -660,10 +680,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       return false;
     }
     STAGE_COLUMN sc = null;
-    if (col < getColumns().length) {
-      sc = getColumns()[col];
+    if (col < getColumns().size()) {
+      sc = getColumns().get(col);
     }
-    if (col >= getColumns().length) {
+    if (col >= getColumns().size()) {
       return true;
     }
     if (sc != null) {
@@ -721,8 +741,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public void setValueAt(Object value, int row, int col) {
     StageTableData td = rows.get(row);
     STAGE_COLUMN sc = null;
-    if (col < getColumns().length) {
-      sc = getColumns()[col];
+    if (col < getColumns().size()) {
+      sc = getColumns().get(col);
     }
     if (sc != null && sc.ID == STAGE_COLUMN.CID_SCORE && !td.isGrpup) {
       try {
@@ -768,7 +788,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       } catch (Exception e) {
       }
     }
-    if (col >= getColumns().length && td != null && !td.isGrpup) {
+    if (col >= getColumns().size() && td != null && !td.isGrpup) {
       try {
         // (?<!\\w)\\d+(?!\\w)
         //Pattern p = Pattern.compile("\\d+:[0-5][0-9]:[0-9][0-9]");
@@ -825,7 +845,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public int getLapNumberFromCol(int col) {
-    return col - getColumns().length + 1;
+    return col - getColumns().size() + 1;
   }
 
   public static final Color DEFAULT_FOREGROUND_COLOR = Color.BLACK;

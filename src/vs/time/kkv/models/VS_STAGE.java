@@ -39,7 +39,9 @@ public class VS_STAGE {
   public long PARENT_STAGE_ID = -1;
   public int IS_LOCK = 0;
   public int PILOTS_FOR_NEXT_ROUND = 3;
-  public VS_RACE race = null;
+  public String REP_COLS = "";
+  
+  public VS_RACE race = null;  
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
 
@@ -71,7 +73,9 @@ public class VS_STAGE {
     new DBModelField("PILOT_TYPE").setDbFieldName("\"PILOT_TYPE\""),
     new DBModelField("PARENT_STAGE_ID").setDbFieldName("\"PARENT_STAGE_ID\""),
     new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
-    new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),});
+    new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),
+    new DBModelField("REP_COLS").setDbFieldName("\"REP_COLS\""),
+  });      
 
   public static void resetSelectedTab(Connection conn, long raceID) {
     try {

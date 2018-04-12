@@ -39,7 +39,7 @@ import vs.time.kkv.connector.MainForm;
     public int width;
     public int ID;
     public boolean isEditing = false;
-    public String cellID = "TXT";
+    public String cellID = "TXT";    
 
     public STAGE_COLUMN(int ID, String caption, int width) {
       this.ID = ID;
