@@ -12,13 +12,15 @@ public class ParseIniFile
    Hashtable<String,String> params;
    ParseIniFile parentIniFile = null;
    String iniFile;
+   String fileCodePage = null;
 
    public ParseIniFile( String iniFile ){    
-     this(iniFile,null);
+     this(iniFile,null,null);
    }
     
-   public ParseIniFile( String iniFile, ParseIniFile parentIniFile )
+   public ParseIniFile( String iniFile, ParseIniFile parentIniFile, String fileCodePage  )
    {
+      this.fileCodePage  = fileCodePage;
       this.iniFile = iniFile;
       this.parentIniFile = parentIniFile;
      
@@ -29,7 +31,7 @@ public class ParseIniFile
       {
         FileInputStream fileIn = new FileInputStream( iniFile );
         BufferedReader dataIn =
-                new BufferedReader( new InputStreamReader( fileIn ) );
+                new BufferedReader( new InputStreamReader( fileIn, "UTF-8" ) );
 
         String readLine = dataIn.readLine();
         String nameParam, valueParam;
@@ -39,6 +41,9 @@ public class ParseIniFile
            readLine = readLine.trim();
            if ( !readLine.equals( "" ) && !readLine.substring( 0, comment.length() ).equals( comment ) )
            {
+              if (fileCodePage!=null){
+                //readLine = readLine.c
+              }
               tokenizer = new StringTokenizer( readLine, "=" );
               nameParam  = tokenizer.nextToken();
               valueParam = "";
@@ -60,7 +65,7 @@ public class ParseIniFile
               params.put( nameParam, valueParam );
               if (nameParam.equalsIgnoreCase("linkIniFile")){
                 try{
-                  linkIniFiles.add(new ParseIniFile(valueParam,this));
+                  linkIniFiles.add(new ParseIniFile(valueParam,this,fileCodePage));
                 }catch(Exception e){
                   System.out.println("link on ini file "+valueParam+" not found");
                 }
