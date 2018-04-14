@@ -4,7 +4,10 @@ GUI for VS TimeMachine
 ## Download Windows version:
 https://github.com/kyo2010/VSTimeMachinGUI/raw/master2/!dis/DroneRacingSystem.zip
 
-### Please note: You need to install JAVA 1.8 and above.
+### Please note: 
+1. Program stable works via USB connection (wire, you can use 20m cable).
+2. Please don't change first transponder id, please change or set the second or third transponder id if groups are created.
+3. You need to install JAVA 1.8 and above.
 http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
 
 ## SQL lite database file
