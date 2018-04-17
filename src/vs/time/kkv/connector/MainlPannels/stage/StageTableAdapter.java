@@ -536,6 +536,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     }
     return tab.mainForm.getLocaleString("Lap") + " " + (columnIndex - getColumns().size() + 1);
   }
+  
+  public String getColumnLocaleName(int columnIndex) {
+    if (columnIndex < getColumns().size()) {
+      return getColumns().get(columnIndex).captionOriginal;
+    }
+    return "Lap" + " " + (columnIndex - getColumns().size() + 1);
+  }
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {

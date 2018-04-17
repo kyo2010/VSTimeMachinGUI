@@ -35,7 +35,7 @@ import vs.time.kkv.connector.MainForm;
     public static final int CID_FAI = 190;
     
     public String caption;
-    private String captionOriginal;
+    public String captionOriginal;
     public int width;
     public int ID;
     public boolean isEditing = false;

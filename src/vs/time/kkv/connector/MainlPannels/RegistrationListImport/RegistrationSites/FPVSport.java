@@ -295,7 +295,8 @@ public class FPVSport extends IRegSite {
 
     JSONArray table_data = new JSONArray();
     for (int i = 0; i < cols; i++) {
-      table_obj.put("HEADER_" + i, tab.stageTableAdapter.getColumnName(i));
+      table_obj.put("_HEADER_" + i, tab.stageTableAdapter.getColumnName(i));
+      table_obj.put("HEADER_" + i, tab.stageTableAdapter.getColumnLocaleName(i));
       table_obj.put("CELLID_" + i, tab.stageTableAdapter.getColumnCellID(i));
       table_obj.put("MIN_WIDTH_" + i, tab.stageTableAdapter.getMinWidth(i));
     }
