@@ -40,6 +40,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public String PILOT;   //  NOT_DETECTED
   public int isError = 0;
   public long LAPS;
+  public long LAPS_INTO_BD = 0;
   public long BEST_LAP;
   public long FIRST_LAP;
   public long RACE_TIME;
@@ -196,8 +197,10 @@ public class VS_STAGE_GROUPS implements Transferable {
     return max;
   }
 
-  public void recalculateLapTimes(Connection conn, VS_STAGE stage, boolean please_recalculate) {
-    try {
+  /** return maximum laps */
+  public long recalculateLapTimes(Connection conn, VS_STAGE stage, boolean please_recalculate) {
+    long result = 0;
+    try {      
       if (IS_RECALULATED == 1 && please_recalculate != true) {
 
       } else {
@@ -210,14 +213,22 @@ public class VS_STAGE_GROUPS implements Transferable {
             int y = 0;
           }          
           boolean hasSkip = false;
+          
+          Map<String, VS_RACE_LAP> laps = null;
+          if (stage.USE_REG_ID_FOR_LAP==1){
+            laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID);
+          }else{
+            laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS);
+          }     
+          LAPS_INTO_BD = stage.LAPS;
+          for (VS_RACE_LAP lap : laps.values()){
+            if (lap!=null && LAPS_INTO_BD<lap.LAP) LAPS_INTO_BD=lap.LAP;
+          }     
+          result = LAPS_INTO_BD;
+          
           for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
-            VS_RACE_LAP lap = null;
-            if (stage.USE_REG_ID_FOR_LAP==1){
-              lap = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).get("" + lap_num);
-            }else{
-              lap = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS).get("" + lap_num);
-            }
+            VS_RACE_LAP lap = laps.get("" + lap_num);
             if (lap != null) {
               if (lap.TRANSPONDER_TIME < best_time_lap) {
                 best_time_lap = lap.TRANSPONDER_TIME;
@@ -258,5 +269,6 @@ public class VS_STAGE_GROUPS implements Transferable {
       }
     } catch (Exception e) {
     }
-  }
+    return result;
+  }  
 }

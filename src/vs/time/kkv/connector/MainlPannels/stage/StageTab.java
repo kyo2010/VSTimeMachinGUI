@@ -101,6 +101,18 @@ public class StageTab extends javax.swing.JPanel {
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
   public boolean isOneTable = false;
+  
+  public void fireStructChange(){    
+    //System.out.println("fireStructChange");
+    //jTable.setModel(stageTableAdapter);
+    jTable.tableChanged(null);
+    MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();
+    for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
+      jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
+      jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
+    }
+  }
+  
 
   Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
@@ -122,6 +134,8 @@ public class StageTab extends javax.swing.JPanel {
         if (pleasuUpdateTable) {
           pleasuUpdateTable = false;
           if (jTable != null) {
+            //stageTableAdapter.             
+            //jTable.addNotify();
             jTable.notifyAll();
             jTable.updateUI();
           }
