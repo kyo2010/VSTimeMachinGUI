@@ -104,6 +104,10 @@ public class DataBaseStructure {
     
     new DBAddonStructure(3.6, "ALTER TABLE VS_STAGE ADD REP_COLS TEXT NOT NULL DEFAULT '';"),
     
+    new DBAddonStructure(3.7, "ALTER TABLE VS_RACE_LAP ADD REG_ID INTEGER NOT NULL DEFAULT 0;"),
+    new DBAddonStructure(3.7, "ALTER TABLE VS_STAGE ADD USE_REG_ID_FOR_LAP INTEGR NOT NULL DEFAULT 0;"),
+    
+    
   };
 
   public static class DBAddonStructure {

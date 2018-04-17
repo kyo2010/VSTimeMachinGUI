@@ -40,10 +40,11 @@ public class VS_STAGE {
   public int IS_LOCK = 0;
   public int PILOTS_FOR_NEXT_ROUND = 3;
   public String REP_COLS = "";
+  public int USE_REG_ID_FOR_LAP = 1;
   
   public VS_RACE race = null;  
 
-  public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = null;
+  public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps_check_reg_id = null;
 
   public Map<Integer, VS_STAGE_GROUP> groups = new HashMap<Integer, VS_STAGE_GROUP>();
 
@@ -75,6 +76,7 @@ public class VS_STAGE {
     new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
     new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),
     new DBModelField("REP_COLS").setDbFieldName("\"REP_COLS\""),
+    new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),    
   });      
 
   public static void resetSelectedTab(Connection conn, long raceID) {
@@ -119,6 +121,7 @@ public class VS_STAGE {
           regs.put("" + usr.VS_PRIMARY_TRANS, reg_user);
         }
         usr.PILOT = reg_user.VS_USER_NAME;
+        usr.REG_ID = reg_user.ID;
         usr.PILOT_TYPE = reg_user.PILOT_TYPE;
         Integer phisical_group_index = indexes.get(db_group_index);
         if (phisical_group_index == null) {
@@ -166,28 +169,41 @@ public class VS_STAGE {
     return CAPTION;
   }
 
-  public VS_RACE_LAP getLap(long GROUP_NUM, int TRANSPONDER, int lapNumber) {
+  public VS_RACE_LAP getLap(long GROUP_NUM, int TRANSPONDER, int lapNumber, long REG_ID) {
     VS_RACE_LAP lap = null;
     try {
-      lap = laps.get("" + GROUP_NUM).get("" + TRANSPONDER).get(lapNumber);
+      if (USE_REG_ID_FOR_LAP==1){
+        lap = laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).get(lapNumber);
+      }else{
+        lap = laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER).get(lapNumber);
+      }  
     } catch (Exception e) {
     }
     return lap;
   }
 
-  public void delLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, int lapNumber, VS_RACE_LAP delLap) {
+  public void delLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long REG_ID, int lapNumber, VS_RACE_LAP delLap) {
     VS_RACE_LAP lap = null;
     try {
-      laps.get("" + GROUP_NUM).get("" + TRANSPONDER).remove("" + lapNumber);
+      if (USE_REG_ID_FOR_LAP==1){        
+        laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).remove("" + lapNumber);
+      }else{
+        laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER).remove("" + lapNumber);
+      }  
       VS_RACE_LAP.dbControl.delete(mainForm.con, delLap);
     } catch (Exception e) {
     }
   }
 
-  public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long START_TIME, VS_STAGE_GROUPS usr) {
+  public VS_RACE_LAP getLastLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long REG_ID, long START_TIME, VS_STAGE_GROUPS usr) {
     boolean find_error = false;
     try {
-      Map<String, VS_RACE_LAP> user_laps = laps.get("" + GROUP_NUM).get("" + TRANSPONDER);
+      Map<String, VS_RACE_LAP> user_laps = null;
+      if (USE_REG_ID_FOR_LAP==1){
+        user_laps = laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID);        
+      }else{
+        user_laps = laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER);
+      } 
       HashSet<Integer> sorted = new HashSet();
       try {
         if (user_laps != null) {
@@ -245,13 +261,14 @@ public class VS_STAGE {
       usr.IS_RECALULATED = 0;
       VS_RACE_LAP lap = new VS_RACE_LAP();
       lap.BASE_ID = 0;
+      lap.REG_ID = usr.REG_ID;
       lap.GROUP_NUM = usr.GROUP_NUM;
       lap.TRANSPONDER_ID = usr.VS_PRIMARY_TRANS;
       lap.RACE_ID = mainForm.activeGroup.stage.RACE_ID;
       lap.STAGE_ID = mainForm.activeGroup.stage.ID;
       lap.TIME_START = mainForm.raceTime;
       lap.TIME_FROM_START = time;
-      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, mainForm.raceTime, usr);
+      VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, usr.REG_ID, mainForm.raceTime, usr);
       lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
       lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
 
@@ -279,7 +296,11 @@ public class VS_STAGE {
           } catch (Exception ein) {
           }
           VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
-          VS_RACE_LAP.dbControl.putObjToMap(laps, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
+          if (USE_REG_ID_FOR_LAP==1){
+            VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + usr.REG_ID, "" + lap.LAP, lap);
+          }else{
+            VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
+          }  
           lap_for_sound = lap;
           lap_return = lap;
         }        

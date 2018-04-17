@@ -22,6 +22,7 @@ public class VS_RACE_LAP {
   public long TIME_START = 0;
   public long TIME_FROM_START = 0;
   public int LAP;   //  NOT_DETECTED
+  public long REG_ID = 0;   //  NOT_DETECTED  
   
   /** Constructor */ 
   public VS_RACE_LAP() {
@@ -39,9 +40,10 @@ public class VS_RACE_LAP {
     new DBModelField("TIME_START").setDbFieldName("\"TIME_START\""),
     new DBModelField("TIME_FROM_START").setDbFieldName("\"TIME_FROM_START\""),
     new DBModelField("LAP").setDbFieldName("\"LAP\""),
+    new DBModelField("REG_ID").setDbFieldName("\"REG_ID\""),
   });
  
-  public static VS_RACE_LAP saveTime(Connection con, VS_STAGE_GROUP group, long time, int TRANSPONDER_ID, int LAP){
+  public static VS_RACE_LAP saveTime(Connection con, VS_STAGE_GROUP group, long time, int TRANSPONDER_ID, long REG_ID ,int LAP){
     try{
       VS_RACE_LAP.dbControl.delete(con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and LAP=?",group.stage.RACE_ID,group.stage.ID,group.GROUP_NUM, LAP);
     }catch(Exception e){}
@@ -51,7 +53,8 @@ public class VS_RACE_LAP {
       lap.RACE_ID = group.stage.RACE_ID;
       lap.STAGE_ID = group.stage.ID;
       lap.GROUP_NUM = group.GROUP_NUM;
-      lap.NUMBER_PACKET = 0;
+      lap.REG_ID = REG_ID;
+      lap.NUMBER_PACKET = 0;           
       lap.TRANSPONDER_ID = TRANSPONDER_ID;
       lap.TRANSPONDER_TIME = time;
       lap.LAP = LAP;                        

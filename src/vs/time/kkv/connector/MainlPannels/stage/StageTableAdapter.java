@@ -300,7 +300,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           VS_REGISTRATION reg = pilot.getRegistration(tab.mainForm.con, tab.stage.RACE_ID);
           if (reg != null) {
             pilot.PILOT = reg.VS_USER_NAME;
-            pilot.PILOT_TYPE = reg.PILOT_TYPE;
+            pilot.REG_ID = reg.ID;
+            pilot.PILOT_TYPE = reg.PILOT_TYPE;            
           }
           VS_STAGE_GROUPS result = pilots.get(pilot.PILOT);
           if (result == null) {
@@ -464,7 +465,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
       }
       try {
-        tab.stage.laps = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);
+        if (tab.stage.USE_REG_ID_FOR_LAP==1){
+          tab.stage.laps_check_reg_id = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "REG_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);        
+        }else{        
+          tab.stage.laps_check_reg_id = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);
+        }  
       } catch (Exception e) {
       }
       for (Integer groupId : tab.stage.groups.keySet()) {
@@ -527,7 +532,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           // lap time
           VS_RACE_LAP lap = null;
           try {
-            lap = tab.stage.laps.get("" + td.pilot.GROUP_NUM).get("" + td.pilot.VS_PRIMARY_TRANS).get("" + getLapNumberFromCol(columnIndex));
+            if (tab.stage.USE_REG_ID_FOR_LAP==1){
+              lap = tab.stage.laps_check_reg_id.get("" + td.pilot.GROUP_NUM).get("" + td.pilot.REG_ID).get("" + getLapNumberFromCol(columnIndex));           
+            }else{            
+              lap = tab.stage.laps_check_reg_id.get("" + td.pilot.GROUP_NUM).get("" + td.pilot.VS_PRIMARY_TRANS).get("" + getLapNumberFromCol(columnIndex));
+            }
           } catch (Exception e) {
           }
           if (lap == null) {
@@ -796,11 +805,15 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         long time = getTimerInterval(val);
         boolean isError = false;
         if (time != -1) {
-          VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.VS_PRIMARY_TRANS, getLapNumberFromCol(col));
+          VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, getLapNumberFromCol(col));          
           if (lap == null) {
             isError = true;
           }
-          VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + getLapNumberFromCol(col), lap);
+          if (tab.stage.USE_REG_ID_FOR_LAP==1){
+            VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.REG_ID, "" + getLapNumberFromCol(col), lap);
+          }else{
+            VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + getLapNumberFromCol(col), lap);
+          }  
         } else {
           isError = true;
         }
@@ -827,8 +840,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             if (i + 1 == tab.stage.LAPS) {
               lapTime = time - lapTime * (tab.stage.LAPS - 1);
             }
-            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, i + 1);
-            VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + (i + 1), lap);
+            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, i + 1);
+            if (tab.stage.USE_REG_ID_FOR_LAP==1){
+              VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.REG_ID, "" + (i + 1), lap);
+            }else{
+              VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + (i + 1), lap);
+            }  
           }
           td.pilot.parent.recalculateScores(tab.mainForm);
         } else {

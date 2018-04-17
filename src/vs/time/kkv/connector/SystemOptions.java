@@ -60,6 +60,9 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.jcTTS_API.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
     singelton.checkRaceGroup.setSelected( VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1)==1?true:false );    
     
+    singelton.USE_TRANS_FOR_GATE.setSelected( VS_SETTING.getParam(mainForm.con, "USE_TRANS_FOR_GATE", 0)==1?true:false);    
+    singelton.TRANS_FOR_GATE.setText(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE", "0"));                     
+    
     SystemOptions th = singelton;
     Point p = mainForm.getLocationOnScreen();
     th.setLocation(p.x + mainForm.getWidth() / 2 - th.getSize().width / 2, p.y + mainForm.getHeight() / 2 - th.getSize().height / 2);
@@ -91,6 +94,9 @@ public class SystemOptions extends javax.swing.JFrame {
     checkRaceGroup = new javax.swing.JCheckBox();
     jLabel3 = new javax.swing.JLabel();
     jcLang = new javax.swing.JComboBox<>();
+    USE_TRANS_FOR_GATE = new javax.swing.JCheckBox();
+    jLabel4 = new javax.swing.JLabel();
+    TRANS_FOR_GATE = new javax.swing.JTextField();
 
     setTitle("System Settings");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -163,6 +169,13 @@ public class SystemOptions extends javax.swing.JFrame {
 
     jcLang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+    USE_TRANS_FOR_GATE.setText("Use transponder for gate");
+    USE_TRANS_FOR_GATE.setToolTipText("You can control colors of gate");
+
+    jLabel4.setText("Transponder of Gate");
+
+    TRANS_FOR_GATE.setText("0");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -172,26 +185,33 @@ public class SystemOptions extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(WebServiceStartOnRun)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(bHTTPServer))
-          .addGroup(layout.createSequentialGroup()
             .addComponent(jLabel2)
             .addGap(18, 18, 18)
             .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(135, 135, 135))
+              .addComponent(WebServiceStartOnRun))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(bHTTPServer))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(checkRaceGroup)
               .addComponent(jLabel3)
               .addGroup(layout.createSequentialGroup()
                 .addGap(186, 186, 186)
-                .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGap(0, 0, Short.MAX_VALUE))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(jLabel1)
-            .addGap(62, 62, 62)
-            .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(164, 164, 164)))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(USE_TRANS_FOR_GATE)
+            .addGap(18, 18, 18)
+            .addComponent(jLabel4)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(TRANS_FOR_GATE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -215,7 +235,12 @@ public class SystemOptions extends javax.swing.JFrame {
           .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(checkRaceGroup)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(USE_TRANS_FOR_GATE)
+          .addComponent(jLabel4)
+          .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -237,6 +262,10 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "TTS_API", ""+jcTTS_API.getSelectedItem());    
     VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", ""+ (checkRaceGroup.isSelected() ? 1 : 0));       
     VS_SETTING.setParam(mainForm.con, "LANG", ""+jcLang.getSelectedItem());    
+    
+    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE", ""+TRANS_FOR_GATE.getText());
+    VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", ""+ (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));      
+    
     mainForm.applayLanguage();
     
     
@@ -277,6 +306,8 @@ public class SystemOptions extends javax.swing.JFrame {
   }//GEN-LAST:event_bHTTPServerActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JTextField TRANS_FOR_GATE;
+  private javax.swing.JCheckBox USE_TRANS_FOR_GATE;
   private javax.swing.JTextField WEB_PORT;
   private javax.swing.JCheckBox WebServiceStartOnRun;
   private javax.swing.JButton bHTTPServer;
@@ -286,6 +317,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JComboBox<String> jcLang;
   private javax.swing.JComboBox<String> jcTTS_API;

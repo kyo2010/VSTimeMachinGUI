@@ -6,6 +6,8 @@
 package vs.time.kkv.connector.connection;
 
 import KKV.Utils.Tools;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -14,14 +16,17 @@ import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Timer;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -119,6 +124,7 @@ public class VSTimeConnector {
     if (transport != null) {
       transport.disconnect();
     }
+    blinkingTimer.stop();
   }
 
   public class AfterConnectionCommsnds extends Thread {
@@ -184,6 +190,7 @@ public class VSTimeConnector {
     }
     lastPingTime = Calendar.getInstance().getTimeInMillis();
     new AfterConnectionCommsnds(this);
+    blinkingTimer.start();
   }
 
   /**
@@ -255,6 +262,52 @@ public class VSTimeConnector {
     }
     return info;
   }
+  
+  class BlinkigQuee{
+    public int transID;
+    public int color;
+    public int delay=1000;
+    public long milisecond_start = 0;
+    public int state = 0; // 0 - setColor, 1 - delay, 2 - off;
+    public BlinkigQuee(int transID, int color) {
+      this.transID = transID;
+      this.color = color;
+    }       
+  } 
+  Vector<BlinkigQuee> blinkigQuee = new Vector<BlinkigQuee>();
+  public void addBlinkTransponder(int transID, int color){
+    blinkigQuee.add(new BlinkigQuee(transID, color));
+  }
+  Timer blinkingTimer = new Timer(500, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (connected && blinkigQuee.size()>0){
+        BlinkigQuee blink = blinkigQuee.get(0);
+        if (blink.state==0){
+          try{
+            setColor(blink.transID, blink.color);
+          }catch(Exception ein){}
+          blink.state = 1;
+          blink.milisecond_start = Calendar.getInstance().getTimeInMillis();
+        }else if (blink.state==1){
+          if (Calendar.getInstance().getTimeInMillis()-blink.milisecond_start>blink.delay){
+            try{
+              setColor(blink.transID, 0);
+            }catch(Exception ein){}
+            blink.state = 2;
+            blinkigQuee.remove(0);
+          }else{
+            try{
+              setColor(blink.transID, blink.color);
+            }catch(Exception ein){}
+            }
+        }else{
+          // Remove from queue          
+          blinkigQuee.remove(0);
+        }
+      }
+    }
+  });
 
   public void setTime() throws SerialPortException, InterruptedException {
     sentMessage("settime:" + Calendar.getInstance().getTime().getTime() + "\r\n");

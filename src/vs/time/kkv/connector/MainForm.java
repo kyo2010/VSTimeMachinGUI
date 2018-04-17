@@ -65,6 +65,8 @@ import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
+import static vs.time.kkv.connector.SystemOptions.singelton;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
@@ -119,6 +121,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
   public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
+  
+  public boolean USE_TRANS_FOR_GATE = false;
+  public int TRANS_FOR_GATE = 0;
+        
 
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
   public String activeLang = "EN";
@@ -355,6 +361,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this, true);
     }
+    
+    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0)==1?true:false;    
+    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);                 
 
     try {
       LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();
@@ -1078,6 +1087,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       log.writeFile(data, true);
     }
     if (lap != null) {
+      
+      if (lap.transponderID==TRANS_FOR_GATE){
+        speaker.speak(speaker.getSpeachMessages().gate());
+        return;
+      }
+       
       this.lastTranponderID = lap.transponderID;
       long timeS = Calendar.getInstance().getTimeInMillis();
       long time = lap.time;
@@ -1110,8 +1125,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         } else {
           speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
         }
+        if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){
+          vsTimeConnector.addBlinkTransponder( TRANS_FOR_GATE, VSColor.RED.vscolor);
+        }  
       }
-
+      
       if (activeRace != null && activeGroup != null) {
         VS_STAGE_GROUPS user = null;
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
@@ -1119,7 +1137,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             user = usr;
             break;
           }
-        }
+        }        
         if (user == null) { // find user by TransID
           for (VS_STAGE_GROUPS usr : activeGroup.users) {
             if (usr.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
@@ -1180,6 +1198,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
               user.GROUP_NUM = activeGroup.GROUP_NUM;
               user.STAGE_ID = activeGroup.stage.ID;
               user.PILOT = usr_reg.VS_USER_NAME;
+              user.REG_ID = usr_reg.ID;
               user.parent = activeGroup;
               user.NUM_IN_GROUP = VS_STAGE_GROUPS.getMaxNumInGroup(con, user.STAGE_ID, user.GROUP_NUM) + 1;
               user.isError = 2;
@@ -1215,6 +1234,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             }
           } catch (Exception ein) {
           }
+          if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){
+            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor);
+          }  
         }
       }
     }

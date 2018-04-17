@@ -191,8 +191,12 @@ public class FPVSport extends IRegSite {
     json.put("PILOT_TYPE", tab.stage.PILOT_TYPE);
 
     try {
-      if (tab.stage.laps != null) {
-        tab.stage.laps = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);
+      if (tab.stage.laps_check_reg_id != null) {
+        if (tab.stage.USE_REG_ID_FOR_LAP==1){
+          tab.stage.laps_check_reg_id = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "REG_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);       
+        }else{
+          tab.stage.laps_check_reg_id = VS_RACE_LAP.dbControl.getMap3(tab.mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", tab.stage.RACE_ID, tab.stage.ID);
+        } 
       }
     } catch (Exception e) {
     }
@@ -252,13 +256,18 @@ public class FPVSport extends IRegSite {
             // lap time
             VS_RACE_LAP lap = null;
             try {
-              lap = tab.stage.laps.get("" + usr.GROUP_NUM).get("" + usr.VS_PRIMARY_TRANS).get("" + i);
+              if (tab.stage.USE_REG_ID_FOR_LAP==1){
+                lap = tab.stage.laps_check_reg_id.get("" + usr.GROUP_NUM).get("" + usr.REG_ID).get("" + i);
+              }else{
+                lap = tab.stage.laps_check_reg_id.get("" + usr.GROUP_NUM).get("" + usr.VS_PRIMARY_TRANS).get("" + i);
+              }  
             } catch (Exception e) {
             }
             if (lap != null) {
               JSONObject lap_obj = new JSONObject();
               lap_obj.put("LAP",lap.LAP);
               lap_obj.put("ID", lap.ID);
+              lap_obj.put("REG_ID", lap.REG_ID);
               lap_obj.put("TRANSPONDER_TIME", lap.TRANSPONDER_TIME);
               lap_obj.put("TRANSPONDER_ID", lap.TRANSPONDER_ID);
               lap_obj.put("GROUP_NUM", lap.GROUP_NUM);
@@ -329,7 +338,6 @@ public class FPVSport extends IRegSite {
     } catch (Exception e) {
       JOptionPane.showMessageDialog(null, "Transmission is error : " + e.getMessage());
     }
-
     return false;
   }
 

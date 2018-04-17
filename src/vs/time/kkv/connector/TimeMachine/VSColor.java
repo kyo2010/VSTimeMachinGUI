@@ -76,6 +76,13 @@ public class VSColor {
             + (blue.length() == 1 ? "0" + blue : blue);
   }
 
+  /***
+    6 bit - blinking in the gate
+    5 bit - light brightnes : 1 - max, 0 - normal
+    4 bit - speed blinking : 1 - fast, 0 - low
+    3 bit - blinking, 0 - off, 1 - blink
+   */
+  
   public VSColor(String colorname, byte blue, byte green, byte red, Color color) {
     /*vscolor = (blue & 0xFF) | ((green & 0xFF) << 1) | ((red & 0xFF) << 2) | 
               ((1 & 0xFF) << 6); // blinking*/
@@ -90,6 +97,7 @@ public class VSColor {
     if (red == 1) {
       vscolor |= (1 << 2);
     }
+    vscolor |= (1 << 5);
     vscolor |= (1 << 6);
     this.color = color;
   }

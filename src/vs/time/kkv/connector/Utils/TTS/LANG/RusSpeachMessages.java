@@ -36,6 +36,10 @@ public class RusSpeachMessages extends ISpeachMessages{
     return new SpeekText("Пилот "+name,3000);
   }
   
+  public SpeekText gate() {
+    return new SpeekText("Транспондер для ворот", 1000);
+  }
+  
   public SpeekText startMessage(String id){
     if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
     if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);

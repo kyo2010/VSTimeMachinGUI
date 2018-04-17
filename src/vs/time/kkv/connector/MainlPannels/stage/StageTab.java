@@ -917,6 +917,7 @@ public class StageTab extends javax.swing.JPanel {
                 VS_REGISTRATION reg = usr.getRegistration(mainForm.con, stage.RACE_ID);
                 if (reg != null) {
                   usr.PILOT = reg.VS_USER_NAME;
+                  usr.REG_ID = reg.ID;
                   if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
                     inactives.add(usr);
                   }
@@ -1029,6 +1030,7 @@ public class StageTab extends javax.swing.JPanel {
             }
             VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
             gr.STAGE_ID = stage.ID;
+            gr.REG_ID = user.ID;
             gr.GROUP_NUM = GRUP_NUM;
             gr.PILOT = user.VS_USER_NAME;
             gr.NUM_IN_GROUP = count_man_in_group;
@@ -1493,7 +1495,7 @@ public class StageTab extends javax.swing.JPanel {
             int user_index = evt.getKeyChar() - '0' - 1;
             long time = Calendar.getInstance().getTimeInMillis();
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
-            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, mainForm.raceTime, usr);
+            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS,usr.REG_ID, mainForm.raceTime, usr);
             if (lap != null) {
               if (time - lap.TIME_FROM_START > 5000) {
                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete last time" + usr.PILOT + " ?", "Delete lap time?", JOptionPane.YES_NO_OPTION);
@@ -1502,7 +1504,7 @@ public class StageTab extends javax.swing.JPanel {
                 }
               }
               try {
-                stage.delLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, lap.LAP, lap);
+                stage.delLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, usr.REG_ID, lap.LAP, lap);
                 usr.IS_RECALULATED = 0;
                 usr.BEST_LAP = 0;
                 usr.IS_FINISHED = 0;

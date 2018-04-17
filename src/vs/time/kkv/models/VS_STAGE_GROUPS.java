@@ -212,7 +212,12 @@ public class VS_STAGE_GROUPS implements Transferable {
           boolean hasSkip = false;
           for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
-            VS_RACE_LAP lap = stage.laps.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS).get("" + lap_num);
+            VS_RACE_LAP lap = null;
+            if (stage.USE_REG_ID_FOR_LAP==1){
+              lap = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).get("" + lap_num);
+            }else{
+              lap = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS).get("" + lap_num);
+            }
             if (lap != null) {
               if (lap.TRANSPONDER_TIME < best_time_lap) {
                 best_time_lap = lap.TRANSPONDER_TIME;

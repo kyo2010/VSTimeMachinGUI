@@ -33,6 +33,10 @@ public class ISpeachMessages {
   public SpeekText connected() {
     return new SpeekText("connected", 800);
   }
+  
+  public SpeekText gate() {
+    return new SpeekText("Transonder of gate", 800);
+  }
 
   public SpeekText disconnected() {
     return new SpeekText("disconnected", 800);
