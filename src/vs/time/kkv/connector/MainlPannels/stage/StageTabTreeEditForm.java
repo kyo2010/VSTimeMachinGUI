@@ -258,10 +258,16 @@ public class StageTabTreeEditForm extends javax.swing.JFrame {
             group.users.set(group.users.indexOf(user), edit);
         }
         edit.dbControl.update(mainForm.con, edit);
-        // refresh laps time
-        List<VS_RACE_LAP> laps = VS_RACE_LAP.dbControl.getList(stageTab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", stageTab.stage.RACE_ID,stageTab.stage.ID,user.GROUP_NUM,user.VS_PRIMARY_TRANS);
+        // refresh laps time                
+        List<VS_RACE_LAP> laps = null;
+        if (stageTab.stage.USE_REG_ID_FOR_LAP==1){
+          laps = VS_RACE_LAP.dbControl.getList(stageTab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND REG_ID=?", stageTab.stage.RACE_ID,stageTab.stage.ID,user.GROUP_NUM,user.REG_ID);
+        }else{
+          laps = VS_RACE_LAP.dbControl.getList(stageTab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? AND TRANSPONDER_ID=?", stageTab.stage.RACE_ID,stageTab.stage.ID,user.GROUP_NUM,user.VS_PRIMARY_TRANS);
+        }  
         for (VS_RACE_LAP lap: laps){
           lap.GROUP_NUM = edit.GROUP_NUM;
+          lap.REG_ID = edit.REG_ID;
           lap.TRANSPONDER_ID = edit.VS_PRIMARY_TRANS;
           VS_RACE_LAP.dbControl.update(stageTab.mainForm.con, lap);
         }
