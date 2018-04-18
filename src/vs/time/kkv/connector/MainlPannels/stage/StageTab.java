@@ -101,8 +101,8 @@ public class StageTab extends javax.swing.JPanel {
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
   public boolean isOneTable = false;
-  
-  public void fireStructChange(){    
+
+  public void fireStructChange() {
     //System.out.println("fireStructChange");
     //jTable.setModel(stageTableAdapter);
     jTable.tableChanged(null);
@@ -112,7 +112,6 @@ public class StageTab extends javax.swing.JPanel {
       jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
     }
   }
-  
 
   Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
@@ -440,7 +439,9 @@ public class StageTab extends javax.swing.JPanel {
                 if (reg != null) {
                   pilot = reg.FIRST_NAME + " " + reg.SECOND_NAME;
                 }
-                if (pilot.trim().equals("")) pilot = user.PILOT;
+                if (pilot.trim().equals("")) {
+                  pilot = user.PILOT;
+                }
                 pilots.add(pilot);
                 user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
               }
@@ -609,10 +610,10 @@ public class StageTab extends javax.swing.JPanel {
       butGroupExport.setVisible(false);
       //jSplitPane2.set
     }
-    
-    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+
+    if (mainForm.activeRace.WEB_RACE_ID != null && !mainForm.activeRace.WEB_RACE_ID.equals("")) {
       butCopyToWeb.setVisible(true);
-    }else{
+    } else {
       butCopyToWeb.setVisible(false);
     }
   }
@@ -880,7 +881,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     } catch (Exception e) {
     }
-  }  
+  }
 
   /**
    * This method is called from within the constructor to initialize the form.
@@ -1328,7 +1329,7 @@ public class StageTab extends javax.swing.JPanel {
             int user_index = evt.getKeyChar() - '0' - 1;
             long time = Calendar.getInstance().getTimeInMillis();
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
-            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS,usr.REG_ID, mainForm.raceTime, usr);
+            VS_RACE_LAP lap = stage.getLastLap(mainForm, usr.GROUP_NUM, usr.VS_PRIMARY_TRANS, usr.REG_ID, mainForm.raceTime, usr);
             if (lap != null) {
               if (time - lap.TIME_FROM_START > 5000) {
                 int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to delete last time" + usr.PILOT + " ?", "Delete lap time?", JOptionPane.YES_NO_OPTION);
@@ -1462,13 +1463,17 @@ public class StageTab extends javax.swing.JPanel {
     for (int row = 0; row < rowCount; row++) {
       String line = "";
       StageTableData std = this.stageTableAdapter.getTableData(row);
-      if (std.isGrpup && isOneTable) continue;
+      if (std.isGrpup && isOneTable) {
+        continue;
+      }
       if (std.isGrpup) {
-        line+= "--==  "+mainForm.getLocaleString("Group")+" "+std.group.GROUP_NUM+"  ==--";
+        line += "--==  " + mainForm.getLocaleString("Group") + " " + std.group.GROUP_NUM + "  ==--";
       } else {
         for (int col = 0; col < colCount; col++) {
           Object obj = jTable.getModel().getValueAt(row, col);
-          if (obj.equals("")) continue;
+          if (obj.equals("")) {
+            continue;
+          }
           line += jTable.getColumnName(col).replaceAll("\n", " ") + sep + obj + sep + "\n";
         }
       }
@@ -1509,13 +1514,15 @@ public class StageTab extends javax.swing.JPanel {
 
   private void butCopyToWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyToWebActionPerformed
     // TODO add your handling code here:
-    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+    if (mainForm.activeRace.WEB_RACE_ID != null && !mainForm.activeRace.WEB_RACE_ID.equals("")) {
       IRegSite site = RegistrationImportForm.getSite(mainForm.activeRace.WEB_SYSTEM_SID);
-      if (site==null) return;
-      if (site.isSuportedToWebUpload()){
-        site.uploadToWebSystem(this,false);
-      }else{
-        JOptionPane.showMessageDialog(null,"Update race data is not supported for site :"+site.REG_SITE_NAME);
+      if (site == null) {
+        return;
+      }
+      if (site.isSuportedToWebUpload()) {
+        site.uploadToWebSystem(this, false);
+      } else {
+        JOptionPane.showMessageDialog(null, "Update race data is not supported for site :" + site.REG_SITE_NAME);
       }
     }
   }//GEN-LAST:event_butCopyToWebActionPerformed
@@ -1567,10 +1574,70 @@ public class StageTab extends javax.swing.JPanel {
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
           if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
-            
+
           }
-          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {            
-            if (1 == 1) {
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+              // Olimpic system implementation base on Qualification time, 1-4, 2-3
+              // Check all groups
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              HashMap<Long, List<VS_STAGE_GROUPS>> groupNums = new HashMap<>();
+              List<Long> groupNumbers = new ArrayList<>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                List<VS_STAGE_GROUPS> users = groupNums.get(usr.GROUP_NUM);
+                if (users == null) {
+                  users = new ArrayList<VS_STAGE_GROUPS>();
+                  groupNums.put(usr.GROUP_NUM, users);
+                  groupNumbers.add(usr.GROUP_NUM);
+                }
+                users.add(usr);
+              }
+              List<VS_STAGE_GROUPS> new_groups = new ArrayList<VS_STAGE_GROUPS>();
+              int count_groups = (groupNums.size() + 1) / 2;
+              for (int group = 0; group < count_groups; group++) {
+                int NUM_IN_GROUP = 1;
+                Long GROUP_NUM_FIRST = groupNumbers.get(group);
+                Long GROUP_NUM_SECOND = groupNumbers.get(groupNumbers.size() - group - 1);
+                if (GROUP_NUM_FIRST == GROUP_NUM_SECOND) {
+                  GROUP_NUM_SECOND = -1L;
+                }
+                List<VS_STAGE_GROUPS> users = groupNums.get(GROUP_NUM_FIRST);
+                for (VS_STAGE_GROUPS usr : users) {
+                  if (usr.WIN == 1) {
+                    usr.STAGE_ID = stage.ID;
+                    usr.GROUP_NUM = group + 1;
+                    usr.NUM_IN_GROUP = NUM_IN_GROUP;
+                    usr.WIN = 0;
+                    usr.SCORE = 0;
+                    usr.SCORE = 0;
+                    usr.GID = -1;
+                    usr.BEST_LAP = 0;
+                    usr.RACE_TIME = 0;
+                    NUM_IN_GROUP++;
+                    new_groups.add(usr);
+                  }
+                }
+                if (GROUP_NUM_SECOND != -1L) {
+                  users = groupNums.get(GROUP_NUM_SECOND);
+                  for (VS_STAGE_GROUPS usr : users) {
+                    if (usr.WIN == 1) {
+                      usr.STAGE_ID = stage.ID;
+                      usr.GROUP_NUM = group + 1;
+                      usr.NUM_IN_GROUP = NUM_IN_GROUP;
+                      usr.WIN = 0;
+                      usr.SCORE = 0;
+                      usr.SCORE = 0;
+                      usr.GID = -1;
+                      usr.BEST_LAP = 0;
+                      usr.RACE_TIME = 0;
+                      NUM_IN_GROUP++;
+                      new_groups.add(usr);
+                    }
+                  }
+                }
+              }
+
+            } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               //checkGroupConstrain();
@@ -1586,7 +1653,7 @@ public class StageTab extends javax.swing.JPanel {
               for (VS_STAGE_GROUPS usr : groups) {
                 VS_REGISTRATION reg = usr.getRegistration(mainForm.con, stage.RACE_ID);
                 if (reg != null) {
-                  usr.PILOT = reg.VS_USER_NAME;                  
+                  usr.PILOT = reg.VS_USER_NAME;
                   usr.REG_ID = reg.ID;
                   if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
                     inactives.add(usr);
@@ -1657,9 +1724,6 @@ public class StageTab extends javax.swing.JPanel {
                 }
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
-            } else {
-              // Double         
-
             }
           } else { // Create pilot list as parent_id - only copy
             groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
