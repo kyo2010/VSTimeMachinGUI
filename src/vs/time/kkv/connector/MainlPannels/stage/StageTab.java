@@ -880,188 +880,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     } catch (Exception e) {
     }
-  }
-
-  public void createGroups() {
-    try {
-      if (stage != null && stage.ID != -1) {
-        VS_STAGE parent_stage = null;
-        try {
-          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
-        } catch (Exception e) {
-        }
-        if (parent_stage == null) {
-          try {
-            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", stage.PARENT_STAGE_ID, stage.RACE_ID);
-          } catch (Exception e) {
-          }
-        }
-
-        if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
-          return;
-        }
-        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
-
-        if (parent_stage != null) {
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
-          // Copy grups to new Stage
-          Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
-          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
-            /*for (VS_STAGE_GROUPS usr : groups) {
-              usr.IS_FINISHED = 1;
-              usr.recalculateLapTimes(mainForm.con, stage, true);
-            }*/
-          }
-          if (stage.STAGE_TYPE == MainForm.STAGE_RACE /*&& parent_stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT*/) {
-            //if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
-            if (1 == 1) {
-              // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
-              //checkGroupConstrain();
-              //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
-              TreeSet<String> user_names = new TreeSet();
-              for (VS_STAGE_GROUPS usr : groups) {
-                if (user_names.contains(usr.PILOT)) {
-                  usr.isError = 2;
-                }
-                user_names.add(usr.PILOT);
-              }
-              List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
-              for (VS_STAGE_GROUPS usr : groups) {
-                VS_REGISTRATION reg = usr.getRegistration(mainForm.con, stage.RACE_ID);
-                if (reg != null) {
-                  usr.PILOT = reg.VS_USER_NAME;
-                  usr.REG_ID = reg.ID;
-                  if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
-                    inactives.add(usr);
-                  }
-                }
-              }
-              for (VS_STAGE_GROUPS del : inactives) {
-                groups.remove(del);
-              }
-              int count_man = groups.size();
-              int count_max_in_groups = stage.COUNT_PILOTS_IN_GROUP;
-              int count_man_in_group = 1;
-              int count_groups = count_man / count_max_in_groups;
-              if (count_groups * count_max_in_groups < count_man) {
-                count_groups++;
-              }
-              int current_group = 1;
-              String[] channels = stage.CHANNELS.split(";");
-              HashMap<Integer, HashMap<String, Integer>> usingChannels = new HashMap<Integer, HashMap<String, Integer>>();
-              for (VS_STAGE_GROUPS usr : groups) {
-                HashMap<String, Integer> groupChannels = usingChannels.get(current_group);
-                if (groupChannels == null) {
-                  groupChannels = new HashMap<String, Integer>();
-                  usingChannels.put(current_group, groupChannels);
-                }
-                usr.GID = -1;
-                //usr.CHANNEL = channels[count_man_in_group - 1];
-                usr.STAGE_ID = stage.ID;
-                usr.IS_FINISHED = 0;
-                usr.IS_RECALULATED = 0;
-                usr.NUM_IN_GROUP = count_man_in_group;
-                usr.GROUP_NUM = current_group;
-                usr.BEST_LAP = 0;
-                usr.LAPS = 0;
-                usr.RACE_TIME = 0;
-                Integer countUse = groupChannels.get(usr.CHANNEL);
-                if (countUse == null) {
-                  countUse = 0;
-                }
-                countUse++;
-                groupChannels.put(usr.CHANNEL, countUse);
-                current_group++;
-                if (current_group > count_groups) {
-                  current_group = 1;
-                  count_man_in_group++;
-                }
-              }
-              HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
-              for (VS_STAGE_GROUPS usr : groups) {
-                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int) usr.GROUP_NUM);
-                if (checkChannels == null) {
-                  checkChannels = new HashMap<String, Integer>();
-                  checkChannelsAll.put((int) usr.GROUP_NUM, checkChannels);
-                }
-                HashMap<String, Integer> groupChannels = usingChannels.get((int) usr.GROUP_NUM);
-                Integer countUse = groupChannels.get(usr.CHANNEL);
-                if (countUse > 1) {
-                  if (checkChannels.get(usr.CHANNEL) == null) {
-                    checkChannels.put(usr.CHANNEL, 1);
-                  } else {
-                    for (String channel : channels) {
-                      if (groupChannels.get(channel) == null) {
-                        usr.CHANNEL = channel;
-                        groupChannels.put(usr.CHANNEL, 1);
-                      }
-                    }
-                  }
-                }
-                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
-              }
-            } else {
-              // Double         
-
-            }
-          } else {
-            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
-            // usual copy
-            for (VS_STAGE_GROUPS user : groups) {
-              user.GID = -1;
-              user.STAGE_ID = stage.ID;
-              user.isError = 0;
-              user.IS_FINISHED = 0;
-              user.IS_RECALULATED = 0;
-              user.LAPS = 0;
-              user.RACE_TIME = 0;
-              user.BEST_LAP = 0;
-              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, user);
-            }
-          }
-        } else {
-          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
-          int count_man_in_group = 0;
-          int GRUP_NUM = 1;
-          String[] channels = stage.CHANNELS.split(";");
-          int prev_type_pilot = -1;
-          for (VS_REGISTRATION user : users) {
-            if (user.VS_TRANS1 == 0) {
-              JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
-              return;
-            }
-            // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
-            if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
-              GRUP_NUM++;
-              count_man_in_group = 0;
-            }
-            // Create new group, if full
-            count_man_in_group = count_man_in_group + 1;
-            if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
-              GRUP_NUM++;
-              count_man_in_group = 1;
-            }
-            VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
-            gr.STAGE_ID = stage.ID;
-            gr.REG_ID = user.ID;
-            gr.GROUP_NUM = GRUP_NUM;
-            gr.PILOT = user.VS_USER_NAME;
-            gr.NUM_IN_GROUP = count_man_in_group;
-            gr.CHANNEL = channels[count_man_in_group - 1];
-            gr.REG_ID = user.ID;
-            gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
-            prev_type_pilot = user.PILOT_TYPE;
-            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
-          }
-        }
-        System.out.println("Satge has been created : " + stage.ID);
-        stage.IS_GROUP_CREATED = 1;
-        VS_STAGE.dbControl.update(mainForm.con, stage);
-      }
-    } catch (Exception e) {
-    }
-  }
+  }  
 
   /**
    * This method is called from within the constructor to initialize the form.
@@ -1722,4 +1541,182 @@ public class StageTab extends javax.swing.JPanel {
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables
+
+  public void createGroups() {
+    try {
+      if (stage != null && stage.ID != -1) {
+        VS_STAGE parent_stage = null;
+        try {
+          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
+        } catch (Exception e) {
+        }
+        if (parent_stage == null) {
+          try {
+            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", stage.PARENT_STAGE_ID, stage.RACE_ID);
+          } catch (Exception e) {
+          }
+        }
+
+        if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
+          return;
+        }
+        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
+
+        if (parent_stage != null) {
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
+          // Copy grups to new Stage
+          Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
+          if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
+            
+          }
+          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {            
+            if (1 == 1) {
+              // based on best time
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              //checkGroupConstrain();
+              //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+              TreeSet<String> user_names = new TreeSet();
+              for (VS_STAGE_GROUPS usr : groups) {
+                if (user_names.contains(usr.PILOT)) {
+                  usr.isError = 2;
+                }
+                user_names.add(usr.PILOT);
+              }
+              List<VS_STAGE_GROUPS> inactives = new ArrayList<VS_STAGE_GROUPS>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                VS_REGISTRATION reg = usr.getRegistration(mainForm.con, stage.RACE_ID);
+                if (reg != null) {
+                  usr.PILOT = reg.VS_USER_NAME;                  
+                  usr.REG_ID = reg.ID;
+                  if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
+                    inactives.add(usr);
+                  }
+                }
+              }
+              for (VS_STAGE_GROUPS del : inactives) {
+                groups.remove(del);
+              }
+              int count_man = groups.size();
+              int count_max_in_groups = stage.COUNT_PILOTS_IN_GROUP;
+              int count_man_in_group = 1;
+              int count_groups = count_man / count_max_in_groups;
+              if (count_groups * count_max_in_groups < count_man) {
+                count_groups++;
+              }
+              int current_group = 1;
+              String[] channels = stage.CHANNELS.split(";");
+              HashMap<Integer, HashMap<String, Integer>> usingChannels = new HashMap<Integer, HashMap<String, Integer>>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                HashMap<String, Integer> groupChannels = usingChannels.get(current_group);
+                if (groupChannels == null) {
+                  groupChannels = new HashMap<String, Integer>();
+                  usingChannels.put(current_group, groupChannels);
+                }
+                usr.GID = -1;
+                //usr.CHANNEL = channels[count_man_in_group - 1];
+                usr.STAGE_ID = stage.ID;
+                usr.IS_FINISHED = 0;
+                usr.IS_RECALULATED = 0;
+                usr.NUM_IN_GROUP = count_man_in_group;
+                usr.GROUP_NUM = current_group;
+                usr.BEST_LAP = 0;
+                usr.LAPS = 0;
+                usr.RACE_TIME = 0;
+                Integer countUse = groupChannels.get(usr.CHANNEL);
+                if (countUse == null) {
+                  countUse = 0;
+                }
+                countUse++;
+                groupChannels.put(usr.CHANNEL, countUse);
+                current_group++;
+                if (current_group > count_groups) {
+                  current_group = 1;
+                  count_man_in_group++;
+                }
+              }
+              HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int) usr.GROUP_NUM);
+                if (checkChannels == null) {
+                  checkChannels = new HashMap<String, Integer>();
+                  checkChannelsAll.put((int) usr.GROUP_NUM, checkChannels);
+                }
+                HashMap<String, Integer> groupChannels = usingChannels.get((int) usr.GROUP_NUM);
+                Integer countUse = groupChannels.get(usr.CHANNEL);
+                if (countUse > 1) {
+                  if (checkChannels.get(usr.CHANNEL) == null) {
+                    checkChannels.put(usr.CHANNEL, 1);
+                  } else {
+                    for (String channel : channels) {
+                      if (groupChannels.get(channel) == null) {
+                        usr.CHANNEL = channel;
+                        groupChannels.put(usr.CHANNEL, 1);
+                      }
+                    }
+                  }
+                }
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+              }
+            } else {
+              // Double         
+
+            }
+          } else { // Create pilot list as parent_id - only copy
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
+            // usual copy
+            for (VS_STAGE_GROUPS user : groups) {
+              user.GID = -1;
+              user.STAGE_ID = stage.ID;
+              user.isError = 0;
+              user.IS_FINISHED = 0;
+              user.IS_RECALULATED = 0;
+              user.LAPS = 0;
+              user.RACE_TIME = 0;
+              user.BEST_LAP = 0;
+              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, user);
+            }
+          }
+        } else { // Parent Stage = null
+          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+          int count_man_in_group = 0;
+          int GRUP_NUM = 1;
+          String[] channels = stage.CHANNELS.split(";");
+          int prev_type_pilot = -1;
+          for (VS_REGISTRATION user : users) {
+            if (user.VS_TRANS1 == 0) {
+              JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
+              return;
+            }
+            // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
+            if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
+              GRUP_NUM++;
+              count_man_in_group = 0;
+            }
+            // Create new group, if full
+            count_man_in_group = count_man_in_group + 1;
+            if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
+              GRUP_NUM++;
+              count_man_in_group = 1;
+            }
+            VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
+            gr.STAGE_ID = stage.ID;
+            gr.REG_ID = user.ID;
+            gr.GROUP_NUM = GRUP_NUM;
+            gr.PILOT = user.VS_USER_NAME;
+            gr.NUM_IN_GROUP = count_man_in_group;
+            gr.CHANNEL = channels[count_man_in_group - 1];
+            gr.REG_ID = user.ID;
+            gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
+            prev_type_pilot = user.PILOT_TYPE;
+            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+          }
+        }
+        System.out.println("Satge has been created : " + stage.ID);
+        stage.IS_GROUP_CREATED = 1;
+        VS_STAGE.dbControl.update(mainForm.con, stage);
+      }
+    } catch (Exception e) {
+    }
+  }
+
 }
