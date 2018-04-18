@@ -266,7 +266,7 @@ public class VSTimeConnector {
   class BlinkigQuee{
     public int transID;
     public int color;
-    public int delay=1000;
+    public int delay=2500;
     public long milisecond_start = 0;
     public int state = 0; // 0 - setColor, 1 - delay, 2 - off;
     public BlinkigQuee(int transID, int color) {

@@ -51,7 +51,7 @@
                       <Group type="102" attributes="0">
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jcbStageType" min="-2" pref="515" max="-2" attributes="0"/>
+                          <Component id="jcbStageType" min="-2" pref="517" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -60,8 +60,8 @@
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jtCaption" max="32767" attributes="0"/>
                               <Component id="parentStage" pref="517" max="32767" attributes="0"/>
+                              <Component id="jtCaption" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="tabPane" alignment="0" max="32767" attributes="0"/>
@@ -129,7 +129,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jRaceTypeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jRaceType" min="-2" pref="515" max="-2" attributes="0"/>
+                      <Component id="jRaceType" min="-2" pref="517" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

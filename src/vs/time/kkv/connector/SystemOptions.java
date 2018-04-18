@@ -264,7 +264,7 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "LANG", ""+jcLang.getSelectedItem());    
     
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE", ""+TRANS_FOR_GATE.getText());
-    VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", ""+ (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));      
+    VS_SETTING.setParam(mainForm.con, "USE_TRANS_FOR_GATE", ""+ (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));      
     
     mainForm.applayLanguage();
     

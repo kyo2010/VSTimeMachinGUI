@@ -484,6 +484,7 @@ public class StageTab extends javax.swing.JPanel {
               try {
                 user.registration = null;
                 user.loadRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+                user.VS_PRIMARY_TRANS = user.registration.VS_TRANS1;
               } catch (Exception ein) {
               }
             }
@@ -1572,7 +1573,7 @@ public class StageTab extends javax.swing.JPanel {
         if (parent_stage != null) {
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
           // Copy grups to new Stage
-          Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=?", stage.RACE_ID, parent_stage.ID);
+          Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=? order by GROUP_NUM", stage.RACE_ID, parent_stage.ID);
           if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
 
           }
@@ -1636,7 +1637,14 @@ public class StageTab extends javax.swing.JPanel {
                   }
                 }
               }
-
+              try{
+                recalulateChannels(new_groups);
+              }catch(Exception e){
+                e.printStackTrace();
+              }  
+              for (VS_STAGE_GROUPS usr : new_groups){
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+              }              
             } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
@@ -1780,6 +1788,47 @@ public class StageTab extends javax.swing.JPanel {
         VS_STAGE.dbControl.update(mainForm.con, stage);
       }
     } catch (Exception e) {
+    }
+  }
+
+  public void recalulateChannels(List<VS_STAGE_GROUPS> users) {
+    String[] channels = stage.CHANNELS.split(";");
+    HashMap<Long, HashMap<String, Integer>> usingChannels = new HashMap();
+
+    for (VS_STAGE_GROUPS usr : users) {
+      HashMap<String, Integer> groupChannels = usingChannels.get(usr.GROUP_NUM);
+      if (groupChannels == null) {
+        groupChannels = new HashMap<String, Integer>();
+        usingChannels.put(usr.GROUP_NUM, groupChannels);
+      }
+      Integer countUse = groupChannels.get(usr.CHANNEL);
+      if (countUse == null) {
+        countUse = 0;
+      }
+      countUse++;
+      groupChannels.put(usr.CHANNEL, countUse);
+    }
+    HashMap<Long, HashMap<String, Integer>> checkChannelsAll = new HashMap<Long, HashMap<String, Integer>>();
+    for (VS_STAGE_GROUPS usr : users) {
+      HashMap<String, Integer> checkChannels = checkChannelsAll.get(usr.GROUP_NUM);
+      if (checkChannels == null) {
+        checkChannels = new HashMap<String, Integer>();
+        checkChannelsAll.put(usr.GROUP_NUM, checkChannels);
+      }
+      HashMap<String, Integer> groupChannels = usingChannels.get(usr.GROUP_NUM);
+      Integer countUse = groupChannels.get(usr.CHANNEL);
+      if (countUse > 1) {
+        if (checkChannels.get(usr.CHANNEL) == null) {
+          checkChannels.put(usr.CHANNEL, 1);
+        } else {
+          for (String channel : channels) {
+            if (groupChannels.get(channel) == null) {
+              usr.CHANNEL = channel;
+              groupChannels.put(usr.CHANNEL, 1);
+            }
+          }
+        }
+      }      
     }
   }
 

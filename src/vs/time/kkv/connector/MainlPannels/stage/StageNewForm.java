@@ -298,7 +298,7 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap()
         .addComponent(jRaceTypeLabel)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jRaceType, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     racePanelLayout.setVerticalGroup(
@@ -634,15 +634,15 @@ public class StageNewForm extends javax.swing.JFrame {
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addComponent(jLabel4)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jcbStageType, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(Caption)
               .addComponent(jLabel5))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(jtCaption)
-              .addComponent(parentStage, 0, 517, Short.MAX_VALUE)))
+              .addComponent(parentStage, 0, 517, Short.MAX_VALUE)
+              .addComponent(jtCaption)))
           .addComponent(tabPane))
         .addContainerGap())
     );
@@ -933,9 +933,10 @@ public class StageNewForm extends javax.swing.JFrame {
       panelQualificationResult2.setVisible(true);
     } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_REPORT) {     
       panelQualificationResult2.setVisible(true);
-      tabPane.setSelectedComponent(tabRaceReport);
-    } else {
+      tabPane.setSelectedComponent(tabRaceReport);      
+    } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE){  
       racePanel.setVisible(true);
+    } else {      
       stagePanel.setVisible(true);
       panelQualificationResult2.setVisible(false);
       tabPane.setSelectedIndex(0);

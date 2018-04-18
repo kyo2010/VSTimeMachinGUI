@@ -1236,6 +1236,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           } catch (Exception ein) {
           }
           if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){
+            if (user.color==null){
+              user.color = VSColor.getColorForChannel(user.CHANNEL, activeGroup.stage.CHANNELS, activeGroup.stage.COLORS);
+            }
             vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor);
           }  
         }
