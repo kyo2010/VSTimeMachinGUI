@@ -32,6 +32,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.TimeMachine.VSTM_ESPInfo;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
@@ -262,48 +263,82 @@ public class VSTimeConnector {
     }
     return info;
   }
-  
-  class BlinkigQuee{
+
+  class BlinkigQuee {
+
     public int transID;
     public int color;
-    public int delay=2500;
+    public int delay = 2500;
     public long milisecond_start = 0;
     public int state = 0; // 0 - setColor, 1 - delay, 2 - off;
-    public BlinkigQuee(int transID, int color) {
+    VSColor gateColor = null;
+    boolean isBlink = false;
+
+    public BlinkigQuee(int transID, int color, VSColor gateColor, boolean isBlink) {
       this.transID = transID;
       this.color = color;
-    }       
-  } 
-  Vector<BlinkigQuee> blinkigQuee = new Vector<BlinkigQuee>();
-  public void addBlinkTransponder(int transID, int color){
-    blinkigQuee.add(new BlinkigQuee(transID, color));
+      this.gateColor = gateColor;
+      this.isBlink = isBlink;
+    }
   }
-  Timer blinkingTimer = new Timer(500, new ActionListener() {
+  Vector<BlinkigQuee> blinkigQuee = new Vector<BlinkigQuee>();
+
+  public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) {
+    blinkigQuee.add(new BlinkigQuee(transID, color, gateColor, isBlink));
+    System.out.println("fire gate");
+    blinkingTimer.setDelay(1);
+    blinkingTimer.restart();
+  }
+  public Timer blinkingTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (connected && blinkigQuee.size()>0){
+      if (connected && blinkigQuee.size() > 0) {
+        blinkingTimer.setDelay(500);
         BlinkigQuee blink = blinkigQuee.get(0);
-        if (blink.state==0){
-          try{
-            setColor(blink.transID, blink.color);
-          }catch(Exception ein){}
+        if (blink.state == 0) {
+          try {
+            if (blink.isBlink) {
+              setColor(blink.transID, VSColor.blinkColor(blink.color));
+            } else {
+              setColor(blink.transID, blink.color);
+            }
+          } catch (Exception ein) {
+          }
           blink.state = 1;
           blink.milisecond_start = Calendar.getInstance().getTimeInMillis();
-        }else if (blink.state==1){
-          if (Calendar.getInstance().getTimeInMillis()-blink.milisecond_start>blink.delay){
-            try{
-              setColor(blink.transID, 0);
-            }catch(Exception ein){}
+        } else if (blink.state == 1) {
+          if (Calendar.getInstance().getTimeInMillis() - blink.milisecond_start > blink.delay) {
+            try {
+              if (blink.gateColor == null) {
+                setColor(blink.transID, 0);
+              } else {
+                setColor(blink.transID, blink.gateColor.vscolor);
+              }
+            } catch (Exception ein) {
+            }
             blink.state = 2;
             blinkigQuee.remove(0);
-          }else{
-            try{
-              setColor(blink.transID, blink.color);
-            }catch(Exception ein){}
+          } else {
+            try {
+              if (blink.isBlink) {
+                setColor(blink.transID, VSColor.blinkColor(blink.color));
+              } else {
+                setColor(blink.transID, blink.color);
+              }
+            } catch (Exception ein) {
             }
-        }else{
+          }
+        } else {
           // Remove from queue          
           blinkigQuee.remove(0);
+          try {
+            if (blink.gateColor == null) {
+              setColor(blink.transID, 0);
+            } else {
+              setColor(blink.transID, blink.gateColor.vscolor);
+            }
+          } catch (Exception ein) {
+          }
         }
       }
     }
@@ -321,7 +356,6 @@ public class VSTimeConnector {
     }
     setTime();
   }*/
-
   public void clear() throws SerialPortException {
     sentMessage("clear\r\n");
   }

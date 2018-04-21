@@ -22,6 +22,7 @@ public class VSColor {
   public static VSColor GREEN = new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, Color.GREEN);
   public static VSColor BLUE = new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, Color.BLUE);
   public static VSColor WHITE = new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE);
+  public static VSColor AQUA = new VSColor("AQUA",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255));
   
   public static VSColor[] CHANNEL_COLORS_FIXED = new VSColor[]{
     new VSColor("RED",BYTE_0, BYTE_0, BYTE_1, new Color(255, 140, 140)).setW3css("w3-red"), // 1 channel
@@ -31,6 +32,7 @@ public class VSColor {
     new VSColor("PURPURE",BYTE_1, BYTE_0, BYTE_1, new Color(255, 140, 255)).setW3css("w3-pink"), // 5 channel
     new VSColor("AQUA",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255)), // 6 channel
     new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, new Color(240, 240, 255)), // 7 channel
+    new VSColor("BLACK",BYTE_0, BYTE_0, BYTE_0, new Color(00, 00, 00)), // 7 channel
     //new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE), // 8 channel
   }; 
   
@@ -40,6 +42,13 @@ public class VSColor {
     for (VSColor color : CHANNEL_COLORS_FIXED){
       COLORS_MAP.put(color.colorname, color);
     }
+  }
+  
+  public static VSColor getColor(String colorNAme){
+    for (VSColor color : CHANNEL_COLORS_FIXED){
+      if (color.colorname.equalsIgnoreCase(colorNAme)) return color;     
+    }
+    return CHANNEL_COLORS_FIXED[0];
   }
   
    
@@ -74,6 +83,12 @@ public class VSColor {
             + (red.length() == 1 ? "0" + red : red)
             + (green.length() == 1 ? "0" + green : green)
             + (blue.length() == 1 ? "0" + blue : blue);
+  }
+  
+  public static int blinkColor(int vscolor){
+    vscolor |= (1 << 3); // blink
+    vscolor |= (1 << 4); // fast blink
+    return vscolor;
   }
 
   /***

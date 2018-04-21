@@ -125,6 +125,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   
   public boolean USE_TRANS_FOR_GATE = false;
   public int TRANS_FOR_GATE = 0;
+  public VSColor TRANS_FOR_GATE_COLOR = null;
+  public boolean TRANS_FOR_GATE_BLINK = false;
         
 
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
@@ -362,10 +364,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this, true);
     }
-    
-    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0)==1?true:false;    
-    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);                 
-
+        
     try {
       LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();
       System.out.println("Local IP: " + LOCAL_HOST);
@@ -390,6 +389,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this );
     STAGE_COLUMN.changeLocale( RegistrationModelTable.STAGE_COLUMNS_STAGE, this );   
     
+    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0)==1?true:false;    
+    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);                 
+
+    TRANS_FOR_GATE_BLINK =  VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0)==1?true:false;    
+    TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
+    
+    if (USE_TRANS_FOR_GATE && vsTimeConnector!=null && vsTimeConnector.connected){
+      try{
+        vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+      }catch(Exception e){}  
+    }
   }
   
   public String getLocaleString(String caption){
@@ -1126,8 +1136,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         } else {
           speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
         }
-        if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){
-          vsTimeConnector.addBlinkTransponder( TRANS_FOR_GATE, VSColor.RED.vscolor);
+        if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){          
+          vsTimeConnector.addBlinkTransponder( TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+          //vsTimeConnector.blinkingTimer.restart();
         }  
       }
       
@@ -1239,7 +1250,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             if (user.color==null){
               user.color = VSColor.getColorForChannel(user.CHANNEL, activeGroup.stage.CHANNELS, activeGroup.stage.COLORS);
             }
-            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor);
+            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR,TRANS_FOR_GATE_BLINK);
           }  
         }
       }
