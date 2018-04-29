@@ -173,6 +173,7 @@ public class StageTab extends javax.swing.JPanel {
       if (checkerCycle * timer.getInitialDelay() < 1000) {
         try {
           mainForm.vsTimeConnector.setColor(0, 0);
+          mainForm.setColorForGate();
         } catch (Exception ein) {
         }
         try {
@@ -181,6 +182,7 @@ public class StageTab extends javax.swing.JPanel {
         }
         try {
           mainForm.vsTimeConnector.setPowerMax();
+          mainForm.setColorForGate();
         } catch (Exception ein) {
         }
 
@@ -529,6 +531,8 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
               }
+              
+              mainForm.setColorForGate();
 
               final boolean useSpeach = true;
               if (td != null && td.isGrpup == true) {

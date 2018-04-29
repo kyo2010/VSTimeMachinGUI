@@ -402,6 +402,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }
   
+  public void setColorForGate(){
+    if (USE_TRANS_FOR_GATE && vsTimeConnector!=null && vsTimeConnector.connected){
+      try{
+        vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+      }catch(Exception e){}  
+    }
+  }
+  
   public String getLocaleString(String caption){
     if (langFile!=null){
       try{
