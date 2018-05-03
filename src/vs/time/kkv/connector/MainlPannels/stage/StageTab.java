@@ -531,7 +531,7 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
               }
-              
+
               mainForm.setColorForGate();
 
               final boolean useSpeach = true;
@@ -1558,13 +1558,15 @@ public class StageTab extends javax.swing.JPanel {
     try {
       if (stage != null && stage.ID != -1) {
         VS_STAGE parent_stage = null;
-        try {
-          parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
-        } catch (Exception e) {
-        }
         if (parent_stage == null) {
           try {
             parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", stage.PARENT_STAGE_ID, stage.RACE_ID);
+          } catch (Exception e) {
+          }
+        }
+        if (parent_stage == null) {
+          try {
+            parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "CAPTION=? and RACE_ID=?", stage.PARENT_STAGE, stage.RACE_ID);
           } catch (Exception e) {
           }
         }
@@ -1582,6 +1584,12 @@ public class StageTab extends javax.swing.JPanel {
 
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT && parent_stage.PARENT_STAGE_ID > 0) {
+              try {
+                parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", parent_stage.PARENT_STAGE_ID, stage.RACE_ID);
+              } catch (Exception e) {
+              }
+            }
             if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
               // Olimpic system implementation base on Qualification time, 1-4, 2-3
               // Check all groups
@@ -1641,14 +1649,14 @@ public class StageTab extends javax.swing.JPanel {
                   }
                 }
               }
-              try{
+              try {
                 recalulateChannels(new_groups);
-              }catch(Exception e){
+              } catch (Exception e) {
                 e.printStackTrace();
-              }  
-              for (VS_STAGE_GROUPS usr : new_groups){
+              }
+              for (VS_STAGE_GROUPS usr : new_groups) {
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
-              }              
+              }
             } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
@@ -1832,7 +1840,7 @@ public class StageTab extends javax.swing.JPanel {
             }
           }
         }
-      }      
+      }
     }
   }
 
