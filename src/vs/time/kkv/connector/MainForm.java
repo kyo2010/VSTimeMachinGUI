@@ -127,7 +127,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int TRANS_FOR_GATE = 0;
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
-        
+  
+  public String BACKGROUND_FOR_TV = "";      
 
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
   public String activeLang = "EN";
@@ -372,7 +373,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       toLog(e);
       //e.printStackTrace();
     }               
-  }    
+  }      
   
   public void applayLanguage(){
     activeLang = VS_SETTING.getParam(con, "LANG", "EN");
@@ -394,7 +395,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     TRANS_FOR_GATE_BLINK =  VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0)==1?true:false;    
     TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
-    
+        
+    BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png");
+            
     if (USE_TRANS_FOR_GATE && vsTimeConnector!=null && vsTimeConnector.connected){
       try{
         vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);

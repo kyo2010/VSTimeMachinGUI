@@ -42,6 +42,10 @@
     var place = document.getElementById("place");
     //alert(place);
     place.innerHTML = loadHTML("tv.ajax?time"+Date.now());
+    var arr = place.getElementsByTagName('script')
+    for (var n = 0; n < arr.length; n++){
+      eval(arr[n].innerHTML);//run script inside div
+    }
   }
 </script>
 

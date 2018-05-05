@@ -96,6 +96,9 @@ public class FPVSport extends IRegSite {
             user.VS_USER_NAME = json_pilot.getString("osd_name");
             user.FIRST_NAME = json_pilot.getString("fname");
             user.SECOND_NAME = json_pilot.getString("lname");
+            if (user.VS_USER_NAME==null || user.VS_USER_NAME.equals("")){
+              user.VS_USER_NAME = user.FIRST_NAME + " "+user.SECOND_NAME;
+            }
             user.PICTURE_FILENAME = "";
             user.PHOTO = "";
             try {

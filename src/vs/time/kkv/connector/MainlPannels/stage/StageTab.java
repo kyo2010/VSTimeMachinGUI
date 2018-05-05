@@ -458,7 +458,7 @@ public class StageTab extends javax.swing.JPanel {
             }
           }
 
-          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach
+          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach and Check and Ligting
 
             if (checkerTimer.isRunning()) {
               checkerTimer.stop();
@@ -1767,10 +1767,10 @@ public class StageTab extends javax.swing.JPanel {
           String[] channels = stage.CHANNELS.split(";");
           int prev_type_pilot = -1;
           for (VS_REGISTRATION user : users) {
-            if (user.VS_TRANS1 == 0) {
+            /*if (user.VS_TRANS1 == 0) {
               JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
               return;
-            }
+            }*/
             // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
             if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
               GRUP_NUM++;

@@ -814,3 +814,15 @@ workbook autofit
 save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/05-04-2018_stage 2018-04-05 report rs1.xlsx
 close Excel Application
 end
+start
+CoInitialize
+Create Excel Application
+Load xhtml-file
+create excel application
+excel application has been created
+open workbook NameFile="C:\prj\java\VS Time machine\VS Time Connector\!xls\{C4541CE7-E1AD-4812-BA64-E0B231792C7C}_kkv_1848.htm"
+set sheet
+workbook autofit
+save to file : C:\prj\java\VS Time machine\VS Time Connector/reports/XLS/03-05-2018_stage 2018-05-03 report rs1.xlsx
+close Excel Application
+end

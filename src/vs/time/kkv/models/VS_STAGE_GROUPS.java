@@ -118,6 +118,10 @@ public class VS_STAGE_GROUPS implements Transferable {
     return registration;
   }
   
+  public void resetRegistration(){
+    registration = null;
+  };
+  
   public void loadRegistration(Connection conn, long raceID) {
     try {
       if (registration == null && REG_ID != 0) {

@@ -306,7 +306,8 @@ class StageTabTreeTransferHandler extends TransferHandler {
   }
 
   public static boolean canBeNewUserInserted(Connection con, VS_STAGE_GROUPS new_user) {
-    try {
+    return true;
+    /*try {
       VS_STAGE_GROUPS t1 = VS_STAGE_GROUPS.dbControl.getItem(con, "STAGE_ID=? and GROUP_NUM=? and TRANSPONDER=?", new_user.STAGE_ID, new_user.GROUP_NUM, new_user.VS_PRIMARY_TRANS);
       if (t1 == null) {
         return true;
@@ -317,7 +318,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
     } catch (Exception e) {
       MainForm._toLog(e);
     }
-    return false;
+    return false;*/
   }
 
   @Override

@@ -228,6 +228,7 @@ public class TVTranslationServlet extends HttpServlet {
 
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("CONTENT", CONTENT));
+    varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
   }
@@ -251,6 +252,7 @@ public class TVTranslationServlet extends HttpServlet {
         String CONTENT = "";
         IVar varsPool = new VarPool();
         varsPool.addChild(new StringVar("CONTENT", CONTENT));
+        varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
         String outHtml = varsPool.applyValues(html);
         resp.getWriter().println(outHtml);
       }

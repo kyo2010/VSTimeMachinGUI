@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
+import javax.swing.DefaultComboBoxModel;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.TTS.TextToSpeachFactory;
 import vs.time.kkv.models.VS_SETTING;
@@ -66,6 +67,18 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.TRANS_FOR_GATE_BLINK.setSelected( VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_BLINK", 0)==1?true:false);    
     singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));                             
     
+    
+    File dir = new File("web/images");
+    List<String> files = new ArrayList();
+    for (String fileName : dir.list()){
+      if (fileName.indexOf(".png")>0 || fileName.indexOf(".jpg")>0){
+        files.add(fileName);
+        //singelton.backgroundImagesForTv.addItem(fileName);
+      }
+    }
+    singelton.backgroundImagesForTv.setModel(new DefaultComboBoxModel(files.toArray()));    
+    singelton.backgroundImagesForTv.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TV_BACKGROUND", "chromokey.png"));    
+    
     SystemOptions th = singelton;
     Point p = mainForm.getLocationOnScreen();
     th.setLocation(p.x + mainForm.getWidth() / 2 - th.getSize().width / 2, p.y + mainForm.getHeight() / 2 - th.getSize().height / 2);
@@ -103,6 +116,8 @@ public class SystemOptions extends javax.swing.JFrame {
     jLabel5 = new javax.swing.JLabel();
     TRANS_FOR_GATE_COLOR = new javax.swing.JComboBox<>();
     TRANS_FOR_GATE_BLINK = new javax.swing.JCheckBox();
+    jLabel6 = new javax.swing.JLabel();
+    backgroundImagesForTv = new javax.swing.JComboBox<>();
 
     setTitle("System Settings");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -188,6 +203,10 @@ public class SystemOptions extends javax.swing.JFrame {
 
     TRANS_FOR_GATE_BLINK.setText("Blink");
 
+    jLabel6.setText("Background for TV monitor");
+
+    backgroundImagesForTv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -197,39 +216,40 @@ public class SystemOptions extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jLabel2)
-            .addGap(18, 18, 18)
-            .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(135, 135, 135))
-              .addComponent(WebServiceStartOnRun))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-            .addComponent(bHTTPServer))
-          .addGroup(layout.createSequentialGroup()
             .addComponent(USE_TRANS_FOR_GATE)
             .addGap(18, 18, 18)
             .addComponent(jLabel4)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(TRANS_FOR_GATE))
+            .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addGap(18, 18, 18)
+            .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(checkRaceGroup)
               .addComponent(jLabel3)
               .addGroup(layout.createSequentialGroup()
-                .addGap(186, 186, 186)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-              .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(TRANS_FOR_GATE_BLINK)))
-            .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(TRANS_FOR_GATE_BLINK))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(62, 62, 62)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(WebServiceStartOnRun)
+              .addComponent(jLabel6))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(backgroundImagesForTv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(bHTTPServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -247,7 +267,11 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(WebServiceStartOnRun)
           .addComponent(bHTTPServer))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(backgroundImagesForTv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel6))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -263,7 +287,7 @@ public class SystemOptions extends javax.swing.JFrame {
           .addComponent(jLabel5)
           .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(TRANS_FOR_GATE_BLINK))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -289,12 +313,11 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE", ""+TRANS_FOR_GATE.getText());
     VS_SETTING.setParam(mainForm.con, "USE_TRANS_FOR_GATE", ""+ (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));      
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_COLOR", ""+TRANS_FOR_GATE_COLOR.getSelectedItem());
-    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", ""+ (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));          
-
+    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", ""+ (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));    
     
+    VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", ""+backgroundImagesForTv.getSelectedItem());
+   
     mainForm.applayLanguage();
-    
-    
     mainForm.speaker.reset();
     
     setVisible(false);
@@ -339,6 +362,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JTextField WEB_PORT;
   private javax.swing.JCheckBox WebServiceStartOnRun;
   private javax.swing.JButton bHTTPServer;
+  private javax.swing.JComboBox<String> backgroundImagesForTv;
   private javax.swing.JCheckBox checkRaceGroup;
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
@@ -347,6 +371,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
+  private javax.swing.JLabel jLabel6;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JComboBox<String> jcLang;
   private javax.swing.JComboBox<String> jcTTS_API;

@@ -94,17 +94,32 @@ public class VS_STAGE {
       Map<Long, Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);      
       
+      Map<String, VS_REGISTRATION> regs_by_id = VS_REGISTRATION.dbControl.getMap(conn, "ID", "VS_RACE_ID=?", race_id);
+      Map<String, VS_REGISTRATION> regs_by_name = VS_REGISTRATION.dbControl.getMap(conn, "VS_USER_NAME", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS1", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs2 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);      
       Map<String, VS_REGISTRATION> regs3 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS3", "VS_RACE_ID=?", race_id);
       
       for (VS_STAGE_GROUPS usr : users) {
-        long db_group_index = usr.GROUP_NUM;
-        VS_REGISTRATION reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);
-        if (usr.VS_PRIMARY_TRANS==0){                    
+        long db_group_index = usr.GROUP_NUM;                        
+        VS_REGISTRATION reg_user = null;
+        
+        if (usr.REG_ID!=0){
+           reg_user = regs_by_id.get("" + usr.REG_ID);
         }
-        if (reg_user==null) reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
-        if (reg_user==null) reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);        
+        
+        if (reg_user==null && !usr.PILOT.equals("")){
+          // by name
+          reg_user = regs_by_name.get("" + usr.PILOT);
+        }
+        
+        if (reg_user==null){
+          if (usr.VS_PRIMARY_TRANS==0){                   
+            reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);        
+          }
+          if (reg_user==null) reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
+          if (reg_user==null) reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);        
+        }  
         
         if (reg_user == null) {
           reg_user = new VS_REGISTRATION();

@@ -60,14 +60,24 @@ public class RegistrationModelTable extends AbstractTableModel {
     return STAGE_COLUMNS_STAGE.length;
   }
   
+  public static final int RWSQ_ACT    = 10;
+  public static final int RWSQ_REG_ID = 20;
+  public static final int RWSQ_NUM    = 30;
+  public static final int RWSQ_PILOT_TYPE = 40;
+  public static final int RWSQ_TRANS  = 50;
+  public static final int RWSQ_OSD_NAME = 60;
+  public static final int RWSQ_FIRST_NAME = 70;
+  public static final int RWSQ_SECOND_NAME = 80;  
+    
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
-    new STAGE_COLUMN(10, "Act", 50),
-    new STAGE_COLUMN(20, "Num", 50),
-    new STAGE_COLUMN(30, "Pilot Type", 90),
-    new STAGE_COLUMN(40, "Trans", 90),
-    new STAGE_COLUMN(50, "OSD Name", 200),
-    new STAGE_COLUMN(60, "First Name", 200),
-    new STAGE_COLUMN(70, "Second Name", 200),
+    new STAGE_COLUMN(RWSQ_ACT, "Act", 50),
+    new STAGE_COLUMN(RWSQ_REG_ID, "RegID", 50),
+    new STAGE_COLUMN(RWSQ_NUM, "Num", 50),
+    new STAGE_COLUMN(RWSQ_PILOT_TYPE, "Pilot Type", 90),
+    new STAGE_COLUMN(RWSQ_TRANS, "Trans", 90),
+    new STAGE_COLUMN(RWSQ_OSD_NAME, "OSD Name", 200),
+    new STAGE_COLUMN(RWSQ_FIRST_NAME, "First Name", 200),
+    new STAGE_COLUMN(RWSQ_SECOND_NAME, "Second Name", 200),
   };
   
 
@@ -77,6 +87,13 @@ public class RegistrationModelTable extends AbstractTableModel {
       return STAGE_COLUMNS_STAGE[columnIndex].caption;
     }
     return "";
+  }  
+
+  public STAGE_COLUMN getColumn(int columnIndex) {
+    if (STAGE_COLUMNS_STAGE.length>columnIndex){
+      return STAGE_COLUMNS_STAGE[columnIndex];
+    }
+    return null;
   }    
   
   public int getColumnWidth(int columnIndex) {
@@ -95,40 +112,46 @@ public class RegistrationModelTable extends AbstractTableModel {
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    if (rows.size() > rowIndex) {
-      VS_REGISTRATION race = rows.get(rowIndex);
-      if (columnIndex == 0) {
-        return race.IS_ACTIVE==1?true:false;
+    STAGE_COLUMN col = getColumn(columnIndex);
+    if (rows.size() > rowIndex && col!=null) {
+      VS_REGISTRATION reg = rows.get(rowIndex);
+      if (col.ID == RWSQ_ACT) {
+        return reg.IS_ACTIVE==1?true:false;
       }
-      if (columnIndex == 1) {
-        return race.NUM;
+      if (col.ID == RWSQ_REG_ID) {
+        return "[ "+reg.ID+" ]";
       }
-      if (columnIndex == 2) {
+      if (col.ID == RWSQ_NUM) {
+        return reg.NUM;
+      }
+      if (col.ID == RWSQ_PILOT_TYPE) {
         try{
-          return MainForm.PILOT_TYPES[race.PILOT_TYPE];
+          return MainForm.PILOT_TYPES[reg.PILOT_TYPE];
         }catch(Exception e){
           return MainForm.PILOT_TYPES[0];
         }
       }
-      if (columnIndex == 3) {
-        return race.VS_TRANS1;
+      if (col.ID == RWSQ_TRANS) {
+        return reg.VS_TRANS1;
       }
-      if (columnIndex == 4) {
-        return race.VS_USER_NAME;
+      if (col.ID == RWSQ_OSD_NAME) {
+        return reg.VS_USER_NAME;
       }
-      if (columnIndex == 5) {
-        return race.FIRST_NAME;
+      if (col.ID == RWSQ_FIRST_NAME) {
+        return reg.FIRST_NAME;
       }
-      if (columnIndex == 6) {
-        return race.SECOND_NAME;
+      if (col.ID == RWSQ_SECOND_NAME) {
+        return reg.SECOND_NAME;
       }
     }
     return "";
   }
    
   public boolean isCellEditable(int row, int col){
-    if (col==0) return true;
-    if (col==2) return true;
+    STAGE_COLUMN colInfo = getColumn(col);
+    if (colInfo!=null && colInfo.ID==RWSQ_ACT) return true;
+    if (colInfo!=null && colInfo.ID==RWSQ_PILOT_TYPE) return true;
+    if (colInfo!=null && colInfo.ID==RWSQ_NUM) return true;
     return false;
   }
     
@@ -141,9 +164,10 @@ public class RegistrationModelTable extends AbstractTableModel {
   }
   
   public void setValueAt(Object value, int row, int col) {
-    if (rows.size() > row) {
+    STAGE_COLUMN colInfo = getColumn(col);    
+    if (rows.size() > row && colInfo!=null) {
       VS_REGISTRATION reg = rows.get(row);      
-      if (col == 4) {
+      /*if (col == 4) {
         reg.VS_USER_NAME = value.toString();
         try {
           reg.dbControl.update(regForm.mainForm.con, reg);
@@ -151,8 +175,8 @@ public class RegistrationModelTable extends AbstractTableModel {
         } catch (UserException e) {
           JOptionPane.showMessageDialog(regForm, "Edition is error. " + e.error + " " + e.details, "Error", JOptionPane.ERROR_MESSAGE);  
         }        
-      }
-      if (col == 0) {
+      }*/
+      if (colInfo.ID == RWSQ_ACT) {
         reg.IS_ACTIVE = (Boolean)value?1:0;
         try {
           reg.dbControl.update(regForm.mainForm.con, reg);
@@ -161,7 +185,7 @@ public class RegistrationModelTable extends AbstractTableModel {
           JOptionPane.showMessageDialog(regForm, "Edition is error. " + e.error + " " + e.details, "Error", JOptionPane.ERROR_MESSAGE);  
         }        
       }
-      if (col == 2) {
+      if (colInfo.ID == RWSQ_PILOT_TYPE) {
         try {
           reg.PILOT_TYPE = ListEditTools.returnIndex(MainForm.PILOT_TYPES, value);
           reg.dbControl.update(regForm.mainForm.con, reg);
@@ -170,7 +194,7 @@ public class RegistrationModelTable extends AbstractTableModel {
           JOptionPane.showMessageDialog(regForm, "Edition is error. " + e.error + " " + e.details, "Error", JOptionPane.ERROR_MESSAGE);  
         }        
       }
-      if (col == 1) {                
+      if (colInfo.ID == RWSQ_NUM) {                
         try {
           reg.NUM = Integer.parseInt(value.toString());
           reg.dbControl.update(regForm.mainForm.con, reg);
