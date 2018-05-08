@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_ESPInfo;
+import vs.time.kkv.models.VS_SETTING;
 
 /**
  *
@@ -297,7 +298,7 @@ public class VSTMParams extends javax.swing.JFrame {
 
     jLabel3.setText("Sensitivity");
 
-    Sensitivity.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0%     (whoop)", "50%", "100%", "auto" }));
+    Sensitivity.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<0 dB ", "0 dB", "3 dB", "6 dB", "9 dB", "12 dB", "15 dB", "18 dB", "21 dB", "24 dB", "auto" }));
     Sensitivity.setMinimumSize(new java.awt.Dimension(150, 20));
     Sensitivity.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -448,7 +449,8 @@ public class VSTMParams extends javax.swing.JFrame {
       mainForm.vsTimeConnector.setVSTMParams(esp_info.SSID, esp_info);
     }catch(Exception e){
       JOptionPane.showMessageDialog(this, "Could not set params."+e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-    }  
+    }   
+    VS_SETTING.setParam(mainForm.con, "VS_BASE_SENS", ""+Sensitivity.getSelectedIndex());
     setVisible(false);
   }//GEN-LAST:event_saveButtonActionPerformed
 

@@ -56,7 +56,7 @@ public class RusSpeachMessages extends ISpeachMessages{
       krug =  " круг "+lap;
     }
     /*return new SpeekText(pilot +" "+krug);*/
-    if (lap==0) return new SpeekText(pilot + " старт");
+    if (lap==0) return new SpeekText(pilot + " старт",1000);
     if (lap>countLaps) return new SpeekText(pilot);
     return new SpeekText(pilot +krug);
   }
@@ -94,14 +94,16 @@ public class RusSpeachMessages extends ISpeachMessages{
   
    public SpeekText invatieGroup(long num, List<String> pilots){
     String text = "Приглашается группа "+num+". ";
+    int count_of_chars = 0;
     for (String pilot :  pilots){
-      text += pilot+"...";      
+      text += pilot+"...";   
+      count_of_chars += pilot.length();
     }
-    return new SpeekText(text, 1000+1000*pilots.size());
+    return new SpeekText(text, 1500+2000*pilots.size() );
   }
    
    public SpeekText findTransponders(long num){
     String text = "Внимание, Группа "+num+". Идет поиск транспондеров. Проверьте питание ваших дронов.";    
-    return new SpeekText(text, 2000);
+    return new SpeekText(text, 3000);
   }
 }

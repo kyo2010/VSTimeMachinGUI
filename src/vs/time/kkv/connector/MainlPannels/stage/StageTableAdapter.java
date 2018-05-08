@@ -132,6 +132,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_NUM, "Num", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT"),
@@ -335,6 +336,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
           result.wins += pilot.WIN;
           result.loses += pilot.LOSE;
+          result.LAPS += pilot.LAPS;
 
         }
 
@@ -346,6 +348,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           Collections.sort(results, VS_STAGE_GROUP.GROUP_LOST_COMPARATOR);
         } else if (tab.stage.SORT_TYPE == MainForm.STAGE_SORT_BY_SCORE_DESC) {
           Collections.sort(results, VS_STAGE_GROUP.GROUP_SCORE_COMPARATOR);
+        } else if (tab.stage.SORT_TYPE == MainForm.STAGE_SORT_BY_LAPS) {
+          Collections.sort(results, VS_STAGE_GROUP.GROUP_LAPS_COMPARATOR);
+        }else if (tab.stage.SORT_TYPE == MainForm.STAGE_SORT_BY_LAPS_AND_SCORES) {
+          Collections.sort(results, VS_STAGE_GROUP.GROUP_LAPS_AND_SCORES_COMPARATOR);
         } else {
           Collections.sort(results, VS_STAGE_GROUP.GROUP_TIME_COMPARATOR);
         }

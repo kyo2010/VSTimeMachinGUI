@@ -103,7 +103,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_SORT_BY_LAP_TIME = 1;
   public static final int STAGE_SORT_BY_SCORE_DESC = 2;
   public static final int STAGE_SORT_BY_LOSS_DESC = 3;
-  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss"};
+  public static final int STAGE_SORT_BY_LAPS = 4;
+  public static final int STAGE_SORT_BY_LAPS_AND_SCORES = 5;
+  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss","Laps & LAP Time","Laps & Scores"};
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
@@ -113,10 +115,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                                                           "Race Result","Race Report"};
 
   public static final int RACE_TYPE_OLYMPIC = 3;
+  public static final int RACE_TYPE_OLYMPIC_LOSES = 4;
   public static final int RACE_TYPE_WHOOP = 2;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 0;
-  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race","Olimpic Single elemenation"};
+  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race","Olimpic Single elemenation","Olimpic Losers" };
 
   public static final int SCORE_WHOOP_NONE = 0;
   public static final int SCORE_WHOOP_WON = 1;
@@ -806,7 +809,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       vsTimeConnector = new VSTimeConnector(this, port,
               VS_SETTING.getParam(con, "WAN_CONNECTION", ""), staticIP,
-              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT);
+              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT,con);
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();

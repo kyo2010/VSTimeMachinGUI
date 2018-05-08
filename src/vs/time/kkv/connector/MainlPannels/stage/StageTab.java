@@ -540,7 +540,7 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
                 mainForm.activeGroup = td.group;
-                //mainForm.invateGroup = null;
+                mainForm.invateGroup = null;
                 td.group.stageTab = StageTab.this;
                 for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;
@@ -554,7 +554,7 @@ public class StageTab extends javax.swing.JPanel {
                   wait(1000);
                 }catch(Exception ect){}*/
                 mainForm.beep.palyAndWait("attention");
-                InfoForm.init(mainForm, "3").setVisible(true);
+                /*InfoForm.init(mainForm, "3").setVisible(true);
                 //if (useSpeach) mainForm.speaker.speak("Three!");                
                 mainForm.beep.paly("three");
                 Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
@@ -595,7 +595,31 @@ public class StageTab extends javax.swing.JPanel {
                   }
                 });
                 t1.setRepeats(false);
-                t1.start();
+                t1.start();*/
+                
+                
+                        int rnd = (int) (Math.random() * 3000);
+                        Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
+                          public void actionPerformed(ActionEvent e) {
+                            InfoForm.init(mainForm, "Go!").setVisible(true);
+                            mainForm.beep.paly("beep");
+                            //if (useSpeach) mainForm.speaker.speak("Go!");
+                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+                            raceTimer.start();
+                            jTree.updateUI();
+                            Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
+                              public void actionPerformed(ActionEvent e) {
+                                InfoForm.init(mainForm, "").setVisible(false);
+                                infoWindowRunning = false;
+                              }
+                            });
+                            t4.setRepeats(false);
+                            t4.start();
+                          }
+                        });
+                        t3.setRepeats(false);
+                        t3.start();
+                
               }
             }
             source.updateUI();
@@ -1590,7 +1614,73 @@ public class StageTab extends javax.swing.JPanel {
               } catch (Exception e) {
               }
             }
-            if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC_LOSES && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              HashMap<Long, List<VS_STAGE_GROUPS>> groupNums = new HashMap<>();
+              List<Long> groupNumbers = new ArrayList<>();
+              for (VS_STAGE_GROUPS usr : groups) {
+                List<VS_STAGE_GROUPS> users = groupNums.get(usr.GROUP_NUM);
+                if (users == null) {
+                  users = new ArrayList<VS_STAGE_GROUPS>();
+                  groupNums.put(usr.GROUP_NUM, users);
+                  groupNumbers.add(usr.GROUP_NUM);
+                }
+                users.add(usr);
+              }
+              List<VS_STAGE_GROUPS> new_groups = new ArrayList<VS_STAGE_GROUPS>();
+              int count_groups = (groupNums.size() + 1) / 2;
+              for (int group = 0; group < count_groups; group++) {
+                int NUM_IN_GROUP = 1;
+                Long GROUP_NUM_FIRST = groupNumbers.get(group);
+                Long GROUP_NUM_SECOND = groupNumbers.get(groupNumbers.size() - group - 1);
+                if (GROUP_NUM_FIRST == GROUP_NUM_SECOND) {
+                  GROUP_NUM_SECOND = -1L;
+                }
+                List<VS_STAGE_GROUPS> users = groupNums.get(GROUP_NUM_FIRST);
+                for (VS_STAGE_GROUPS usr : users) {
+                  if (usr.LOSE == 1) {
+                    usr.STAGE_ID = stage.ID;
+                    usr.GROUP_NUM = group + 1;
+                    usr.NUM_IN_GROUP = NUM_IN_GROUP;
+                    usr.WIN = 0;                    
+                    usr.SCORE = 0;
+                    usr.SCORE = 0;
+                    usr.GID = -1;
+                    usr.BEST_LAP = 0;
+                    usr.RACE_TIME = 0;
+                    NUM_IN_GROUP++;
+                    new_groups.add(usr);
+                  }
+                }
+                if (GROUP_NUM_SECOND != -1L) {
+                  users = groupNums.get(GROUP_NUM_SECOND);
+                  for (VS_STAGE_GROUPS usr : users) {
+                    if (usr.LOSE == 1) {
+                      usr.STAGE_ID = stage.ID;
+                      usr.GROUP_NUM = group + 1;
+                      usr.NUM_IN_GROUP = NUM_IN_GROUP;
+                      usr.WIN = 0;
+                      usr.SCORE = 0;
+                      usr.SCORE = 0;
+                      usr.GID = -1;
+                      usr.BEST_LAP = 0;
+                      usr.RACE_TIME = 0;
+                      NUM_IN_GROUP++;
+                      new_groups.add(usr);
+                    }
+                  }
+                }
+              }
+              try {
+                recalulateChannels(new_groups);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              for (VS_STAGE_GROUPS usr : new_groups) {
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+              }
+              
+            }else if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
               // Olimpic system implementation base on Qualification time, 1-4, 2-3
               // Check all groups
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);

@@ -115,12 +115,12 @@ public class ISpeachMessages {
     for (String pilot :  pilots){
       text += pilot+"...";      
     }
-    return new SpeekText(text, 1000+1000*pilots.size());
+    return new SpeekText(text, 1500+2000*pilots.size());
   }
   
   public SpeekText findTransponders(long num){
     String text = "Finding transponders. Group "+num+".";    
-    return new SpeekText(text, 1000);
+    return new SpeekText(text, 2000);
   }
 
 }

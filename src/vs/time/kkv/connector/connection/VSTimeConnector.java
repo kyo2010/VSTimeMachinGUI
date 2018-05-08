@@ -16,6 +16,7 @@ import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
 import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.connector.connection.ConnectionVSTimeMachine;
+import vs.time.kkv.models.VS_SETTING;
 
 /**
  *
@@ -63,6 +65,7 @@ public class VSTimeConnector {
   public VSSendListener sendListener = null;
   public Map<Integer, String> flashResponse = new HashMap<Integer, String>();
   public boolean waitFirstPing = false;
+  public Connection connForParams = null;
 
   public VSSendListener getSendListener() {
     return sendListener;
@@ -109,7 +112,7 @@ public class VSTimeConnector {
     }
   }
 
-  public VSTimeConnector(VSTimeMachineReciver reciver, String port, String network_sid, String staticIP, int portForListing, int portForSending) {
+  public VSTimeConnector(VSTimeMachineReciver reciver, String port, String network_sid, String staticIP, int portForListing, int portForSending, Connection connForParams) {
     comPort = port;
     lastPingTime = Calendar.getInstance().getTimeInMillis();
     this.portForListing = portForListing;
@@ -117,6 +120,7 @@ public class VSTimeConnector {
     this.reciver = reciver;
     this.network_sid = network_sid;
     this.staticIP = staticIP;
+    this.connForParams = connForParams;
     //connect();
   }
 
@@ -157,7 +161,16 @@ public class VSTimeConnector {
 
       try {
         //conector.hello();
-        conector.setSensitivityMax();
+        // for whoop
+        // conector.setSensitivityMax();
+        if (connForParams==null){
+          conector.setSensitivityMax();
+        }else{
+          int sens = VS_SETTING.getParam(connForParams, "VS_BASE_SENS", 12);
+          conector.setSensitivity(sens);
+        }  
+        
+        
         try {
           sleep(200);
         } catch (Exception e) {
@@ -207,7 +220,7 @@ public class VSTimeConnector {
   }
 
   public void setPowerMax() throws SerialPortException {
-    setPower(2);
+    setPower(12);
   }
 
   public void getPower() throws SerialPortException {
@@ -223,7 +236,7 @@ public class VSTimeConnector {
   }
 
   public void setSensitivityMax() throws SerialPortException {
-    setSensitivity(3);
+    setSensitivity(12);
   }
 
   public void setColor(int transponderID, int color) throws SerialPortException {
@@ -415,7 +428,7 @@ public class VSTimeConnector {
         //if (data.indexOf("ping")!=0)
         System.out.print("receive:" + data);
       }
-    }, "WLAN", "", null, 0, 0);
+    }, "WLAN", "", null, 0, 0,null);
     try {
       connector.connect();
     } catch (Exception e) {
