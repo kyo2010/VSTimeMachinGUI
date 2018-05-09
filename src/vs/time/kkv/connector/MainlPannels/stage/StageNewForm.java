@@ -817,7 +817,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
         if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE
                 && (stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP
-                || stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE)) {
+                /*|| stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE*/)) {
           stage.SORT_TYPE = MainForm.STAGE_SORT_BY_SCORE_DESC;
           stage.ID = -1;
           String caption = stage.CAPTION;

@@ -596,30 +596,29 @@ public class StageTab extends javax.swing.JPanel {
                 });
                 t1.setRepeats(false);
                 t1.start();*/
-                
-                
-                        int rnd = (int) (Math.random() * 3000);
-                        Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
-                          public void actionPerformed(ActionEvent e) {
-                            InfoForm.init(mainForm, "Go!").setVisible(true);
-                            mainForm.beep.paly("beep");
-                            //if (useSpeach) mainForm.speaker.speak("Go!");
-                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-                            raceTimer.start();
-                            jTree.updateUI();
-                            Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
-                              public void actionPerformed(ActionEvent e) {
-                                InfoForm.init(mainForm, "").setVisible(false);
-                                infoWindowRunning = false;
-                              }
-                            });
-                            t4.setRepeats(false);
-                            t4.start();
-                          }
-                        });
-                        t3.setRepeats(false);
-                        t3.start();
-                
+
+                int rnd = (int) (Math.random() * 3000);
+                Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
+                  public void actionPerformed(ActionEvent e) {
+                    InfoForm.init(mainForm, "Go!").setVisible(true);
+                    mainForm.beep.paly("beep");
+                    //if (useSpeach) mainForm.speaker.speak("Go!");
+                    mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+                    raceTimer.start();
+                    jTree.updateUI();
+                    Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
+                      public void actionPerformed(ActionEvent e) {
+                        InfoForm.init(mainForm, "").setVisible(false);
+                        infoWindowRunning = false;
+                      }
+                    });
+                    t4.setRepeats(false);
+                    t4.start();
+                  }
+                });
+                t3.setRepeats(false);
+                t3.start();
+
               }
             }
             source.updateUI();
@@ -1608,7 +1607,7 @@ public class StageTab extends javax.swing.JPanel {
 
           }
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
-            if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT && parent_stage.PARENT_STAGE_ID > 0) {
+            if ((stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC || stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE) && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT && parent_stage.PARENT_STAGE_ID > 0) {
               try {
                 parent_stage = VS_STAGE.dbControl.getItem(mainForm.con, "ID=? and RACE_ID=?", parent_stage.PARENT_STAGE_ID, stage.RACE_ID);
               } catch (Exception e) {
@@ -1642,7 +1641,7 @@ public class StageTab extends javax.swing.JPanel {
                     usr.STAGE_ID = stage.ID;
                     usr.GROUP_NUM = group + 1;
                     usr.NUM_IN_GROUP = NUM_IN_GROUP;
-                    usr.WIN = 0;                    
+                    usr.WIN = 0;
                     usr.SCORE = 0;
                     usr.SCORE = 0;
                     usr.GID = -1;
@@ -1679,11 +1678,43 @@ public class StageTab extends javax.swing.JPanel {
               for (VS_STAGE_GROUPS usr : new_groups) {
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
-              
-            }else if (stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+
+            } else if ((stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC || stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE) && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
               // Olimpic system implementation base on Qualification time, 1-4, 2-3
               // Check all groups
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 AND GROUP_TYPE=0 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              List<VS_STAGE_GROUPS> groups_losers2 = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 AND GROUP_TYPE=1 order by GROUP_NUM", parent_stage.ID);
+              List<VS_STAGE_GROUPS> groups_losers = new ArrayList<VS_STAGE_GROUPS>();
+              int cur_loser_group = 0;
+              int NUM_IN_GROUP_LOSERS = 1;
+              long last_loser_goruop = -1;
+              if (groups_losers2 != null) {
+                for (VS_STAGE_GROUPS usr : groups_losers2) {
+                  if (last_loser_goruop == -1) {
+                    last_loser_goruop = usr.GROUP_NUM;
+                  }
+                  if (last_loser_goruop != usr.GROUP_NUM) {
+                    NUM_IN_GROUP_LOSERS = 1;
+                    cur_loser_group++;
+                  }
+                  if (usr.WIN == 1) {
+                    usr.STAGE_ID = stage.ID;
+                    usr.GROUP_NUM = cur_loser_group;
+                    usr.NUM_IN_GROUP = NUM_IN_GROUP_LOSERS;
+                    usr.WIN = 0;
+                    usr.SCORE = 0;
+                    usr.SCORE = 0;
+                    usr.GID = -1;
+                    usr.LAPS = 0;
+                    usr.BEST_LAP = 0;
+                    usr.RACE_TIME = 0;
+                    usr.GROUP_TYPE = 1;
+                    NUM_IN_GROUP_LOSERS++;
+                    groups_losers.add(usr);
+                  }
+                }
+              }
+
               HashMap<Long, List<VS_STAGE_GROUPS>> groupNums = new HashMap<>();
               List<Long> groupNumbers = new ArrayList<>();
               for (VS_STAGE_GROUPS usr : groups) {
@@ -1696,6 +1727,8 @@ public class StageTab extends javax.swing.JPanel {
                 users.add(usr);
               }
               List<VS_STAGE_GROUPS> new_groups = new ArrayList<VS_STAGE_GROUPS>();
+              int count_man_in_losers = 1;
+              int current_group_num_in_losers = 0;
               int count_groups = (groupNums.size() + 1) / 2;
               for (int group = 0; group < count_groups; group++) {
                 int NUM_IN_GROUP = 1;
@@ -1714,10 +1747,32 @@ public class StageTab extends javax.swing.JPanel {
                     usr.SCORE = 0;
                     usr.SCORE = 0;
                     usr.GID = -1;
+                    usr.LAPS = 0;
                     usr.BEST_LAP = 0;
                     usr.RACE_TIME = 0;
                     NUM_IN_GROUP++;
                     new_groups.add(usr);
+                  }
+                  if (usr.LOSE == 1) {
+                    if (count_man_in_losers > stage.COUNT_PILOTS_IN_GROUP) {
+                      current_group_num_in_losers++;
+                      count_man_in_losers = 1;
+                    }
+                    usr.STAGE_ID = stage.ID;
+                    //usr.GROUP_NUM = current_group_num_in_losers;
+                    //usr.NUM_IN_GROUP = count_man_in_losers;
+                    usr.WIN = 0;
+                    usr.LOSE = 0;                      
+                    usr.SCORE = 0;
+                    usr.SCORE = 0;
+                    usr.loses = 1;
+                    usr.GID = -1;
+                    usr.LAPS = 0;
+                    usr.BEST_LAP = 0;
+                    usr.GROUP_TYPE = 1;
+                    usr.RACE_TIME = 0;
+                    count_man_in_losers++;
+                    addUserToGroup(usr, groups_losers,stage.COUNT_PILOTS_IN_GROUP);
                   }
                 }
                 if (GROUP_NUM_SECOND != -1L) {
@@ -1732,9 +1787,32 @@ public class StageTab extends javax.swing.JPanel {
                       usr.SCORE = 0;
                       usr.GID = -1;
                       usr.BEST_LAP = 0;
+                      usr.LAPS = 0;
                       usr.RACE_TIME = 0;
                       NUM_IN_GROUP++;
                       new_groups.add(usr);
+                    }
+                    if (usr.LOSE == 1) {
+                      if (count_man_in_losers > stage.COUNT_PILOTS_IN_GROUP) {
+                        current_group_num_in_losers++;
+                        count_man_in_losers = 1;
+                      }
+                      usr.STAGE_ID = stage.ID;
+                      //usr.GROUP_NUM = current_group_num_in_losers;
+                      //usr.NUM_IN_GROUP = count_man_in_losers;
+                      usr.WIN = 0;
+                      usr.LOSE = 0;
+                      usr.loses = 1;
+                      usr.LAPS = 0;
+                      usr.SCORE = 0;
+                      usr.SCORE = 0;
+                      usr.GID = -1;
+                      usr.GROUP_TYPE = 1;
+                      usr.BEST_LAP = 0;
+                      usr.RACE_TIME = 0;
+                      count_man_in_losers++;
+                      //new_groups_losers.add(usr);
+                      addUserToGroup(usr, groups_losers,stage.COUNT_PILOTS_IN_GROUP);
                     }
                   }
                 }
@@ -1744,9 +1822,30 @@ public class StageTab extends javax.swing.JPanel {
               } catch (Exception e) {
                 e.printStackTrace();
               }
+
+              try {
+                recalulateChannels(groups_losers);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
+              long max_real_groups = 0;
               for (VS_STAGE_GROUPS usr : new_groups) {
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+                if (max_real_groups < usr.GROUP_NUM) {
+                  max_real_groups = usr.GROUP_NUM;
+                }
               }
+              if (max_real_groups > 0) {
+                max_real_groups++;
+              }
+              if (stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE) {
+                for (VS_STAGE_GROUPS usr : groups_losers) {
+                  usr.GROUP_NUM = max_real_groups + usr.GROUP_NUM;
+                  VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
+                }
+              }
+
             } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
@@ -1932,6 +2031,38 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     }
+  }
+
+  public void addUserToGroup(VS_STAGE_GROUPS add_usr, List<VS_STAGE_GROUPS> users, int max_pilots_in_groups) {
+    Map<Long, Integer> count_pilots_in_group = new HashMap();
+    long max_group_index = 0;
+    for (VS_STAGE_GROUPS usr : users) {
+      Integer count_pilots = count_pilots_in_group.get(usr.GROUP_NUM);
+      if (count_pilots == null) count_pilots = 0;      
+      count_pilots++;
+      count_pilots_in_group.put(usr.GROUP_NUM, count_pilots);
+      if (max_group_index < usr.GROUP_NUM) {
+        max_group_index = usr.GROUP_NUM;
+      }
+    }
+    // find empty group  
+    boolean is_find = false;
+    for (Long num : count_pilots_in_group.keySet()) {
+      Integer count_pilots = count_pilots_in_group.get(num);
+      if (count_pilots == null) count_pilots = 0;            
+      if (count_pilots<max_pilots_in_groups){
+        is_find = true;
+        add_usr.GROUP_NUM = num;
+        add_usr.NUM_IN_GROUP = count_pilots+1;
+        users.add(add_usr);        
+      }
+    }    
+    // create new groups
+    if (!is_find){
+      add_usr.GROUP_NUM = max_group_index+1;
+      add_usr.NUM_IN_GROUP = 1;
+      users.add(add_usr); 
+    }  
   }
 
 }
