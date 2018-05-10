@@ -56,6 +56,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
+import vs.time.kkv.connector.web.TVTranslationServlet;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
@@ -1008,6 +1009,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         return but;
       }
     } else {
+                 
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
       table.setRowHeight(row, 30);
@@ -1062,6 +1064,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
                 label.setBackground(Color.GREEN);
               }
             }
+            if (column==1){
+              if (td.pilot.RECEIVED_LAPS) {
+                label.setBackground(Color.YELLOW);
+              }else{
+                label.setBackground(Color.GREEN);
+              }
+            }            
           }
         }
       }

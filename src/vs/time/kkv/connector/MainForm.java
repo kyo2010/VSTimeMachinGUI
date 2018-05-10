@@ -1260,6 +1260,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (user != null) {
+          if (!user.RECEIVED_LAPS){
+             user.RECEIVED_LAPS = true;
+          }          
           VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
           try {
             if (activeGroup.stageTab != null) {

@@ -202,6 +202,11 @@ public class StageTab extends javax.swing.JPanel {
 
       try {
         if (checkingGrpup != null) {
+          
+          for (VS_STAGE_GROUPS user : checkingGrpup.users){
+            user.RECEIVED_LAPS = false;
+          }
+          
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
             List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
@@ -495,6 +500,7 @@ public class StageTab extends javax.swing.JPanel {
             for (VS_STAGE_GROUPS user : checkingGrpup.users) {
               user.CHECK_FOR_RACE = 2;
               user.FIRST_LAP = 0;
+              user.RECEIVED_LAPS = false;
               user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
               try {
                 user.registration = null;
@@ -1068,7 +1074,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    bStopChecking.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/stop.png"))); // NOI18N
+    bStopChecking.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/stopSeach.png"))); // NOI18N
     bStopChecking.setToolTipText("Stop Trans Seach");
     bStopChecking.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -52,6 +52,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int ACTIVE_FOR_NEXT_STAGE = 1;
   public int CHECK_FOR_RACE = 0;
   public VSColor color = null;
+  public boolean RECEIVED_LAPS = true;
   
   public long QUAL_TIME = 0;
   public long QUAL_POS = 0;
