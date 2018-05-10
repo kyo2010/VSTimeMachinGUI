@@ -27,7 +27,7 @@ public class ISpeachMessages {
   }
 
   public SpeekText raceIsOverIn10sec() {
-    return new SpeekText("The Race will be finished in ten seconds", 2000);
+    return new SpeekText("The Race will be finished in ten seconds", 3000);
   }
 
   public SpeekText connected() {

@@ -94,6 +94,14 @@ public class VSTimeConnector {
     }
     return false;
   }
+  
+  public void rfidLock(int key) throws SerialPortException{
+    sentMessage("rfidlock:" + key + "\r\n");
+  }
+  
+  public void rfidUnlock() throws SerialPortException{
+    sentMessage("rfidunlock\r\n");
+  }
 
   public void checkConnection() {
     if (transport != null) {
@@ -164,10 +172,11 @@ public class VSTimeConnector {
         // for whoop
         // conector.setSensitivityMax();
         if (connForParams==null){
-          conector.setSensitivityMax();
+          //conector.setSensitivityMax();
         }else{
-          int sens = VS_SETTING.getParam(connForParams, "VS_BASE_SENS", 12);
-          conector.setSensitivity(sens);
+          //int sens = VS_SETTING.getParam(connForParams, "VS_BASE_SENS", 8);
+          //if (sens>8) sens = 8;
+          //conector.setSensitivity(sens);
         }  
         
         
@@ -219,9 +228,9 @@ public class VSTimeConnector {
     sentMessage("sendpwr:" + powerIndex + "\r\n");
   }
 
-  public void setPowerMax() throws SerialPortException {
-    setPower(12);
-  }
+ /* public void setPowerMax() throws SerialPortException {
+    setPower(11);
+  }*/
 
   public void getPower() throws SerialPortException {
     sentMessage("rcvpwr\r\n");
@@ -235,9 +244,9 @@ public class VSTimeConnector {
     sentMessage("setsensitivity:" + sensivity + "\r\n");
   }
 
-  public void setSensitivityMax() throws SerialPortException {
+  /*public void setSensitivityMax() throws SerialPortException {
     setSensitivity(12);
-  }
+  }*/
 
   public void setColor(int transponderID, int color) throws SerialPortException {
     //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");

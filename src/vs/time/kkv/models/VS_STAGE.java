@@ -7,6 +7,7 @@ import KKV.Utils.JDEDate;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,7 @@ public class VS_STAGE {
   public String CAPTION;   //  NOT_DETECTED
   public int COUNT_PILOTS_IN_GROUP;   //  NOT_DETECTED
   public String CHANNELS;   //  NOT_DETECTED
-  public String COLORS= "";
+  public String COLORS = "";
   public int MIN_LAP_TIME;
   public int LAPS;
   public int IS_GROUP_CREATED;
@@ -41,8 +42,8 @@ public class VS_STAGE {
   public int PILOTS_FOR_NEXT_ROUND = 3;
   public String REP_COLS = "";
   public int USE_REG_ID_FOR_LAP = 1;
-  
-  public VS_RACE race = null;  
+
+  public VS_RACE race = null;
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps_check_reg_id = null;
 
@@ -76,8 +77,7 @@ public class VS_STAGE {
     new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
     new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),
     new DBModelField("REP_COLS").setDbFieldName("\"REP_COLS\""),
-    new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),    
-  });      
+    new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),});
 
   public static void resetSelectedTab(Connection conn, long raceID) {
     try {
@@ -92,35 +92,39 @@ public class VS_STAGE {
       groups.clear();
       int GROUP_INDEX = 0;
       Map<Long, Integer> indexes = new HashMap<>();
-      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);      
-      
+      List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
+
       Map<String, VS_REGISTRATION> regs_by_id = VS_REGISTRATION.dbControl.getMap(conn, "ID", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs_by_name = VS_REGISTRATION.dbControl.getMap(conn, "VS_USER_NAME", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS1", "VS_RACE_ID=?", race_id);
-      Map<String, VS_REGISTRATION> regs2 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);      
+      Map<String, VS_REGISTRATION> regs2 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS2", "VS_RACE_ID=?", race_id);
       Map<String, VS_REGISTRATION> regs3 = VS_REGISTRATION.dbControl.getMap(conn, "VS_TRANS3", "VS_RACE_ID=?", race_id);
-      
+
       for (VS_STAGE_GROUPS usr : users) {
-        long db_group_index = usr.GROUP_NUM;                        
+        long db_group_index = usr.GROUP_NUM;
         VS_REGISTRATION reg_user = null;
-        
-        if (usr.REG_ID!=0){
-           reg_user = regs_by_id.get("" + usr.REG_ID);
+
+        if (usr.REG_ID != 0) {
+          reg_user = regs_by_id.get("" + usr.REG_ID);
         }
-        
-        if (reg_user==null && !usr.PILOT.equals("")){
+
+        if (reg_user == null && !usr.PILOT.equals("")) {
           // by name
           reg_user = regs_by_name.get("" + usr.PILOT);
         }
-        
-        if (reg_user==null){
-          if (usr.VS_PRIMARY_TRANS==0){                   
-            reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);        
+
+        if (reg_user == null) {
+          if (usr.VS_PRIMARY_TRANS == 0) {
+            reg_user = regs.get("" + usr.VS_PRIMARY_TRANS);
           }
-          if (reg_user==null) reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
-          if (reg_user==null) reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);        
-        }  
-        
+          if (reg_user == null) {
+            reg_user = regs2.get("" + usr.VS_PRIMARY_TRANS);
+          }
+          if (reg_user == null) {
+            reg_user = regs3.get("" + usr.VS_PRIMARY_TRANS);
+          }
+        }
+
         if (reg_user == null) {
           reg_user = new VS_REGISTRATION();
           reg_user.PILOT_TYPE = 0;
@@ -187,11 +191,11 @@ public class VS_STAGE {
   public VS_RACE_LAP getLap(long GROUP_NUM, int TRANSPONDER, int lapNumber, long REG_ID) {
     VS_RACE_LAP lap = null;
     try {
-      if (USE_REG_ID_FOR_LAP==1){
+      if (USE_REG_ID_FOR_LAP == 1) {
         lap = laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).get(lapNumber);
-      }else{
+      } else {
         lap = laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER).get(lapNumber);
-      }  
+      }
     } catch (Exception e) {
     }
     return lap;
@@ -200,11 +204,11 @@ public class VS_STAGE {
   public void delLap(MainForm mainForm, long GROUP_NUM, int TRANSPONDER, long REG_ID, int lapNumber, VS_RACE_LAP delLap) {
     VS_RACE_LAP lap = null;
     try {
-      if (USE_REG_ID_FOR_LAP==1){        
+      if (USE_REG_ID_FOR_LAP == 1) {
         laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID).remove("" + lapNumber);
-      }else{
+      } else {
         laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER).remove("" + lapNumber);
-      }  
+      }
       VS_RACE_LAP.dbControl.delete(mainForm.con, delLap);
     } catch (Exception e) {
     }
@@ -214,11 +218,11 @@ public class VS_STAGE {
     boolean find_error = false;
     try {
       Map<String, VS_RACE_LAP> user_laps = null;
-      if (USE_REG_ID_FOR_LAP==1){
-        user_laps = laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID);        
-      }else{
+      if (USE_REG_ID_FOR_LAP == 1) {
+        user_laps = laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID);
+      } else {
         user_laps = laps_check_reg_id.get("" + GROUP_NUM).get("" + TRANSPONDER);
-      } 
+      }
       HashSet<Integer> sorted = new HashSet();
       try {
         if (user_laps != null) {
@@ -292,33 +296,37 @@ public class VS_STAGE {
         usr.BEST_LAP = 0;
         usr.SCORE = 0;
       }
-      
+
       long lap_time = lap.TRANSPONDER_TIME;
-      
-      if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP != 0 && lap.LAP==1) {
+
+      if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP != 0 && lap.LAP == 1) {
         lap_time = time - usr.FIRST_LAP;
       }
 
       VS_RACE_LAP lap_for_sound = null;
       if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP == 0) {
-        usr.FIRST_LAP = time;        
+        usr.FIRST_LAP = time;
         lap_for_sound = lap;
         lap_for_sound.LAP = 0;
-      } else {        
-        if (lap_time >= MIN_LAP_TIME * 1000) {
-          try {
-            mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.VS_PRIMARY_TRANS + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
-          } catch (Exception ein) {
+      } else {
+        if (Calendar.getInstance().getTimeInMillis() - mainForm.raceTime < 2000) {
+          // ignore lapinfo
+        } else {
+          if (lap_time >= MIN_LAP_TIME * 1000) {
+            try {
+              mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.VS_PRIMARY_TRANS + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
+            } catch (Exception ein) {
+            }
+            VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
+            if (USE_REG_ID_FOR_LAP == 1) {
+              VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + usr.REG_ID, "" + lap.LAP, lap);
+            } else {
+              VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
+            }
+            lap_for_sound = lap;
+            lap_return = lap;
           }
-          VS_RACE_LAP.dbControl.insert(mainForm.con, lap);
-          if (USE_REG_ID_FOR_LAP==1){
-            VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + usr.REG_ID, "" + lap.LAP, lap);
-          }else{
-            VS_RACE_LAP.dbControl.putObjToMap(laps_check_reg_id, "" + lap.GROUP_NUM, "" + lap.TRANSPONDER_ID, "" + lap.LAP, lap);
-          }  
-          lap_for_sound = lap;
-          lap_return = lap;
-        }        
+        }
       }
       usr.IS_RECALULATED = 0;
 

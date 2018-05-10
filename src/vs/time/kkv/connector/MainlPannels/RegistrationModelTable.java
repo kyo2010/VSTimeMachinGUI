@@ -58,8 +58,7 @@ public class RegistrationModelTable extends AbstractTableModel {
   @Override
   public int getColumnCount() {
     return STAGE_COLUMNS_STAGE.length;
-  }
-  
+  }   
   public static final int RWSQ_ACT    = 10;
   public static final int RWSQ_REG_ID = 20;
   public static final int RWSQ_NUM    = 30;

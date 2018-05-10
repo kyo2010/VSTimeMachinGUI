@@ -48,7 +48,13 @@ public class VSTMParams extends javax.swing.JFrame {
     if (esp_info==null) throw new Exception("Reading errr. VT Time machine has not been available now");
     
     instance.VSTMID.setText(mainForm.vsTimeConnector.baseStationID);
-    instance.Sensitivity.setSelectedIndex(mainForm.vsTimeConnector.sensitivityIndex);
+    try{
+      instance.Sensitivity.setSelectedIndex(mainForm.vsTimeConnector.sensitivityIndex);
+    }catch(Exception e){
+      try{
+        instance.Sensitivity.setSelectedIndex(0);
+      }catch(Exception ex){} 
+    }
     instance.CONNECTION_TYPE.setSelectedIndex(esp_info.connectionType);
     instance.SSID.setText(esp_info.SSID);
     instance.SSPWD.setText(esp_info.SSPWD);

@@ -113,6 +113,8 @@ public class StageTab extends javax.swing.JPanel {
     }
   }
 
+  boolean iveSaid10seckudForRaceOver = false;
+  
   Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -150,7 +152,10 @@ public class StageTab extends javax.swing.JPanel {
         long diff = (raceTime + 10000 - max_race_time) / 1000;
         long diff_ms = max_race_time - raceTime;
         if (diff == 0) {
-          mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceIsOverIn10sec());
+          if (!iveSaid10seckudForRaceOver){
+            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceIsOverIn10sec());
+            iveSaid10seckudForRaceOver = true;
+          }
         }
         if (diff_ms < 0) {
           stopRace();
@@ -161,7 +166,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
-  Timer checkerTimer = new Timer(200, new ActionListener() {
+  Timer checkerTimer = new Timer(250, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -169,11 +174,16 @@ public class StageTab extends javax.swing.JPanel {
       }
       Timer timer = (Timer) e.getSource();
       InfoForm.init(mainForm, "Check", 100).setVisible(true);
+      bStopChecking.setVisible(true);    
 
       if (checkerCycle * timer.getInitialDelay() < 1000) {
         try {
-          mainForm.vsTimeConnector.setColor(0, 0);
-          mainForm.setColorForGate();
+          mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
+          try {
+            Thread.sleep(150);
+          } catch (Exception ein) {
+          }
+          mainForm.vsTimeConnector.setColor(0, 0);         
         } catch (Exception ein) {
         }
         try {
@@ -181,7 +191,7 @@ public class StageTab extends javax.swing.JPanel {
         } catch (Exception ein) {
         }
         try {
-          mainForm.vsTimeConnector.setPowerMax();
+          //mainForm.vsTimeConnector.setPowerMax();
           mainForm.setColorForGate();
         } catch (Exception ein) {
         }
@@ -198,14 +208,15 @@ public class StageTab extends javax.swing.JPanel {
             VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
             for (Integer transID : userTrans) {
               mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
-              try {
+             //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
+             try {
                 Thread.sleep(150);
               } catch (Exception ein) {
               }
             }
             checkingGrpup.users.get(pilot_num).color = vs_color;
             try {
-              System.out.println("time1: " + Calendar.getInstance().getTimeInMillis());
+              //System.out.println("time1: " + Calendar.getInstance().getTimeInMillis());
               //Thread.currentThread().wait(400);              
               //System.out.println("time2: "+Calendar.getInstance().getTimeInMillis());    
             } catch (Exception ein) {
@@ -246,7 +257,7 @@ public class StageTab extends javax.swing.JPanel {
           all_ok = false;
         }
       }
-      if (checkerCycle * timer.getInitialDelay() > 10000 || all_ok) {
+      if (checkerCycle * timer.getInitialDelay() > 1000*300 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
@@ -256,6 +267,7 @@ public class StageTab extends javax.swing.JPanel {
         pleasuUpdateTable = true;
         checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
+        stopSearch();
       }
     }
   });
@@ -283,6 +295,7 @@ public class StageTab extends javax.swing.JPanel {
     this.stage = _stage;
     initComponents();
     this.mainForm = main;
+    bStopChecking.setVisible(false);   
     //topPanel.setVisible(false);              
 
     timerCaption.setVisible(false);
@@ -461,8 +474,8 @@ public class StageTab extends javax.swing.JPanel {
           if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach and Check and Ligting
 
             if (checkerTimer.isRunning()) {
-              checkerTimer.stop();
-              InfoForm.init(mainForm, "", 100).setVisible(false);
+              //checkerTimer.stop();
+              stopSearch();             
               return;
             }
 
@@ -540,7 +553,8 @@ public class StageTab extends javax.swing.JPanel {
                   return;
                 }
                 mainForm.activeGroup = td.group;
-                mainForm.invateGroup = null;
+                // We need to check : Run Race Group = Invate RaceGroup
+                //mainForm.invateGroup = null;
                 td.group.stageTab = StageTab.this;
                 for (VS_STAGE_GROUPS user : td.group.users) {
                   user.FIRST_LAP = 0;
@@ -649,6 +663,9 @@ public class StageTab extends javax.swing.JPanel {
   /*public void checkGroupConstrain() {      
   }*/
   public void stopRace() {
+    // To show Table result for TV
+    mainForm.invateGroup = null;
+    iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
@@ -933,6 +950,7 @@ public class StageTab extends javax.swing.JPanel {
     butCopyToClipboard = new javax.swing.JButton();
     butCopyGropusToClipboard = new javax.swing.JButton();
     butCopyToWeb = new javax.swing.JButton();
+    bStopChecking = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -1050,6 +1068,14 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    bStopChecking.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/stop.png"))); // NOI18N
+    bStopChecking.setToolTipText("Stop Trans Seach");
+    bStopChecking.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bStopCheckingActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1057,7 +1083,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+        .addComponent(bStopChecking, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butCopyToWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1086,7 +1114,7 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addGap(8, 8, 8)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING)
           .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bRestartWebServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1098,7 +1126,8 @@ public class StageTab extends javax.swing.JPanel {
           .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(bStopChecking, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     butCopyToWeb.setVisible(false);
@@ -1555,9 +1584,35 @@ public class StageTab extends javax.swing.JPanel {
     }
   }//GEN-LAST:event_butCopyToWebActionPerformed
 
+  private void bStopCheckingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bStopCheckingActionPerformed
+    // TODO add your handling code here:
+    stopSearch();        
+  }//GEN-LAST:event_bStopCheckingActionPerformed
+
+  public void stopSearch(){
+    // TODO : 
+    checkerTimer.stop();      
+    InfoForm.init(mainForm, "", 100).setVisible(false);
+    if (mainForm.vsTimeConnector!=null){
+      try{
+        mainForm.vsTimeConnector.rfidUnlock();
+        bStopChecking.setVisible(false);    
+      }catch(Exception e){}
+      try {
+        Thread.sleep(300);
+      } catch (Exception ein) {
+      }
+      try{      
+        mainForm.vsTimeConnector.rfidUnlock();
+        bStopChecking.setVisible(false);    
+      }catch(Exception e){}
+      InfoForm.init(mainForm, "", 100).setVisible(false);
+    }
+  }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bNewStage;
+  private javax.swing.JButton bStopChecking;
   private javax.swing.JButton butConfig;
   private javax.swing.JButton butCopyGropusToClipboard;
   private javax.swing.JButton butCopyToClipboard;

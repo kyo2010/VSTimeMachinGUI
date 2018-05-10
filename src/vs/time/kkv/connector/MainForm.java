@@ -136,6 +136,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
   public String activeLang = "EN";
   public ParseIniFile langFile = null;
+  public int RFIDLockPassword = 55;
 
   public String[] getBands() {
     String[] res = new String[0];
@@ -1114,7 +1115,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (lap != null) {
       
       if (lap.transponderID==TRANS_FOR_GATE){
-        speaker.speak(speaker.getSpeachMessages().gate());
+        if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+          speaker.speak(speaker.getSpeachMessages().gate());
+        }
         return;
       }
        
@@ -1146,9 +1149,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       if (activeGroup == null) {
         if (usr_reg != null) {
-          speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
+          if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+            speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
+          }  
         } else {
-          speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
+          if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+            speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
+          }
         }
         if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){          
           vsTimeConnector.addBlinkTransponder( TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
