@@ -105,33 +105,33 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_SORT_BY_LOSS_DESC = 3;
   public static final int STAGE_SORT_BY_LAPS = 4;
   public static final int STAGE_SORT_BY_LAPS_AND_SCORES = 5;
-  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss","Laps & LAP Time","Laps & Scores"};
+  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss", "Laps & LAP Time", "Laps & Scores"};
 
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
-  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification", 
-                                                          "Qualification Result", "Race", 
-                                                          "Race Result","Race Report"};
+  public final static String[] STAGE_TYPES = new String[]{"Practica", "Qualification",
+    "Qualification Result", "Race",
+    "Race Result", "Race Report"};
 
   public static final int RACE_TYPE_OLYMPIC = 3;
   public static final int RACE_TYPE_OLYMPIC_LOSES = 4;
   public static final int RACE_TYPE_WHOOP = 2;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 0;
-  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race","Olimpic Single elemenation","Olimpic Losers" };
+  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race", "Olimpic Single elemenation", "Olimpic Losers"};
 
   public static final int SCORE_WHOOP_NONE = 0;
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
   public final static String[] SCORES_WHOOP = new String[]{"", "Won", "Lost"};
-  
+
   public boolean USE_TRANS_FOR_GATE = false;
   public int TRANS_FOR_GATE = 0;
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
-  
-  public String BACKGROUND_FOR_TV = "";      
+
+  public String BACKGROUND_FOR_TV = "";
 
   public static boolean PLEASE_CLOSE_ALL_THREAD = false;
   public String activeLang = "EN";
@@ -188,6 +188,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public VS_STAGE_GROUP invateGroup = null;
+  public VS_STAGE_GROUP checkingGrpup = null;
   public VS_STAGE activeStage = null;
 
   public RegistrationTab regForm = null;
@@ -329,7 +330,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
     }
     applayLanguage();
-    
+
     jmAddStageToRace.setVisible(false);
     try {
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
@@ -369,62 +370,67 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this, true);
     }
-        
+
     try {
       LOCAL_HOST = Inet4Address.getLocalHost().getHostAddress();
       System.out.println("Local IP: " + LOCAL_HOST);
     } catch (UnknownHostException e) {
       toLog(e);
       //e.printStackTrace();
-    }               
-  }      
-  
-  public void applayLanguage(){
+    }
+  }
+
+  public void applayLanguage() {
     activeLang = VS_SETTING.getParam(con, "LANG", "EN");
-    try{
-      langFile = new ParseIniFile("locale/"+activeLang+".ini");
-    }catch(Exception e){
+    try {
+      langFile = new ParseIniFile("locale/" + activeLang + ".ini");
+    } catch (Exception e) {
       langFile = null;
     }
-    
-    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_STAGE, this );
-    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_STAGE_RACE, this );
-    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_RESULT, this );
-    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_REPORT, this );
-    STAGE_COLUMN.changeLocale( StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this );
-    STAGE_COLUMN.changeLocale( RegistrationModelTable.STAGE_COLUMNS_STAGE, this );   
-    
-    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0)==1?true:false;    
-    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);                 
 
-    TRANS_FOR_GATE_BLINK =  VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0)==1?true:false;    
+    STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_STAGE, this);
+    STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_STAGE_RACE, this);
+    STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_RESULT, this);
+    STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_REPORT, this);
+    STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this);
+    STAGE_COLUMN.changeLocale(RegistrationModelTable.STAGE_COLUMNS_STAGE, this);
+
+    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0) == 1 ? true : false;
+    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);
+
+    TRANS_FOR_GATE_BLINK = VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false;
     TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
-        
+
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png");
-            
-    if (USE_TRANS_FOR_GATE && vsTimeConnector!=null && vsTimeConnector.connected){
-      try{
+
+    if (USE_TRANS_FOR_GATE && vsTimeConnector != null && vsTimeConnector.connected) {
+      try {
         vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
-      }catch(Exception e){}  
+      } catch (Exception e) {
+      }
     }
   }
-  
-  public void setColorForGate(){
-    if (USE_TRANS_FOR_GATE && vsTimeConnector!=null && vsTimeConnector.connected){
-      try{
+
+  public void setColorForGate() {
+    if (USE_TRANS_FOR_GATE && vsTimeConnector != null && vsTimeConnector.connected) {
+      try {
         vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
-      }catch(Exception e){}  
+      } catch (Exception e) {
+      }
     }
   }
-  
-  public String getLocaleString(String caption){
-    if (langFile!=null){
-      try{
-        String val = langFile.getParam(caption);      
-        if (val!=null) return val;
-      }catch(Exception e){}
-    }      
-    return caption;  
+
+  public String getLocaleString(String caption) {
+    if (langFile != null) {
+      try {
+        String val = langFile.getParam(caption);
+        if (val != null) {
+          return val;
+        }
+      } catch (Exception e) {
+      }
+    }
+    return caption;
   }
 
   public void setStateMenu(boolean isConnected) {
@@ -810,7 +816,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       vsTimeConnector = new VSTimeConnector(this, port,
               VS_SETTING.getParam(con, "WAN_CONNECTION", ""), staticIP,
-              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT,con);
+              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT, con);
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();
@@ -1113,14 +1119,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       log.writeFile(data, true);
     }
     if (lap != null) {
-      
-      if (lap.transponderID==TRANS_FOR_GATE){
-        if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+
+      if (lap.transponderID == TRANS_FOR_GATE) {
+        if (regForm != null && regForm.unRaceLapSound.isSelected()) {
           speaker.speak(speaker.getSpeachMessages().gate());
         }
         return;
       }
-       
+
       this.lastTranponderID = lap.transponderID;
       long timeS = Calendar.getInstance().getTimeInMillis();
       long time = lap.time;
@@ -1149,20 +1155,36 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
       if (activeGroup == null) {
         if (usr_reg != null) {
-          if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+          if (regForm != null && regForm.unRaceLapSound.isSelected()) {
             speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
-          }  
+          }
         } else {
-          if (regForm!=null && regForm.unRaceLapSound.isSelected()){
+          if (regForm != null && regForm.unRaceLapSound.isSelected()) {
             speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
           }
         }
-        if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){          
-          vsTimeConnector.addBlinkTransponder( TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+        if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE != 0) {
+          vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
           //vsTimeConnector.blinkingTimer.restart();
-        }  
+        }
+
+        try {
+          if (checkingGrpup != null && checkingGrpup.users != null) {
+            for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+              if (user.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
+                user.RECEIVED_LAPS = true;
+                if (activeGroup.stageTab != null) {
+                  activeGroup.stageTab.pleasuUpdateTable = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (Exception e) {
+          toLog(e);
+        }
       }
-      
+
       if (activeRace != null && activeGroup != null) {
         VS_STAGE_GROUPS user = null;
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
@@ -1170,7 +1192,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             user = usr;
             break;
           }
-        }        
+        }
         if (user == null) { // find user by TransID
           for (VS_STAGE_GROUPS usr : activeGroup.users) {
             if (usr.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
@@ -1227,7 +1249,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             } catch (Exception ein) {
             }
             if (user == null) {
-              user = new VS_STAGE_GROUPS(); 
+              user = new VS_STAGE_GROUPS();
               user.GROUP_NUM = activeGroup.GROUP_NUM;
               user.STAGE_ID = activeGroup.stage.ID;
               user.PILOT = usr_reg.VS_USER_NAME;
@@ -1260,9 +1282,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (user != null) {
-          if (!user.RECEIVED_LAPS){
-             user.RECEIVED_LAPS = true;
-          }          
           VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
           try {
             if (activeGroup.stageTab != null) {
@@ -1270,12 +1289,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             }
           } catch (Exception ein) {
           }
-          if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE!=0){
-            if (user.color==null){
+          if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE != 0) {
+            if (user.color == null) {
               user.color = VSColor.getColorForChannel(user.CHANNEL, activeGroup.stage.CHANNELS, activeGroup.stage.COLORS);
             }
-            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR,TRANS_FOR_GATE_BLINK);
-          }  
+            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+          }
         }
       }
     }
