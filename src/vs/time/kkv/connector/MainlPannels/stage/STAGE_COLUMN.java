@@ -60,6 +60,7 @@ import vs.time.kkv.connector.MainForm;
     }
     
     public static void changeLocale(STAGE_COLUMN[] columns, MainForm mainForm){
+
       for (STAGE_COLUMN col : columns){
         col.caption = mainForm.getLocaleString(col.captionOriginal);
       }

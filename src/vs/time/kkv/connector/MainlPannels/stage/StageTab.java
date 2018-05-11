@@ -114,7 +114,7 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   boolean iveSaid10seckudForRaceOver = false;
-  
+
   Timer raceTimer = new Timer(1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -152,7 +152,7 @@ public class StageTab extends javax.swing.JPanel {
         long diff = (raceTime + 10000 - max_race_time) / 1000;
         long diff_ms = max_race_time - raceTime;
         if (diff == 0) {
-          if (!iveSaid10seckudForRaceOver){
+          if (!iveSaid10seckudForRaceOver) {
             mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceIsOverIn10sec());
             iveSaid10seckudForRaceOver = true;
           }
@@ -166,8 +166,8 @@ public class StageTab extends javax.swing.JPanel {
 
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
-  boolean pleaseMakeYelowPilot = false; 
-  Timer checkerTimer = new Timer(250, new ActionListener() {
+  boolean pleaseMakeYelowPilot = false;
+  Timer checkerTimer = new Timer(200, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -175,16 +175,21 @@ public class StageTab extends javax.swing.JPanel {
       }
       Timer timer = (Timer) e.getSource();
       InfoForm.init(mainForm, "Check", 100).setVisible(true);
-      bStopChecking.setVisible(true);    
+
+      try {
+        mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
+        try {
+          Thread.sleep(50);
+        } catch (Exception ein) {
+        }
+      } catch (Exception ein) {
+      }
+
+      bStopChecking.setVisible(true);
 
       if (checkerCycle * timer.getInitialDelay() < 1000) {
         try {
-          mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
-          try {
-            Thread.sleep(150);
-          } catch (Exception ein) {
-          }
-          mainForm.vsTimeConnector.setColor(0, 0);         
+          mainForm.vsTimeConnector.setColor(0, 0);
         } catch (Exception ein) {
         }
         try {
@@ -196,29 +201,29 @@ public class StageTab extends javax.swing.JPanel {
           mainForm.setColorForGate();
         } catch (Exception ein) {
         }
-                
-        if (pleaseMakeYelowPilot){          
-          for (VS_STAGE_GROUPS user : checkingGrpup.users){
+
+        if (pleaseMakeYelowPilot) {
+          for (VS_STAGE_GROUPS user : checkingGrpup.users) {
             user.RECEIVED_LAPS = false;
           }
           pleaseMakeYelowPilot = false;
           pleasuUpdateTable = true;
-        }  
+        }
 
         checkerCycle++;
         return;
       }
 
       try {
-        if (checkingGrpup != null) {                            
+        if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
             List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
             VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
             for (Integer transID : userTrans) {
               mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
-             //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
-             try {
+              //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
+              try {
                 Thread.sleep(150);
               } catch (Exception ein) {
               }
@@ -266,7 +271,7 @@ public class StageTab extends javax.swing.JPanel {
           all_ok = false;
         }
       }
-      if (checkerCycle * timer.getInitialDelay() > 1000*300 || all_ok) {
+      if (checkerCycle * timer.getInitialDelay() > 1000 * 300 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
@@ -304,7 +309,7 @@ public class StageTab extends javax.swing.JPanel {
     this.stage = _stage;
     initComponents();
     this.mainForm = main;
-    bStopChecking.setVisible(false);   
+    bStopChecking.setVisible(false);
     //topPanel.setVisible(false);              
 
     timerCaption.setVisible(false);
@@ -484,7 +489,7 @@ public class StageTab extends javax.swing.JPanel {
 
             if (checkerTimer.isRunning()) {
               //checkerTimer.stop();
-              stopSearch();             
+              stopSearch();
               return;
             }
 
@@ -1597,26 +1602,28 @@ public class StageTab extends javax.swing.JPanel {
 
   private void bStopCheckingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bStopCheckingActionPerformed
     // TODO add your handling code here:
-    stopSearch();        
+    stopSearch();
   }//GEN-LAST:event_bStopCheckingActionPerformed
 
-  public void stopSearch(){
+  public void stopSearch() {
     // TODO : 
-    checkerTimer.stop();      
+    checkerTimer.stop();
     InfoForm.init(mainForm, "", 100).setVisible(false);
-    if (mainForm.vsTimeConnector!=null){
-      try{
+    if (mainForm.vsTimeConnector != null) {
+      try {
         mainForm.vsTimeConnector.rfidUnlock();
-        bStopChecking.setVisible(false);    
-      }catch(Exception e){}
+        bStopChecking.setVisible(false);
+      } catch (Exception e) {
+      }
       try {
         Thread.sleep(300);
       } catch (Exception ein) {
       }
-      try{      
+      try {
         mainForm.vsTimeConnector.rfidUnlock();
-        bStopChecking.setVisible(false);    
-      }catch(Exception e){}
+        bStopChecking.setVisible(false);
+      } catch (Exception e) {
+      }
       InfoForm.init(mainForm, "", 100).setVisible(false);
     }
   }
@@ -1828,7 +1835,7 @@ public class StageTab extends javax.swing.JPanel {
                     //usr.GROUP_NUM = current_group_num_in_losers;
                     //usr.NUM_IN_GROUP = count_man_in_losers;
                     usr.WIN = 0;
-                    usr.LOSE = 0;                      
+                    usr.LOSE = 0;
                     usr.SCORE = 0;
                     usr.SCORE = 0;
                     usr.loses = 1;
@@ -1838,7 +1845,7 @@ public class StageTab extends javax.swing.JPanel {
                     usr.GROUP_TYPE = 1;
                     usr.RACE_TIME = 0;
                     count_man_in_losers++;
-                    addUserToGroup(usr, groups_losers,stage.COUNT_PILOTS_IN_GROUP);
+                    addUserToGroup(usr, groups_losers, stage.COUNT_PILOTS_IN_GROUP);
                   }
                 }
                 if (GROUP_NUM_SECOND != -1L) {
@@ -1878,7 +1885,7 @@ public class StageTab extends javax.swing.JPanel {
                       usr.RACE_TIME = 0;
                       count_man_in_losers++;
                       //new_groups_losers.add(usr);
-                      addUserToGroup(usr, groups_losers,stage.COUNT_PILOTS_IN_GROUP);
+                      addUserToGroup(usr, groups_losers, stage.COUNT_PILOTS_IN_GROUP);
                     }
                   }
                 }
@@ -2104,7 +2111,9 @@ public class StageTab extends javax.swing.JPanel {
     long max_group_index = 0;
     for (VS_STAGE_GROUPS usr : users) {
       Integer count_pilots = count_pilots_in_group.get(usr.GROUP_NUM);
-      if (count_pilots == null) count_pilots = 0;      
+      if (count_pilots == null) {
+        count_pilots = 0;
+      }
       count_pilots++;
       count_pilots_in_group.put(usr.GROUP_NUM, count_pilots);
       if (max_group_index < usr.GROUP_NUM) {
@@ -2115,20 +2124,22 @@ public class StageTab extends javax.swing.JPanel {
     boolean is_find = false;
     for (Long num : count_pilots_in_group.keySet()) {
       Integer count_pilots = count_pilots_in_group.get(num);
-      if (count_pilots == null) count_pilots = 0;            
-      if (count_pilots<max_pilots_in_groups){
+      if (count_pilots == null) {
+        count_pilots = 0;
+      }
+      if (count_pilots < max_pilots_in_groups) {
         is_find = true;
         add_usr.GROUP_NUM = num;
-        add_usr.NUM_IN_GROUP = count_pilots+1;
-        users.add(add_usr);        
+        add_usr.NUM_IN_GROUP = count_pilots + 1;
+        users.add(add_usr);
       }
-    }    
+    }
     // create new groups
-    if (!is_find){
-      add_usr.GROUP_NUM = max_group_index+1;
+    if (!is_find) {
+      add_usr.GROUP_NUM = max_group_index + 1;
       add_usr.NUM_IN_GROUP = 1;
-      users.add(add_usr); 
-    }  
+      users.add(add_usr);
+    }
   }
 
 }
