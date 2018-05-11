@@ -264,7 +264,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
-    unRaceLapSound.setText("Sound Lap Info");
+    unRaceLapSound.setText("Lap Info Voice");
     unRaceLapSound.setToolTipText("Enable Sound Lap Info for UNRace mode");
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
