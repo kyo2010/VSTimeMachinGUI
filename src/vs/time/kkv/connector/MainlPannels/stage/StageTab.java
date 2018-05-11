@@ -166,6 +166,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public int checkerCycle = 0;
   VS_STAGE_GROUP checkingGrpup = null;
+  boolean pleaseMakeYelowPilot = false; 
   Timer checkerTimer = new Timer(250, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -195,18 +196,21 @@ public class StageTab extends javax.swing.JPanel {
           mainForm.setColorForGate();
         } catch (Exception ein) {
         }
+                
+        if (pleaseMakeYelowPilot){          
+          for (VS_STAGE_GROUPS user : checkingGrpup.users){
+            user.RECEIVED_LAPS = false;
+          }
+          pleaseMakeYelowPilot = false;
+          pleasuUpdateTable = true;
+        }  
 
         checkerCycle++;
         return;
       }
 
       try {
-        if (checkingGrpup != null) {
-          
-          for (VS_STAGE_GROUPS user : checkingGrpup.users){
-            user.RECEIVED_LAPS = false;
-          }
-          
+        if (checkingGrpup != null) {                            
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
             List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
@@ -510,6 +514,7 @@ public class StageTab extends javax.swing.JPanel {
               }
             }
             pleasuUpdateTable = true;
+            pleaseMakeYelowPilot = true;
             checkerCycle = 0;
             checkerTimer.start();
           }
