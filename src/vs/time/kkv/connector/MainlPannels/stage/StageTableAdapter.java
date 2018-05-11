@@ -988,7 +988,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       }
       if (column == 3) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Invate"));
-        if (td.isGrpup && td.group == tab.mainForm.checkingGrpup) {
+        if (td.isGrpup && td.group == tab.checkingGrpup) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(new Color(193, 211, 245));
         } else {
@@ -999,7 +999,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       }
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Check"));
-        if (td.isGrpup && td.group == tab.mainForm.checkingGrpup) {
+        if (td.isGrpup && td.group == tab.checkingGrpup) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(new Color(193, 211, 245));
         } else {

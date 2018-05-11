@@ -48,7 +48,7 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     //com.sun.awt.AWTUtilities.setWindowShape(this, s);
   }
   
-  Timer waitTimer = new Timer(1000, new ActionListener() {
+  Timer waitTimer = new Timer(1500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.unRaceTime==0) return;

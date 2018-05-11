@@ -188,7 +188,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public VS_STAGE_GROUP invateGroup = null;
-  public VS_STAGE_GROUP checkingGrpup = null;
+  public VS_STAGE_GROUP lastCheckingGrpup = null;
   public VS_STAGE activeStage = null;
 
   public RegistrationTab regForm = null;
@@ -1169,8 +1169,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
 
         try {
-          if (checkingGrpup != null && checkingGrpup.users != null) {
-            for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+          if (lastCheckingGrpup != null && lastCheckingGrpup.users != null) {
+            for (VS_STAGE_GROUPS user : lastCheckingGrpup.users) {
               if (user.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
                 user.RECEIVED_LAPS = true;
                 if (activeGroup.stageTab != null) {
