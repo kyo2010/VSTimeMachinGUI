@@ -188,7 +188,7 @@ public class StageNewForm extends javax.swing.JFrame {
         channelControls.get(index).color.setSelectedItem(color);
         index++;
       }
-      //jtCountOfPilots.setSelectedIndex(channels.length - 1);      
+      jtCountOfPilots.setSelectedIndex(channels.length - 1);      
     }
 
     if (stage==null){
@@ -735,6 +735,8 @@ public class StageNewForm extends javax.swing.JFrame {
   }//GEN-LAST:event_bCancelActionPerformed
 
   private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
+    String channels = "";
+    String colors = "";
     try {
       boolean isNewSatge = false;
       VS_STAGE parent_stage = null;
@@ -783,8 +785,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
       stage.PILOT_TYPE = jPilotType.getSelectedIndex();
 
-      String channels = "";
-      String colors = "";
+
       for (int index = 0; index < count_of_pilots; index++) {
         channels += channelControls.get(index).box.getSelectedItem().toString() + ";";
         colors += channelControls.get(index).color.getSelectedItem().toString() + ";";
@@ -842,15 +843,19 @@ public class StageNewForm extends javax.swing.JFrame {
       }
       setVisible(false);
 
-      mainForm.setActiveRace(mainForm.activeRace);
-      VS_SETTING.setParam(mainForm.con, "CHANNELS", channels);
-      VS_SETTING.setParam(mainForm.con, "COLORS", colors);
-
+      mainForm.setActiveRace(mainForm.activeRace);    
     } catch (Exception e) {
       mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    try{
+      if (!channels.equalsIgnoreCase("")) {
+        VS_SETTING.setParam(mainForm.con, "CHANNELS", channels);
+        VS_SETTING.setParam(mainForm.con, "COLORS", colors);  
+      }      
+    }catch(Exception e){}
+    
   }//GEN-LAST:event_bSaveActionPerformed
 
   private void jchGroupByPilotTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchGroupByPilotTypeActionPerformed
@@ -936,6 +941,7 @@ public class StageNewForm extends javax.swing.JFrame {
       tabPane.setSelectedComponent(tabRaceReport);      
     } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE){  
       racePanel.setVisible(true);
+      stagePanel.setVisible(true);
     } else {      
       stagePanel.setVisible(true);
       panelQualificationResult2.setVisible(false);

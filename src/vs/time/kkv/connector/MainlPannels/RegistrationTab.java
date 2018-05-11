@@ -35,6 +35,7 @@ import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainForm.LastTransponderListener;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
+import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
@@ -66,8 +67,11 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     for (int i=0; i<regModelTable.getColumnCount(); i++){
       jtPilotRegistration.getColumnModel().getColumn(i).setPreferredWidth(regModelTable.getColumnWidth(i));
+      STAGE_COLUMN colInfo = regModelTable.getColumn(i);
+      if (colInfo.ID==regModelTable.RWSQ_PILOT_TYPE){
+        jtPilotRegistration.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));    
+      }
     }    
-    jtPilotRegistration.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));
     jtPilotRegistration.setRowHeight(28);
 
     popup = new JPopupMenu();
@@ -180,6 +184,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   public void refreshData() {
     activeTransponder.setVisible(false);
     regModelTable.loadData();
+    jtPilotRegistration.addNotify();
     jtPilotRegistration.updateUI();
     mainForm.setTransponderListener(this);
   }

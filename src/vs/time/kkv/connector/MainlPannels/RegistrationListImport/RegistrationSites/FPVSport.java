@@ -111,6 +111,11 @@ public class FPVSport extends IRegSite {
               }
             } catch (Exception e) {
             };
+            
+            if (user.VS_USER_NAME.equalsIgnoreCase("KKV")){
+              int y=0;
+            }
+            
             String trns_st = json_pilot.getString("transID");
             try {
               String[] trans = trns_st.split(";");

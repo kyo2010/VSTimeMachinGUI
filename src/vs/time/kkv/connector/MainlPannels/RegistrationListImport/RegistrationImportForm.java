@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.MainlPannels.RegistrationListImport;
 
 import KKV.Utils.Tools;
+import java.awt.Cursor;
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
@@ -98,6 +99,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   public String setAutoLoadEvent = null;
 
   public void prepare() {
+    jButOk.setEnabled(true);
     jeAutzCode.setText("");
     if (regTab.mainForm.activeRace.WEB_SYSTEM_SID != null && !regTab.mainForm.activeRace.WEB_SYSTEM_SID.equals("")) {
       setAutoLoadEvent = regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION.trim();
@@ -252,6 +254,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   }//GEN-LAST:event_jButCancelActionPerformed
 
   private void jButOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButOkActionPerformed
+    jButOk.setEnabled(false);
+    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     if (PLEASE_SELECT_WEB_SYSTEM.equalsIgnoreCase(jcbSites.getSelectedItem().toString())) {
     } else {
       try {
@@ -301,7 +305,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                       pilot.NUM = VS_REGISTRATION.maxNum(con, pilot.VS_RACE_ID) + 1;
                       if (pilot.VS_TRANS1 != 0) {
                         for (VS_REGISTRATION reg1 : regs.values()) {
-                          if (reg1.VS_TRANS1 == pilot.VS_TRANS1 || reg1.VS_TRANS2 == pilot.VS_TRANS1
+                          if ( (reg1.VS_TRANS1!=0 && reg1.VS_TRANS1 == pilot.VS_TRANS1) || reg1.VS_TRANS2 == pilot.VS_TRANS1
                                   || reg1.VS_TRANS3 == pilot.VS_TRANS1) {
                             JOptionPane.showMessageDialog(this, "Transponder for pilot " + pilot.VS_USER_NAME + " is duplocated.\nPilot " + reg1.VS_USER_NAME + " has the same transponder", "Information", JOptionPane.INFORMATION_MESSAGE);
                             pilot.VS_TRANS1 = 0;
@@ -376,8 +380,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
         }
       } catch (Exception e) {
         MainForm._toLog(e);
+      }finally{
+        setCursor(Cursor.getDefaultCursor());
       }
     }
+    jButOk.setEnabled(true);
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
 
@@ -416,6 +423,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     if (PLEASE_SELECT_WEB_SYSTEM.equalsIgnoreCase(jcbSites.getSelectedItem().toString())) {
     } else {
       try {
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         IRegSite site = getSite(jcbSites.getSelectedItem().toString());
         if (site != null) {
           site.load();
@@ -447,6 +455,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       } catch (Exception e) {
         MainForm._toLog(e);
         jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
+      } finally{
+         this.setCursor(Cursor.getDefaultCursor());
       }
     }
   }

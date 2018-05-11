@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector;
 
+import java.awt.Cursor;
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ public class VSTMParams extends javax.swing.JFrame {
     if (instance==null) instance = new VSTMParams(mainForm);
         
     try{
+      mainForm.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));  
     VSTM_ESPInfo esp_info = mainForm.vsTimeConnector.getVSTMParams( mainForm.vsTimeConnector.baseStationID );
     instance.esp_info = esp_info;
     
@@ -76,6 +78,8 @@ public class VSTMParams extends javax.swing.JFrame {
       //e.printStackTrace();
       instance.esp_info = null;
       JOptionPane.showMessageDialog(mainForm, "Could not get params."+e.toString(), "Error", JOptionPane.ERROR_MESSAGE);  
+    }finally{
+       mainForm.setCursor(Cursor.getDefaultCursor());
     }
     
     return instance;
