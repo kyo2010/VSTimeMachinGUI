@@ -38,6 +38,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   VSTimeMachineReciver receiver = null;
   public VSTimeConnector timeConnector = null;
   public String network_sid = "";
+  public boolean getIPAdressfromPackage = false;
 
   public int port_for_listining = 8888;
   public int port_for_sending = 8889;
@@ -53,7 +54,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     }
     this.network_sid = network_sid;
     this.staticIP = staticIP;
-    
+
     this.receiver = receiver;
     this.timeConnector = timeConnector;
 
@@ -61,12 +62,14 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     //String host = "255.255.255.255";
     //String host = "192.168.197.255";
     //String host = "192.168.197.100";
-    
-    if (staticIP==null){
+
+    if (staticIP == null) {
       KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
-      if (ka!=null) host = ka.multiHostAddress;    
+      if (ka != null) {
+        host = ka.multiHostAddress;
+      }
       ipAddress = InetAddress.getByName(host);
-    }else{
+    } else {
       ipAddress = InetAddress.getByName(staticIP);
     }
 
@@ -90,8 +93,22 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
           sock.receive(packet);
 
           byte[] data_b = packet.getData();
-          ipAddress = packet.getAddress();
-          String data = new String(data_b, 0, packet.getLength());          
+
+          try {
+            if (!getIPAdressfromPackage) {
+              InetAddress ipAddress1 = packet.getAddress();
+              String host = ipAddress1.getHostAddress();
+              int pos = host.lastIndexOf(".");
+              if (pos > 0) {
+                String broadCastHost = host.substring(0, pos) + ".255";
+                ipAddress = InetAddress.getByName(broadCastHost);
+                getIPAdressfromPackage = true;
+              }
+            }
+          } catch (Exception ein1) {
+          }
+
+          String data = new String(data_b, 0, packet.getLength());
           data = data.trim();
 
           // try{
@@ -131,7 +148,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
           } catch (Exception e) {
           }
         } catch (Exception ein) {
-          ein.printStackTrace();  
+          ein.printStackTrace();
           try {
             sock.close();
           } catch (Exception e) {
@@ -151,25 +168,30 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     } catch (Exception e) {
     }
   }
-  
+
   String prev_data = null;
 
   @Override
   public void sendData(String data) {
-    
-    if (prev_data!=null && prev_data.equalsIgnoreCase(data)){
-      try{        
-        String host = "localhost";
-        if (staticIP==null){
-          KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
-          if (ka!=null) host = ka.multiHostAddress;    
-          ipAddress = InetAddress.getByName(host);
-        }else{
-         ipAddress = InetAddress.getByName(staticIP);
+
+    if (!getIPAdressfromPackage) {
+      if (prev_data != null && prev_data.equalsIgnoreCase(data)) {
+        try {
+          String host = "localhost";
+          if (staticIP == null) {
+            KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+            if (ka != null) {
+              host = ka.multiHostAddress;
+            }
+            ipAddress = InetAddress.getByName(host);
+          } else {
+            ipAddress = InetAddress.getByName(staticIP);
+          }
+        } catch (Exception e) {
         }
-      }catch(Exception e){}      
+      }
     }
-    
+
     //data = data.trim();//+"\r";
     byte[] b = data.getBytes();
     DatagramPacket dp = new DatagramPacket(b, b.length, ipAddress, this.port_for_sending);
@@ -185,7 +207,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       ex.printStackTrace();
       Logger.getLogger(ConnectionSocket.class.getName()).log(Level.SEVERE, null, ex);
     }
- 
+
     prev_data = data;
   }
 
@@ -212,26 +234,34 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       Enumeration e = NetworkInterface.getNetworkInterfaces();
       while (e.hasMoreElements()) {
         NetworkInterface n = (NetworkInterface) e.nextElement();
-        if (n.isLoopback()) continue;        
+        if (n.isLoopback()) {
+          continue;
+        }
         //if (n.isPointToPoint()) continue;
-        if (!n.supportsMulticast()) continue;
-        if (!n.isUp()) continue;
-        if (n.isVirtual()) continue;
-        Enumeration ee = n.getInetAddresses();        
-        System.out.println(n.getName()+" ["+n.getDisplayName()+"]");
-        
-          while (ee.hasMoreElements()) {
-            InetAddress i = (InetAddress) ee.nextElement();
-            String ip = i.getHostAddress();
-            String ip_host = "";
-            int pos = ip.lastIndexOf(".");
-            if (pos>0){
-              ip_host = ip.substring(0,pos)+".255";
-            }
-            System.out.println("ip:"+ip+" brodcast:"+ip_host);
-            break;
+        if (!n.supportsMulticast()) {
+          continue;
+        }
+        if (!n.isUp()) {
+          continue;
+        }
+        if (n.isVirtual()) {
+          continue;
+        }
+        Enumeration ee = n.getInetAddresses();
+        System.out.println(n.getName() + " [" + n.getDisplayName() + "]");
+
+        while (ee.hasMoreElements()) {
+          InetAddress i = (InetAddress) ee.nextElement();
+          String ip = i.getHostAddress();
+          String ip_host = "";
+          int pos = ip.lastIndexOf(".");
+          if (pos > 0) {
+            ip_host = ip.substring(0, pos) + ".255";
           }
-       
+          System.out.println("ip:" + ip + " brodcast:" + ip_host);
+          break;
+        }
+
       }
 
     } catch (Exception e) {
@@ -239,8 +269,9 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     }
 
   }
-  
-  public int getTimeOutForReconnect(){
+
+  public int getTimeOutForReconnect() {
     return 20;
-  };
+  }
+;
 }

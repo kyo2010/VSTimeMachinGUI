@@ -308,7 +308,9 @@ public class VSTimeConnector {
   public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) {
     this.gateColor = gateColor;
     gateTransId = transID;
-    blinkigQuee.add(new BlinkigQuee(transID, color, gateColor, isBlink));
+    if (transID!=-1){    
+      blinkigQuee.add(new BlinkigQuee(transID, color, gateColor, isBlink));
+    }  
     System.out.println("fire gate");
     blinkingTimer.setDelay(1);
     blinkingTimer.restart();
@@ -317,12 +319,13 @@ public class VSTimeConnector {
   VSColor gateColor = null;
   int gateTransId = -1;
   int gateChecker= 0 ;
-  public Timer blinkingTimer = new Timer(500, new ActionListener() {
+  public Timer blinkingTimer = new Timer(100, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (connected && blinkigQuee.size() > 0) {
         blinkingTimer.setDelay(500);
         BlinkigQuee blink = blinkigQuee.get(0);
+        gateChecker=0;
         if (blink.state == 0) {
           try {
             if (blink.isBlink) {
@@ -366,12 +369,12 @@ public class VSTimeConnector {
               setColor(blink.transID, blink.gateColor.vscolor);
             }
           } catch (Exception ein) {
-          }
+          }          
         }
       }else{
         gateChecker++;
-        if (gateChecker>=2){
-          gateChecker=0;
+        if (gateChecker<=5){
+          //gateChecker=0;
           if (gateColor!=null){
             try{
               setColor(gateTransId, gateColor.vscolor);

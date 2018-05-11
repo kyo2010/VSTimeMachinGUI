@@ -403,9 +403,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png");
 
-    if (USE_TRANS_FOR_GATE && vsTimeConnector != null && vsTimeConnector.connected) {
+    if (vsTimeConnector != null && vsTimeConnector.connected) {      
       try {
-        vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+        if (USE_TRANS_FOR_GATE){
+          vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+        }else{
+          // public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) 
+          vsTimeConnector.addBlinkTransponder(-1,0,null,false);
+        }  
       } catch (Exception e) {
       }
     }
@@ -826,7 +831,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         System.out.println(e);
         vsTimeConnector = null;
       }
-      speaker.speak(speaker.getSpeachMessages().connected());
+      //speaker.speak(speaker.getSpeachMessages().connected());
     }
   }//GEN-LAST:event_connectButtonActionPerformed
 
@@ -841,7 +846,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     vsTimeConnector = null;
     setStateMenu(false);
     jLabel3.setText("disconnected");
-    speaker.speak(speaker.getSpeachMessages().disconnected());
+    //speaker.speak(speaker.getSpeachMessages().disconnected());
   }//GEN-LAST:event_menuDisconnectActionPerformed
 
   private void menuWLANSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuWLANSettingActionPerformed
