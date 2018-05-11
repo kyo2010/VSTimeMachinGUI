@@ -181,8 +181,13 @@ public class StageTab extends javax.swing.JPanel {
         try {
           Thread.sleep(50);
         } catch (Exception ein) {
-        }
+        }        
       } catch (Exception ein) {
+      }
+      if (checkingGrpup!=null && checkingGrpup.users!=null){
+        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+          user.RECEIVED_LAPS = false;
+        }
       }
 
       bStopChecking.setVisible(true);
