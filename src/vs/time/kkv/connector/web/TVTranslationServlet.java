@@ -199,7 +199,7 @@ public class TVTranslationServlet extends HttpServlet {
 
     for (int numGroup : stage.groups.keySet()) {
       VS_STAGE_GROUP group = stage.groups.get(numGroup);
-      if (lines + group.users.size() < MAX_TABLE_LINES) {
+      if (lines + group.users.size() <= MAX_TABLE_LINES) {
       } else {
         lines = 0;
         displays.add(new DISPLAY());
@@ -258,6 +258,7 @@ public class TVTranslationServlet extends HttpServlet {
         index++;
       }
     }*/
+    int next_group = -1;
     if (current_dispaly != null) {
       for (int numGroup : current_dispaly.numGroups) {
         VS_STAGE_GROUP group = stage.groups.get(numGroup);
@@ -270,11 +271,36 @@ public class TVTranslationServlet extends HttpServlet {
           }
           CONTENT += "<tr class='w3-white'>";
           if (showGroupNumber && index == 0) {
-            CONTENT += "<th rowspan='" + group.users.size() + "'>" + group.GROUP_NUM + "</th>";
+            String color = "w3-green";            
+            if (user.IS_FINISHED==1) {
+              color = "w3-red";
+              next_group = group.GROUP_INDEX+1;
+            }else{
+              if (group.GROUP_INDEX==next_group){
+                color = "w3-yellow";
+              }
+            }
+            CONTENT += "<th rowspan='" + group.users.size() + "'>" + 
+                    "<span class=\"w3-badge "+color+" 1w3-large\">&nbsp;"+
+                    group.GROUP_NUM + 
+                    "&nbsp;</span>"+
+                    "</th>";
           }
           CONTENT += "<th>" + (index + 1) + "</th>";
           CONTENT += "<th>" + surname + user.PILOT + "</th>";
-          CONTENT += "<th>" + user.CHANNEL + "</th>";
+          
+          String color = "";
+          try{
+            VSColor vs_color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);    
+            color = vs_color.w3css;
+          }catch(Exception e){            
+          }
+          
+          CONTENT += "<th>" + 
+                  "<span class=\"w3-badge "+color+" 1w3-large\">&nbsp;"+
+                  user.CHANNEL + 
+                  "&nbsp;</span>"+
+                  "</th>";
           CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
           CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
           CONTENT += "</tr>";
