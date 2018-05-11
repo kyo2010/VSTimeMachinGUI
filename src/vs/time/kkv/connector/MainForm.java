@@ -999,12 +999,33 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static void main(String args[]) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
+        
+        /*try{
+          
+          for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
+            System.out.println(info.getClassName());
+            // javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          }
+          
+          // javax.swing.plaf.metal.MetalLookAndFeel
+          // javax.swing.plaf.nimbus.NimbusLookAndFeel 
+          // com.sun.java.swing.plaf.motif.MotifLookAndFeel 
+          // com.sun.java.swing.plaf.windows.WindowsLookAndFeel 
+          // com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel
+         
+          //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+          //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+          //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFee");
+          UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        }catch(Exception ein){}*/
+        
         MainForm mainForm = new MainForm("VS Time Connector");
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        mainForm.setSize(dim.width / 2, dim.height / 2);
+        mainForm.setSize( (int) (dim.width *0.9), (int) (dim.height * 0.8));
+        //mainForm.setSize( dim.width, dim.height);
         mainForm.setLocation(dim.width / 2 - mainForm.getSize().width / 2, dim.height / 2 - mainForm.getSize().height / 2);
         mainForm.setVisible(true);
       }
