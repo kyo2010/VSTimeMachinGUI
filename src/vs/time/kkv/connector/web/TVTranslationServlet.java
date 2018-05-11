@@ -7,6 +7,7 @@ package vs.time.kkv.connector.web;
 
 import KKV.Utils.Tools;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.InfoForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.MainlPannels.stage.StageTableData;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -33,6 +35,9 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  */
 public class TVTranslationServlet extends HttpServlet {
 
+  static final int MAX_TABLE_LINES = 13;
+  static final long MAX_TIME_DISPLAY = 5000;
+  
   public static boolean USE_CACHE = false;
   String templ = null;
   String templ_button = null;
@@ -49,61 +54,61 @@ public class TVTranslationServlet extends HttpServlet {
       this.index = index;
     }
 
-    public boolean addPilotInfo(IVar varsPool, boolean isRace) {      
+    public boolean addPilotInfo(IVar varsPool, boolean isRace) {
       boolean res = true;
       String webPhoto = "";
       String webName = "";
       String webChannel = "";
       String webColor = "";
       String webInfo = "";
-      try{      
-      if (pilot != null) {
-        //if (pilot.PILOT.equals("RUBOT")){
-        //  int y = 0;
-        //}
-        reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
-        int pWidth = 240;
-        if (isRace) {
-          pWidth = 150;
-        }
-        if (reg!=null && !reg.PHOTO.equalsIgnoreCase("")) {
-          webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
-        } else {
-
-        }
-
-        if (pilot.color != null) {
-          webColor = pilot.color.colorname.toLowerCase();
-        }
-        if (webColor.equals("")) {
-          webColor = "blue";
-        }
-        webName = pilot.PILOT;
-        if (reg != null) {
-          webName = reg.FIRST_NAME + " " + reg.SECOND_NAME + " [" + pilot.PILOT + "]";
-        }
-        String h1 = "h1";
-        if (isRace) {
-          h1 = "h2";
-        }
-        webName = "<div class='w3-margin-top w3-container w3-" + webColor + "' style='text-shadow:2px 1px 0 #444'><" + h1 + "><b>" + webName + "</b></" + h1 + "></div>";
-
-        if (isRace) {
-          String bestLap = "";
-          String info = "";
-          if (pilot.BEST_LAP != 0) {
-            bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Лучший круг : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
+      try {
+        if (pilot != null) {
+          //if (pilot.PILOT.equals("RUBOT")){
+          //  int y = 0;
+          //}
+          reg = pilot.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+          int pWidth = 240;
+          if (isRace) {
+            pWidth = 150;
           }
-          if (pilot.IS_FINISHED == 1) {
-            info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Общее время :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
+          if (reg != null && !reg.PHOTO.equalsIgnoreCase("")) {
+            webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
+          } else {
+
           }
-          webInfo = "<div class='w3-container w3-white'><h3><b>Кругов : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
+
+          if (pilot.color != null) {
+            webColor = pilot.color.colorname.toLowerCase();
+          }
+          if (webColor.equals("")) {
+            webColor = "blue";
+          }
+          webName = pilot.PILOT;
+          if (reg != null) {
+            webName = reg.FIRST_NAME + " " + reg.SECOND_NAME + " [" + pilot.PILOT + "]";
+          }
+          String h1 = "h1";
+          if (isRace) {
+            h1 = "h2";
+          }
+          webName = "<div class='w3-margin-top w3-container w3-" + webColor + "' style='text-shadow:2px 1px 0 #444'><" + h1 + "><b>" + webName + "</b></" + h1 + "></div>";
+
+          if (isRace) {
+            String bestLap = "";
+            String info = "";
+            if (pilot.BEST_LAP != 0) {
+              bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Лучший круг : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
+            }
+            if (pilot.IS_FINISHED == 1) {
+              info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Общее время :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
+            }
+            webInfo = "<div class='w3-container w3-white'><h3><b>Кругов : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
+          }
+
+          webChannel = "<div class='w3-badge w3-" + webColor + "'><b>" + pilot.CHANNEL + "</b></div>";
         }
 
-        webChannel = "<div class='w3-badge w3-" + webColor + "'><b>" + pilot.CHANNEL + "</b></div>";
-      }
-      
-      }catch(Exception ein){
+      } catch (Exception ein) {
         res = false;
       }
 
@@ -112,7 +117,7 @@ public class TVTranslationServlet extends HttpServlet {
       varsPool.addChild(new StringVar("CH" + index, webChannel));
       varsPool.addChild(new StringVar("COLOR" + index, webColor));
       varsPool.addChild(new StringVar("INFO" + index, webInfo));
-      
+
       return res;
     }
 
@@ -139,12 +144,12 @@ public class TVTranslationServlet extends HttpServlet {
       }
 
       //if (group != null && group.users != null && group.users.size() > i) {
-        for (VS_STAGE_GROUPS usr : group.users) {
-          if (usr.CHANNEL.equalsIgnoreCase(channel)) {
-            pilot = usr;
-            break;
-          }
+      for (VS_STAGE_GROUPS usr : group.users) {
+        if (usr.CHANNEL.equalsIgnoreCase(channel)) {
+          pilot = usr;
+          break;
         }
+      }
       //}
       pInfos[i] = new PilotInfo(i + 1, pilot);
     }
@@ -157,6 +162,11 @@ public class TVTranslationServlet extends HttpServlet {
 
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
+  }
+
+  public class DISPLAY {
+
+    public List<Integer> numGroups = new ArrayList();
   }
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
@@ -175,16 +185,27 @@ public class TVTranslationServlet extends HttpServlet {
       CONTENT += "<th>G</th>";
     }
     CONTENT += "<th> </th>";
-    CONTENT += "<th>"+mainForm.getLocaleString("Pilot")+"</th>";
-    CONTENT += "<th>"+mainForm.getLocaleString("Channel")+"</th>";
-    CONTENT += "<th>"+mainForm.getLocaleString("Race Time")+"</th>";
-    CONTENT += "<th>"+mainForm.getLocaleString("Best Lap")+"</th>";
+    CONTENT += "<th>" + mainForm.getLocaleString("Pilot") + "</th>";
+    CONTENT += "<th>" + mainForm.getLocaleString("Channel") + "</th>";
+    CONTENT += "<th>" + mainForm.getLocaleString("Race Time") + "</th>";
+    CONTENT += "<th>" + mainForm.getLocaleString("Best Lap") + "</th>";
     CONTENT += "</tr>";
 
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;
     long best_time = VS_STAGE_GROUPS.MAX_TIME;
+    int lines = 0;
+    List<DISPLAY> displays = new ArrayList<>();
+    displays.add(new DISPLAY());
+
     for (int numGroup : stage.groups.keySet()) {
       VS_STAGE_GROUP group = stage.groups.get(numGroup);
+      if (lines + group.users.size() < MAX_TABLE_LINES) {
+      } else {
+        lines = 0;
+        displays.add(new DISPLAY());
+      }
+      displays.get(displays.size() - 1).numGroups.add(numGroup);
+      lines = lines + group.users.size();
       for (VS_STAGE_GROUPS user : group.users) {
         if (user.BEST_LAP < best_lap && user.BEST_LAP != 0) {
           best_lap = user.BEST_LAP;
@@ -201,7 +222,21 @@ public class TVTranslationServlet extends HttpServlet {
       best_lap++;
     }
 
-    for (int numGroup : stage.groups.keySet()) {
+    DISPLAY current_dispaly = null;
+    if (displays.size() > 0) {
+      long t = Calendar.getInstance().getTimeInMillis();
+      long d = t - mainForm.unRaceTime;
+      long count_dispalys = d/MAX_TIME_DISPLAY;
+      int disp_number = (int)count_dispalys%displays.size();
+      if (disp_number>=displays.size()){
+        current_dispaly = displays.get(0);
+      }else{
+        current_dispaly = displays.get(disp_number);
+        //System.out.println("Current TV display number is:"+disp_number);
+      }  
+    }
+
+    /*for (int numGroup : stage.groups.keySet()) {
       VS_STAGE_GROUP group = stage.groups.get(numGroup);
       int index = 0;
       for (VS_STAGE_GROUPS user : group.users) {
@@ -222,7 +257,32 @@ public class TVTranslationServlet extends HttpServlet {
         CONTENT += "</tr>";
         index++;
       }
+    }*/
+    if (current_dispaly != null) {
+      for (int numGroup : current_dispaly.numGroups) {
+        VS_STAGE_GROUP group = stage.groups.get(numGroup);
+        int index = 0;
+        for (VS_STAGE_GROUPS user : group.users) {
+          VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+          String surname = "";
+          if (reg != null) {
+            surname = reg.SECOND_NAME + ((reg.FIRST_NAME.length() > 0) ? (" " + reg.FIRST_NAME.substring(0, 1) + ".") : "") + " ";
+          }
+          CONTENT += "<tr class='w3-white'>";
+          if (showGroupNumber && index == 0) {
+            CONTENT += "<th rowspan='" + group.users.size() + "'>" + group.GROUP_NUM + "</th>";
+          }
+          CONTENT += "<th>" + (index + 1) + "</th>";
+          CONTENT += "<th>" + surname + user.PILOT + "</th>";
+          CONTENT += "<th>" + user.CHANNEL + "</th>";
+          CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
+          CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
+          CONTENT += "</tr>";
+          index++;
+        }
+      }
     }
+
     CONTENT += "</table></p>";
     CONTENT += "</div>";
 
@@ -257,7 +317,7 @@ public class TVTranslationServlet extends HttpServlet {
         resp.getWriter().println(outHtml);
       }
     } catch (Exception e) {
-      resp.getWriter().println(e.toString() + ". " +Tools.traceError(e));
+      resp.getWriter().println(e.toString() + ". " + Tools.traceError(e));
       System.out.println(e);
     }
   }
