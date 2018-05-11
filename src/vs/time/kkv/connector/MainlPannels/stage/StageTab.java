@@ -276,6 +276,8 @@ public class StageTab extends javax.swing.JPanel {
           all_ok = false;
         }
       }
+      // Ceck 2.5 secs minimum - fol lap 
+      if (checkerCycle * timer.getInitialDelay()<2500) all_ok = false;
       if (checkerCycle * timer.getInitialDelay() > 1000 * 300 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
