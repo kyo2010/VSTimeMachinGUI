@@ -43,9 +43,14 @@ public class VS_RACE_LAP {
     new DBModelField("REG_ID").setDbFieldName("\"REG_ID\""),
   });
  
-  public static VS_RACE_LAP saveTime(Connection con, VS_STAGE_GROUP group, long time, int TRANSPONDER_ID, long REG_ID ,int LAP){
+  public static VS_RACE_LAP saveTime(Connection con, VS_STAGE stage, VS_STAGE_GROUP group, long time, int TRANSPONDER_ID, long REG_ID ,int LAP){
     try{
-      VS_RACE_LAP.dbControl.delete(con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and LAP=?",group.stage.RACE_ID,group.stage.ID,group.GROUP_NUM, LAP);
+      if (stage.USE_REG_ID_FOR_LAP==1){
+        VS_RACE_LAP.dbControl.delete(con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and LAP=? and REG_ID=?",group.stage.RACE_ID,group.stage.ID,group.GROUP_NUM, REG_ID);
+      }else{
+        VS_RACE_LAP.dbControl.delete(con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and LAP=? and TRANSPONDER_ID=?",group.stage.RACE_ID,group.stage.ID,group.GROUP_NUM, TRANSPONDER_ID);
+       
+      }  
     }catch(Exception e){}
     try{
       VS_RACE_LAP lap = new VS_RACE_LAP();

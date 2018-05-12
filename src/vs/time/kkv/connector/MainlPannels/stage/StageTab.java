@@ -576,7 +576,6 @@ public class StageTab extends javax.swing.JPanel {
                 if (stage.IS_LOCK == 1) {
                   return;
                 }
-                mainForm.activeGroup = td.group;
                 // We need to check : Run Race Group = Invate RaceGroup
                 //mainForm.invateGroup = null;
                 td.group.stageTab = StageTab.this;
@@ -591,6 +590,7 @@ public class StageTab extends javax.swing.JPanel {
                 try{
                   wait(1000);
                 }catch(Exception ect){}*/
+                
                 mainForm.beep.palyAndWait("attention");
                 /*InfoForm.init(mainForm, "3").setVisible(true);
                 //if (useSpeach) mainForm.speaker.speak("Three!");                
@@ -634,6 +634,7 @@ public class StageTab extends javax.swing.JPanel {
                 });
                 t1.setRepeats(false);
                 t1.start();*/
+                mainForm.activeGroup = td.group;                   
 
                 int rnd = (int) (Math.random() * 3000);
                 Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
@@ -642,12 +643,22 @@ public class StageTab extends javax.swing.JPanel {
                     mainForm.beep.paly("beep");
                     //if (useSpeach) mainForm.speaker.speak("Go!");
                     mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+                    try{
+                      if (mainForm.vsTimeConnector!=null){
+                        mainForm.vsTimeConnector.rfidUnlock();
+                      }
+                    }catch(Exception ein){} 
                     raceTimer.start();
                     jTree.updateUI();
                     Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
                         InfoForm.init(mainForm, "").setVisible(false);
                         infoWindowRunning = false;
+                        try{
+                          if (mainForm.vsTimeConnector!=null){
+                            mainForm.vsTimeConnector.rfidUnlock();
+                            }
+                        }catch(Exception ein){}                     
                       }
                     });
                     t4.setRepeats(false);

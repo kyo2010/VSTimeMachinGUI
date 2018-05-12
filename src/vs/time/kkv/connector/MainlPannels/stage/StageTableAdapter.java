@@ -247,6 +247,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           if (tab.stage.PILOT_TYPE == MainForm.PILOT_TYPE_NONE_INDEX || tab.stage.PILOT_TYPE == pilot.PILOT_TYPE) {
             if (pilots.get(pilot.PILOT) == null) {
               pilot.NUM_IN_GROUP = index;
+              pilot.GROUP_NUM = 1;
               //pilot.IS_FINISHED = 1;
               pilot.IS_RECALULATED = 1;
 
@@ -337,9 +338,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           if (pilot.RACE_TIME != 0 && pilot.RACE_TIME < result.RACE_TIME) {
             result.RACE_TIME = pilot.RACE_TIME;
           }
-          result.wins += pilot.WIN;
-          result.loses += pilot.LOSE;
-          result.LAPS += pilot.LAPS;
+          if (result!=pilot){
+            result.wins += pilot.WIN;
+            result.loses += pilot.LOSE;
+            result.LAPS += pilot.LAPS;
+          }  
 
         }
 
@@ -406,7 +409,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
         List<VS_STAGE_GROUPS> results = new ArrayList<VS_STAGE_GROUPS>();
         for (VS_STAGE stage : stages) {
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by GROUP_NUM, NUM_IN_GROUP", stage.ID);
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stage.ID);
           for (VS_STAGE_GROUPS usr : groups) {
             VS_STAGE_GROUPS res = null;
             for (VS_STAGE_GROUPS result : results) {
@@ -878,7 +881,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         boolean isError = false;
         if (time != -1) {
           int lapNum =  getLapNumberFromCol(col);
-          if (time == -2) {
+          if (time == -2) { // it's sapce = only delete time
             if (tab.stage.USE_REG_ID_FOR_LAP == 1) {
               VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and REG_ID=?",tab.stage.RACE_ID, tab.stage.ID,td.pilot.GROUP_NUM,  td.pilot.REG_ID);            
               VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.REG_ID, "" +lapNum, null);
@@ -887,7 +890,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + lapNum, null);
             } 
           } else {
-            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, time, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, lapNum);
+            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, tab.stage, td.pilot.parent, time, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, lapNum);
             if (lap == null) {
               isError = true;
             }
@@ -916,14 +919,19 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         long time = getTimerInterval(val);
         boolean isError = false;
         if (time != -1) {
-          VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?",
-                  tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.VS_PRIMARY_TRANS);
+          if (tab.stage.USE_REG_ID_FOR_LAP==1){
+            VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and REG_ID=?",
+                  tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.REG_ID);
+          }else{
+            VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and TRANSPONDER_ID=?",
+                  tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.VS_PRIMARY_TRANS);          
+          }  
           long lapTime = time / tab.stage.LAPS;
           for (int i = 0; i < tab.stage.LAPS; i++) {
             if (i + 1 == tab.stage.LAPS) {
               lapTime = time - lapTime * (tab.stage.LAPS - 1);
             }
-            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, i + 1);
+            VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, tab.stage, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, i + 1);
             if (tab.stage.USE_REG_ID_FOR_LAP == 1) {
               VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.REG_ID, "" + (i + 1), lap);
             } else {

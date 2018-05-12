@@ -404,6 +404,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
             if (race.RACE_NAME.trim().equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {
               if (regTab.mainForm.activeRace!=null){
                 regTab.mainForm.activeRace.WEB_RACE_ID = ""+race.RACE_ID;
+                regTab.mainForm.activeRace.WEB_SYSTEM_SID = site.REG_SITE_NAME;
+                regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = site.REG_SITE_NAME;
                 VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
               }
             }

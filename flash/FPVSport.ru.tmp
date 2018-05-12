@@ -104,6 +104,22 @@
         "PICTURE_OK" : "0",
         "PICTURE" : ""
        }
+      ,{
+        "id" : "99",
+        "osd_name" : "Siberian",
+        "fname" : "Максим",
+        "lname" : "Хисамутдинов",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
     ]
    }
   ,{
@@ -251,7 +267,7 @@
         "osd_name" : "BEZIK",
         "fname" : "Александр",
         "lname" : "Безлепкин",
-        "transID" : "",
+        "transID" : "1406",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -537,7 +553,7 @@
         "osd_name" : "BEZIK",
         "fname" : "Александр",
         "lname" : "Безлепкин",
-        "transID" : "",
+        "transID" : "1406",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -823,7 +839,7 @@
         "osd_name" : "BEZIK",
         "fname" : "Александр",
         "lname" : "Безлепкин",
-        "transID" : "",
+        "transID" : "1406",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1027,7 +1043,7 @@
         "osd_name" : "BEZIK",
         "fname" : "Александр",
         "lname" : "Безлепкин",
-        "transID" : "",
+        "transID" : "1406",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1123,7 +1139,7 @@
         "osd_name" : "krleone",
         "fname" : "Вячеслав",
         "lname" : "Царев",
-        "transID" : "55",
+        "transID" : "1414",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1131,8 +1147,8 @@
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-12-0909-05-12_krleone.jpg"
        }
     ]
    }
@@ -1199,7 +1215,7 @@
         "osd_name" : "BEZIK",
         "fname" : "Александр",
         "lname" : "Безлепкин",
-        "transID" : "",
+        "transID" : "1406",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1275,22 +1291,6 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/Tarantino_2018-04-09.jpg"
        }
       ,{
-        "id" : "19",
-        "osd_name" : "Gavrfpv",
-        "fname" : "Гавриил",
-        "lname" : "Щицын ",
-        "transID" : "1289",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : ""
-       }
-      ,{
         "id" : "48",
         "osd_name" : "RAIN_FPV",
         "fname" : "Владимир",
@@ -1327,7 +1327,7 @@
         "osd_name" : "krleone",
         "fname" : "Вячеслав",
         "lname" : "Царев",
-        "transID" : "55",
+        "transID" : "1414",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1335,8 +1335,8 @@
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-12-0909-05-12_krleone.jpg"
        }
       ,{
         "id" : "26",
@@ -1353,22 +1353,6 @@
         "regionEN" : "none",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_wakella.jpg"
-       }
-      ,{
-        "id" : "25",
-        "osd_name" : "kiwiki",
-        "fname" : "Павел",
-        "lname" : "Дехтярь",
-        "transID" : "1342; 1362",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "118823",
-        "regionCode" : "77",
-        "region" : "г. Москва + МО",
-        "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
       ,{
         "id" : "95",
@@ -1403,22 +1387,6 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-09-0909-05-19_chuvis.jpeg"
        }
       ,{
-        "id" : "49",
-        "osd_name" : "GURYCH",
-        "fname" : "Александр",
-        "lname" : "Гурычев",
-        "transID" : "1340",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "110393",
-        "regionCode" : "77",
-        "region" : "г. Москва + МО",
-        "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-09-1717-04-17_GURYCH.PNG"
-       }
-      ,{
         "id" : "24",
         "osd_name" : "SERGEYA",
         "fname" : "Сергей",
@@ -1449,6 +1417,22 @@
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+       }
+      ,{
+        "id" : "100",
+        "osd_name" : "roma_xolod",
+        "fname" : "Роман",
+        "lname" : "лутковский",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
        }
     ]
    }
@@ -2058,7 +2042,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "0",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/egor_garpunov_2018-05-01.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/egor_garpunov_2018-05-11.jpg"
        }
       ,{
         "id" : "31",
