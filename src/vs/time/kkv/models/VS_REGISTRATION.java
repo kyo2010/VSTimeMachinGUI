@@ -83,6 +83,17 @@ public class VS_REGISTRATION {
     return VS_USER_NAME;
   } 
   
+  public String getTransponders(){
+    String trans = ""+VS_TRANS1;
+    if (VS_TRANS2!=0) trans+=";"+VS_TRANS2;
+    if (VS_TRANS3!=0) trans+=";"+VS_TRANS3;
+    return trans;
+  }
+  
+  public String getFullUserName(){
+    return VS_USER_NAME+" / "+FIRST_NAME+" "+SECOND_NAME;
+  }
+  
   public static VS_USERS updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr){
     // Creating global user  
     VS_USERS global_user = null;

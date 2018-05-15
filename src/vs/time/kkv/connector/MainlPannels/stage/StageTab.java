@@ -466,9 +466,10 @@ public class StageTab extends javax.swing.JPanel {
             if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
               JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
               return;
-            }
+            }            
             List<String> pilots = new ArrayList<String>();
             if (td != null && td.group != null && td.group.users != null) {
+              mainForm.lastInvateGroup = td.group;
               for (VS_STAGE_GROUPS user : td.group.users) {
                 VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
                 String pilot = user.PILOT;
@@ -544,8 +545,8 @@ public class StageTab extends javax.swing.JPanel {
 
               try {
                 if (VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1) {
-                  if (mainForm.invateGroup == null || mainForm.invateGroup.stage.ID != td.group.stage.ID
-                          || mainForm.invateGroup.GROUP_INDEX != td.group.GROUP_INDEX) {
+                  if (mainForm.lastInvateGroup == null || mainForm.lastInvateGroup.stage.ID != td.group.stage.ID
+                          || mainForm.lastInvateGroup.GROUP_INDEX != td.group.GROUP_INDEX) {
                     JOptionPane.showMessageDialog(mainForm, "Please Invate the Group " + td.group.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
                     return;
                   }
@@ -1612,7 +1613,7 @@ public class StageTab extends javax.swing.JPanel {
         return;
       }
       if (site.isSuportedToWebUpload()) {
-        site.uploadToWebSystem(this, false);
+        site.uploadToWebSystem(null, this, false,true);
       } else {
         JOptionPane.showMessageDialog(null, "Update race data is not supported for site :" + site.REG_SITE_NAME);
       }

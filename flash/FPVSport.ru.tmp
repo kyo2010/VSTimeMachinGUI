@@ -58,6 +58,22 @@
         "PICTURE_OK" : "0",
         "PICTURE" : ""
        }
+      ,{
+        "id" : "101",
+        "osd_name" : "CRASHCOOL ",
+        "fname" : "Евгений ",
+        "lname" : "Погодин ",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-13-0909-05-37_CRASHCOOL.jpg"
+       }
     ]
    }
   ,{
@@ -119,6 +135,22 @@
         "regionEN" : "Krasnoyarsk region",
         "PICTURE_OK" : "0",
         "PICTURE" : ""
+       }
+      ,{
+        "id" : "101",
+        "osd_name" : "CRASHCOOL ",
+        "fname" : "Евгений ",
+        "lname" : "Погодин ",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-13-0909-05-37_CRASHCOOL.jpg"
        }
     ]
    }
@@ -204,13 +236,13 @@
         "fname" : "Вадим",
         "lname" : "Дзёма",
         "transID" : "",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "122844",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
        }
@@ -442,13 +474,13 @@
         "fname" : "Вадим",
         "lname" : "Дзёма",
         "transID" : "",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "122844",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
        }
@@ -744,13 +776,13 @@
         "fname" : "Вадим",
         "lname" : "Дзёма",
         "transID" : "",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "122844",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
        }
@@ -959,7 +991,7 @@
         "regionCode" : "78",
         "region" : "Санкт-Петербург",
         "regionEN" : "Saint-Petersburg",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-21-2020-04-44_orangefpv.jpg"
        }
     ]
@@ -1028,13 +1060,13 @@
         "fname" : "Вадим",
         "lname" : "Дзёма",
         "transID" : "",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "122844",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
        }
@@ -1135,20 +1167,52 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
        }
       ,{
-        "id" : "87",
-        "osd_name" : "krleone",
-        "fname" : "Вячеслав",
-        "lname" : "Царев",
-        "transID" : "1414",
+        "id" : "2",
+        "osd_name" : "KKV",
+        "fname" : "Константин",
+        "lname" : "Кимлаев",
+        "transID" : "1322;1320;1364",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
-        "FAI" : "",
+        "FAI" : "123242",
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-12-0909-05-12_krleone.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+       }
+      ,{
+        "id" : "25",
+        "osd_name" : "kiwiki",
+        "fname" : "Павел",
+        "lname" : "Дехтярь",
+        "transID" : "1342; 1362",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "118823",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
+       }
+      ,{
+        "id" : "60",
+        "osd_name" : "orange",
+        "fname" : "Pavel",
+        "lname" : "Nikitin",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "123247",
+        "regionCode" : "78",
+        "region" : "Санкт-Петербург",
+        "regionEN" : "Saint-Petersburg",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-21-2020-04-44_orangefpv.jpg"
        }
     ]
    }
@@ -1184,13 +1248,13 @@
         "fname" : "Вадим",
         "lname" : "Дзёма",
         "transID" : "",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "122844",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-31-1919-03-46_FPV_ZOOM.jpg"
        }
@@ -1331,7 +1395,7 @@
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
-        "FAI" : "",
+        "FAI" : "124105",
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
@@ -2177,7 +2241,7 @@
         "osd_name" : "AG",
         "fname" : "Александр",
         "lname" : "Жулёв",
-        "transID" : "13",
+        "transID" : "1351",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",

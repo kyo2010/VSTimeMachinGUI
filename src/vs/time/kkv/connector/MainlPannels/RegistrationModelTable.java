@@ -10,6 +10,7 @@ import vs.time.kkv.connector.Users.*;
 import KKV.Utils.UserException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,7 @@ import vs.time.kkv.models.VS_USERS;
  */
 public class RegistrationModelTable extends AbstractTableModel {
 
-  private List<VS_REGISTRATION> rows;
+  public List<VS_REGISTRATION> rows = new ArrayList<>();
   private RegistrationTab regForm = null;
   public String findString = "";
   

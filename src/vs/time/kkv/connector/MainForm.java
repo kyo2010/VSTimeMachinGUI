@@ -55,12 +55,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
+import javax.swing.Timer;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jssc.SerialNativeInterface;
 import jssc.SerialPortList;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
 import vs.time.kkv.connector.Race.RaceControlForm;
@@ -188,8 +191,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_RACE activeRace = null;
   public VS_STAGE_GROUP activeGroup = null;
   public VS_STAGE_GROUP invateGroup = null;
+  public VS_STAGE_GROUP lastInvateGroup = null;
   public VS_STAGE_GROUP lastCheckingGrpup = null;
   public VS_STAGE activeStage = null;
+  public StageTab activeStageTab = null;
 
   public RegistrationTab regForm = null;
   public long raceTime = 0;
@@ -378,7 +383,44 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       toLog(e);
       //e.printStackTrace();
     }
+
+    autoUploadToWebTimer.start();
   }
+
+  // Autouploader Timer to web-site - One time per minute
+  Timer autoUploadToWebTimer = new Timer(3*1000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      try {
+        if (activeRace != null) {
+          if (activeRace.AUTO_WEB_UPDATE == 1) {
+            IRegSite site = null;
+            if (activeRace.WEB_RACE_ID != null && !activeRace.WEB_RACE_ID.equals("")) {
+              site = RegistrationImportForm.getSite(activeRace.WEB_SYSTEM_SID);
+              if (site == null) {
+                return;
+              }
+              if (site.isSuportedToWebUpload()) {
+              } else {
+                return;
+              }
+            } else {
+              return;
+            }
+            if (regForm != null && activeStageTab == null) {
+              site.uploadToWebSystem(regForm, null, false, false);
+              //System.out.println("Registration has been updated");
+            }
+            if (activeStageTab != null) {
+              site.uploadToWebSystem(null, activeStageTab, false, false);
+              //System.out.println("Stage '"+activeStageTab.stage.CAPTION+"' has been updated");
+            }
+          }
+        }
+      } catch (Exception ex) {
+      }
+    }
+  });
 
   public void applayLanguage() {
     activeLang = VS_SETTING.getParam(con, "LANG", "EN");
@@ -403,14 +445,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png");
 
-    if (vsTimeConnector != null && vsTimeConnector.connected) {      
+    if (vsTimeConnector != null && vsTimeConnector.connected) {
       try {
-        if (USE_TRANS_FOR_GATE){
+        if (USE_TRANS_FOR_GATE) {
           vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
-        }else{
+        } else {
           // public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) 
-          vsTimeConnector.addBlinkTransponder(-1,0,null,false);
-        }  
+          vsTimeConnector.addBlinkTransponder(-1, 0, null, false);
+        }
       } catch (Exception e) {
       }
     }
@@ -878,6 +920,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //JOptionPane.showMessageDialog(this, ""+tabbedPanel.getSelectedComponent(), "test", JOptionPane.ERROR_MESSAGE);
     invateGroup = null;
     activeStage = null;
+    activeStageTab = null;
     Object tabObject = evt.getSource();
     if (tabObject instanceof JTabbedPane) {
       Object obj = tabbedPanel.getSelectedComponent();
@@ -885,6 +928,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         StageTab tab = (StageTab) obj;
         if (tab.jchTV.isSelected()) {
           activeStage = tab.stage;
+          activeStageTab = tab;
         }
       }
     }
@@ -999,7 +1043,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static void main(String args[]) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        
+
         /*try{
           
           for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1018,13 +1062,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFee");
           UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }catch(Exception ein){}*/
-        
         MainForm mainForm = new MainForm("VS Time Connector");
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        mainForm.setSize( (int) (dim.width *0.9), (int) (dim.height * 0.8));
+        mainForm.setSize((int) (dim.width * 0.9), (int) (dim.height * 0.8));
         //mainForm.setSize( dim.width, dim.height);
         mainForm.setLocation(dim.width / 2 - mainForm.getSize().width / 2, dim.height / 2 - mainForm.getSize().height / 2);
         mainForm.setVisible(true);

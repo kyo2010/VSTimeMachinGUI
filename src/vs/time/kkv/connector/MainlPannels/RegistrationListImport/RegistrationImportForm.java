@@ -106,6 +106,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       jcbSites.setSelectedItem(regTab.mainForm.activeRace.WEB_SYSTEM_SID);
       siteSelected();
     }
+    automaticUpload.setSelected(regTab.mainForm.activeRace.AUTO_WEB_UPDATE==1?true:false);
   }
 
   /**
@@ -118,9 +119,6 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   private void initComponents() {
 
     jPanel1 = new javax.swing.JPanel();
-    jButOk = new javax.swing.JButton();
-    jButCancel = new javax.swing.JButton();
-    butLink = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
     jcbSites = new javax.swing.JComboBox<>();
@@ -128,54 +126,25 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     chbUpdatePhoto = new javax.swing.JCheckBox();
     jLabel1 = new javax.swing.JLabel();
     jeAutzCode = new javax.swing.JTextField();
+    automaticUpload = new javax.swing.JCheckBox();
+    jPanel2 = new javax.swing.JPanel();
+    jButOk = new javax.swing.JButton();
+    butLink = new javax.swing.JButton();
+    jButCancel = new javax.swing.JButton();
 
     setTitle("Pilots Import from Web");
     setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
 
-    jButOk.setText("Ok");
-    jButOk.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButOkActionPerformed(evt);
-      }
-    });
-
-    jButCancel.setText("Cancel");
-    jButCancel.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButCancelActionPerformed(evt);
-      }
-    });
-
-    butLink.setText("Create link to Web Race");
-    butLink.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        butLinkActionPerformed(evt);
-      }
-    });
-
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(butLink, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-        .addGap(29, 29, 29)
-        .addComponent(jButCancel)
-        .addContainerGap())
+      .addGap(0, 7, Short.MAX_VALUE)
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButOk)
-          .addComponent(jButCancel)
-          .addComponent(butLink))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGap(0, 65, Short.MAX_VALUE)
     );
 
     jLabel3.setText("Web Resource");
@@ -188,6 +157,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
         jcbSitesItemStateChanged(evt);
       }
     });
+    jcbSites.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jcbSitesActionPerformed(evt);
+      }
+    });
 
     jcbRaces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -197,11 +171,63 @@ public class RegistrationImportForm extends javax.swing.JFrame {
 
     jLabel1.setText("Authorization Code");
 
+    automaticUpload.setText("Automatic upload to Web");
+    automaticUpload.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+    automaticUpload.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+    jButOk.setText("Ok");
+    jButOk.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButOkActionPerformed(evt);
+      }
+    });
+
+    butLink.setText("Create link to Web Race");
+    butLink.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butLinkActionPerformed(evt);
+      }
+    });
+
+    jButCancel.setText("Cancel");
+    jButCancel.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButCancelActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(174, 174, 174)
+        .addComponent(butLink, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+        .addGap(181, 181, 181)
+        .addComponent(jButCancel)
+        .addContainerGap())
+    );
+    jPanel2Layout.setVerticalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jButOk)
+          .addComponent(butLink)
+          .addComponent(jButCancel))
+        .addContainerGap(22, Short.MAX_VALUE))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,15 +241,15 @@ public class RegistrationImportForm extends javax.swing.JFrame {
               .addComponent(jcbRaces, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addContainerGap())
           .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabel1)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jeAutzCode)
+            .addGap(14, 14, 14))
+          .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(chbUpdatePhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jeAutzCode)))
-            .addGap(14, 14, 14))))
+              .addComponent(chbUpdatePhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(automaticUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 0, Short.MAX_VALUE))))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,8 +268,12 @@ public class RegistrationImportForm extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
           .addComponent(jeAutzCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(automaticUpload)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
     );
 
     pack();
@@ -317,6 +347,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                         count_updated_photos_pilots++;
                       }
 
+                      pilot.IS_ACTIVE=0;
                       VS_REGISTRATION.dbControl.insert(con, pilot);
                       VS_USERS global_user = VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
 
@@ -370,6 +401,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           if (importRace!=null){
             regTab.mainForm.activeRace.WEB_RACE_ID = ""+importRace.RACE_ID;
           }  
+          
+          regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 0;
+          if (automaticUpload.isSelected()){
+            regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 1;
+          }
                 
           VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
           Tools.setPreference("AUTORIZE_CODE_"+site.REG_SITE_NAME, jeAutzCode.getText());
@@ -406,12 +442,15 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                 regTab.mainForm.activeRace.WEB_RACE_ID = ""+race.RACE_ID;
                 regTab.mainForm.activeRace.WEB_SYSTEM_SID = site.REG_SITE_NAME;
                 regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = site.REG_SITE_NAME;
+                regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 0;
+                if (automaticUpload.isSelected()){
+                  regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 1;
+                }
                 VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
               }
             }
           }
-        }
-        
+        }        
         String auth = jeAutzCode.getText();
         Tools.setPreference("AUTORIZE_CODE_"+site.REG_SITE_NAME, auth);
         setVisible(false);
@@ -419,6 +458,10 @@ public class RegistrationImportForm extends javax.swing.JFrame {
        JOptionPane.showMessageDialog(null, "Create Link to Web Race is Error. " + e.getMessage());
     }    
   }//GEN-LAST:event_butLinkActionPerformed
+
+  private void jcbSitesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbSitesActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_jcbSitesActionPerformed
 
   public void siteSelected() {
     //jcbRaces.setModel(new javax.swing.DefaultComboBoxModel(new String[0]));
@@ -468,6 +511,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox automaticUpload;
   private javax.swing.JButton butLink;
   private javax.swing.JCheckBox chbUpdatePhoto;
   private javax.swing.JButton jButCancel;
@@ -476,6 +520,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JPanel jPanel2;
   private javax.swing.JComboBox<String> jcbRaces;
   private javax.swing.JComboBox<String> jcbSites;
   private javax.swing.JTextField jeAutzCode;

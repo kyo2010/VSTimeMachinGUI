@@ -133,14 +133,19 @@ public class RaceHttpServlet extends HttpServlet {
         STAGE_CAPTION = "Registration";
         PAGE_CONTENT += "<table class='w3-table w3-striped w3-bordered' style='width:300px'>\n";
         PAGE_CONTENT += "<tr class='w3-teal'>\n";
-        PAGE_CONTENT += "  <th width='40px'>#</th><th width='260px'>Pilot</th>\n";
+        PAGE_CONTENT += "  <th width='40px'>#</th><th width='260px'>Pilot</th><th width='150px'>Transponder</th>\n";
         PAGE_CONTENT += "</tr>\n";
         try {
           List<VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? order by NUM", race_id);
+          int index = 1;
           for (VS_REGISTRATION reg : regs) {
-            PAGE_CONTENT += "<tr>\n";
-            PAGE_CONTENT += "  <td>" + reg.NUM + "</td><td>" + reg.VS_USER_NAME + "</td>\n";
-            PAGE_CONTENT += "</tr>\n";
+            if (reg.IS_ACTIVE==1){
+              PAGE_CONTENT += "<tr>\n";
+              PAGE_CONTENT += "  <td>" + index + "</td><td>" + reg.VS_USER_NAME + "</td>\n";
+              PAGE_CONTENT += "  <td>"+reg.getTransponders()+"</td>";
+              PAGE_CONTENT += "</tr>\n";
+              index++;
+            }              
           }
         } catch (Exception e) {
           mainForm.toLog(e);

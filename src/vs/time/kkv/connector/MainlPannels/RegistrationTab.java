@@ -49,7 +49,7 @@ import vs.time.kkv.models.VS_REGISTRATION;
 public class RegistrationTab extends javax.swing.JPanel implements LastTransponderListener {
 
   public MainForm mainForm;
-  RegistrationModelTable regModelTable = null;
+  public RegistrationModelTable regModelTable = null;
   JPopupMenu popup = null;
 
   /**
@@ -409,11 +409,10 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       JOptionPane.showMessageDialog(null,"Please make a link with web system");
       return;
     }
-    
-    int index = 1;
+       
+    site.uploadToWebSystem(this, null, true,true);
     for (StageTab stageTab : mainForm.stageTabs) {
-      site.uploadToWebSystem(stageTab, index==1?true:false);
-      index++;
+      site.uploadToWebSystem(null, stageTab, false, true);
     }    
   }//GEN-LAST:event_butUploadToSiteActionPerformed
 

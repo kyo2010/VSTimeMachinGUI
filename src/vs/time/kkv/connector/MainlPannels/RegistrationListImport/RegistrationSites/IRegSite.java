@@ -7,6 +7,7 @@ package vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSi
 
 import KKV.Utils.UserException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.RegistrationTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSFlashControl;
 import vs.time.kkv.models.VS_RACE;
@@ -30,11 +32,12 @@ import vs.time.kkv.models.VS_REGISTRATION;
 public abstract class IRegSite {
 
   public static String TMP_PHOTO_NAME = "flash/PHOTO";
-  
+  public static String PATH_ONLINE_UPDATE = "online";
+
   public String REG_SITE_URL = "";
   public String REG_SITE_NAME = "";
   public String REG_SITE_URL_FOR_UPLOAD = "";
-  
+
   List<VS_RACE> races = new ArrayList<VS_RACE>();
 
   public String getJSONFileName() {
@@ -44,12 +47,12 @@ public abstract class IRegSite {
   public String getSystemName() {
     return REG_SITE_NAME;
   }
-  
-  public boolean isSuportedToWebUpload(){
+
+  public boolean isSuportedToWebUpload() {
     return false;
   }
-  
-  public boolean uploadToWebSystem(StageTab tab, boolean removeAllStages){
+
+  public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) {
     return false;
   }
 
@@ -81,12 +84,12 @@ public abstract class IRegSite {
         server = new URL(url);
         connection = server.openConnection();
         is = connection.getInputStream();
-        
+
         int pos = url.lastIndexOf("/");
-        String newFileName = TMP_PHOTO_NAME + "/" +url.substring(pos+1);
-        
+        String newFileName = TMP_PHOTO_NAME + "/" + url.substring(pos + 1);
+
         byte[] buffer = new byte[1000];
-        targetFile = new File( newFileName );
+        targetFile = new File(newFileName);
         outStream = new FileOutputStream(targetFile);
         int count = 0;
         int m = 0;
@@ -96,10 +99,10 @@ public abstract class IRegSite {
         }
         fileName = newFileName;
       } catch (MalformedURLException e) {
-        MainForm._toLog("url error:"+url);
+        MainForm._toLog("url error:" + url);
         MainForm._toLog(e);
       } catch (IOException e) {
-        MainForm._toLog("url error:"+url);
+        MainForm._toLog("url error:" + url);
         MainForm._toLog(e);
       } finally {
         if (outStream != null) {
@@ -152,6 +155,33 @@ public abstract class IRegSite {
         } catch (Exception ein) {
         }
       }
+    }
+  }
+
+  public boolean isSameContent(String fileName1, String fileName2) {
+    try {
+      File f1 = new File(fileName1);
+      File f2 = new File(fileName2);
+      if (f1.length() != f2.length()) {
+        return false;
+      }
+      FileInputStream fis1 = new FileInputStream(f1);
+      FileInputStream fis2 = new FileInputStream(f2);
+      try {
+        int byte1;
+        while ((byte1 = fis1.read()) != -1) {
+          int byte2 = fis2.read();
+          if (byte1 != byte2) {
+            return false;
+          }
+        }
+      } finally {
+        fis1.close();
+        fis2.close();
+      }
+      return true;
+    } catch (Exception e) {
+      return false;
     }
   }
 }

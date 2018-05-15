@@ -107,7 +107,9 @@ public class DataBaseStructure {
     new DBAddonStructure(3.7, "ALTER TABLE VS_RACE_LAP ADD REG_ID INTEGER NOT NULL DEFAULT 0;"),
     new DBAddonStructure(3.7, "ALTER TABLE VS_STAGE ADD USE_REG_ID_FOR_LAP INTEGR NOT NULL DEFAULT 0;"),
     
-    new DBAddonStructure(3.8, "ALTER TABLE VS_STAGE_GROUPS ADD GROUP_TYPE INTEGER NOT NULL DEFAULT 0;"),      
+    new DBAddonStructure(3.8, "ALTER TABLE VS_STAGE_GROUPS ADD GROUP_TYPE INTEGER NOT NULL DEFAULT 0;"),     
+    
+    new DBAddonStructure(3.9, "ALTER TABLE VS_RACE ADD AUTO_WEB_UPDATE INTEGER NOT NULL DEFAULT 0;"),  
   };
 
   public static class DBAddonStructure {
