@@ -82,7 +82,7 @@ public class VSTimeConnector {
   }
 
   public Map<Integer, VS_EchoTrans> transpondersIsAlive = new HashMap<Integer, VS_EchoTrans>();
-  long lastPingTime = 0;
+  public long lastPingTime = 0;
 
   public void clearTransponderSearchQueue() {
     transpondersIsAlive.clear();

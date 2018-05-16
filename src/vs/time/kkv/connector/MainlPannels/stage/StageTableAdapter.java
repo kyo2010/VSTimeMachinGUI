@@ -68,7 +68,7 @@ import static vs.time.kkv.models.VS_STAGE_GROUP.GROUP_TIME_COMPARATOR;
  */
 public class StageTableAdapter extends AbstractTableModel implements TableCellRenderer {
 
-  private List<StageTableData> rows;
+  public List<StageTableData> rows = null;
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
 

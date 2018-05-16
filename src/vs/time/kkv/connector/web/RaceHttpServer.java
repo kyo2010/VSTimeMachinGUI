@@ -23,6 +23,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -73,7 +74,8 @@ public class RaceHttpServer  implements  Runnable {
   public void run() {
     try {      
       server = new Server(port); 
-      ServletContextHandler handler = new ServletContextHandler(server, "/");    
+      ServletContextHandler handler = new ServletContextHandler(server, "/");   
+      handler.setSessionHandler(new SessionHandler());
       
       /*ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
       context.setClassLoader(jspClassLoader);*/

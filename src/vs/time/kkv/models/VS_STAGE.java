@@ -42,6 +42,7 @@ public class VS_STAGE {
   public int PILOTS_FOR_NEXT_ROUND = 3;
   public String REP_COLS = "";
   public int USE_REG_ID_FOR_LAP = 1;
+  public StageTab tab = null;
 
   public VS_RACE race = null;
 

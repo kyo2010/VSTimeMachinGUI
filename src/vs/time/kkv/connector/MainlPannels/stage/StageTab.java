@@ -165,9 +165,9 @@ public class StageTab extends javax.swing.JPanel {
     }
   });
 
-  public int checkerCycle = 0;  
+  public int checkerCycle = 0;
   boolean pleaseMakeYelowPilot = false;
-  Timer checkerTimer = new Timer(200, new ActionListener() {
+  public Timer checkerTimer = new Timer(200, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -181,10 +181,10 @@ public class StageTab extends javax.swing.JPanel {
         try {
           Thread.sleep(50);
         } catch (Exception ein) {
-        }        
+        }
       } catch (Exception ein) {
       }
-      if (checkingGrpup!=null && checkingGrpup.users!=null){
+      if (checkingGrpup != null && checkingGrpup.users != null) {
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
           user.RECEIVED_LAPS = false;
         }
@@ -277,7 +277,9 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
       // Ceck 2.5 secs minimum - fol lap 
-      if (checkerCycle * timer.getInitialDelay()<2500) all_ok = false;
+      if (checkerCycle * timer.getInitialDelay() < 2500) {
+        all_ok = false;
+      }
       if (checkerCycle * timer.getInitialDelay() > 1000 * 300 || all_ok) {
         timer.stop();
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
@@ -463,215 +465,24 @@ public class StageTab extends javax.swing.JPanel {
            * * INAVITATION
            */
           if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
-            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
-              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
-              return;
-            }            
-            List<String> pilots = new ArrayList<String>();
-            if (td != null && td.group != null && td.group.users != null) {
-              mainForm.lastInvateGroup = td.group;
-              for (VS_STAGE_GROUPS user : td.group.users) {
-                VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
-                String pilot = user.PILOT;
-                if (reg != null) {
-                  pilot = reg.FIRST_NAME + " " + reg.SECOND_NAME;
-                }
-                if (pilot.trim().equals("")) {
-                  pilot = user.PILOT;
-                }
-                pilots.add(pilot);
-                user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
-              }
-              mainForm.invateGroup = td.group;
-              mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
-            }
-            try {
-              if (mainForm.vsTimeConnector != null && mainForm.vsTimeConnector.connected) {
-                mainForm.vsTimeConnector.setTime();
-              }
-            } catch (Exception ein) {
-            }
+            invateAction(td.group.GROUP_NUM, true);
           }
 
           if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach and Check and Ligting
-
             if (checkerTimer.isRunning()) {
               //checkerTimer.stop();
               stopSearch();
               return;
             }
-
-            if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
-              JOptionPane.showMessageDialog(StageTab.this, "Transponder hub device is not connected.\nThis function is not been activated.", "Information", JOptionPane.INFORMATION_MESSAGE);
-              return;
-            }
-
-            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
-              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
-              return;
-            }
-
-            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().findTransponders(td.group.GROUP_NUM));
-            mainForm.vsTimeConnector.clearTransponderSearchQueue();
-            checkingGrpup = td.group;
-            mainForm.lastCheckingGrpup = checkingGrpup;
-            for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-              user.CHECK_FOR_RACE = 2;
-              user.FIRST_LAP = 0;
-              user.RECEIVED_LAPS = false;
-              user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
-              try {
-                user.registration = null;
-                user.loadRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
-                user.VS_PRIMARY_TRANS = user.registration.VS_TRANS1;
-              } catch (Exception ein) {
-              }
-            }
-            pleasuUpdateTable = true;
-            pleaseMakeYelowPilot = true;
-            checkerCycle = 0;
-            checkerTimer.start();
+            startSearchAction(td.group.GROUP_NUM, true);
           }
           if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) { // Start Race
-            if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
-              JOptionPane.showMessageDialog(mainForm, "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
-              return;
-            }
-
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
               stopRace();
               //timerCaption.setVisible(false);              
             } else {
-
-              try {
-                if (VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1) {
-                  if (mainForm.lastInvateGroup == null || mainForm.lastInvateGroup.stage.ID != td.group.stage.ID
-                          || mainForm.lastInvateGroup.GROUP_INDEX != td.group.GROUP_INDEX) {
-                    JOptionPane.showMessageDialog(mainForm, "Please Invate the Group " + td.group.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                  }
-                }
-              } catch (Exception ein) {
-              }
-
-              if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
-                int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to re-flight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                } else {
-                  return;
-                }
-              }
-
-              if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
-                int res = JOptionPane.showConfirmDialog(StageTab.this, "Transponder hub device is not connected.\nDo you like to start?", "Information", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                } else {
-                  return;
-                }
-              }
-
-              mainForm.setColorForGate();
-
-              final boolean useSpeach = true;
-              if (td != null && td.isGrpup == true) {
-                if (stage.IS_LOCK == 1) {
-                  return;
-                }
-                // We need to check : Run Race Group = Invate RaceGroup
-                //mainForm.invateGroup = null;
-                td.group.stageTab = StageTab.this;
-                for (VS_STAGE_GROUPS user : td.group.users) {
-                  user.FIRST_LAP = 0;
-                }
-                timerCaption.setText(getTimeIntervelForTimer(0));
-                timerCaption.setVisible(true);
-                infoWindowRunning = true;
-                InfoForm.init(mainForm, "!!!").setVisible(true);
-                /*mainForm.beep.palyAndWait("Group "+td.group.GROUP_NUM+" is ready");
-                try{
-                  wait(1000);
-                }catch(Exception ect){}*/
-                
-                mainForm.beep.palyAndWait("attention");
-                /*InfoForm.init(mainForm, "3").setVisible(true);
-                //if (useSpeach) mainForm.speaker.speak("Three!");                
-                mainForm.beep.paly("three");
-                Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
-                  public void actionPerformed(ActionEvent e) {
-                    InfoForm.init(mainForm, "2").setVisible(true);
-                    //if (useSpeach) mainForm.speaker.speak("Two!");
-                    mainForm.beep.paly("two");
-                    Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
-                      public void actionPerformed(ActionEvent e) {
-                        InfoForm.init(mainForm, "1").setVisible(true);
-                        //if (useSpeach) mainForm.speaker.speak("One!");                        
-                        mainForm.beep.paly("one");
-                        int rnd = (int) (Math.random() * 3000);
-                        Timer t3 = new Timer(1000 + rnd, new ActionListener() {      // Timer 4 seconds
-                          public void actionPerformed(ActionEvent e) {
-                            InfoForm.init(mainForm, "Go!").setVisible(true);
-                            mainForm.beep.paly("beep");
-                            //if (useSpeach) mainForm.speaker.speak("Go!");
-                            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-                            raceTimer.start();
-                            jTree.updateUI();
-                            Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
-                              public void actionPerformed(ActionEvent e) {
-                                InfoForm.init(mainForm, "").setVisible(false);
-                                infoWindowRunning = false;
-                              }
-                            });
-                            t4.setRepeats(false);
-                            t4.start();
-                          }
-                        });
-                        t3.setRepeats(false);
-                        t3.start();
-                      }
-                    });
-                    t2.setRepeats(false);
-                    t2.start();
-                  }
-                });
-                t1.setRepeats(false);
-                t1.start();*/
-                mainForm.activeGroup = td.group;                   
-
-                int rnd = (int) (Math.random() * 3000);
-                Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
-                  public void actionPerformed(ActionEvent e) {
-                    InfoForm.init(mainForm, "Go!").setVisible(true);
-                    mainForm.beep.paly("beep");
-                    //if (useSpeach) mainForm.speaker.speak("Go!");
-                    mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-                    try{
-                      if (mainForm.vsTimeConnector!=null){
-                        mainForm.vsTimeConnector.rfidUnlock();
-                      }
-                    }catch(Exception ein){} 
-                    raceTimer.start();
-                    jTree.updateUI();
-                    Timer t4 = new Timer(1500, new ActionListener() {      // Timer 4 seconds
-                      public void actionPerformed(ActionEvent e) {
-                        InfoForm.init(mainForm, "").setVisible(false);
-                        infoWindowRunning = false;
-                        try{
-                          if (mainForm.vsTimeConnector!=null){
-                            mainForm.vsTimeConnector.rfidUnlock();
-                            }
-                        }catch(Exception ein){}                     
-                      }
-                    });
-                    t4.setRepeats(false);
-                    t4.start();
-                  }
-                });
-                t3.setRepeats(false);
-                t3.start();
-
-              }
+              startRaceAction(td.group.GROUP_NUM, true);
             }
-            source.updateUI();
           }
         }
       }
@@ -1613,7 +1424,7 @@ public class StageTab extends javax.swing.JPanel {
         return;
       }
       if (site.isSuportedToWebUpload()) {
-        site.uploadToWebSystem(null, this, false,true);
+        site.uploadToWebSystem(null, this, false, true);
       } else {
         JOptionPane.showMessageDialog(null, "Update race data is not supported for site :" + site.REG_SITE_NAME);
       }
@@ -2126,6 +1937,17 @@ public class StageTab extends javax.swing.JPanel {
     }
   }
 
+  public void preapreTimeMachineToRace() {
+    try {
+      if (mainForm.vsTimeConnector != null) {
+        mainForm.vsTimeConnector.rfidUnlock();
+        wait(150);
+        mainForm.vsTimeConnector.clear();
+      }
+    } catch (Exception ein) {
+    }
+  }
+
   public void addUserToGroup(VS_STAGE_GROUPS add_usr, List<VS_STAGE_GROUPS> users, int max_pilots_in_groups) {
     Map<Long, Integer> count_pilots_in_group = new HashMap();
     long max_group_index = 0;
@@ -2160,6 +1982,210 @@ public class StageTab extends javax.swing.JPanel {
       add_usr.NUM_IN_GROUP = 1;
       users.add(add_usr);
     }
+  }
+
+  public StageTableData getGroupByNum(long GROUP_NUM) {
+    if (stageTableAdapter.rows != null) {
+      for (StageTableData tr : stageTableAdapter.rows) {
+        if (tr.isGrpup && tr.group.GROUP_NUM == GROUP_NUM) {
+          return tr;
+        }
+      }
+    }
+    return null;
+  }
+
+  public String startRaceAction(long GROUP_NUM, boolean showDialog) {
+    String message = "";
+    if (mainForm.vsTimeConnector != null) {
+      long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
+      if (sec >= 5) {
+        message = "The VS Time Machine has not response for " + sec + " seconds.";
+        if (showDialog) {
+          int res = JOptionPane.showConfirmDialog(StageTab.this, message + "\nDo you want to start ?", "Please check ping command.", JOptionPane.YES_NO_OPTION);
+          if (res == JOptionPane.YES_OPTION) {
+          } else {
+            return message;
+          }
+        } else {
+          return message;
+        }
+      }
+    }
+
+    StageTableData td = getGroupByNum(GROUP_NUM);
+    if (td == null) {
+      return "Group is not found";
+    }
+
+    if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+      message = "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM;
+      if (showDialog) {
+        JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+      }
+      return message;
+    }
+    try {
+      if (VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1) {
+        if (mainForm.lastInvateGroup == null || mainForm.lastInvateGroup.stage.ID != td.group.stage.ID
+                || mainForm.lastInvateGroup.GROUP_INDEX != td.group.GROUP_INDEX) {
+          message = "Please Invate the Group " + td.group.GROUP_NUM;
+          if (showDialog) {
+            JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+          }
+          return message;
+        }
+      }
+    } catch (Exception ein) {
+    }
+    if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
+      if (showDialog) {
+        int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to re-flight Group" + td.group.GROUP_NUM + " ?", "Re-flight", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+        } else {
+          return "";
+        }
+      }
+    }
+    if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+      message = "Transponder hub device is not connected.";
+      if (showDialog) {
+        int res = JOptionPane.showConfirmDialog(StageTab.this, message + "\nDo you like to start?", "Information", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+        } else {
+          return message;
+        }
+      } else {
+        return message;
+      }
+    }
+    preapreTimeMachineToRace();
+    mainForm.setColorForGate();
+    if (td != null && td.isGrpup == true) {
+      if (stage.IS_LOCK == 1) {
+        return "";
+      }
+      // We need to check : Run Race Group = Invate RaceGroup
+      //mainForm.invateGroup = null;
+      td.group.stageTab = StageTab.this;
+      for (VS_STAGE_GROUPS user : td.group.users) {
+        user.FIRST_LAP = 0;
+      }
+      timerCaption.setText(getTimeIntervelForTimer(0));
+      timerCaption.setVisible(true);
+      InfoForm.init(mainForm, "!!!").setVisible(true);
+      mainForm.beep.palyAndWait("attention");
+      mainForm.activeGroup = td.group;
+      int rnd = (int) (Math.random() * 3000);
+      Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
+        public void actionPerformed(ActionEvent e) {
+          InfoForm.init(mainForm, "Go!").setVisible(true);
+          mainForm.beep.paly("beep");
+          //if (useSpeach) mainForm.speaker.speak("Go!");
+          mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+          preapreTimeMachineToRace();
+          raceTimer.start();
+          jTree.updateUI();
+          Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+            public void actionPerformed(ActionEvent e) {
+              InfoForm.init(mainForm, "").setVisible(false);
+            }
+          });
+          t4.setRepeats(false);
+          t4.start();
+        }
+      });
+      t3.setRepeats(false);
+      t3.start();
+    }
+    pleasuUpdateTable = true;
+    return message;
+  }
+
+  public String startSearchAction(long GROUP_NUM, boolean showDialog) {
+    String message = "";
+    if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+      message = "Transponder hub device is not connected.\nThis function is not been activated.";
+      if (showDialog) {
+        JOptionPane.showMessageDialog(StageTab.this, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+      }
+      return message;
+    }
+
+    StageTableData td = getGroupByNum(GROUP_NUM);
+    if (td == null) {
+      return "Group is not found";
+    }
+
+    if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+      message = "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM;
+      if (showDialog) {
+        JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+      }
+      return message;
+    }
+    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().findTransponders(td.group.GROUP_NUM));
+    mainForm.vsTimeConnector.clearTransponderSearchQueue();
+    checkingGrpup = td.group;
+    checkingGrpup.stageTab = this;
+    mainForm.lastCheckingGrpup = checkingGrpup;
+    for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+      user.CHECK_FOR_RACE = 2;
+      user.FIRST_LAP = 0;
+      user.RECEIVED_LAPS = false;
+      user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
+      try {
+        user.registration = null;
+        user.loadRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+        user.VS_PRIMARY_TRANS = user.registration.VS_TRANS1;
+      } catch (Exception ein) {
+      }
+    }
+    pleasuUpdateTable = true;
+    pleaseMakeYelowPilot = true; // to reset Lap Checker for pilot, the second row will be yellow
+    checkerCycle = 0;
+    checkerTimer.start();
+    return message;
+  }
+
+  public String invateAction(long GROUP_NUM, boolean showDialog) {
+    String message = "";
+    StageTableData td = getGroupByNum(GROUP_NUM);
+    if (td == null) {
+      return "Group is not found";
+    }
+    if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
+      message = "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM;
+      if (showDialog){
+        JOptionPane.showMessageDialog(mainForm,message , "Information", JOptionPane.INFORMATION_MESSAGE);
+      } 
+      return message;
+    }
+    List<String> pilots = new ArrayList<String>();
+    if (td != null && td.group != null && td.group.users != null) {
+      mainForm.lastInvateGroup = td.group;
+      for (VS_STAGE_GROUPS user : td.group.users) {
+        VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
+        String pilot = user.PILOT;
+        if (reg != null) {
+          pilot = reg.FIRST_NAME + " " + reg.SECOND_NAME;
+        }
+        if (pilot.trim().equals("")) {
+          pilot = user.PILOT;
+        }
+        pilots.add(pilot);
+        user.color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
+      }
+      mainForm.invateGroup = td.group;
+      mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
+    }
+    try {
+      if (mainForm.vsTimeConnector != null && mainForm.vsTimeConnector.connected) {
+        mainForm.vsTimeConnector.setTime();
+      }
+    } catch (Exception ein) {
+    }
+    return message;
   }
 
 }

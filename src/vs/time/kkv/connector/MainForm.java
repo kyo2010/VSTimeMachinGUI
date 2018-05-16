@@ -233,6 +233,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           stage.race = race;
           StageTab p = new StageTab(this, stage);
           stageTabs.add(p);
+          stage.tab = p;
           String prefix = "";
           if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {
             try {
