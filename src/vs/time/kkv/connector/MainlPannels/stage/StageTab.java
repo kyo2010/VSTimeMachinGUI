@@ -1444,23 +1444,16 @@ public class StageTab extends javax.swing.JPanel {
     // TODO : 
     checkerTimer.stop();
     InfoForm.init(mainForm, "", 100).setVisible(false);
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.vsTimeConnector != null) {      
+      preapreTimeMachineToRace();
       try {
-        mainForm.vsTimeConnector.rfidUnlock();
-        bStopChecking.setVisible(false);
-      } catch (Exception e) {
-      }
-      try {
-        Thread.sleep(300);
+        Thread.currentThread().sleep(300);
       } catch (Exception ein) {
       }
-      try {
-        mainForm.vsTimeConnector.rfidUnlock();
-        bStopChecking.setVisible(false);
-      } catch (Exception e) {
-      }
+      preapreTimeMachineToRace();
       InfoForm.init(mainForm, "", 100).setVisible(false);
     }
+    this.bStopChecking.setVisible(false);
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,1 +1,15 @@
-[2018-5-17 11:30:54] CLEAR OK;[2018-5-17 11:30:54] timesynchok:65535,1526545854855,98[2018-5-17 11:30:54] CLEAR OK;[2018-5-17 11:30:54] timesynchok:65535,1526545854856,128[2018-5-17 11:30:59] CLEAR OK;[2018-5-17 11:30:59] timesynchok:65535,1526545859494,87[2018-5-17 11:31:8] CLEAR OK;[2018-5-17 11:31:8] timesynchok:65535,1526545868140,75[2018-5-17 11:32:3] CLEAR OK;[2018-5-17 11:32:3] timesynchok:65535,1526545923097,86[2018-5-17 11:32:3] CLEAR OK;[2018-5-17 11:32:3] timesynchok:65535,1526545923112,180[2018-5-17 11:32:6] CLEAR OK;[2018-5-17 11:32:6] timesynchok:65535,1526545926458,69[2018-5-17 11:32:6] CLEAR OK;[2018-5-17 11:32:6] timesynchok:65535,1526545926491,148
+[2018-5-17 13:50:3] lap:3530,65535,1342,1526554166338,196,214[2018-5-17 13:50:27] CLEAR OK;[2018-5-17 13:50:27] timesynchok:65535,1526554227786,62[2018-5-17 13:50:28] lap:3531,65535,1342,1526554227787,196,9[2018-5-17 13:50:28] null java.lang.NullPointerException
+	at vs.time.kkv.connector.MainForm.receiveData(MainForm.java:1254)
+	at vs.time.kkv.connector.connection.wan.ConnectionSocket.run(ConnectionSocket.java:137)
+[2018-5-17 13:50:28] CLEAR OK;[2018-5-17 13:50:28] timesynchok:65535,1526554228294,233[2018-5-17 13:50:28] timesynchok:65535,1526554228496,132[2018-5-17 13:50:29] lap:3532,65535,1342,1526554228295,196,180[2018-5-17 13:50:29] null java.lang.NullPointerException
+	at vs.time.kkv.connector.MainForm.receiveData(MainForm.java:1254)
+	at vs.time.kkv.connector.connection.wan.ConnectionSocket.run(ConnectionSocket.java:137)
+[2018-5-17 13:50:44] timesynchok:65535,1526554244051,90[2018-5-17 13:50:44] lap:3533,65535,1342,1526554243851,196,87[2018-5-17 13:50:44] null java.lang.NullPointerException
+	at vs.time.kkv.connector.MainForm.receiveData(MainForm.java:1254)
+	at vs.time.kkv.connector.connection.wan.ConnectionSocket.run(ConnectionSocket.java:137)
+[2018-5-17 13:50:44] timesynchok:65535,1526554244555,14[2018-5-17 13:50:44] lap:3534,65535,1342,1526554244354,196,129[2018-5-17 13:50:44] null java.lang.NullPointerException
+	at vs.time.kkv.connector.MainForm.receiveData(MainForm.java:1254)
+	at vs.time.kkv.connector.connection.wan.ConnectionSocket.run(ConnectionSocket.java:137)
+[2018-5-17 13:50:48] CLEAR OK;[2018-5-17 13:50:48] timesynchok:65535,1526554248846,42[2018-5-17 13:50:49] timesynchok:65535,1526554249250,214[2018-5-17 13:50:49] CLEAR OK;[2018-5-17 13:50:49] timesynchok:65535,1526554249560,249[2018-5-17 13:50:49] lap:3536,65535,1342,1526554249360,196,151[2018-5-17 13:50:49] null java.lang.NullPointerException
+	at vs.time.kkv.connector.MainForm.receiveData(MainForm.java:1254)
+	at vs.time.kkv.connector.connection.wan.ConnectionSocket.run(ConnectionSocket.java:137)
