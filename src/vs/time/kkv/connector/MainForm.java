@@ -38,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -55,6 +56,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -519,7 +521,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     mSystemOptions = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
-    mConsole = new javax.swing.JMenuItem();
+    mConsole = new javax.swing.JMenuItem(){
+      @Override
+      public KeyStroke getAccelerator()
+      {
+        return KeyStroke.getKeyStroke(KeyEvent.VK_C, 0);
+      }
+    };
     jMenu1 = new javax.swing.JMenu();
     menuWLANSetting = new javax.swing.JMenuItem();
     menuConnect = new javax.swing.JMenuItem();

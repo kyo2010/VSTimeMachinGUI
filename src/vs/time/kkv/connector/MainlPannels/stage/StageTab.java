@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -167,7 +168,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public int checkerCycle = 0;
   boolean pleaseMakeYelowPilot = false;
-  public Timer checkerTimer = new Timer(200, new ActionListener() {
+  public Timer checkerTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -179,7 +180,8 @@ public class StageTab extends javax.swing.JPanel {
       try {
         mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
         try {
-          Thread.sleep(50);
+          //Thread.sleep(500);
+          Thread.currentThread().sleep(50);
         } catch (Exception ein) {
         }
       } catch (Exception ein) {
@@ -198,7 +200,8 @@ public class StageTab extends javax.swing.JPanel {
         } catch (Exception ein) {
         }
         try {
-          Thread.sleep(150);
+          //Thread.sleep(150);
+          Thread.currentThread().sleep(150);
         } catch (Exception ein) {
         }
         try {
@@ -223,13 +226,14 @@ public class StageTab extends javax.swing.JPanel {
         if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
-            List<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
+            Collection<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
             VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
             for (Integer transID : userTrans) {
               mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
               //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
               try {
-                Thread.sleep(150);
+                //Thread.sleep(150);
+                Thread.currentThread().sleep(150);
               } catch (Exception ein) {
               }
             }
@@ -250,7 +254,7 @@ public class StageTab extends javax.swing.JPanel {
           //}                                     
         }
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-          List<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID);
+          Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID);
           for (Integer transID : userTrans) {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
               if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
@@ -1941,8 +1945,8 @@ public class StageTab extends javax.swing.JPanel {
     try {
       if (mainForm.vsTimeConnector != null) {
         mainForm.vsTimeConnector.rfidUnlock();
-        wait(150);
-        mainForm.vsTimeConnector.clear();
+        Thread.currentThread().sleep(200);
+        mainForm.vsTimeConnector.setTime();
       }
     } catch (Exception ein) {
     }
@@ -2154,6 +2158,7 @@ public class StageTab extends javax.swing.JPanel {
     if (td == null) {
       return "Group is not found";
     }
+    preapreTimeMachineToRace();
     if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
       message = "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM;
       if (showDialog){

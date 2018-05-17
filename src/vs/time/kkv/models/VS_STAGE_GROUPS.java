@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 
 public class VS_STAGE_GROUPS implements Transferable {
@@ -138,9 +141,10 @@ public class VS_STAGE_GROUPS implements Transferable {
     }
   }
   
-  public List<Integer> getUserTransponders(Connection conn, long raceID){
+  public Collection<Integer> getUserTransponders(Connection conn, long raceID){
     loadRegistration(conn, raceID);
-    List<Integer> trans = new ArrayList<>();
+    Set<Integer> trans = new TreeSet<>();
+    //List<Integer> trans = new ArrayList<>();
     trans.add(VS_PRIMARY_TRANS);
     if (registration!=null){
       if (registration.VS_TRANS1!=0 && registration.VS_TRANS1!=-1)

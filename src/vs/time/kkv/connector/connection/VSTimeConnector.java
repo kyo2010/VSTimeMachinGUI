@@ -180,7 +180,7 @@ public class VSTimeConnector {
         }  
         
         
-        try {
+        /*try {
           sleep(200);
         } catch (Exception e) {
         }
@@ -188,7 +188,7 @@ public class VSTimeConnector {
         try {
           sleep(300);
         } catch (Exception e) {
-        }
+        }*/
         //conector.setSensitivityMax();
         //try {
         //  sleep(300);

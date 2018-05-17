@@ -74,6 +74,9 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mConsoleActionPerformed"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JMenuItem(){&#xd;&#xa;  @Override&#xd;&#xa;  public KeyStroke getAccelerator()&#xd;&#xa;  {&#xd;&#xa;    return KeyStroke.getKeyStroke(KeyEvent.VK_C, 0);&#xd;&#xa;  }&#xd;&#xa;};"/>
+              </AuxValues>
             </MenuItem>
           </SubComponents>
         </Menu>
