@@ -457,19 +457,20 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (results.size() < 40) {
           SCORE = results.size();
         }
+        int MAX_SCORE = SCORE;
 
         for (VS_STAGE_GROUPS pilot : results) {
           if (SCORE > 0) {
             pilot.SCORE = SCORE;
           }
           if (pilot.NUM_IN_GROUP == 1) {
-            pilot.SCORE += 8;
+            pilot.SCORE += Math.round(MAX_SCORE/5);
           }
           if (pilot.NUM_IN_GROUP == 2) {
-            pilot.SCORE += 5;
+            pilot.SCORE += Math.round(MAX_SCORE/8);
           }
           if (pilot.NUM_IN_GROUP == 3) {
-            pilot.SCORE += 3;
+            pilot.SCORE += Math.round(MAX_SCORE/13);
           }
           SCORE--;
           VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
