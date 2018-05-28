@@ -280,6 +280,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } else {
       jmAddStageToRace.setVisible(false);
     }
+    if (activeRace!=null){
+      lap_log.writeFile("---==  Set Active Race  ==---  ;"+activeRace.RACE_NAME+" ["+activeRace.RACE_ID+"]");      
+    }
   }
 
   boolean tabListenerEnabled = false;
@@ -389,6 +392,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     autoUploadToWebTimer.start();
     lap_log.writeFile("---==  Progam is loaded  ==--- ");      
+    if (activeRace!=null){
+      lap_log.writeFile("---==  Active Race  ==---  ;"+activeRace.RACE_NAME+" ["+activeRace.RACE_ID+"]");      
+    }
   }
 
   // Autouploader Timer to web-site - One time per minute
