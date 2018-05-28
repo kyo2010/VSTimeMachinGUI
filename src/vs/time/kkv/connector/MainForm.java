@@ -204,6 +204,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int lastTranponderID = -1;
   public RaceHttpServer httpServer = null;
   public String LOCAL_HOST = "localhost";
+  public int AUTO_UPDATER_TIME = 30; // 30 sekund
 
   public List<StageTab> stageTabs = new ArrayList<StageTab>();
 
@@ -386,12 +387,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       toLog(e);
       //e.printStackTrace();
     }
-
     autoUploadToWebTimer.start();
+    lap_log.writeFile("---==  Progam is loaded  ==--- ");      
   }
 
   // Autouploader Timer to web-site - One time per minute
-  Timer autoUploadToWebTimer = new Timer(3*1000, new ActionListener() {
+  Timer autoUploadToWebTimer = new Timer(AUTO_UPDATER_TIME*1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       try {
@@ -1190,11 +1191,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         VSTeamConsole.addText(data);
       }
     }
-
+    
     jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
+      if (lap!=null){
+        lap_log.writeFile("RCV;" + data);      
+      }
     }
     if (lap != null) {
 
@@ -1383,6 +1387,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VSTeamConsole.isOpened) {
       VSTeamConsole.addText(text);
     }
+    lap_log.writeFile("SND;" + text);    
   }
 
   public interface LastTransponderListener {

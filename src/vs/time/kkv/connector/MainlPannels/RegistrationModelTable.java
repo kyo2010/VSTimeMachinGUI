@@ -21,6 +21,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
@@ -177,7 +178,13 @@ public class RegistrationModelTable extends AbstractTableModel {
         }        
       }*/
       if (colInfo.ID == RWSQ_ACT) {
-        reg.IS_ACTIVE = (Boolean)value?1:0;
+        if (reg.IS_ACTIVE==1){
+          int res = JOptionPane.showConfirmDialog(regForm, "Do you like to delete pilot '"+reg.getFullUserName()+"' ?", "Information", JOptionPane.YES_NO_OPTION);
+          if (res == JOptionPane.NO_OPTION) {
+            return;
+          }        
+        }
+        reg.IS_ACTIVE = (Boolean)value?1:0;        
         try {
           reg.dbControl.update(regForm.mainForm.con, reg);
           //UserList.init(mainForm).refresh();

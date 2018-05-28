@@ -56,9 +56,9 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jcbPilots" min="-2" pref="198" max="-2" attributes="0"/>
-                      <Component id="jcbChannel1" min="-2" pref="198" max="-2" attributes="0"/>
-                      <Component id="jcbGroups" min="-2" pref="198" max="-2" attributes="0"/>
+                      <Component id="jcbChannel1" max="32767" attributes="0"/>
+                      <Component id="jcbPilots" max="32767" attributes="0"/>
+                      <Component id="jcbGroups" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -140,7 +140,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bSave" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="312" max="32767" attributes="0"/>
                   <Component id="bCancel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

@@ -80,7 +80,7 @@ public class VS_REGISTRATION {
   }
   
   public String toString(){
-    return VS_USER_NAME;
+    return getFullUserName();
   } 
   
   public String getTransponders(){

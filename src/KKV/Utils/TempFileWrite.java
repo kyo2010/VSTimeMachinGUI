@@ -41,7 +41,7 @@ public class TempFileWrite {
     new File(new File(fileName).getParent()).mkdirs();
     try {
       this.fileName = fileName;
-      fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+      fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,true)));
     } catch (Exception e) {
       System.out.println("" + e);
     }
@@ -55,9 +55,9 @@ public class TempFileWrite {
     try {
       this.fileName = fileName;
       if (codePage!=null)
-        fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), codePage));
+        fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,true), codePage));
       else 
-        fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+        fileOut = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,true)));
     } catch (Exception e) {
       System.out.println("" + e);
     }
@@ -82,14 +82,17 @@ public class TempFileWrite {
   
   public String getTime(){
     Date dt = Calendar.getInstance().getTime();
-    String res = (dt.getYear()+1900)+"-"+(dt.getMonth()+1)+"-"+dt.getDate()+" "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
+    String res = (dt.getYear()+1900)+"-"+Tools.padl(""+(dt.getMonth()+1),2,"0")+"-"+dt.getDate()+" "+Tools.padl(""+dt.getHours(),2,"0")+":"+Tools.padl(""+dt.getMinutes(),2,"0")+":"+Tools.padl(""+dt.getSeconds(),2,"0");
     return res;
   };
 
   public void writeFile(String writeStr, boolean flagTime) {
     try {
-      if (flagTime)
-        writeStr = "[" + getTime() + "] " + writeStr;
+      if (flagTime){
+        boolean addVK = true;
+        if (writeStr.indexOf("\n")>0){ addVK = false; }
+        writeStr = "[" + getTime() + "] " + writeStr+(addVK?"\r\n":"");
+      }  
         fileOut.write(writeStr);
         fileOut.flush();
     } catch (Exception e) {

@@ -1,0 +1,76 @@
+[2018-05-28 14:27:25] ---==  Progam is loaded  ==--- 
+[2018-05-28 14:27:32] SND;rfidunlock
+[2018-05-28 14:27:32] SND;settime:1527506852743
+[2018-05-28 14:27:32] SND;rfidunlock
+[2018-05-28 14:27:33] SND;settime:1527506853149
+[2018-05-28 14:27:33] ---==  Invate  ==---;Practica1 [200];Group;2
+[2018-05-28 14:27:33] SND;settime:1527506853364
+[2018-05-28 14:27:35] ---==  Start Search  ==---;Practica1 [200];Group;2
+[2018-05-28 14:27:35] SND;rfidlock:55
+[2018-05-28 14:27:35] SND;sendcolor:0,0
+[2018-05-28 14:27:36] SND;rfidlock:55
+[2018-05-28 14:27:36] SND;sendcolor:0,0
+[2018-05-28 14:27:36] SND;rfidlock:55
+[2018-05-28 14:27:36] SND;searchtrans:1454,98;
+[2018-05-28 14:27:37] SND;rfidlock:55
+[2018-05-28 14:27:37] SND;searchtrans:1396,102;
+[2018-05-28 14:27:37] SND;rfidlock:55
+[2018-05-28 14:27:37] SND;searchtrans:1342,97;
+[2018-05-28 14:27:37] SND;searchtrans:1362,97;
+[2018-05-28 14:27:38] SND;rfidlock:55
+[2018-05-28 14:27:38] SND;searchtrans:1414,100;
+[2018-05-28 14:27:38] SND;rfidlock:55
+[2018-05-28 14:27:38] SND;searchtrans:1454,98;
+[2018-05-28 14:27:39] SND;rfidlock:55
+[2018-05-28 14:27:39] SND;searchtrans:1396,102;
+[2018-05-28 14:27:39] SND;rfidlock:55
+[2018-05-28 14:27:39] SND;searchtrans:1342,97;
+[2018-05-28 14:27:39] SND;searchtrans:1362,97;
+[2018-05-28 14:27:40] SND;rfidlock:55
+[2018-05-28 14:27:40] SND;searchtrans:1414,100;
+[2018-05-28 14:27:40] SND;rfidlock:55
+[2018-05-28 14:27:40] SND;searchtrans:1454,98;
+[2018-05-28 14:27:41] SND;rfidlock:55
+[2018-05-28 14:27:41] SND;searchtrans:1396,102;
+[2018-05-28 14:27:41] SND;rfidlock:55
+[2018-05-28 14:27:41] SND;searchtrans:1342,97;
+[2018-05-28 14:27:41] SND;searchtrans:1362,97;
+[2018-05-28 14:27:42] SND;rfidlock:55
+[2018-05-28 14:27:42] SND;searchtrans:1414,100;
+[2018-05-28 14:27:42] SND;rfidlock:55
+[2018-05-28 14:27:42] SND;searchtrans:1454,98;
+[2018-05-28 14:27:43] SND;rfidlock:55
+[2018-05-28 14:27:43] SND;searchtrans:1396,102;
+[2018-05-28 14:27:43] SND;rfidlock:55
+[2018-05-28 14:27:43] SND;searchtrans:1342,97;
+[2018-05-28 14:27:43] SND;searchtrans:1362,97;
+[2018-05-28 14:27:44] SND;rfidlock:55
+[2018-05-28 14:27:44] SND;searchtrans:1414,100;
+[2018-05-28 14:27:44] SND;rfidlock:55
+[2018-05-28 14:27:44] SND;searchtrans:1454,98;
+[2018-05-28 14:27:45] SND;rfidlock:55
+[2018-05-28 14:27:45] SND;searchtrans:1396,102;
+[2018-05-28 14:27:45] SND;rfidlock:55
+[2018-05-28 14:27:45] SND;searchtrans:1342,97;
+[2018-05-28 14:27:45] SND;searchtrans:1362,97;
+[2018-05-28 14:27:46] SND;rfidlock:55
+[2018-05-28 14:27:46] SND;searchtrans:1414,100;
+[2018-05-28 14:27:46] ---==  Stop Search  ==---
+[2018-05-28 14:27:46] SND;rfidunlock
+[2018-05-28 14:27:46] SND;settime:1527506866839
+[2018-05-28 14:27:47] SND;rfidunlock
+[2018-05-28 14:27:47] SND;settime:1527506867243
+[2018-05-28 14:27:47] SND;rfidunlock
+[2018-05-28 14:27:47] SND;settime:1527506867949
+[2018-05-28 14:27:48] SND;rfidunlock
+[2018-05-28 14:27:48] SND;settime:1527506868355
+[2018-05-28 14:27:53] SND;rfidunlock
+[2018-05-28 14:27:53] SND;settime:1527506873405
+[2018-05-28 14:27:53] SND;rfidunlock
+[2018-05-28 14:27:53] SND;settime:1527506873807
+[2018-05-28 14:27:54] ---==  Run Race  ==---;Practica1 [200];Group;2
+[2018-05-28 14:28:02] SND;rfidunlock
+[2018-05-28 14:28:02] SND;settime:1527506882971
+[2018-05-28 14:28:03] SND;rfidunlock
+[2018-05-28 14:28:03] SND;settime:1527506883376
+[2018-05-28 14:28:10] ---==  Stop Race  ==---;Practica1 [200];Group;2

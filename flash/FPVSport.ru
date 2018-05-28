@@ -1,6 +1,50 @@
  {
 "data":[
    {
+    "id" : "54",
+    "name" : "2018.08.17 Чемпионат Приволжского Федерального Округа  по дрон-рейсингу в классе F-3U ",
+    "date_event" : "17.08.2018",
+    "race_url" : "http://fpvsport.ru/race54",
+    "country" : "RUS",
+    "countryName" : "Россия",
+    "countryNameEN" : "Russian Federation",
+    "regionCode" : "77",
+    "region" : "г. Москва + МО",
+    "regionEN" : "Moscow + Moscow Region",
+    "pilots" : [
+       {
+        "id" : "25",
+        "osd_name" : "kiwiki",
+        "fname" : "Павел",
+        "lname" : "Дехтярь",
+        "transID" : "1342; 1362",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "118823",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
+       }
+    ]
+   }
+  ,{
+    "id" : "53",
+    "name" : "2018.08.17 Чемпионат Приволжского Федерального Округа  по дрон-рейсингу в классе F-3U ",
+    "date_event" : "17.08.2018",
+    "race_url" : "http://fpvsport.ru/race53",
+    "country" : "RUS",
+    "countryName" : "Россия",
+    "countryNameEN" : "Russian Federation",
+    "regionCode" : "77",
+    "region" : "г. Москва + МО",
+    "regionEN" : "Moscow + Moscow Region",
+    "pilots" : [
+    ]
+   }
+  ,{
     "id" : "47",
     "name" : "2018.08.16 ЧЕМПИОНАТ ПРИВОЛЖСКОГО ФЕДЕРАЛЬНОГО ОКРУГА F3U",
     "date_event" : "16.08.2018",
@@ -12,68 +56,6 @@
     "region" : "Оренбургская область",
     "regionEN" : "Orenburg region",
     "pilots" : [
-    ]
-   }
-  ,{
-    "id" : "46",
-    "name" : "2018.08.10 ЧЕМПИОНАТ СИБИРСКОГО ФЕДЕРАЛЬНОГО ОКРУГА F-3U",
-    "date_event" : "10.08.2018",
-    "race_url" : "http://fpvsport.ru/race46",
-    "country" : "RUS",
-    "countryName" : "Россия",
-    "countryNameEN" : "Russian Federation",
-    "regionCode" : "24",
-    "region" : "Красноярский край",
-    "regionEN" : "Krasnoyarsk region",
-    "pilots" : [
-       {
-        "id" : "73",
-        "osd_name" : "Maestro",
-        "fname" : "Алексей",
-        "lname" : "Соколов",
-        "transID" : "",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "",
-        "regionCode" : "24",
-        "region" : "Красноярский край",
-        "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-27-0505-04-01_______________.jpg"
-       }
-      ,{
-        "id" : "98",
-        "osd_name" : "h2cl@mail.ru",
-        "fname" : "Виталий",
-        "lname" : "Новиков",
-        "transID" : "1111",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "",
-        "regionCode" : "24",
-        "region" : "Красноярский край",
-        "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "0",
-        "PICTURE" : ""
-       }
-      ,{
-        "id" : "101",
-        "osd_name" : "CRASHCOOL ",
-        "fname" : "Евгений ",
-        "lname" : "Погодин ",
-        "transID" : "",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "",
-        "regionCode" : "24",
-        "region" : "Красноярский край",
-        "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "0",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-13-0909-05-37_CRASHCOOL.jpg"
-       }
     ]
    }
   ,{
@@ -149,8 +131,56 @@
         "regionCode" : "24",
         "region" : "Красноярский край",
         "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-13-0909-05-37_CRASHCOOL.jpg"
+       }
+      ,{
+        "id" : "73",
+        "osd_name" : "Maestro",
+        "fname" : "Алексей",
+        "lname" : "Соколов",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-27-0505-04-01_______________.jpg"
+       }
+      ,{
+        "id" : "74",
+        "osd_name" : "Alexandr_FPV",
+        "fname" : "Александр",
+        "lname" : "Ганин",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-27-0707-04-57_Ganin.JPG"
+       }
+      ,{
+        "id" : "98",
+        "osd_name" : "h2cl@mail.ru",
+        "fname" : "Виталий",
+        "lname" : "Новиков",
+        "transID" : "1111",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
        }
     ]
    }
@@ -311,22 +341,6 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-0909-03-35_BEZIK.jpg"
        }
       ,{
-        "id" : "2",
-        "osd_name" : "KKV",
-        "fname" : "Константин",
-        "lname" : "Кимлаев",
-        "transID" : "1322;1320;1364",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "123242",
-        "regionCode" : "77",
-        "region" : "г. Москва + МО",
-        "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
-       }
-      ,{
         "id" : "48",
         "osd_name" : "RAIN_FPV",
         "fname" : "Владимир",
@@ -389,6 +403,22 @@
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-23_RUBOT.jpg"
+       }
+      ,{
+        "id" : "2",
+        "osd_name" : "KKV",
+        "fname" : "Константин",
+        "lname" : "Кимлаев",
+        "transID" : "1322;1320;1364",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "123242",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
     ]
    }
@@ -674,7 +704,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "18",
@@ -883,22 +913,6 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-29-0909-03-35_BEZIK.jpg"
        }
       ,{
-        "id" : "2",
-        "osd_name" : "KKV",
-        "fname" : "Константин",
-        "lname" : "Кимлаев",
-        "transID" : "1322;1320;1364",
-        "country" : "RUS",
-        "countryName" : "Россия",
-        "countryNameEN" : "Russian Federation",
-        "FAI" : "123242",
-        "regionCode" : "77",
-        "region" : "г. Москва + МО",
-        "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
-       }
-      ,{
         "id" : "19",
         "osd_name" : "Gavrfpv",
         "fname" : "Гавриил",
@@ -994,6 +1008,22 @@
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-21-2020-04-44_orangefpv.jpg"
        }
+      ,{
+        "id" : "2",
+        "osd_name" : "KKV",
+        "fname" : "Константин",
+        "lname" : "Кимлаев",
+        "transID" : "1322;1320;1364",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "123242",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
+       }
     ]
    }
   ,{
@@ -1044,8 +1074,8 @@
    }
   ,{
     "id" : "24",
-    "name" : "2018.05.26 Открытый Кубок ДОСААФ России Южного административного округа г. Москвы по дрон-рейсингу в классе F-3U 26-27 Мая 2018 года.",
-    "date_event" : "26.05.2018",
+    "name" : "2018.05.27 Открытый Кубок Юго-западного административного округа города Москвы по дрон-рейсингу в классе F-3U",
+    "date_event" : "27.05.2018",
     "race_url" : "http://fpvsport.ru/race24",
     "country" : "RUS",
     "countryName" : "Россия",
@@ -1135,22 +1165,6 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/Tarantino_2018-04-09.jpg"
        }
       ,{
-        "id" : "19",
-        "osd_name" : "Gavrfpv",
-        "fname" : "Гавриил",
-        "lname" : "Щицын ",
-        "transID" : "1289",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
-        "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : ""
-       }
-      ,{
         "id" : "18",
         "osd_name" : "RUBOT",
         "fname" : "Роман",
@@ -1180,7 +1194,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "25",
@@ -1214,6 +1228,134 @@
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-21-2020-04-44_orangefpv.jpg"
        }
+      ,{
+        "id" : "87",
+        "osd_name" : "krleone",
+        "fname" : "Вячеслав",
+        "lname" : "Царев",
+        "transID" : "1414",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "124105",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-12-0909-05-12_krleone.jpg"
+       }
+      ,{
+        "id" : "104",
+        "osd_name" : "Gravic",
+        "fname" : "Александр",
+        "lname" : "Грабарев",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-21-1010-05-41_Gravic.jpg"
+       }
+      ,{
+        "id" : "49",
+        "osd_name" : "GURYCH",
+        "fname" : "Александр",
+        "lname" : "Гурычев",
+        "transID" : "1340",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "110393",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-09-1717-04-17_GURYCH.PNG"
+       }
+      ,{
+        "id" : "105",
+        "osd_name" : "Karasik",
+        "fname" : "Сергей",
+        "lname" : "Назаров",
+        "transID" : "1413",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "124427",
+        "regionCode" : "50",
+        "region" : "Московская Область",
+        "regionEN" : "Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-24-2020-05-53_Karasik.jpeg"
+       }
+      ,{
+        "id" : "106",
+        "osd_name" : "SLY FOX",
+        "fname" : "Артем",
+        "lname" : "Игнатов",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
+        "id" : "95",
+        "osd_name" : "Ermakov",
+        "fname" : "Илья",
+        "lname" : "Ермаков",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
+        "id" : "107",
+        "osd_name" : "@YPAN360",
+        "fname" : "Владимир",
+        "lname" : "Воронин",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
+        "id" : "7",
+        "osd_name" : "maloii",
+        "fname" : "Александр",
+        "lname" : "Сорокин",
+        "transID" : "1304",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
+       }
     ]
    }
   ,{
@@ -1228,6 +1370,52 @@
     "region" : "Ленинградская область",
     "regionEN" : "Leningrad region",
     "pilots" : [
+    ]
+   }
+  ,{
+    "id" : "52",
+    "name" : "2018.05.25 Гонка для теста VS TimeMachine",
+    "date_event" : "25.05.2018",
+    "race_url" : "http://fpvsport.ru/race52",
+    "country" : "RUS",
+    "countryName" : "Россия",
+    "countryNameEN" : "Russian Federation",
+    "regionCode" : "77",
+    "region" : "г. Москва + МО",
+    "regionEN" : "Moscow + Moscow Region",
+    "pilots" : [
+       {
+        "id" : "2",
+        "osd_name" : "KKV",
+        "fname" : "Константин",
+        "lname" : "Кимлаев",
+        "transID" : "1322;1320;1364",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "123242",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
+       }
+      ,{
+        "id" : "7",
+        "osd_name" : "maloii",
+        "fname" : "Александр",
+        "lname" : "Сорокин",
+        "transID" : "1304",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-26-1616-03-40_maloii.jpeg"
+       }
     ]
    }
   ,{
@@ -1480,7 +1668,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "100",
@@ -1650,7 +1838,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "96",
@@ -1966,7 +2154,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
     ]
    }
@@ -2508,15 +2696,15 @@
         "fname" : "Степан",
         "lname" : "Глухов",
         "transID" : "1273",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
         "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-16-2020-05-48_RUStepan.jpg"
        }
       ,{
         "id" : "19",
@@ -2674,7 +2862,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "23",
@@ -2920,15 +3108,15 @@
         "fname" : "Степан",
         "lname" : "Глухов",
         "transID" : "1273",
-        "country" : "Россия",
-        "countryName" : "none",
-        "countryNameEN" : "none",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
         "FAI" : "",
-        "regionCode" : "Москва",
-        "region" : "none",
-        "regionEN" : "none",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-24_RUStepan.jpg"
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-16-2020-05-48_RUStepan.jpg"
        }
       ,{
         "id" : "2",
@@ -2944,7 +3132,7 @@
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
         "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-04-11.jpg"
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/KKV_2018-05-19.jpg"
        }
       ,{
         "id" : "15",

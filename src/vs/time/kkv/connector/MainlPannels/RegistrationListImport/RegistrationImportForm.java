@@ -102,7 +102,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     jButOk.setEnabled(true);
     jeAutzCode.setText("");
     if (regTab.mainForm.activeRace.WEB_SYSTEM_SID != null && !regTab.mainForm.activeRace.WEB_SYSTEM_SID.equals("")) {
-      setAutoLoadEvent = regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION.trim();
+      setAutoLoadEvent = regTab.mainForm.activeRace.WEB_RACE_ID;
       jcbSites.setSelectedItem(regTab.mainForm.activeRace.WEB_SYSTEM_SID);
       siteSelected();
     }
@@ -441,12 +441,13 @@ public class RegistrationImportForm extends javax.swing.JFrame {
               if (regTab.mainForm.activeRace!=null){
                 regTab.mainForm.activeRace.WEB_RACE_ID = ""+race.RACE_ID;
                 regTab.mainForm.activeRace.WEB_SYSTEM_SID = site.REG_SITE_NAME;
-                regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = site.REG_SITE_NAME;
+                regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = ""+race.RACE_NAME;
                 regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 0;
                 if (automaticUpload.isSelected()){
                   regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 1;
                 }
                 VS_RACE.dbControl.update(regTab.mainForm.con, regTab.mainForm.activeRace);
+                break;
               }
             }
           }
@@ -478,7 +479,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
           int selIndex = 0;
           for (VS_RACE race : races) {
             list[index] = race.RACE_NAME.trim();
-            if (setAutoLoadEvent != null && setAutoLoadEvent.equalsIgnoreCase(race.RACE_NAME.trim())) {
+            if (setAutoLoadEvent != null && setAutoLoadEvent.equals(""+race.RACE_ID)) {
               selIndex = index;
             }
             index++;

@@ -429,7 +429,7 @@ public class FPVSport extends IRegSite {
       if (isSameContent(fileName,fileNameCashe)){
         pleaseUpdate = false;        
       }else{
-        System.out.println("Online "+fileName+" has been updated");      
+        System.out.println("Try to update '"+fileName+"' to "+REG_SITE_URL);      
       }
     }
 
