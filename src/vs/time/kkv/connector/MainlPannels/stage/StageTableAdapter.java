@@ -1130,7 +1130,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
                 label.setBackground(Color.GREEN);
               }
             }
-            if (column==1){
+            if (column==2){
+              /*
+              STAGE_COLUMN sc = null;
+        if (columnIndex < getColumns().size()) {
+          sc = getColumns().get(columnIndex);
+              
+              */
               if (td.pilot.RECEIVED_LAPS) {
                  label.setBackground(Color.GREEN);
               }else{

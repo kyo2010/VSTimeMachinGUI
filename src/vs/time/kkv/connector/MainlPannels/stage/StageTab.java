@@ -515,7 +515,7 @@ public class StageTab extends javax.swing.JPanel {
   }*/
   public void stopRace() {
     // To show Table result for TV
-    mainForm.lap_log.writeFile("---==  Stop Race  ==---;"+stage.CAPTION+" ["+stage.ID+"];Group;"+mainForm.activeGroup.GROUP_NUM);      
+    mainForm.lap_log.writeFile("---==  Stop Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + mainForm.activeGroup.GROUP_NUM);
     mainForm.invateGroup = null;
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
@@ -1446,7 +1446,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.lap_log.writeFile("---==  Stop Search  ==---");
     checkerTimer.stop();
     InfoForm.init(mainForm, "", 100).setVisible(false);
-    if (mainForm.vsTimeConnector != null) {      
+    if (mainForm.vsTimeConnector != null) {
       preapreTimeMachineToRace();
       try {
         Thread.currentThread().sleep(300);
@@ -1455,7 +1455,7 @@ public class StageTab extends javax.swing.JPanel {
       preapreTimeMachineToRace();
       InfoForm.init(mainForm, "", 100).setVisible(false);
     }
-    this.bStopChecking.setVisible(false);    
+    this.bStopChecking.setVisible(false);
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1790,6 +1790,11 @@ public class StageTab extends javax.swing.JPanel {
                 count_groups++;
               }
               int current_group = 1;
+
+              //int[] GROUP_ALG4 = new int[]{1, 4, 2, 3};
+              //int[] GROUP_ALG8 = new int[]{1, 8, 3, 6, 4, 5, 2, 7};                      
+              int[] GROUP_ALG = createGroupsAlg(count_groups);
+
               String[] channels = stage.CHANNELS.split(";");
               HashMap<Integer, HashMap<String, Integer>> usingChannels = new HashMap<Integer, HashMap<String, Integer>>();
               for (VS_STAGE_GROUPS usr : groups) {
@@ -1805,6 +1810,19 @@ public class StageTab extends javax.swing.JPanel {
                 usr.IS_RECALULATED = 0;
                 usr.NUM_IN_GROUP = count_man_in_group;
                 usr.GROUP_NUM = current_group;
+                try {
+                  if (GROUP_ALG != null) //usr.GROUP_NUM = GROUP_ALG.get(current_group - 1);
+                  {
+                    usr.GROUP_NUM = GROUP_ALG[current_group - 1];
+                  }
+                  /*if (count_groups == 4) {
+                    usr.GROUP_NUM = GROUP_ALG4[current_group - 1];
+                  }
+                  if (count_groups == 8) {
+                    usr.GROUP_NUM = GROUP_ALG8[current_group - 1];
+                  } */
+                } catch (Exception ein) {
+                }
                 usr.BEST_LAP = 0;
                 usr.LAPS = 0;
                 usr.RACE_TIME = 0;
@@ -1820,9 +1838,11 @@ public class StageTab extends javax.swing.JPanel {
                   count_man_in_group++;
                 }
               }
-              HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
+
+              //HashMap<Integer, HashMap<String, Integer>> checkChannelsAll = new HashMap<Integer, HashMap<String, Integer>>();
+              recalulateChannels(groups);
               for (VS_STAGE_GROUPS usr : groups) {
-                HashMap<String, Integer> checkChannels = checkChannelsAll.get((int) usr.GROUP_NUM);
+                /*HashMap<String, Integer> checkChannels = checkChannelsAll.get((int) usr.GROUP_NUM);
                 if (checkChannels == null) {
                   checkChannels = new HashMap<String, Integer>();
                   checkChannelsAll.put((int) usr.GROUP_NUM, checkChannels);
@@ -1840,7 +1860,7 @@ public class StageTab extends javax.swing.JPanel {
                       }
                     }
                   }
-                }
+                }*/
                 usr.IS_FINISHED = 0;
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
@@ -2077,7 +2097,7 @@ public class StageTab extends javax.swing.JPanel {
       if (stage.IS_LOCK == 1) {
         return "";
       }
-      mainForm.lap_log.writeFile("---==  Run Race  ==---;"+stage.CAPTION+" ["+stage.ID+"];Group;"+td.group.GROUP_NUM);      
+      mainForm.lap_log.writeFile("---==  Run Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       // We need to check : Run Race Group = Invate RaceGroup
       //mainForm.invateGroup = null;
       td.group.stageTab = StageTab.this;
@@ -2137,7 +2157,7 @@ public class StageTab extends javax.swing.JPanel {
       }
       return message;
     }
-    mainForm.lap_log.writeFile("---==  Start Search  ==---;"+stage.CAPTION+" ["+stage.ID+"];Group;"+td.group.GROUP_NUM);      
+    mainForm.lap_log.writeFile("---==  Start Search  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
     mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().findTransponders(td.group.GROUP_NUM));
     mainForm.vsTimeConnector.clearTransponderSearchQueue();
     checkingGrpup = td.group;
@@ -2171,14 +2191,14 @@ public class StageTab extends javax.swing.JPanel {
     preapreTimeMachineToRace();
     if (mainForm.activeGroup != null && mainForm.activeGroup != td.group) {
       message = "Please stop race. Group" + mainForm.activeGroup.GROUP_NUM;
-      if (showDialog){
-        JOptionPane.showMessageDialog(mainForm,message , "Information", JOptionPane.INFORMATION_MESSAGE);
-      } 
+      if (showDialog) {
+        JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+      }
       return message;
     }
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
-      mainForm.lap_log.writeFile("---==  Invate  ==---;"+stage.CAPTION+" ["+stage.ID+"];Group;"+td.group.GROUP_NUM);
+      mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {
         VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
@@ -2204,4 +2224,43 @@ public class StageTab extends javax.swing.JPanel {
     return message;
   }
 
+  public static int[] createGroupsAlg(int count_groups) {
+    int[] GROUP_ALG = null;
+    if (count_groups % 2 == 0) {
+      GROUP_ALG = new int[count_groups];
+      boolean flag_to_end = false;      
+      for (int i = 0; i < count_groups / 2; i++) {
+        if (!flag_to_end) {
+          //0 => 0,1        2 => 2,3
+          GROUP_ALG[i] = i + 1;
+          GROUP_ALG[i+1] = count_groups - i;
+        } else {
+          // 1 - last-1, last-2,  2=>    
+          GROUP_ALG[count_groups - (i) - 1] = i + 1;
+          GROUP_ALG[count_groups - (i)] = count_groups - i;
+        }
+        flag_to_end = !flag_to_end;
+      }
+    }
+    return GROUP_ALG;
+  }
+  
+  public static void printGroup(int[] groups){
+    System.out.print("Count group:"+groups.length+"   ");    
+    for (int i=0; i<groups.length/2; i++){
+      System.out.print( groups[i*2]+"-"+groups[i*2+1] +"   ");
+    }
+     System.out.println("");
+  }
+  
+  public static void main(String[] args){
+    printGroup(createGroupsAlg(2));
+    printGroup(createGroupsAlg(4));
+    printGroup(createGroupsAlg(6));
+    printGroup(createGroupsAlg(8));
+    printGroup(createGroupsAlg(10));
+    printGroup(createGroupsAlg(16));
+    printGroup(createGroupsAlg(32));
+    printGroup(createGroupsAlg(64));
+  }
 }

@@ -28,6 +28,22 @@
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-03-21_9BaochFf4tg.jpg"
        }
+      ,{
+        "id" : "45",
+        "osd_name" : "NiFkaa",
+        "fname" : "Кирилл",
+        "lname" : "Федукович",
+        "transID" : "1368",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "109470",
+        "regionCode" : "77",
+        "region" : "г. Москва + МО",
+        "regionEN" : "Moscow + Moscow Region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-06-1212-04-50_NiFkaa.jpg"
+       }
     ]
    }
   ,{
@@ -151,6 +167,22 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-27-0505-04-01_______________.jpg"
        }
       ,{
+        "id" : "98",
+        "osd_name" : "h2cl@mail.ru",
+        "fname" : "Виталий",
+        "lname" : "Новиков",
+        "transID" : "1111",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "24",
+        "region" : "Красноярский край",
+        "regionEN" : "Krasnoyarsk region",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
         "id" : "74",
         "osd_name" : "Alexandr_FPV",
         "fname" : "Александр",
@@ -167,11 +199,11 @@
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-04-27-0707-04-57_Ganin.JPG"
        }
       ,{
-        "id" : "98",
-        "osd_name" : "h2cl@mail.ru",
-        "fname" : "Виталий",
+        "id" : "108",
+        "osd_name" : "Nikitos",
+        "fname" : "Никита",
         "lname" : "Новиков",
-        "transID" : "1111",
+        "transID" : "",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -2293,7 +2325,7 @@
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/egor_garpunov_2018-05-11.jpg"
        }
       ,{
@@ -2703,7 +2735,7 @@
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-16-2020-05-48_RUStepan.jpg"
        }
       ,{
@@ -3115,7 +3147,7 @@
         "regionCode" : "77",
         "region" : "г. Москва + МО",
         "regionEN" : "Moscow + Moscow Region",
-        "PICTURE_OK" : "0",
+        "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-05-16-2020-05-48_RUStepan.jpg"
        }
       ,{
