@@ -69,6 +69,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     edJudge.setText(race.JUDGE);
     edSecretary.setText(race.SECRETARY);
     jtRaceName.setText(""+race.RACE_NAME);    
+    chPostponingStart.setSelected(race.POST_START==1);    
     if (race.PLEASE_IGNORE_FIRST_LAP==1){
       jcIgnoreFirstLap.setSelected(true);
     }else{
@@ -100,6 +101,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     jLabel6 = new javax.swing.JLabel();
     edJudge = new javax.swing.JTextField();
     edSecretary = new javax.swing.JTextField();
+    chPostponingStart = new javax.swing.JCheckBox();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -142,6 +144,10 @@ public class RaceControlForm extends javax.swing.JFrame {
 
     edSecretary.setText("jTextField2");
 
+    chPostponingStart.setText("Postponing Start");
+    chPostponingStart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    chPostponingStart.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -164,16 +170,20 @@ public class RaceControlForm extends javax.swing.JFrame {
               .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(jtLapsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(jtRaceName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
-          .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel5)
-              .addComponent(jLabel6))
-            .addGap(32, 32, 32)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(edSecretary, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(edJudge, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))))
-        .addContainerGap(17, Short.MAX_VALUE))
+          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+              .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(chPostponingStart))
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+              .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel5)
+                .addComponent(jLabel6))
+              .addGap(32, 32, 32)
+              .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(edSecretary, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(edJudge, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+        .addContainerGap(19, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +214,9 @@ public class RaceControlForm extends javax.swing.JFrame {
           .addComponent(jLabel6)
           .addComponent(edSecretary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jcIgnoreFirstLap)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jcIgnoreFirstLap)
+          .addComponent(chPostponingStart))
         .addGap(64, 64, 64))
     );
 
@@ -222,7 +234,7 @@ public class RaceControlForm extends javax.swing.JFrame {
       }
     });
 
-    butSelect.setText("Select");
+    butSelect.setText("Select w/o Save");
     butSelect.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butSelectActionPerformed(evt);
@@ -236,7 +248,7 @@ public class RaceControlForm extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(bSave)
-        .addGap(65, 65, 65)
+        .addGap(32, 32, 32)
         .addComponent(butSelect)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
@@ -289,6 +301,7 @@ public class RaceControlForm extends javax.swing.JFrame {
       
       race.JUDGE = edJudge.getText();
       race.SECRETARY = edSecretary.getText();
+      race.POST_START = chPostponingStart.isSelected()?1:0;
       
       race.MAX_RACE_TIME = 0;
       try{
@@ -363,6 +376,7 @@ public class RaceControlForm extends javax.swing.JFrame {
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
   private javax.swing.JButton butSelect;
+  private javax.swing.JCheckBox chPostponingStart;
   private javax.swing.JTextField edJudge;
   private javax.swing.JTextField edSecretary;
   private javax.swing.JLabel jLSeconds;

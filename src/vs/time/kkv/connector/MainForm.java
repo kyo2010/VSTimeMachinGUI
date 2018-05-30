@@ -232,8 +232,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         boolean isFound = false;
         StageTab stage1 = null;
         stageTabs.clear();
-        for (VS_STAGE stage : stages) {
-          stage.race = race;
+        for (VS_STAGE stage : stages) {          
           StageTab p = new StageTab(this, stage);
           stageTabs.add(p);
           stage.tab = p;

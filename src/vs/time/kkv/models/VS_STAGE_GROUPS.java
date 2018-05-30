@@ -46,6 +46,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long BEST_LAP;
   public long FIRST_LAP;
   public long RACE_TIME;
+  public long START_TIME = 0; // for postponing start
   public int IS_RECALULATED = 0;
   public int IS_FINISHED = 0;
   public int PILOT_TYPE = 0;

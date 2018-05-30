@@ -624,7 +624,7 @@ public class StageTab extends javax.swing.JPanel {
       pool.addChild(new StringVar("FIX_ROWS", "4"));
 
       out.applayPoolToViewFile(sheet, pool);
-      out.addToDataFile(sheet, "info:$$Race : " + stage.race.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
+      out.addToDataFile(sheet, "info:$$Race : " + mainForm.activeRace.RACE_NAME + " as of " + jd.getDDMMYYYY("-") + "$$");
       out.addToDataFile(sheet, "info:$$Stage : " + stage.CAPTION + "$$");
       out.addToDataFile(sheet, "info:");
 
@@ -1109,12 +1109,12 @@ public class StageTab extends javax.swing.JPanel {
 
       if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
         pool.addChild(new StringVar("FIX_ROWS", "5"));
-        out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("Confirm by") + "$$::$$" + mainForm.getLocaleString("Race") + " : " + stage.race.RACE_NAME + "$$:");
+        out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("Confirm by") + "$$::$$" + mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "$$:");
         out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("General Judge") + "$$::$$" + mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + "$$:");
-        out.addToDataFile(sheet, "info2::$$" + stage.race.JUDGE + "$$::$$" + mainForm.getLocaleString("Race date") + " : " + stage.race.RACE_DATE.getDateAsDDMMYYYY("-") + "$$:");
+        out.addToDataFile(sheet, "info2::$$" + mainForm.activeRace.JUDGE + "$$::$$" + mainForm.getLocaleString("Race date") + " : " + mainForm.activeRace.RACE_DATE.getDateAsDDMMYYYY("-") + "$$:");
       } else {
         pool.addChild(new StringVar("FIX_ROWS", "4"));
-        out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("Race") + " : " + stage.race.RACE_NAME + "$$:");
+        out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "$$:");
         out.addToDataFile(sheet, "info:$$" + mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + "$$:");
       }
 
@@ -1150,7 +1150,7 @@ public class StageTab extends javax.swing.JPanel {
       if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
         out.addToDataFile(sheet, "info:");
         out.addToDataFile(sheet, "info:");
-        out.addToDataFile(sheet, "info3:$$" + mainForm.getLocaleString("Secretary") + "$$::$$" + stage.race.SECRETARY + "$$:");
+        out.addToDataFile(sheet, "info3:$$" + mainForm.getLocaleString("Secretary") + "$$::$$" + mainForm.activeRace.SECRETARY + "$$:");
       }
 
       out.closeDataFile(sheet);

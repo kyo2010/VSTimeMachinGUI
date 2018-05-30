@@ -44,7 +44,7 @@ public class VS_STAGE {
   public int USE_REG_ID_FOR_LAP = 1;
   public StageTab tab = null;
 
-  public VS_RACE race = null;
+  //public VS_RACE race = null;
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps_check_reg_id = null;
 
@@ -290,7 +290,14 @@ public class VS_STAGE {
       lap.TIME_FROM_START = time;
       VS_RACE_LAP last_lap = getLastLap(mainForm, lap.GROUP_NUM, lap.TRANSPONDER_ID, usr.REG_ID, mainForm.raceTime, usr);
       lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
-      lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
+      
+      VS_RACE race = mainForm.activeRace;
+      
+      if (race != null && race.POST_START==1 && usr.START_TIME!=0 && lap.LAP==1){
+        lap.TRANSPONDER_TIME = time - usr.START_TIME;        
+      }else{
+        lap.TRANSPONDER_TIME = last_lap == null ? (time - mainForm.raceTime) : (time - last_lap.TIME_FROM_START);
+      }
 
       if (lap.LAP == 1) {
         usr.RACE_TIME = 0;
@@ -299,9 +306,13 @@ public class VS_STAGE {
       }
 
       long lap_time = lap.TRANSPONDER_TIME;
+      
+      if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && lap.LAP == 1 && race.POST_START==1 && usr.START_TIME<mainForm.raceTime) {
+        usr.START_TIME = time;
+      }
 
       if (race != null && race.PLEASE_IGNORE_FIRST_LAP == 1 && usr.FIRST_LAP != 0 && lap.LAP == 1) {
-        lap_time = time - usr.FIRST_LAP;
+        lap_time = time - usr.FIRST_LAP;        
       }
 
       VS_RACE_LAP lap_for_sound = null;

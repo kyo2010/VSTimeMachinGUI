@@ -69,20 +69,26 @@
                               <Component id="jtRaceName" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="jcIgnoreFirstLap" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jcIgnoreFirstLap" min="-2" pref="193" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="chPostponingStart" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="edSecretary" min="-2" pref="211" max="-2" attributes="0"/>
-                              <Component id="edJudge" min="-2" pref="211" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="edSecretary" min="-2" pref="211" max="-2" attributes="0"/>
+                                  <Component id="edJudge" min="-2" pref="211" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
+                  <EmptySpace pref="19" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -121,7 +127,10 @@
                       <Component id="edSecretary" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jcIgnoreFirstLap" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jcIgnoreFirstLap" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="chPostponingStart" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -199,6 +208,13 @@
             <Property name="text" type="java.lang.String" value="jTextField2"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="chPostponingStart">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Postponing Start"/>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="horizontalTextPosition" type="int" value="2"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel2">
@@ -209,7 +225,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bSave" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="butSelect" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="bCancel" min="-2" max="-2" attributes="0"/>
@@ -250,7 +266,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="butSelect">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Select"/>
+            <Property name="text" type="java.lang.String" value="Select w/o Save"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butSelectActionPerformed"/>
