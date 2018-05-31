@@ -344,7 +344,10 @@ public class VS_STAGE {
 
       String krug = "";
       if (lap_for_sound != null) {
-        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().lapTime(usr.PILOT, lap_for_sound.LAP, usr.parent.stage.LAPS));
+        String sec = "";
+        long s = lap.TRANSPONDER_TIME/1000;
+        if (mainForm.SAY_SECONDS_FOR_LAP) sec= " "+s;
+        mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().lapTime(usr.PILOT+sec, lap_for_sound.LAP, usr.parent.stage.LAPS));
       }
 
     } catch (Exception e) {

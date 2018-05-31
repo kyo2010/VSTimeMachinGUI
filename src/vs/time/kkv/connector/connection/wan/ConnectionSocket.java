@@ -85,15 +85,11 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       sock = new DatagramSocket(port_for_listining);
 
       while (!finish) {
-        byte[] buffer = new byte[65536];
-
+        byte[] buffer = new byte[15000];
         try {
-
           DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
           sock.receive(packet);
-
           byte[] data_b = packet.getData();
-
           try {
             if (!getIPAdressfromPackage) {
               InetAddress ipAddress1 = packet.getAddress();

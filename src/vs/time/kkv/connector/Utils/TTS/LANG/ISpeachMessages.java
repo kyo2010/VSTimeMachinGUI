@@ -65,6 +65,10 @@ public class ISpeachMessages {
     }
     return new SpeekText(id);
   }
+  
+  public SpeekText saySecunds(int seconds) {
+    return new SpeekText(""+seconds, 1000);
+  }
 
   public SpeekText lapTime(String pilot, int lap, int countLaps) {
     String krug = "";

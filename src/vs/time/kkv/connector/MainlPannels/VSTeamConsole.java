@@ -467,7 +467,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   public FlashTimer flashTimer = null;
     public class FlashTimer extends Timer {    
      public FlashTimer(final int transponderID, final VSFlash flash) {      
-      super(20, new ActionListener() {
+      super(200, new ActionListener() {
         int indexData = 0; 
         int waitResponse = 0;
         boolean sended = false;   

@@ -96,6 +96,8 @@ import vs.time.kkv.models.VS_USERS;
  * @author kyo
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, VSTimeConnector.VSSendListener {
+  
+  public boolean SAY_SECONDS_FOR_LAP = false;
 
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
