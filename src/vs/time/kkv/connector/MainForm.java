@@ -1203,7 +1203,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
-      if (lap!=null){
+      if (lap==null){
         lap_log.writeFile("RCV;" + data);      
       }
     }
