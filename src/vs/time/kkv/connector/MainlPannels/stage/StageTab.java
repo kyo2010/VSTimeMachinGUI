@@ -2129,8 +2129,9 @@ public class StageTab extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent e) {
           Runtime runtime = Runtime.getRuntime();
           try {
-            runtime.exec("run.cmd");
-          } catch (IOException rt_e) {
+            Process p = runtime.exec("run.cmd");
+            int exitCode = p.waitFor();
+          } catch (Exception rt_e) {
             MainForm._toLog(rt_e);
           }
           InfoForm.init(mainForm, "Go!").setVisible(true);
