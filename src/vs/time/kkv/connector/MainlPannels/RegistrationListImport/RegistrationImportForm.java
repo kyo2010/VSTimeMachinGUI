@@ -125,7 +125,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     jcbRaces = new javax.swing.JComboBox<>();
     chbUpdatePhoto = new javax.swing.JCheckBox();
     jLabel1 = new javax.swing.JLabel();
-    jeAutzCode = new javax.swing.JTextField();
+    jeAutzCode = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     automaticUpload = new javax.swing.JCheckBox();
     jPanel2 = new javax.swing.JPanel();
     jButOk = new javax.swing.JButton();

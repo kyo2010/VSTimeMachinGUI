@@ -207,10 +207,14 @@
             <Property name="text" type="java.lang.String" value="0000"/>
           </Properties>
           <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JTextField" name="edUser">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="butPilots">
           <Properties>
@@ -243,6 +247,7 @@
             <Property name="text" type="java.lang.String" value="0000"/>
           </Properties>
           <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>
         </Component>
@@ -251,6 +256,7 @@
             <Property name="text" type="java.lang.String" value="0000"/>
           </Properties>
           <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>
         </Component>
@@ -265,8 +271,14 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="edFirstName">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JTextField" name="edSecondName">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+          </AuxValues>
         </Component>
         <Container class="vs.time.kkv.connector.MainlPannels.ImageImplement" name="PHOTO">
           <Properties>
@@ -275,10 +287,15 @@
                 <BevelBorder/>
               </Border>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="PHOTOMouseClicked"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="RegisterPilotlForm_PHOTO"/>
+          </AuxValues>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -299,6 +316,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="edRegion">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
@@ -309,6 +329,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="jTextField1"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

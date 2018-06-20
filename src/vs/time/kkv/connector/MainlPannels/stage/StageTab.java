@@ -76,6 +76,7 @@ import ru.nkv.var.StringVar;
 import ru.nkv.var.Var;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
+import static vs.time.kkv.connector.MainForm._toLog;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.SystemOptions;
@@ -165,6 +166,20 @@ public class StageTab extends javax.swing.JPanel {
       }
     }
   });
+
+  public static String getFlightSpeed(VS_RACE race, long bestLapTime) {
+    String res = "";
+    try {
+      int m = race.LAP_DISTANCE;
+      if (bestLapTime > 0 && m > 0 && bestLapTime!=VS_STAGE_GROUPS.MAX_TIME) {
+        double ss = ((double )m)/bestLapTime;
+        double speed = ss * 3600;
+        res = "" + Math.round(speed);
+      }
+    } catch (Exception e) {
+    }
+    return res;
+  }
 
   public int checkerCycle = 0;
   boolean pleaseMakeYelowPilot = false;
@@ -2112,6 +2127,12 @@ public class StageTab extends javax.swing.JPanel {
       int rnd = (int) (Math.random() * 3000);
       Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
         public void actionPerformed(ActionEvent e) {
+          Runtime runtime = Runtime.getRuntime();
+          try {
+            runtime.exec("run.cmd");
+          } catch (IOException rt_e) {
+            MainForm._toLog(rt_e);
+          }
           InfoForm.init(mainForm, "Go!").setVisible(true);
           mainForm.beep.paly("beep");
           //if (useSpeach) mainForm.speaker.speak("Go!");
@@ -2228,12 +2249,12 @@ public class StageTab extends javax.swing.JPanel {
     int[] GROUP_ALG = null;
     if (count_groups % 2 == 0) {
       GROUP_ALG = new int[count_groups];
-      boolean flag_to_end = false;      
+      boolean flag_to_end = false;
       for (int i = 0; i < count_groups / 2; i++) {
         if (!flag_to_end) {
           //0 => 0,1        2 => 2,3
           GROUP_ALG[i] = i + 1;
-          GROUP_ALG[i+1] = count_groups - i;
+          GROUP_ALG[i + 1] = count_groups - i;
         } else {
           // 1 - last-1, last-2,  2=>    
           GROUP_ALG[count_groups - (i) - 1] = i + 1;
@@ -2244,16 +2265,16 @@ public class StageTab extends javax.swing.JPanel {
     }
     return GROUP_ALG;
   }
-  
-  public static void printGroup(int[] groups){
-    System.out.print("Count group:"+groups.length+"   ");    
-    for (int i=0; i<groups.length/2; i++){
-      System.out.print( groups[i*2]+"-"+groups[i*2+1] +"   ");
+
+  public static void printGroup(int[] groups) {
+    System.out.print("Count group:" + groups.length + "   ");
+    for (int i = 0; i < groups.length / 2; i++) {
+      System.out.print(groups[i * 2] + "-" + groups[i * 2 + 1] + "   ");
     }
-     System.out.println("");
+    System.out.println("");
   }
-  
-  public static void main(String[] args){
+
+  public static void main(String[] args) {
     printGroup(createGroupsAlg(2));
     printGroup(createGroupsAlg(4));
     printGroup(createGroupsAlg(6));

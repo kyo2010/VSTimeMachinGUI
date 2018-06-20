@@ -125,23 +125,23 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     jPanel1 = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
-    edTransponder = new javax.swing.JTextField();
-    edUser = new javax.swing.JTextField();
+    edTransponder = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
+    edUser = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     butPilots = new javax.swing.JButton();
     butUsedLastTransponderID = new javax.swing.JButton();
     jLabel4 = new javax.swing.JLabel();
     jLabel5 = new javax.swing.JLabel();
-    edTransponder2 = new javax.swing.JTextField();
-    edTransponder3 = new javax.swing.JTextField();
+    edTransponder2 = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
+    edTransponder3 = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     jLabel6 = new javax.swing.JLabel();
     jLabel7 = new javax.swing.JLabel();
-    edFirstName = new javax.swing.JTextField();
-    edSecondName = new javax.swing.JTextField();
+    edFirstName = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
+    edSecondName = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     PHOTO = new vs.time.kkv.connector.MainlPannels.ImageImplement();
     jLabel8 = new javax.swing.JLabel();
-    edRegion = new javax.swing.JTextField();
+    edRegion = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     jLabel9 = new javax.swing.JLabel();
-    edFAI = new javax.swing.JTextField();
+    edFAI = new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField();
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
@@ -187,6 +187,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
     jLabel7.setText("Second Name:");
 
     PHOTO.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    PHOTO.setToolTipText("");
+    PHOTO.setAutoscrolls(true);
     PHOTO.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         PHOTOMouseClicked(evt);

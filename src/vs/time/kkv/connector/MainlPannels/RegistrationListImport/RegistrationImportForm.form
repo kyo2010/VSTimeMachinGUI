@@ -168,6 +168,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jeAutzCode">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new vs.time.kkv.connector.Utils.KKVTreeTable.KKVTextField()"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JCheckBox" name="automaticUpload">
       <Properties>

@@ -110,7 +110,9 @@ public class DataBaseStructure {
     new DBAddonStructure(3.8, "ALTER TABLE VS_STAGE_GROUPS ADD GROUP_TYPE INTEGER NOT NULL DEFAULT 0;"),     
     
     new DBAddonStructure(3.9, "ALTER TABLE VS_RACE ADD AUTO_WEB_UPDATE INTEGER NOT NULL DEFAULT 0;"),  
-    new DBAddonStructure(4.0, "ALTER TABLE VS_RACE ADD POST_START INTEGER NOT NULL DEFAULT 0;"),  
+    new DBAddonStructure(4.0, "ALTER TABLE VS_RACE ADD POST_START INTEGER NOT NULL DEFAULT 0;"),      
+    new DBAddonStructure(4.1, "ALTER TABLE VS_RACE ADD LAP_DISTANCE INTEGER NOT NULL DEFAULT 0;"),  
+
   };
 
   public static class DBAddonStructure {

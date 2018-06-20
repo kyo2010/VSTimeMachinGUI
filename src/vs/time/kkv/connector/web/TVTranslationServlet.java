@@ -42,6 +42,8 @@ public class TVTranslationServlet extends HttpServlet {
   String templ = null;
   String templ_button = null;
   MainForm mainForm = null;
+  
+  public static final boolean SHOW_SPEED = true;
 
   public class PilotInfo {
 
@@ -171,7 +173,7 @@ public class TVTranslationServlet extends HttpServlet {
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
     String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
-    String CONTENT = "";
+    String CONTENT = "";    
 
     boolean showGroupNumber = false;
     if (stage.groups.size() > 1) {
@@ -189,6 +191,9 @@ public class TVTranslationServlet extends HttpServlet {
     CONTENT += "<th>" + mainForm.getLocaleString("Channel") + "</th>";
     CONTENT += "<th>" + mainForm.getLocaleString("Race Time") + "</th>";
     CONTENT += "<th>" + mainForm.getLocaleString("Best Lap") + "</th>";
+    if (SHOW_SPEED){
+      CONTENT += "<th>" + mainForm.getLocaleString("Speed") + "</th>";
+    }
     CONTENT += "</tr>";
 
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;
@@ -287,8 +292,7 @@ public class TVTranslationServlet extends HttpServlet {
                     "</th>";
           }
           CONTENT += "<th>" + (index + 1) + "</th>";
-          CONTENT += "<th>" + surname + user.PILOT + "</th>";
-          
+          CONTENT += "<th>" + surname + user.PILOT + "</th>";          
           String color = "";
           try{
             VSColor vs_color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);    
@@ -303,15 +307,18 @@ public class TVTranslationServlet extends HttpServlet {
                   "</th>";
           CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
           CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
+          if (SHOW_SPEED){
+            String speed = StageTab.getFlightSpeed(mainForm.activeRace, user.BEST_LAP);
+            if (!speed.equals("")) speed +=  " "+mainForm.getLocaleString("km/h");
+            CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + speed + "</th>";          
+          }  
           CONTENT += "</tr>";
           index++;
         }
       }
     }
-
     CONTENT += "</table></p>";
     CONTENT += "</div>";
-
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("CONTENT", CONTENT));
     varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));

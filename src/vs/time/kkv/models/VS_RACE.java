@@ -30,7 +30,8 @@ public class VS_RACE {
   public String JUDGE = "";
   public String SECRETARY = "";
   public int AUTO_WEB_UPDATE = 0;
-  public int POST_START = 0;                    
+  public int POST_START = 0;        
+  public int LAP_DISTANCE = 0;
   
   public List<VS_REGISTRATION> users = new ArrayList<>();
   
@@ -62,6 +63,8 @@ public class VS_RACE {
     new DBModelField("WEB_RACE_ID").setDbFieldName("\"WEB_RACE_ID\""),    
     new DBModelField("AUTO_WEB_UPDATE").setDbFieldName("\"AUTO_WEB_UPDATE\""), 
     new DBModelField("POST_START").setDbFieldName("\"POST_START\""),     
+    
+    new DBModelField("LAP_DISTANCE").setDbFieldName("\"LAP_DISTANCE\""),             
   });
   
 }
