@@ -100,6 +100,7 @@ public class StageTab extends javax.swing.JPanel {
   public JPopupMenu popupMenuJTree = null;
   public StageTableAdapter stageTableAdapter = null;
   public VS_STAGE_GROUP checkingGrpup = null;
+  public boolean FIRST_RACER_IS_FINISHED = false;
 
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
@@ -171,8 +172,8 @@ public class StageTab extends javax.swing.JPanel {
     String res = "";
     try {
       int m = race.LAP_DISTANCE;
-      if (bestLapTime > 0 && m > 0 && bestLapTime!=VS_STAGE_GROUPS.MAX_TIME) {
-        double ss = ((double )m)/bestLapTime;
+      if (bestLapTime > 0 && m > 0 && bestLapTime != VS_STAGE_GROUPS.MAX_TIME) {
+        double ss = ((double) m) / bestLapTime;
         double speed = ss * 3600;
         res = "" + Math.round(speed);
       }
@@ -2042,7 +2043,18 @@ public class StageTab extends javax.swing.JPanel {
     return null;
   }
 
+  public void runFinishCommand() {
+    Runtime runtime = Runtime.getRuntime();
+    try {
+      Process p = runtime.exec("finish.cmd");
+      int exitCode = p.waitFor();
+    } catch (Exception rt_e) {
+      MainForm._toLog(rt_e);
+    }
+  }
+
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
+    FIRST_RACER_IS_FINISHED = true;
     String message = "";
     if (mainForm.vsTimeConnector != null) {
       long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
@@ -2140,6 +2152,7 @@ public class StageTab extends javax.swing.JPanel {
           mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
           preapreTimeMachineToRace();
           raceTimer.start();
+          FIRST_RACER_IS_FINISHED = false;
           jTree.updateUI();
           Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
             public void actionPerformed(ActionEvent e) {
