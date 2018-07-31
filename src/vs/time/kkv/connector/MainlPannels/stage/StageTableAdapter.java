@@ -626,7 +626,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       StageTableData td = rows.get(rowIndex);
       if (td.isGrpup) {
         if (columnIndex == 0) {
-          return " -= " + tab.mainForm.getLocaleString("Group") + " " + td.group.GROUP_NUM + " =- ";
+          String addon = "";      
+          if (td.group.users!=null && td.group.users.size()>0){
+            if ( td.group.users.get(0).IS_PANDING==1){
+              addon = " waiting for losers";
+            }
+          }      
+          return " -= " + tab.mainForm.getLocaleString("Group") + " " + td.group.GROUP_NUM + " =- "+addon;
         }
         return "";
       } else {
@@ -664,7 +670,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             }
           } catch (Exception e) {
           }
-          return td.pilot.PILOT + addon;
+          String addon2 = "";
+          if (tab.stage.STAGE_TYPE==MainForm.STAGE_RACE && tab.stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE){
+            if (td.pilot.GROUP_TYPE==0) addon2 = "★ ";
+            else addon2 = "☟ ";
+          }
+          return addon2 + td.pilot.PILOT + addon;
         }
         
         if (sc != null && sc.ID == STAGE_COLUMN.CID_REG_ID) {          
@@ -1113,6 +1124,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (show_laps && !td.isGrpup && column >= (getColumns().size() + tab.stage.LAPS)) {
           label.setBackground(Color.LIGHT_GRAY);
         } else {
+          if  (this.tab.stage.ID  ==245){
+            int y = 0;
+          }
+          
           if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
             if (td.pilot.CHECK_FOR_RACE == 0) {
               label.setBackground(Color.WHITE);
