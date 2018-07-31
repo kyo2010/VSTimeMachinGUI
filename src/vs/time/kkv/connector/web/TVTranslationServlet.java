@@ -35,14 +35,14 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  */
 public class TVTranslationServlet extends HttpServlet {
 
-  static final int MAX_TABLE_LINES = 13;
+  static final int MAX_TABLE_LINES = 16;
   static final long MAX_TIME_DISPLAY = 5000;
-  
+
   public static boolean USE_CACHE = false;
   String templ = null;
   String templ_button = null;
   MainForm mainForm = null;
-  
+
   public static final boolean SHOW_SPEED = true;
 
   public class PilotInfo {
@@ -167,13 +167,18 @@ public class TVTranslationServlet extends HttpServlet {
   }
 
   public class DISPLAY {
-
+    boolean byGroup = false;    
+    public VS_STAGE_GROUP virtual_group = null;
     public List<Integer> numGroups = new ArrayList();
+    public List<VS_STAGE_GROUPS> users = new ArrayList();
+    public DISPLAY( boolean byGroup){
+      this.byGroup = byGroup;
+    }
   }
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
     String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
-    String CONTENT = "";    
+    String CONTENT = "";
 
     boolean showGroupNumber = false;
     if (stage.groups.size() > 1) {
@@ -181,7 +186,7 @@ public class TVTranslationServlet extends HttpServlet {
     }
 
     CONTENT = "<div class='w3-container'><p>";
-    CONTENT += "<table class='w3-table w3-bordered w3-border w3-xxxlarge'>";
+    CONTENT += "<table class='w3-table w3-bordered w3-border w3-xxlarge'>";
     CONTENT += "<tr class='w3-blue'>";
     if (showGroupNumber) {
       CONTENT += "<th>G</th>";
@@ -191,7 +196,7 @@ public class TVTranslationServlet extends HttpServlet {
     CONTENT += "<th>" + mainForm.getLocaleString("Channel") + "</th>";
     CONTENT += "<th>" + mainForm.getLocaleString("Race Time") + "</th>";
     CONTENT += "<th>" + mainForm.getLocaleString("Best Lap") + "</th>";
-    if (SHOW_SPEED){
+    if (SHOW_SPEED) {
       CONTENT += "<th>" + mainForm.getLocaleString("Speed") + "</th>";
     }
     CONTENT += "</tr>";
@@ -199,26 +204,49 @@ public class TVTranslationServlet extends HttpServlet {
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;
     long best_time = VS_STAGE_GROUPS.MAX_TIME;
     int lines = 0;
-    List<DISPLAY> displays = new ArrayList<>();
-    displays.add(new DISPLAY());
+    List<DISPLAY> displays = new ArrayList<>();    
 
-    for (int numGroup : stage.groups.keySet()) {
-      VS_STAGE_GROUP group = stage.groups.get(numGroup);
-      if (lines + group.users.size() <= MAX_TABLE_LINES) {
-      } else {
-        lines = 0;
-        displays.add(new DISPLAY());
-      }
-      displays.get(displays.size() - 1).numGroups.add(numGroup);
-      lines = lines + group.users.size();
-      for (VS_STAGE_GROUPS user : group.users) {
+    boolean show_by_group = false;
+    if (stage.groups.size() == 1) {
+      show_by_group = false;
+      VS_STAGE_GROUP group = stage.groups.get(0);
+      displays.add(new DISPLAY(show_by_group));
+      for (VS_STAGE_GROUPS user : group.users){
+        if (lines + 1 <= MAX_TABLE_LINES) {
+        } else {
+          lines = 0;
+          displays.add(new DISPLAY(show_by_group));
+        }
+        lines++;
+        displays.get(displays.size() - 1).users.add(user);
         if (user.BEST_LAP < best_lap && user.BEST_LAP != 0) {
-          best_lap = user.BEST_LAP;
+            best_lap = user.BEST_LAP;
+          }
+          if (user.RACE_TIME < best_time && user.RACE_TIME != 0) {
+            best_time = user.RACE_TIME;
+          }
+      }       
+    }else{
+      show_by_group = true;
+      displays.add(new DISPLAY(show_by_group));
+      for (int numGroup : stage.groups.keySet()) {
+        VS_STAGE_GROUP group = stage.groups.get(numGroup);
+        if (lines + group.users.size() <= MAX_TABLE_LINES) {
+        } else {
+          lines = 0;
+          displays.add(new DISPLAY(show_by_group));
         }
-        if (user.RACE_TIME < best_time && user.RACE_TIME != 0) {
-          best_time = user.RACE_TIME;
+        displays.get(displays.size() - 1).numGroups.add(numGroup);
+        lines = lines + group.users.size();
+        for (VS_STAGE_GROUPS user : group.users) {
+          if (user.BEST_LAP < best_lap && user.BEST_LAP != 0) {
+            best_lap = user.BEST_LAP;
+          }
+          if (user.RACE_TIME < best_time && user.RACE_TIME != 0) {
+            best_time = user.RACE_TIME;
+          }
         }
-      }
+      }      
     }
     if (best_time == VS_STAGE_GROUPS.MAX_TIME) {
       best_time++;
@@ -231,14 +259,14 @@ public class TVTranslationServlet extends HttpServlet {
     if (displays.size() > 0) {
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.unRaceTime;
-      long count_dispalys = d/MAX_TIME_DISPLAY;
-      int disp_number = (int)count_dispalys%displays.size();
-      if (disp_number>=displays.size()){
+      long count_dispalys = d / MAX_TIME_DISPLAY;
+      int disp_number = (int) count_dispalys % displays.size();
+      if (disp_number >= displays.size()) {
         current_dispaly = displays.get(0);
-      }else{
+      } else {
         current_dispaly = displays.get(disp_number);
         //System.out.println("Current TV display number is:"+disp_number);
-      }  
+      }
     }
 
     /*for (int numGroup : stage.groups.keySet()) {
@@ -263,12 +291,33 @@ public class TVTranslationServlet extends HttpServlet {
         index++;
       }
     }*/
+    
+    
+    if (current_dispaly!=null && current_dispaly.byGroup==false){
+      VS_STAGE_GROUP v_group = new VS_STAGE_GROUP(null);
+      v_group.GROUP_INDEX = 1;
+      v_group.GROUP_NUM = -1;
+      current_dispaly.numGroups.add(1);
+      current_dispaly.virtual_group = v_group;
+    }
+    
     int next_group = -1;
-    if (current_dispaly != null) {
+    if (current_dispaly != null) {           
       for (int numGroup : current_dispaly.numGroups) {
-        VS_STAGE_GROUP group = stage.groups.get(numGroup);
+        
+        VS_STAGE_GROUP group = null;
         int index = 0;
-        for (VS_STAGE_GROUPS user : group.users) {
+        List<VS_STAGE_GROUPS> users = null;
+        if (current_dispaly.byGroup==true) {
+          group = stage.groups.get(numGroup);
+          users = group.users;
+        }
+        if (current_dispaly.byGroup==false) {
+          group = current_dispaly.virtual_group;
+          users = current_dispaly.users;
+        }
+        
+        for (VS_STAGE_GROUPS user : users) {
           VS_REGISTRATION reg = user.getRegistration(mainForm.con, mainForm.activeRace.RACE_ID);
           String surname = "";
           if (reg != null) {
@@ -276,42 +325,51 @@ public class TVTranslationServlet extends HttpServlet {
           }
           CONTENT += "<tr class='w3-white'>";
           if (showGroupNumber && index == 0) {
-            String color = "w3-green";            
-            if (user.IS_FINISHED==1) {
+            String color = "w3-green";
+            if (user.IS_FINISHED == 1) {
               color = "w3-red";
-              next_group = group.GROUP_INDEX+1;
-            }else{
-              if (group.GROUP_INDEX==next_group){
+              next_group = group.GROUP_INDEX + 1;
+            } else {
+              if (group.GROUP_INDEX == next_group) {
                 color = "w3-yellow";
               }
             }
-            CONTENT += "<th rowspan='" + group.users.size() + "'>" + 
-                    "<span class=\"w3-badge "+color+" 1w3-large\">&nbsp;"+
-                    group.GROUP_NUM + 
-                    "&nbsp;</span>"+
-                    "</th>";
+            CONTENT += "<th rowspan='" + users.size() + "'>"
+                    + "<span class=\"w3-badge " + color + " 1w3-large\">&nbsp;"
+                    + (group.GROUP_NUM==-1?"":""+group.GROUP_NUM)
+                    + "&nbsp;</span>"
+                    + "</th>";
           }
-          CONTENT += "<th>" + (index + 1) + "</th>";
-          CONTENT += "<th>" + surname + user.PILOT + "</th>";          
+
+          String pilotName = surname + " " + user.PILOT;
+          /*if (pilotName.length()>25){
+            if (surname.length()>user.PILOT.length()) pilotName = surname;
+            else pilotName = user.PILOT;
+          }*/
+
+          CONTENT += "<th>" +  (current_dispaly.byGroup?(index + 1):user.NUM_IN_GROUP) + "</th>";
+          CONTENT += "<th w3-xlarge >" + pilotName + "</th>";
           String color = "";
-          try{
-            VSColor vs_color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);    
+          try {
+            VSColor vs_color = VSColor.getColorForChannel(user.CHANNEL, stage.CHANNELS, stage.COLORS);
             color = vs_color.w3css;
-          }catch(Exception e){            
+          } catch (Exception e) {
           }
-          
-          CONTENT += "<th>" + 
-                  "<span class=\"w3-badge "+color+" 1w3-large\">&nbsp;"+
-                  user.CHANNEL + 
-                  "&nbsp;</span>"+
-                  "</th>";
+
+          CONTENT += "<th>"
+                  + "<span class=\"w3-badge " + color + " 1w3-large\">&nbsp;"
+                  + user.CHANNEL
+                  + "&nbsp;</span>"
+                  + "</th>";
           CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
           CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
-          if (SHOW_SPEED){
+          if (SHOW_SPEED) {
             String speed = StageTab.getFlightSpeed(mainForm.activeRace, user.BEST_LAP);
-            if (!speed.equals("")) speed +=  " "+mainForm.getLocaleString("km/h");
-            CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + speed + "</th>";          
-          }  
+            if (!speed.equals("")) {
+              speed += " " + mainForm.getLocaleString("km/h");
+            }
+            CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + speed + "</th>";
+          }
           CONTENT += "</tr>";
           index++;
         }
