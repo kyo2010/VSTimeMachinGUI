@@ -82,6 +82,31 @@ public class VS_STAGE_GROUP implements Transferable {
     }
   };
   
+  public static Comparator GROUP_QUAL_TIME_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
+    @Override
+    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
+      if (o1.RACE_TIME > o2.RACE_TIME) {
+        return 1;
+      }
+      if (o1.RACE_TIME < o2.RACE_TIME) {
+        return -1;
+      }
+      if (o1.QUAL_TIME > o2.QUAL_TIME) {
+        return 1;
+      }
+      if (o1.QUAL_TIME < o2.QUAL_TIME) {
+        return -1;
+      }            
+      if (o1.BEST_LAP > o2.BEST_LAP) {
+        return 1;
+      }
+      if (o1.BEST_LAP < o2.BEST_LAP) {
+        return -1;
+      }
+      return 0;
+    }
+  };
+  
   public static Comparator GROUP_LAPS_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
     @Override
     public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
@@ -209,7 +234,8 @@ public class VS_STAGE_GROUP implements Transferable {
       for (VS_STAGE_GROUPS user : users) {
         sorted_users.add(user);
       }
-      Collections.sort(sorted_users, GROUP_TIME_COMPARATOR);
+      //Collections.sort(sorted_users, GROUP_TIME_COMPARATOR);
+      Collections.sort(sorted_users, GROUP_QUAL_TIME_COMPARATOR);
 
       int size = users.size();
       int WIN_USERS = Math.round(size / 2);

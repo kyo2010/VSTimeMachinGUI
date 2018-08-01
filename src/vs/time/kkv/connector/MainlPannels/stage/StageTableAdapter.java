@@ -107,6 +107,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 100).setIsEditing(true).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_QUAL_TIME, "Qualification\ntime", 140).setCellID("TXT_RIGHT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SPEED, "Speed", 100).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps", 50).setCellID("INT"),};
 
@@ -536,19 +537,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
         MainForm._toLog(ein);
       }
-    } else {
-      if (tab.stage.ID == 114) {
-        int y = 0;
-      }
+    } else {     
       for (Integer groupId : tab.stage.groups.keySet()) {
         VS_STAGE_GROUP group = tab.stage.groups.get(groupId);
         rows.add(new StageTableData(group));
         for (VS_STAGE_GROUPS pilot : group.users) {
-          //if (pilot.IS_FINISHED==0) {
           pilot.IS_RECALULATED = 0;
-          //}
-          //   pilot.IS_RECALULATED = 0;
-          // }  
           rows.add(new StageTableData(pilot));
         }
       }
@@ -951,6 +945,25 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         //System.out.println("VS_STAGE_GROUPS - sat value3");
         VS_STAGE_GROUPS.dbControl.update(tab.mainForm.con, td.pilot);
       } catch (Exception e) {
+      }
+    }
+    if (sc != null && sc.ID == STAGE_COLUMN.CID_QUAL_TIME && !td.isGrpup) {
+      boolean isError = false;
+      try {        
+        String val = value == null ? "" : value.toString();
+        long time = getTimerInterval(val);
+        if (time != -1) {
+          td.pilot.QUAL_TIME = time;          
+          VS_STAGE_GROUPS.dbControl.update(tab.mainForm.con, td.pilot);        
+          td.pilot.parent.recalculateScores(tab.mainForm);
+        }else{
+          isError = true;
+        }       
+      } catch (Exception e) {
+        isError = true;
+      }
+      if (isError) {
+          JOptionPane.showMessageDialog(tab, "Please input correct time.\nFormat: 00:00:00", "Input error", JOptionPane.INFORMATION_MESSAGE);
       }
     }
     if (col >= getColumns().size() && td != null && !td.isGrpup) {
