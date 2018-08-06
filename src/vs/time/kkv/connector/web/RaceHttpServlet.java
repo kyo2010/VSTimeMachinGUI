@@ -296,7 +296,7 @@ public class RaceHttpServlet extends HttpServlet {
             long currentGroup = 0;
             PAGE_CONTENT += "<table class='w3-table w3-bordered'>\n";
             PAGE_CONTENT += "<tr class='w3-teal'>\n";
-            PAGE_CONTENT += "  <th>#</th><th>Pilot</th><th>Channel</th><th>Laps</th><th>Best Lap</th><th>Last Lap</th><th>Race Lap</th><th>Status</th>\n";
+            PAGE_CONTENT += "  <th>#</th><th>Pilot</th><th>Channel</th><th>Laps</th><th>Best Lap</th><th>Last Lap</th><th>Race Lap</th><th>Status</th><th>Pos</th>\n";
             PAGE_CONTENT += "</tr>\n";
             for (VS_STAGE_GROUPS user : groups) {
               if (currentGroup != user.GROUP_NUM) {
@@ -329,7 +329,7 @@ public class RaceHttpServlet extends HttpServlet {
                    control_buttons = "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_STOP_CHECK+"' class='w3-teal w3-button'>"+
                                     "Stop Search</a>";
                 }                
-                PAGE_CONTENT += "  <td colspan='8'><a  name='group_"+user.GROUP_NUM+"'></a><b>Group" + user.GROUP_NUM + "</b> "+control_buttons+"</td>\n";                                               
+                PAGE_CONTENT += "  <td colspan='9'><a  name='group_"+user.GROUP_NUM+"'></a><b>Group" + user.GROUP_NUM + "</b> "+control_buttons+"</td>\n";                                               
                 PAGE_CONTENT += "</tr>\n";
                 currentGroup = user.GROUP_NUM;
               }
@@ -343,6 +343,7 @@ public class RaceHttpServlet extends HttpServlet {
 
               PAGE_CONTENT += "<tr class='" + w3css + "'>\n";
               String status = "";
+              int pos = 0;
               if (user.GROUP_NUM == activeGroupNum) {
                 status = "active";
               }
@@ -355,14 +356,29 @@ public class RaceHttpServlet extends HttpServlet {
                   activeGroupNum = user.GROUP_NUM;
                 }
               }
-
+              if(user.IS_FINISHED == 1 && user.RACE_TIME > 0){
+                 int coutFinish = 0;
+                 for (VS_STAGE_GROUPS user2 : groups) {
+                    if(user.GROUP_NUM == user2.GROUP_NUM && user2.IS_FINISHED == 1) coutFinish++; 
+                 }
+                 pos = coutFinish;
+                 for (VS_STAGE_GROUPS user2 : groups) {
+                    if(user.GROUP_NUM == user2.GROUP_NUM 
+                            && user2.IS_FINISHED == 1 
+                            && user2.RACE_TIME > 0 
+                            && user.RACE_TIME < user2.RACE_TIME){
+                          pos--;
+                    }
+                 }
+               }
               ///String bgcolor = "#ffffff";           
               PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' ><b>" + user.CHANNEL + "</b></td>"
                       + "<td align='center'>" + user.LAPS + "</td>"
                       + "<td>" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
                       + "<td>" + (user.LAST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.LAST_LAP)) + "</td>"
                       + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
-                      + status + "</td>\n";
+                      + status + "</td>"
+                      + "<td  align='center'>" + (pos == 0 ? "" : (user.RACE_TIME == VS_STAGE_GROUPS.MAX_TIME? "DNF": pos)) + "</td>\n";
               PAGE_CONTENT += "</tr>\n";
             }
             PAGE_CONTENT += "</table>\n";
