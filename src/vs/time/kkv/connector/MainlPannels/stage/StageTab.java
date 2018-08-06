@@ -1516,6 +1516,15 @@ public class StageTab extends javax.swing.JPanel {
         if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
           return;
         }
+
+        Map<String, VS_STAGE_GROUPS> qualification = null;
+        if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+          List<VS_STAGE> stages = VS_STAGE.dbControl.getList(mainForm.con, "RACE_ID=? and STAGE_TYPE=? order by ID desc", stage.RACE_ID, MainForm.STAGE_QUALIFICATION_RESULT);
+          if (stages != null && stages.size() > 0) {
+            qualification = VS_STAGE_GROUPS.dbControl.getMap(mainForm.con, "PILOT", "STAGE_ID=?", stages.get(0).ID);
+          }
+        }
+
         VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
 
         if (parent_stage != null) {
@@ -1775,7 +1784,7 @@ public class StageTab extends javax.swing.JPanel {
                   }
                   groups_losers.clear();
                   for (VS_STAGE_GROUPS usr : new_groups) {
-                    usr.IS_PANDING = 0;                    
+                    usr.IS_PANDING = 0;
                   }
                   try {
                     recalulateChannels(new_groups);
@@ -1789,7 +1798,7 @@ public class StageTab extends javax.swing.JPanel {
                       usr.WIN = 1;
                     }
                   }
-                  if (groups_losers_new.size() != 0 && groups_losers.size()!=0) {
+                  if (groups_losers_new.size() != 0 && groups_losers.size() != 0) {
                     if (groups_losers_new.size() < stage.COUNT_PILOTS_IN_GROUP && groups_losers.size() >= stage.COUNT_PILOTS_IN_GROUP) {
                       for (VS_STAGE_GROUPS usr : groups_losers_new) {
                         usr.IS_PANDING = 1;
@@ -1816,17 +1825,35 @@ public class StageTab extends javax.swing.JPanel {
               for (VS_STAGE_GROUPS usr : new_groups) {
                 usr.STAGE_ID = stage.ID;
                 usr.CHECK_FOR_RACE = 1;
+                if (qualification != null) {
+                  VS_STAGE_GROUPS quala = qualification.get(usr.PILOT);
+                  if (quala != null) {
+                    usr.QUAL_TIME = quala.RACE_TIME;
+                  }
+                }
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
               if (stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE) {
                 for (VS_STAGE_GROUPS usr : groups_losers) {
                   usr.STAGE_ID = stage.ID;
                   usr.CHECK_FOR_RACE = 1;
+                  if (qualification != null) {
+                    VS_STAGE_GROUPS quala = qualification.get(usr.PILOT);
+                    if (quala != null) {
+                      usr.QUAL_TIME = quala.RACE_TIME;
+                    }
+                  }
                   VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
                 for (VS_STAGE_GROUPS usr : groups_losers_new) {
                   usr.STAGE_ID = stage.ID;
                   usr.CHECK_FOR_RACE = 1;
+                  if (qualification != null) {
+                    VS_STAGE_GROUPS quala = qualification.get(usr.PILOT);
+                    if (quala != null) {
+                      usr.QUAL_TIME = quala.RACE_TIME;
+                    }
+                  }
                   VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
               }
@@ -1943,6 +1970,14 @@ public class StageTab extends javax.swing.JPanel {
                     }
                   }
                 }*/
+
+                if (qualification != null) {
+                  VS_STAGE_GROUPS quala = qualification.get(usr.PILOT);
+                  if (quala != null) {
+                    usr.QUAL_TIME = quala.RACE_TIME;
+                  }
+                }
+
                 usr.IS_FINISHED = 0;
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
@@ -1950,16 +1985,24 @@ public class StageTab extends javax.swing.JPanel {
           } else { // Create pilot list as parent_id - only copy
             groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
             // usual copy
-            for (VS_STAGE_GROUPS user : groups) {
-              user.GID = -1;
-              user.STAGE_ID = stage.ID;
-              user.isError = 0;
-              user.IS_FINISHED = 0;
-              user.IS_RECALULATED = 0;
-              user.LAPS = 0;
-              user.RACE_TIME = 0;
-              user.BEST_LAP = 0;
-              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, user);
+            for (VS_STAGE_GROUPS usr : groups) {
+              usr.GID = -1;
+              usr.STAGE_ID = stage.ID;
+              usr.isError = 0;
+              usr.IS_FINISHED = 0;
+              usr.IS_RECALULATED = 0;
+              usr.LAPS = 0;
+              usr.RACE_TIME = 0;
+              usr.BEST_LAP = 0;
+
+              if (qualification != null) {
+                VS_STAGE_GROUPS quala = qualification.get(usr.PILOT);
+                if (quala != null) {
+                  usr.QUAL_TIME = quala.RACE_TIME;
+                }
+              }
+
+              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
             }
           }
         } else { // Parent Stage = null
@@ -1994,6 +2037,14 @@ public class StageTab extends javax.swing.JPanel {
             gr.REG_ID = user.ID;
             gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
             prev_type_pilot = user.PILOT_TYPE;
+
+            if (qualification != null) {
+              VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
+              if (quala != null) {
+                gr.QUAL_TIME = quala.RACE_TIME;
+              }
+            }
+
             VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
           }
         }
