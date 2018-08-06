@@ -31,7 +31,7 @@ import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
- * тест
+ *
  * @author kyo
  */
 public class RaceHttpServlet extends HttpServlet {
