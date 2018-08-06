@@ -78,3 +78,383 @@
 [2018-08-3 21:17:56] ---==  Progam is loaded  ==--- 
 [2018-08-3 21:17:56] ---==  Active Race  ==---  ;Race [12]
 [2018-08-3 21:18:53] ---==  Invate  ==---;Practica1 [191];Group;1
+[2018-08-6 18:23:35] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 18:23:38] ---==  Progam is loaded  ==--- 
+[2018-08-6 18:23:38] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 18:25:26] ---==  Invate  ==---;Practica1 [191];Group;1
+[2018-08-6 18:28:10] ---==  Invate  ==---;Practica1 [191];Group;1
+[2018-08-6 18:29:20] ---==  Invate  ==---;Practica1 [191];Group;1
+[2018-08-6 18:31:48] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:32:06] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:33:01] SND;rfidunlock
+[2018-08-6 18:33:01] SND;settime:1533569581954
+[2018-08-6 18:33:02] SND;rfidunlock
+[2018-08-6 18:33:02] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:33:03] RCV;CLEAR OK;
+[2018-08-6 18:33:03] SND;timesynchreceived:77
+[2018-08-6 18:33:03] RCV;timesynchok:77,0,11
+[2018-08-6 18:33:09] SND;rfidunlock
+[2018-08-6 18:33:09] SND;settime:1533569589254
+[2018-08-6 18:33:09] SND;rfidunlock
+[2018-08-6 18:33:10] RCV;CLEAR OK;
+[2018-08-6 18:33:10] SND;timesynchreceived:77
+[2018-08-6 18:33:10] RCV;timesynchok:77,65579855642624,104
+[2018-08-6 18:37:10] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:39:46] SND;rfidunlock
+[2018-08-6 18:39:46] SND;settime:1533569986705
+[2018-08-6 18:39:46] SND;rfidunlock
+[2018-08-6 18:39:47] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:39:48] RCV;CLEAR OK;
+[2018-08-6 18:39:48] SND;timesynchreceived:77
+[2018-08-6 18:39:48] RCV;timesynchok:77,96937411870720,182
+[2018-08-6 18:39:52] SND;rfidunlock
+[2018-08-6 18:39:52] SND;settime:1533569992254
+[2018-08-6 18:39:52] SND;rfidunlock
+[2018-08-6 18:39:53] RCV;CLEAR OK;
+[2018-08-6 18:39:53] SND;timesynchreceived:77
+[2018-08-6 18:39:53] RCV;timesynchok:77,1804066652946432,210
+[2018-08-6 18:40:19] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:40:42] SND;rfidunlock
+[2018-08-6 18:40:42] SND;settime:1533570042967
+[2018-08-6 18:40:43] SND;rfidunlock
+[2018-08-6 18:40:43] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:40:47] RCV;CLEAR OK;
+[2018-08-6 18:40:47] SND;timesynchreceived:77
+[2018-08-6 18:40:47] RCV;timesynchok:77,1827903721439232,11
+ping:1827903721439284,77,82
+timesynchok:77,1827903721439434,7
+timesynchok:77,1827903721439636,244
+timesynchok:77,1827903721439838,31
+timesynchok:77,1827903721440040,84
+timesynchok:77,1827903721440242,167
+ping:1827903721440294,77,131
+timesynchok:77,1827903721440444,171
+timesynchok:77,1827903721440646,88
+timesynchok:77,1827903721440848,179
+timesynchok:77,1827903721441050,31
+timesynchok:77,1827903721441252,236
+ping:1827903721441304,77,122
+timesynchok:77,1827903721441454,224
+timesynchok:77,1827903721441656,19[2018-08-6 18:40:52] SND;rfidunlock
+[2018-08-6 18:40:52] SND;settime:1533570052677
+[2018-08-6 18:40:52] SND;rfidunlock
+[2018-08-6 18:40:54] RCV;CLEAR OK;
+[2018-08-6 18:40:54] SND;timesynchreceived:77
+[2018-08-6 18:40:54] RCV;timesynchok:77,2056133988581376,232
+[2018-08-6 18:42:17] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:45:58] SND;rfidunlock
+[2018-08-6 18:45:58] SND;settime:1533570358510
+[2018-08-6 18:45:58] SND;rfidunlock
+[2018-08-6 18:45:58] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:46:00] RCV;CLEAR OK;
+[2018-08-6 18:46:00] SND;timesynchreceived:77
+[2018-08-6 18:46:00] RCV;timesynchok:77,2087431415267328,58
+[2018-08-6 18:46:05] SND;rfidunlock
+[2018-08-6 18:46:05] SND;settime:1533570365735
+[2018-08-6 18:46:05] SND;rfidunlock
+[2018-08-6 18:46:07] RCV;CLEAR OK;
+[2018-08-6 18:46:07] SND;timesynchreceived:77
+[2018-08-6 18:46:07] RCV;timesynchok:77,3401042884558848,126
+[2018-08-6 18:49:34] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 18:49:53] SND;rfidunlock
+[2018-08-6 18:49:53] SND;settime:1533570593917
+[2018-08-6 18:49:54] SND;rfidunlock
+[2018-08-6 18:49:54] ---==  Run Race  ==---;Practica1 [191];Group;4
+[2018-08-6 18:49:55] RCV;CLEAR OK;
+[2018-08-6 18:49:55] SND;timesynchreceived:77
+[2018-08-6 18:49:55] RCV;timesynchok:77,3432078318239744,145
+[2018-08-6 18:49:59] SND;rfidunlock
+[2018-08-6 18:49:59] SND;settime:1533570599240
+[2018-08-6 18:49:59] SND;rfidunlock
+[2018-08-6 18:50:00] RCV;CLEAR OK;
+[2018-08-6 18:50:00] SND;timesynchreceived:77
+[2018-08-6 18:50:00] RCV;timesynchok:77,4412159773638656,84
+[2018-08-6 18:54:59] ---==  Stop Race  ==---;Practica1 [191];Group;4
+[2018-08-6 20:27:18] SND;rfidunlock
+[2018-08-6 20:27:18] SND;settime:1533576438436
+[2018-08-6 20:27:18] SND;rfidunlock
+[2018-08-6 20:27:18] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 20:27:20] RCV;CLEAR OK;
+[2018-08-6 20:27:20] SND;timesynchreceived:77
+[2018-08-6 20:27:20] RCV;timesynchok:77,4435021884555264,105
+[2018-08-6 20:27:24] SND;rfidunlock
+[2018-08-6 20:27:24] SND;settime:1533576444437
+[2018-08-6 20:27:24] SND;rfidunlock
+[2018-08-6 20:27:26] RCV;CLEAR OK;
+[2018-08-6 20:27:26] SND;timesynchreceived:77
+[2018-08-6 20:27:26] RCV;timesynchok:77,29517922950971392,164
+[2018-08-6 20:32:25] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 20:43:52] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 20:43:55] ---==  Progam is loaded  ==--- 
+[2018-08-6 20:43:55] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 20:45:34] ---==  Invate  ==---;Practica1 [191];Group;5
+[2018-08-6 20:48:04] SND;rfidunlock
+[2018-08-6 20:48:04] SND;settime:1533577684279
+[2018-08-6 20:48:04] SND;rfidunlock
+[2018-08-6 20:48:04] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 20:48:05] RCV;CLEAR OK;
+[2018-08-6 20:48:05] SND;timesynchreceived:77
+[2018-08-6 20:48:05] RCV;timesynchok:77,29543697049714688,78
+[2018-08-6 20:48:11] SND;rfidunlock
+[2018-08-6 20:48:11] SND;settime:1533577691828
+[2018-08-6 20:48:12] SND;rfidunlock
+[2018-08-6 20:48:13] RCV;CLEAR OK;
+[2018-08-6 20:48:13] SND;timesynchreceived:77
+[2018-08-6 20:48:13] RCV;timesynchok:77,34869052769828864,96
+[2018-08-6 20:48:25] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 20:53:20] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 20:53:23] ---==  Progam is loaded  ==--- 
+[2018-08-6 20:53:23] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 20:57:45] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 20:57:49] ---==  Progam is loaded  ==--- 
+[2018-08-6 20:57:49] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 20:59:17] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 20:59:20] ---==  Progam is loaded  ==--- 
+[2018-08-6 20:59:20] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:01:28] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:01:31] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:01:31] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:01:50] SND;rfidunlock
+[2018-08-6 21:01:50] SND;settime:1533578510320
+[2018-08-6 21:01:50] SND;rfidunlock
+[2018-08-6 21:01:50] ---==  Run Race  ==---;Practica1 [191];Group;1
+[2018-08-6 21:01:52] RCV;CLEAR OK;
+[2018-08-6 21:01:52] SND;timesynchreceived:77
+[2018-08-6 21:01:52] RCV;timesynchok:77,34901479772913664,198
+[2018-08-6 21:01:57] SND;rfidunlock
+[2018-08-6 21:01:57] SND;settime:1533578517246
+[2018-08-6 21:01:57] SND;rfidunlock
+[2018-08-6 21:01:58] RCV;CLEAR OK;
+[2018-08-6 21:01:58] SND;timesynchreceived:77
+[2018-08-6 21:01:58] RCV;timesynchok:77,38417056533577728,18
+[2018-08-6 21:02:10] ---==  Stop Race  ==---;Practica1 [191];Group;1
+[2018-08-6 21:02:37] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:02:40] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:02:40] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:03:11] SND;rfidunlock
+[2018-08-6 21:03:11] SND;settime:1533578591950
+[2018-08-6 21:03:12] SND;rfidunlock
+[2018-08-6 21:03:12] ---==  Run Race  ==---;Practica1 [191];Group;1
+[2018-08-6 21:03:13] RCV;CLEAR OK;
+[2018-08-6 21:03:13] SND;timesynchreceived:77
+[2018-08-6 21:03:13] RCV;timesynchok:77,38446803477069824,191
+[2018-08-6 21:03:17] SND;rfidunlock
+[2018-08-6 21:03:17] SND;settime:1533578597893
+[2018-08-6 21:03:18] SND;rfidunlock
+[2018-08-6 21:03:19] RCV;CLEAR OK;
+[2018-08-6 21:03:19] SND;timesynchreceived:77
+[2018-08-6 21:03:19] RCV;timesynchok:77,38767667598852096,154
+[2018-08-6 21:03:26] ---==  Stop Race  ==---;Practica1 [191];Group;1
+[2018-08-6 21:04:14] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:04:18] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:04:18] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:05:09] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:05:12] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:05:12] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:05:32] SND;rfidunlock
+[2018-08-6 21:05:32] SND;settime:1533578732523
+[2018-08-6 21:05:32] SND;rfidunlock
+[2018-08-6 21:05:32] ---==  Run Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:05:34] RCV;CLEAR OK;
+[2018-08-6 21:05:34] SND;timesynchreceived:77
+[2018-08-6 21:05:34] RCV;timesynchok:77,38793196884459520,158
+[2018-08-6 21:05:37] SND;rfidunlock
+[2018-08-6 21:05:38] SND;settime:1533578738161
+[2018-08-6 21:05:38] SND;rfidunlock
+[2018-08-6 21:05:39] RCV;CLEAR OK;
+[2018-08-6 21:05:39] SND;timesynchreceived:77
+[2018-08-6 21:05:39] RCV;timesynchok:77,39371458413068288,97
+[2018-08-6 21:05:48] ---==  Stop Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:05:53] SND;rfidunlock
+[2018-08-6 21:05:53] SND;settime:1533578753754
+[2018-08-6 21:05:53] SND;rfidunlock
+[2018-08-6 21:05:54] ---==  Run Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:05:55] RCV;CLEAR OK;
+[2018-08-6 21:05:55] SND;timesynchreceived:77
+[2018-08-6 21:05:55] RCV;timesynchok:77,39395673421905920,156
+[2018-08-6 21:06:00] SND;rfidunlock
+[2018-08-6 21:06:00] SND;settime:1533578760575
+[2018-08-6 21:06:00] SND;rfidunlock
+[2018-08-6 21:06:01] ---==  Stop Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:06:02] RCV;CLEAR OK;
+[2018-08-6 21:06:02] SND;timesynchreceived:77
+[2018-08-6 21:06:02] RCV;timesynchok:77,39462649141919744,100
+[2018-08-6 21:06:04] SND;rfidunlock
+[2018-08-6 21:06:04] SND;settime:1533578764912
+[2018-08-6 21:06:05] SND;rfidunlock
+[2018-08-6 21:06:05] ---==  Run Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:06:06] RCV;CLEAR OK;
+[2018-08-6 21:06:06] SND;timesynchreceived:77
+[2018-08-6 21:06:06] RCV;timesynchok:77,39491945130622976,120
+[2018-08-6 21:06:11] ---==  Stop Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:06:12] SND;rfidunlock
+[2018-08-6 21:06:12] SND;settime:1533578772218
+[2018-08-6 21:06:12] SND;rfidunlock
+[2018-08-6 21:06:13] RCV;CLEAR OK;
+[2018-08-6 21:06:13] SND;timesynchreceived:77
+[2018-08-6 21:06:13] RCV;timesynchok:77,39510572403785728,86
+[2018-08-6 21:10:44] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:10:47] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:10:47] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:17:23] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:17:26] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:17:26] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:18:34] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:18:36] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:18:36] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:19:16] SND;rfidunlock
+[2018-08-6 21:19:16] SND;settime:1533579556589
+[2018-08-6 21:19:16] SND;rfidunlock
+[2018-08-6 21:19:16] ---==  Run Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:19:18] RCV;CLEAR OK;
+[2018-08-6 21:19:18] SND;timesynchreceived:77
+[2018-08-6 21:19:18] RCV;timesynchok:77,39541955713040384,29
+[2018-08-6 21:19:21] SND;rfidunlock
+[2018-08-6 21:19:21] SND;settime:1533579561730
+[2018-08-6 21:19:21] SND;rfidunlock
+[2018-08-6 21:19:23] RCV;CLEAR OK;
+[2018-08-6 21:19:23] SND;timesynchreceived:77
+[2018-08-6 21:19:23] RCV;timesynchok:77,42910975321440256,216
+[2018-08-6 21:19:32] ---==  Stop Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:19:45] SND;rfidunlock
+[2018-08-6 21:19:45] SND;settime:1533579585219
+[2018-08-6 21:19:45] SND;rfidunlock
+[2018-08-6 21:19:45] ---==  Run Race  ==---;Practica1 [191];Group;2
+[2018-08-6 21:19:46] RCV;CLEAR OK;
+[2018-08-6 21:19:46] SND;timesynchreceived:77
+[2018-08-6 21:19:46] RCV;timesynchok:77,42933060026499072,253
+[2018-08-6 21:19:49] SND;rfidunlock
+[2018-08-6 21:19:50] SND;settime:1533579590099
+[2018-08-6 21:19:50] SND;rfidunlock
+[2018-08-6 21:19:51] RCV;CLEAR OK;
+[2018-08-6 21:19:51] SND;timesynchreceived:77
+[2018-08-6 21:19:51] RCV;timesynchok:77,43033948808282112,77
+[2018-08-6 21:22:59] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:23:02] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:23:02] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:23:34] SND;rfidunlock
+[2018-08-6 21:23:35] SND;settime:1533579815108
+[2018-08-6 21:23:35] SND;rfidunlock
+[2018-08-6 21:23:35] ---==  Run Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:23:36] RCV;CLEAR OK;
+[2018-08-6 21:23:36] SND;timesynchreceived:77
+[2018-08-6 21:23:36] RCV;timesynchok:77,43054908248686592,167
+[2018-08-6 21:23:41] SND;rfidunlock
+[2018-08-6 21:23:41] SND;settime:1533579821450
+[2018-08-6 21:23:41] SND;rfidunlock
+[2018-08-6 21:23:43] RCV;CLEAR OK;
+[2018-08-6 21:23:43] SND;timesynchreceived:77
+[2018-08-6 21:23:43] RCV;timesynchok:77,44021366084599808,155
+[2018-08-6 21:23:44] ---==  Stop Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:29:24] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:29:27] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:29:27] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:30:03] SND;rfidunlock
+[2018-08-6 21:30:03] SND;settime:1533580203313
+[2018-08-6 21:30:03] SND;rfidunlock
+[2018-08-6 21:30:03] ---==  Run Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:30:05] RCV;CLEAR OK;
+[2018-08-6 21:30:05] SND;timesynchreceived:77
+[2018-08-6 21:30:05] RCV;timesynchok:77,44048609062158336,60
+[2018-08-6 21:30:08] SND;rfidunlock
+[2018-08-6 21:30:08] SND;settime:1533580208534
+[2018-08-6 21:30:08] SND;rfidunlock
+[2018-08-6 21:30:10] RCV;CLEAR OK;
+[2018-08-6 21:30:10] SND;timesynchreceived:77
+[2018-08-6 21:30:10] RCV;timesynchok:77,45688779763089408,45
+[2018-08-6 21:32:50] ---==  Stop Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:33:35] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:33:37] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:33:37] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:35:34] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 21:35:37] ---==  Progam is loaded  ==--- 
+[2018-08-6 21:35:37] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 21:36:01] SND;rfidunlock
+[2018-08-6 21:36:01] SND;settime:1533580561679
+[2018-08-6 21:36:01] SND;rfidunlock
+[2018-08-6 21:36:02] ---==  Run Race  ==---;Practica1 [191];Group;3
+[2018-08-6 21:36:03] RCV;CLEAR OK;
+[2018-08-6 21:36:03] SND;timesynchreceived:77
+[2018-08-6 21:36:03] RCV;timesynchok:77,45711208082309120,206
+[2018-08-6 21:36:07] SND;rfidunlock
+[2018-08-6 21:36:07] SND;settime:1533580567354
+[2018-08-6 21:36:07] SND;rfidunlock
+[2018-08-6 21:36:09] RCV;CLEAR OK;
+[2018-08-6 21:36:09] SND;timesynchreceived:77
+[2018-08-6 21:36:09] RCV;timesynchok:77,47228031617466368,211
+[2018-08-6 21:36:45] ---==  Stop Race  ==---;Practica1 [191];Group;3
+[2018-08-6 22:43:32] SND;rfidunlock
+[2018-08-6 22:43:33] SND;settime:1533584613027
+[2018-08-6 22:43:33] SND;rfidunlock
+[2018-08-6 22:43:33] ---==  Run Race  ==---;Practica1 [191];Group;5
+[2018-08-6 22:43:35] RCV;CLEAR OK;
+[2018-08-6 22:43:35] SND;timesynchreceived:77
+[2018-08-6 22:43:35] RCV;timesynchok:77,47252409851838464,170
+ping:47252409851838516,77,190
+timesynchok:77,47252409851838666,89[2018-08-6 22:43:38] SND;rfidunlock
+[2018-08-6 22:43:38] SND;settime:1533584618684
+[2018-08-6 22:43:38] SND;rfidunlock
+[2018-08-6 22:43:41] RCV;CLEAR OK;
+[2018-08-6 22:43:41] SND;timesynchreceived:77
+[2018-08-6 22:43:41] RCV;timesynchok:77,64625436600041472,118
+ping:64625436600041524,77,145
+timesynchok:77,64625436600041674,228
+timesynchok:77,64625436600041876,172
+timesynchok:77,64625436600042078,30[2018-08-6 22:43:59] ---==  Stop Race  ==---;Practica1 [191];Group;5
+[2018-08-6 22:58:31] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 22:58:34] ---==  Progam is loaded  ==--- 
+[2018-08-6 22:58:34] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 22:59:55] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 22:59:58] ---==  Progam is loaded  ==--- 
+[2018-08-6 22:59:58] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:29:36] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:29:39] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:29:39] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:30:16] SND;rfidunlock
+[2018-08-6 23:30:16] SND;settime:1533587416367
+[2018-08-6 23:30:16] SND;rfidunlock
+[2018-08-6 23:30:16] ---==  Run Race  ==---;Practica1 [191];Group;1
+[2018-08-6 23:30:18] RCV;CLEAR OK;
+[2018-08-6 23:30:18] SND;timesynchreceived:77
+[2018-08-6 23:30:18] RCV;timesynchok:77,64651472691789824,5
+[2018-08-6 23:30:23] SND;rfidunlock
+[2018-08-6 23:30:23] SND;settime:1533587423728
+[2018-08-6 23:30:23] SND;rfidunlock
+[2018-08-6 23:30:25] RCV;CLEAR OK;
+[2018-08-6 23:30:25] SND;timesynchreceived:77
+[2018-08-6 23:30:25] RCV;timesynchok:77,76665449718218752,195
+[2018-08-6 23:34:14] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:34:17] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:34:17] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:35:55] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:35:58] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:35:58] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:50:03] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:50:12] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:50:15] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:50:15] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:50:48] SND;rfidunlock
+[2018-08-6 23:50:49] SND;settime:1533588649136
+[2018-08-6 23:50:49] SND;rfidunlock
+[2018-08-6 23:50:49] ---==  Run Race  ==---;Practica1 [191];Group;1
+[2018-08-6 23:50:50] RCV;CLEAR OK;
+[2018-08-6 23:50:50] SND;timesynchreceived:77
+[2018-08-6 23:50:50] RCV;timesynchok:77,76697060660740096,61
+[2018-08-6 23:50:55] SND;rfidunlock
+[2018-08-6 23:50:55] SND;settime:1533588655330
+[2018-08-6 23:50:55] SND;rfidunlock
+[2018-08-6 23:50:57] RCV;CLEAR OK;
+[2018-08-6 23:50:57] SND;timesynchreceived:77
+[2018-08-6 23:50:57] RCV;timesynchok:77,81960418527936512,142
+[2018-08-6 23:55:49] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:55:52] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:55:52] ---==  Active Race  ==---  ;Race [12]
+[2018-08-6 23:57:31] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-6 23:57:34] ---==  Progam is loaded  ==--- 
+[2018-08-6 23:57:34] ---==  Active Race  ==---  ;Race [12]
+[2018-08-7 00:08:46] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-7 00:08:49] ---==  Progam is loaded  ==--- 
+[2018-08-7 00:08:49] ---==  Active Race  ==---  ;Race [12]
+[2018-08-7 00:10:50] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-7 00:10:53] ---==  Progam is loaded  ==--- 
+[2018-08-7 00:10:53] ---==  Active Race  ==---  ;Race [12]

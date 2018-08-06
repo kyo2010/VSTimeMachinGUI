@@ -44,6 +44,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long LAPS;
   public long LAPS_INTO_BD = 0;
   public long BEST_LAP;
+  public long LAST_LAP;
   public long FIRST_LAP;
   public long RACE_TIME;
   public long START_TIME = 0; // for postponing start
@@ -95,6 +96,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("CHANNEL").setDbFieldName("\"CHANNEL\""),
     new DBModelField("LAPS").setDbFieldName("\"LAPS\""),
     new DBModelField("BEST_LAP").setDbFieldName("\"BEST_LAP\""),
+    new DBModelField("LAST_LAP").setDbFieldName("\"LAST_LAP\""),
     new DBModelField("RACE_TIME").setDbFieldName("\"RACE_TIME\""),
     new DBModelField("IS_RECALULATED").setDbFieldName("\"IS_RECALULATED\""),
     new DBModelField("IS_FINISHED").setDbFieldName("\"IS_FINISHED\""),
@@ -216,6 +218,7 @@ public class VS_STAGE_GROUPS implements Transferable {
 
       } else {
         long best_time_lap = MAX_TIME;
+        long last_time_lap = MAX_TIME;
         long _RACE_TIME = 0;
         LAPS = 0;
         boolean all_laps_is_exist = false;
@@ -250,6 +253,7 @@ public class VS_STAGE_GROUPS implements Transferable {
                 all_laps_is_exist = true;
 
               }
+              last_time_lap = lap.TRANSPONDER_TIME;
             } else {
               hasSkip = true;
             }
@@ -258,6 +262,7 @@ public class VS_STAGE_GROUPS implements Transferable {
         }
         if (LAPS > 0) {
           BEST_LAP = best_time_lap;
+          LAST_LAP = last_time_lap;
         }
         if (all_laps_is_exist) {
           RACE_TIME = _RACE_TIME;
