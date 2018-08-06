@@ -117,7 +117,8 @@ public class RaceHttpServer  implements  Runnable {
       
       handler.setWelcomeFiles(new String[]{ "index.htm" });
       handler.addServlet(RaceHttpServlet.class, "/index.htm");
-      handler.addServlet(TVTranslationServlet.class, "/tv.ajax");           
+      handler.addServlet(TVTranslationServlet.class, "/tv.ajax");    
+      //hello maloii
       //server.setHandler(handler);                       
        HandlerList handlers = new HandlerList( );
        handlers.setHandlers( new Handler[] {                  

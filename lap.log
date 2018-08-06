@@ -74,3 +74,7 @@
 [2018-05-28 14:28:03] SND;rfidunlock
 [2018-05-28 14:28:03] SND;settime:1527506883376
 [2018-05-28 14:28:10] ---==  Stop Race  ==---;Practica1 [200];Group;2
+[2018-08-3 21:17:53] ---==  Set Active Race  ==---  ;Race [12]
+[2018-08-3 21:17:56] ---==  Progam is loaded  ==--- 
+[2018-08-3 21:17:56] ---==  Active Race  ==---  ;Race [12]
+[2018-08-3 21:18:53] ---==  Invate  ==---;Practica1 [191];Group;1
