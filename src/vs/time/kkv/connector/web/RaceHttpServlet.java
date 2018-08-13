@@ -117,6 +117,8 @@ public class RaceHttpServlet extends HttpServlet {
         //PAGE_CONTENT+= "<p>"+message+"</p>\n";
         PAGE_CONTENT+= "</div>\n";
       }
+      
+      /** оброботчик основных событий от группы для админа, приглашение, запуск, стоп */      
       Long group_num = null;
       try{
         group_num = Long.parseLong(req.getParameter("group_num"));
@@ -169,6 +171,7 @@ public class RaceHttpServlet extends HttpServlet {
       group_num_send = group_num;
     }
 
+    /** Вывод групп */
     //resp.getWriter().println("EmbeddedJetty");  
     try {
       if (templ == null || USE_CACHE == false) {

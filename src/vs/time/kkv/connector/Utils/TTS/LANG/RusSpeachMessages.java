@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class RusSpeachMessages extends ISpeachMessages{
   public SpeekText groupFinished(long groupIndex){
-    return new SpeekText("Гонка группы " + groupIndex + " закончена",2000);
+    return new SpeekText("гонка группы " + groupIndex + " закончена",2000);
   };
   
   public SpeekText pilotIsChecked(String pilot){
@@ -21,7 +21,7 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
   
   public SpeekText raceIsOverIn10sec(){
-   return new SpeekText("Гонка закончится через десять секунд",2000);
+   return new SpeekText("гонка закончится через десять секунд",2000);
   }
   
   public SpeekText connected(){
@@ -37,14 +37,14 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
   
   public SpeekText gate() {
-    return new SpeekText("Транспондер для ворот", 1000);
+    return new SpeekText("транспондер для ворот", 1000);
   }
   
   public SpeekText startMessage(String id){
     if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
     if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);
     if (id.equalsIgnoreCase("three")) return new SpeekText("Три",350);
-    if (id.equalsIgnoreCase("attention")) return new SpeekText("Внимание, старт после звукового сигнала",5000,5000);
+    if (id.equalsIgnoreCase("attention")) return new SpeekText("внимание, старт после звукового сигнала",5000,5000);
     return new SpeekText(id);      
   }
   
@@ -93,7 +93,7 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
   
    public SpeekText invatieGroup(long num, List<String> pilots){
-    String text = "Приглашается группа "+num+". ";
+    String text = "приглашается группа "+num+". ";
     int count_of_chars = 0;
     for (String pilot :  pilots){
       text += pilot+"...";   
@@ -103,7 +103,7 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
    
    public SpeekText findTransponders(long num){
-    String text = "Поиск транспондеров. Группа "+num;    
+    String text = "поиск транспондеров. Группа "+num;    
     return new SpeekText(text, 2000);
   }
 }

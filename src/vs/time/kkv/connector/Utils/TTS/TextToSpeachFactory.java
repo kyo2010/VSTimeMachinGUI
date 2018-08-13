@@ -30,7 +30,12 @@ public class TextToSpeachFactory {
       TTS_LIST.add(new TextToSpeechCOM());
     }catch(RuntimeException re){  
     }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
-    }    
+    }  
+    try{
+      TTS_LIST.add(new TextToSpeechCOM2());
+    }catch(RuntimeException re){  
+    }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
+    }  
   }
   
   public static String[] getTTSNames(){

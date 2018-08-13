@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -415,9 +416,9 @@ public class FPVSport extends IRegSite {
     String fileNameCashe = IRegSite.PATH_ONLINE_UPDATE + "/" + jsonFileName + "_cashe.json";
     new File(fileName).delete();
     try {
-      FileOutputStream fos = new FileOutputStream(fileName);
-      fos.write(message.getBytes());
-      fos.close();
+      OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName),StandardCharsets.UTF_8);
+      out.write(message); 
+      out.close();
     } catch (Exception e) {
       if (showMessages) {
         JOptionPane.showMessageDialog(null, "JSON creation is eror : " + e.getMessage());
