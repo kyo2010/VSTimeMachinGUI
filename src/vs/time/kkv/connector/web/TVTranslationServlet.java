@@ -166,6 +166,9 @@ public class TVTranslationServlet extends HttpServlet {
     resp.getWriter().println(outHtml);
   }
 
+  /** Класс для отображения части групп, так как все группы сразу могут влезть на экран телевизора
+      бьем на группы на дисплеи и меняем дисплеи раз в три секунды
+   */ 
   public class DISPLAY {
     boolean byGroup = false;    
     public VS_STAGE_GROUP virtual_group = null;
