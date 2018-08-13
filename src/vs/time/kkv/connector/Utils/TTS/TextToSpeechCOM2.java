@@ -39,7 +39,7 @@ public class TextToSpeechCOM2 implements IKKVSpeek {
     // s.Speak Wscript.Arguments(0), 3
     try {
       // !!!!!! Please load audio forma notify.wav
-      speak.invoke("Speak", new Variant[]{new Variant(text),new Variant(3)});
+      speak.invoke("Speak", new Variant[]{new Variant("   "+text)});
     } catch (Exception e) {
       e.printStackTrace();
     }
