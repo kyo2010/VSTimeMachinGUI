@@ -736,7 +736,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           return tab.getTimeIntervel(td.pilot.RACE_TIME);
         }
         if (sc != null && sc.ID == STAGE_COLUMN.CID_CHANNEL) {
-          return td.pilot.CHANNEL;
+            if (td.pilot.color == null) {
+                td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
+              }
+          return td.pilot.CHANNEL+(td.pilot.color != null? " ("+td.pilot.color.colorname+")":"");
         }
 
         if (sc != null && sc.ID == STAGE_COLUMN.CID_QUAL_STATUS) {
