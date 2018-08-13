@@ -19,62 +19,76 @@ import vs.time.kkv.connector.Utils.TTS.LANG.ISpeachMessages;
  *
  * @author kyo
  */
-public class TextToSpeechCOM implements IKKVSpeek{
+public class TextToSpeechCOM implements IKKVSpeek {
 
   ReleaseManager rm = new ReleaseManager();
   IDispatch speak = null;
-  
+
   public TextToSpeechCOM() {
-    try{    
-      speak = new IDispatch(rm, "SAPI.SpVoice");                
-    }catch(Exception e){
+    try {
+      speak = new IDispatch(rm, "SAPI.SpVoice");
+    } catch (Exception e) {
       e.printStackTrace();
     }
-	}
-  
-  public void say(String text){
+    if (speak == null) {
+      try {
+        speak = new IDispatch(rm, "SPEECH.SpVoice");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void say(String text) {
     // set s = CreateObject("SAPI.SpVoice")
     // s.Speak Wscript.Arguments(0), 3
-    try{
+    try {
       // !!!!!! Please load audio forma notify.wav
-      speak.method("Speak",new Object[]{text,3});
-    } catch(Exception e){
+      speak.method("Speak", new Object[]{text, 3});
+    } catch (Exception e) {
       e.printStackTrace();
-    }    
+    }
   }
-  
-  public static void pause(){
-  try{
+
+  public static void pause() {
+    try {
       //Thread.currentThread().wait(3000);
       Thread.sleep(1500);
-    }catch(Exception e){}
+    } catch (Exception e) {
+    }
   }
-  
-  public static void main(String[] args){
+
+  public static void main(String[] args) {
     TextToSpeechCOM tts = new TextToSpeechCOM();
     tts.say("тест");
     pause();
     tts.say("Hello тест");
     pause();
     tts.say("Hi world");
-    try{
+    try {
       //Thread.currentThread().wait(3000);
       Thread.sleep(3000);
-    }catch(Exception e){}
+    } catch (Exception e) {
+    }
     System.out.println("exit");
-    
+
   }
+
+  public String getTTSName() {
+    return "Windows TTS";
+  }
+
+  ;
   
-  public String getTTSName(){
-    return "Windows TTS"; 
-  };
-  
-  public boolean useTranslit(){
+  public boolean useTranslit() {
     return false;
-  };
+  }
+
+  ;
   
-  public ISpeachMessages returnSpeachMessages(){
+  public ISpeachMessages returnSpeachMessages() {
     return ISpeachMessages.RU;
-  };
-  
+  }
+;
+
 }

@@ -30,6 +30,13 @@ public class TextToSpeechCOM_EN implements IKKVSpeek{
     }catch(Exception e){
       e.printStackTrace();
     }
+    if (speak == null) {
+      try {
+        speak = new IDispatch(rm, "SPEECH.SpVoice");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
 	}
   
   public void say(String text){
