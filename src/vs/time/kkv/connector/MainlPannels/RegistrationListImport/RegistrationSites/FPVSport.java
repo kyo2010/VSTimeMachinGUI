@@ -417,7 +417,7 @@ public class FPVSport extends IRegSite {
     new File(fileName).delete();
     try {
       OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName),StandardCharsets.UTF_8);
-      out.write(message);
+      out.write(message); 
       out.close();
     } catch (Exception e) {
       if (showMessages) {
