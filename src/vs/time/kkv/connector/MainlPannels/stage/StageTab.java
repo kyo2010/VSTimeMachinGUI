@@ -244,8 +244,13 @@ public class StageTab extends javax.swing.JPanel {
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
             Collection<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
             VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
+            VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
             for (Integer transID : userTrans) {
-              mainForm.vsTimeConnector.seachTransponder(transID, vs_color.getVSColor());
+              int vs_color_to_send = vs_color.getVSColor();
+              if (race.HYBRID_MODE != 1){
+                  vs_color_to_send |= (1 << 7);
+              }
+              mainForm.vsTimeConnector.seachTransponder(transID, vs_color_to_send);
               //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
               try {
                 //Thread.sleep(150);
