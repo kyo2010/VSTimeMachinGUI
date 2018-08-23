@@ -17,6 +17,7 @@ import vs.time.kkv.connector.MainForm;
     public static final int CID_PILOT_NUM = 15;
     public static final int CID_PILOT_TYPE = 17;
     public static final int CID_CHANNEL = 20;
+    public static final int CID_COLOR = 22;
     public static final int CID_SCORE = 25;
     public static final int CID_WIN = 26;
     public static final int CID_LOSS = 27;

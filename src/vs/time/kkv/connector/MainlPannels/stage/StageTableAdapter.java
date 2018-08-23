@@ -88,6 +88,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_REG_ID, "Reg ID", 50), 
     new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50),  
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 90),
@@ -99,6 +100,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE_RACE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_REG_ID, "Reg ID", 50),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50),    
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
@@ -736,10 +738,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           return tab.getTimeIntervel(td.pilot.RACE_TIME);
         }
         if (sc != null && sc.ID == STAGE_COLUMN.CID_CHANNEL) {
-            if (td.pilot.color == null) {
-                td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
-              }
-          return td.pilot.CHANNEL+(td.pilot.color != null? " ("+td.pilot.color.colorname+")":"");
+          return td.pilot.CHANNEL;
+        }
+        
+        if (sc != null && sc.ID == STAGE_COLUMN.CID_COLOR) {
+          if (td.pilot.color == null) {
+            td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
+          }
+          return (td.pilot.color != null? td.pilot.color.colorname:"");
         }
 
         if (sc != null && sc.ID == STAGE_COLUMN.CID_QUAL_STATUS) {
