@@ -2257,38 +2257,99 @@ public class StageTab extends javax.swing.JPanel {
       }
       timerCaption.setText(getTimeIntervelForTimer(0));
       timerCaption.setVisible(true);
-      InfoForm.init(mainForm, "!!!").setVisible(true);
-      mainForm.beep.palyAndWait("attention");
-      mainForm.activeGroup = td.group;
-      int rnd = (int) (Math.random() * 3000);
-      Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
-        public void actionPerformed(ActionEvent e) {
-          Runtime runtime = Runtime.getRuntime();
-          try {
-            Process p = runtime.exec("run.cmd");
-            int exitCode = p.waitFor();
-          } catch (Exception rt_e) {
-            MainForm._toLog(rt_e);
-          }
-          InfoForm.init(mainForm, "Go!").setVisible(true);
-          mainForm.beep.paly("beep");
-          //if (useSpeach) mainForm.speaker.speak("Go!");
-          mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-          preapreTimeMachineToRace();
-          raceTimer.start();
-          FIRST_RACER_IS_FINISHED = false;
-          jTree.updateUI();
-          Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
-            public void actionPerformed(ActionEvent e) {
-              InfoForm.init(mainForm, "").setVisible(false);
-            }
-          });
-          t4.setRepeats(false);
-          t4.start();
+      VS_RACE race = null;
+      
+        try {
+            race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
+        } catch (UserException ex) {
+            Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
         }
-      });
-      t3.setRepeats(false);
-      t3.start();
+      if(race != null && race.RANDOM_BEEP != 1){
+      InfoForm.init(mainForm, "3").setVisible(true);
+      mainForm.activeGroup = td.group;
+        //if (useSpeach) mainForm.speaker.speak("Three!");                
+        mainForm.beep.paly("three");
+        Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+          public void actionPerformed(ActionEvent e) {
+            InfoForm.init(mainForm, "2").setVisible(true);
+            //if (useSpeach) mainForm.speaker.speak("Two!");
+            mainForm.beep.paly("two");
+            Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+              public void actionPerformed(ActionEvent e) {
+                InfoForm.init(mainForm, "1").setVisible(true);
+                //if (useSpeach) mainForm.speaker.speak("One!");                        
+                mainForm.beep.paly("one");
+                //int rnd = (int) (Math.random() * 3000);
+                Timer t3 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                  public void actionPerformed(ActionEvent e) {
+                    Runtime runtime = Runtime.getRuntime();
+                    try {
+                      Process p = runtime.exec("run.cmd");
+                      int exitCode = p.waitFor();
+                    } catch (Exception rt_e) {
+                      MainForm._toLog(rt_e);
+                    }
+                    InfoForm.init(mainForm, "Go!").setVisible(true);
+                    mainForm.beep.paly("beep");
+                    //if (useSpeach) mainForm.speaker.speak("Go!");
+                    mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+                    preapreTimeMachineToRace();
+                    raceTimer.start();
+                    FIRST_RACER_IS_FINISHED = false;
+                    jTree.updateUI();
+                    Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                      public void actionPerformed(ActionEvent e) {
+                        InfoForm.init(mainForm, "").setVisible(false);
+                      }
+                    });
+                    t4.setRepeats(false);
+                    t4.start();
+                  }
+                });
+                t3.setRepeats(false);
+                t3.start();
+              }
+            });
+            t2.setRepeats(false);
+            t2.start();
+          }
+        });
+        t1.setRepeats(false);
+        t1.start();
+      }else{
+        InfoForm.init(mainForm, "!!!").setVisible(true);
+        mainForm.beep.palyAndWait("attention");
+        mainForm.activeGroup = td.group;
+        int rnd = (int) (Math.random() * 3000);
+        Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
+          public void actionPerformed(ActionEvent e) {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+              Process p = runtime.exec("run.cmd");
+              int exitCode = p.waitFor();
+            } catch (Exception rt_e) {
+              MainForm._toLog(rt_e);
+            }
+            InfoForm.init(mainForm, "Go!").setVisible(true);
+            mainForm.beep.paly("beep");
+            //if (useSpeach) mainForm.speaker.speak("Go!");
+            mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
+            preapreTimeMachineToRace();
+            raceTimer.start();
+            FIRST_RACER_IS_FINISHED = false;
+            jTree.updateUI();
+            Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+              public void actionPerformed(ActionEvent e) {
+                InfoForm.init(mainForm, "").setVisible(false);
+              }
+            });
+            t4.setRepeats(false);
+            t4.start();
+          }
+        });
+        t3.setRepeats(false);
+        t3.start();
+      }
     }
     pleasuUpdateTable = true;
     return message;

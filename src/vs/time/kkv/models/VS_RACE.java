@@ -21,6 +21,7 @@ public class VS_RACE {
   public int IS_ACTIVE = 0;
   public int PLEASE_IGNORE_FIRST_LAP = 0;
   public int HYBRID_MODE = 1;
+  public int RANDOM_BEEP = 1;
   public String CHANNEL1 = "";
   public String CHANNEL2 = "";
   public String CHANNEL3 = "";
@@ -54,6 +55,7 @@ public class VS_RACE {
     new DBModelField("CHANNEL4").setDbFieldName("\"CHANNEL4\""),
     new DBModelField("PLEASE_IGNORE_FIRST_LAP").setDbFieldName("\"PLEASE_IGNORE_FIRST_LAP\""),
     new DBModelField("HYBRID_MODE").setDbFieldName("\"HYBRID_MODE\""),
+    new DBModelField("RANDOM_BEEP").setDbFieldName("\"RANDOM_BEEP\""),
     new DBModelField("MAX_RACE_TIME").setDbFieldName("\"MAX_RACE_TIME\""),
 
     new DBModelField("WEB_SYSTEM_SID").setDbFieldName("\"WEB_SYSTEM_SID\""),

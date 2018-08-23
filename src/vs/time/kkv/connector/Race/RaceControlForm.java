@@ -82,6 +82,11 @@ public class RaceControlForm extends javax.swing.JFrame {
     }else{
       jсHybridMode.setSelected(false);
     }
+    if (race.RANDOM_BEEP==1){
+      jcBeepRandom.setSelected(true);
+    }else{
+      jcBeepRandom.setSelected(false);
+    }
     
   }
 
@@ -115,6 +120,7 @@ public class RaceControlForm extends javax.swing.JFrame {
         jLSeconds1 = new javax.swing.JLabel();
         jLSeconds2 = new javax.swing.JLabel();
         jсHybridMode = new javax.swing.JCheckBox();
+        jcBeepRandom = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         bSave = new javax.swing.JButton();
         bCancel = new javax.swing.JButton();
@@ -179,6 +185,16 @@ public class RaceControlForm extends javax.swing.JFrame {
         jсHybridMode.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jсHybridMode.setIconTextGap(22);
 
+        jcBeepRandom.setSelected(true);
+        jcBeepRandom.setText("Beep with random delay");
+        jcBeepRandom.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jcBeepRandom.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        jcBeepRandom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcBeepRandomActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -186,23 +202,6 @@ public class RaceControlForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chPostponingStart))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6))
-                            .addGap(82, 82, 82)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(edJudge, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(edSecretary, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jtLapDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jLSeconds2)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -222,7 +221,27 @@ public class RaceControlForm extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLSeconds)
                                     .addComponent(jLSeconds1)))))
-                    .addComponent(jсHybridMode, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jсHybridMode, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcBeepRandom))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chPostponingStart))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel6))
+                            .addGap(82, 82, 82)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(edJudge, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(edSecretary, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jtLapDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jLSeconds2))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -268,7 +287,9 @@ public class RaceControlForm extends javax.swing.JFrame {
                     .addComponent(chPostponingStart)
                     .addComponent(jcIgnoreFirstLap, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jсHybridMode)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jсHybridMode)
+                    .addComponent(jcBeepRandom))
                 .addGap(41, 41, 41))
         );
 
@@ -348,9 +369,12 @@ public class RaceControlForm extends javax.swing.JFrame {
       if (jcIgnoreFirstLap.isSelected()) race.PLEASE_IGNORE_FIRST_LAP = 1;
       race.HYBRID_MODE = 0;
       if (jсHybridMode.isSelected()) race.HYBRID_MODE = 1;
+      race.RANDOM_BEEP = 0;
+      if (jcBeepRandom.isSelected()) race.RANDOM_BEEP = 1;
       try{
         race.MIN_LAP_TIME = Integer.parseInt(jtMinLapTime.getText());
       }catch(Exception e){}  
+      
       
       try{
         race.LAP_DISTANCE = Integer.parseInt(jtLapDistance.getText());
@@ -394,6 +418,10 @@ public class RaceControlForm extends javax.swing.JFrame {
   private void jcIgnoreFirstLapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcIgnoreFirstLapActionPerformed
     // TODO add your handling code here:
   }//GEN-LAST:event_jcIgnoreFirstLapActionPerformed
+
+    private void jcBeepRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcBeepRandomActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcBeepRandomActionPerformed
 
   /**
    * @param args the command line arguments
@@ -450,6 +478,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JCheckBox jcBeepRandom;
     private javax.swing.JCheckBox jcIgnoreFirstLap;
     private javax.swing.JTextField jtLapDistance;
     private javax.swing.JTextField jtLapsCount;
