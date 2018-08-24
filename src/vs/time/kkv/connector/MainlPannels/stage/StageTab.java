@@ -2015,42 +2015,98 @@ public class StageTab extends javax.swing.JPanel {
           int count_man_in_group = 0;
           int GRUP_NUM = 1;
           String[] channels = stage.CHANNELS.split(";");
-          int prev_type_pilot = -1;
-          for (VS_REGISTRATION user : users) {
-            /*if (user.VS_TRANS1 == 0) {
-              JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
-              return;
-            }*/
-            // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
-            if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
-              GRUP_NUM++;
-              count_man_in_group = 0;
-            }
-            // Create new group, if full
-            count_man_in_group = count_man_in_group + 1;
-            if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
-              GRUP_NUM++;
-              count_man_in_group = 1;
-            }
-            VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
-            gr.STAGE_ID = stage.ID;
-            gr.REG_ID = user.ID;
-            gr.GROUP_NUM = GRUP_NUM;
-            gr.PILOT = user.VS_USER_NAME;
-            gr.NUM_IN_GROUP = count_man_in_group;
-            gr.CHANNEL = channels[count_man_in_group - 1];
-            gr.REG_ID = user.ID;
-            gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
-            prev_type_pilot = user.PILOT_TYPE;
+          if (stage.RACE_TYPE == MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16) {
+              int[] indx_pilots = { 1,2,3,4,
+                                    5,7,6,8,
+                                    10,11,9,12,
+                                    15,14,16,13,
+                                    13,1,5,9,
+                                    14,10,2,6,
+                                    11,15,7,3,
+                                    4,8,12,16,
+                                    6,16,1,11,
+                                    12,5,15,2,
+                                    8,9,3,14,
+                                    13,4,10,7,
+                                    7,12,14,1,
+                                    2,13,8,11,
+                                    16,3,10,5,
+                                    9,6,4,15,
+                                    1,8,15,10,
+                                    9,2,7,16,
+                                    3,12,13,6,
+                                    5,14,11,4};
+              if(users.size() == 16){
+                  for(int i = 0; i < indx_pilots.length; i++){
+                    if(i%4==0 && i != 0){
+                        GRUP_NUM++;
+                        count_man_in_group = 0;
+                    }
+                    count_man_in_group = count_man_in_group + 1;
+                    VS_REGISTRATION user = users.get(indx_pilots[i]-1);
+                    VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
+                    gr.STAGE_ID = stage.ID;
+                    gr.REG_ID = user.ID;
+                    gr.GROUP_NUM = GRUP_NUM;
+                    gr.PILOT = user.VS_USER_NAME;
+                    gr.NUM_IN_GROUP = count_man_in_group;
+                    gr.CHANNEL = channels[count_man_in_group - 1];
+                    gr.REG_ID = user.ID;
+                    gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
+                    //prev_type_pilot = user.PILOT_TYPE;
 
-            if (qualification != null) {
-              VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
-              if (quala != null) {
-                gr.QUAL_TIME = quala.RACE_TIME;
+                    if (qualification != null) {
+                      VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
+                      if (quala != null) {
+                        gr.QUAL_TIME = quala.RACE_TIME;
+                      }
+                    }
+
+                    VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+                  }
+              }else{
+                  //ERROR
+                  System.out.println("ERROR GREATE GROUPS 16!!! ::"+users.size());
+                  JOptionPane.showConfirmDialog(StageTab.this, "The number of pilots should be 16.", "Error", JOptionPane.YES_OPTION);
               }
-            }
+          }else{
+            int prev_type_pilot = -1;
+            for (VS_REGISTRATION user : users) {
+              /*if (user.VS_TRANS1 == 0) {
+                JOptionPane.showMessageDialog(this, "Please set Transponder ID for " + user.VS_USER_NAME);
+                return;
+              }*/
+              // Create new Group, if FLAG_BY_PYLOT_TYPE=1 and New Pilot Type 
+              if (prev_type_pilot != -1 && prev_type_pilot != user.PILOT_TYPE && stage.FLAG_BY_PYLOT_TYPE == 1) {
+                GRUP_NUM++;
+                count_man_in_group = 0;
+              }
+              // Create new group, if full
+              count_man_in_group = count_man_in_group + 1;
+              if (count_man_in_group > stage.COUNT_PILOTS_IN_GROUP) {
+                GRUP_NUM++;
+                count_man_in_group = 1;
+              }
+              VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
+              gr.STAGE_ID = stage.ID;
+              gr.REG_ID = user.ID;
+              gr.GROUP_NUM = GRUP_NUM;
+              gr.PILOT = user.VS_USER_NAME;
+              gr.NUM_IN_GROUP = count_man_in_group;
+              gr.CHANNEL = channels[count_man_in_group - 1];
+              gr.REG_ID = user.ID;
+              gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
+              prev_type_pilot = user.PILOT_TYPE;
 
-            VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+              if (qualification != null) {
+                VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
+                if (quala != null) {
+                  gr.QUAL_TIME = quala.RACE_TIME;
+                }
+              }
+
+              VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+            }
           }
         }
         System.out.println("Satge has been created : " + stage.ID);
