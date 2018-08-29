@@ -44,7 +44,7 @@ public class TextToSpeechCOM implements IKKVSpeek {
     // s.Speak Wscript.Arguments(0), 3
     try {
       // !!!!!! Please load audio forma notify.wav
-      speak.method("Speak", new Object[]{text, 3});
+      speak.method("Speak", new Object[]{text, 1});
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -39,7 +39,7 @@ public class TextToSpeechCOM2_EN implements IKKVSpeek {
     // s.Speak Wscript.Arguments(0), 3
     try {
       // !!!!!! Please load audio forma notify.wav
-      speak.invoke("Speak", new Variant[]{new Variant("   "+text)});
+      speak.invoke("Speak", new Variant[]{new Variant("   "+text),new Variant(1)});
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -70,7 +70,7 @@ public class TextToSpeechCOM2_EN implements IKKVSpeek {
   }
 
   public String getTTSName() {
-    return "Windows TTS2";
+    return "Windows TTS2 [ENG]";
   }
 
   ;
