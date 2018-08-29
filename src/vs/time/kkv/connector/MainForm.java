@@ -50,6 +50,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -398,11 +399,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       lap_log.writeFile("---==  Active Race  ==---  ;"+activeRace.RACE_NAME+" ["+activeRace.RACE_ID+"]");      
     }
   }
-
-  // Autouploader Timer to web-site - One time per minute
-  Timer autoUploadToWebTimer = new Timer(AUTO_UPDATER_TIME*1000, new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
+  
+  public AtomicBoolean treadIsRunning = new AtomicBoolean(false);
+  public class uploadThrad extends Thread{
+    @Override 
+    public void run(){
+      treadIsRunning.set(true);
       try {
         if (activeRace != null) {
           if (activeRace.AUTO_WEB_UPDATE == 1) {
@@ -431,6 +433,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       } catch (Exception ex) {
       }
+      treadIsRunning.set(false);
+    }
+  }
+
+  // Autouploader Timer to web-site - One time per minute
+  Timer autoUploadToWebTimer = new Timer(AUTO_UPDATER_TIME*2000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {      
+      if (treadIsRunning.get()==false){
+        new uploadThrad().start();
+      }      
     }
   });
 
