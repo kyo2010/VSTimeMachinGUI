@@ -131,12 +131,14 @@ public class StageTab extends javax.swing.JPanel {
       try {
         if (pleasuUpdateTree) {
           pleasuUpdateTree = false;
+          //System.out.println("repaint tree");
           if (jTree != null) {
             jTree.notifyAll();
             jTree.updateUI();
           }
         }
         if (pleasuUpdateTable) {
+          //System.out.println("repaint table");
           pleasuUpdateTable = false;
           if (jTable != null) {
             //stageTableAdapter.             
@@ -247,8 +249,8 @@ public class StageTab extends javax.swing.JPanel {
             VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
             for (Integer transID : userTrans) {
               int vs_color_to_send = vs_color.getVSColor();
-              if (race.HYBRID_MODE != 1){
-                  vs_color_to_send |= (1 << 7);
+              if (race.HYBRID_MODE != 1) {
+                vs_color_to_send |= (1 << 7);
               }
               mainForm.vsTimeConnector.seachTransponder(transID, vs_color_to_send);
               //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
@@ -354,6 +356,8 @@ public class StageTab extends javax.swing.JPanel {
       isOneTable = true;
       butCopyGropusToClipboard.setVisible(false);
     }
+
+    // isOneTable = true; for Debug to hide tree
 
     refreshData(false);
     refreshDataActionPerformedWitoutRecalulation();
@@ -486,9 +490,7 @@ public class StageTab extends javax.swing.JPanel {
           if (td == null || !td.isGrpup) {
             return;
           }
-          /**
-           * * INAVITATION
-           */
+          //INAVITATION          
           if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
             invateAction(td.group.GROUP_NUM, true);
           }
@@ -522,7 +524,6 @@ public class StageTab extends javax.swing.JPanel {
       jTree.setVisible(false);
       jScrollPane2.setVisible(false);
       butGroupExport.setVisible(false);
-      //jSplitPane2.set
     }
 
     if (mainForm.activeRace.WEB_RACE_ID != null && !mainForm.activeRace.WEB_RACE_ID.equals("")) {
@@ -530,6 +531,7 @@ public class StageTab extends javax.swing.JPanel {
     } else {
       butCopyToWeb.setVisible(false);
     }
+
   }
 
   /*public void checkGroupConstrain() {      
@@ -611,12 +613,14 @@ public class StageTab extends javax.swing.JPanel {
     //jTable.addNotify();
     //jTree.addNotify();
     //jTree.updateUI();
-    if (refreshInterface) {
+    if (refreshInterface && isOneTable == false) {
       jTree.updateUI();
       //treeModel = new StageTreeModel(this);
       //jTree.setModel(treeModel);
     }
-    expandAllJTree();
+    if (isOneTable == false) {
+      expandAllJTree();
+    }
   }
 
   public BaseFont getRussianFont() throws DocumentException, IOException {
@@ -1218,15 +1222,18 @@ public class StageTab extends javax.swing.JPanel {
       return;
     }
 
-    treeModel = new StageTreeModel(this);
-    jTree.setModel(treeModel);
-    jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
-    jTree.setDragEnabled(true);
-    jTree.setDropMode(DropMode.USE_SELECTION);
-    StageTreeCellRender render = new StageTreeCellRender(this);
-    jTree.setCellRenderer(render);
-    expandAllJTree();
+    if (isOneTable == false) {
+      treeModel = new StageTreeModel(this);
+      jTree.setModel(treeModel);
+      jTree.setTransferHandler(new StageTabTreeTransferHandler(this));
+      jTree.setDragEnabled(true);
+      jTree.setDropMode(DropMode.USE_SELECTION);
+      StageTreeCellRender render = new StageTreeCellRender(this);
+      jTree.setCellRenderer(render);
+      expandAllJTree();
+    }
 
+    jTable.setRowHeight(30);
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
@@ -1300,12 +1307,6 @@ public class StageTab extends javax.swing.JPanel {
     }
     StageNewForm.init(mainForm, null).setVisible(true);
   }//GEN-LAST:event_bNewStageActionPerformed
-
-  private void jTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableKeyPressed
-    // TODO add your handling code here:
-    keyPressed(evt);
-
-  }//GEN-LAST:event_jTableKeyPressed
 
   private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
     keyPressed(evt);
@@ -1461,6 +1462,10 @@ public class StageTab extends javax.swing.JPanel {
     // TODO add your handling code here:
     stopSearch();
   }//GEN-LAST:event_bStopCheckingActionPerformed
+
+  private void jTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableKeyPressed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_jTableKeyPressed
 
   public void stopSearch() {
     // TODO : 
@@ -2016,60 +2021,60 @@ public class StageTab extends javax.swing.JPanel {
           int GRUP_NUM = 1;
           String[] channels = stage.CHANNELS.split(";");
           if (stage.RACE_TYPE == MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16) {
-              int[] indx_pilots = { 1,2,3,4,
-                                    5,7,6,8,
-                                    10,11,9,12,
-                                    15,14,16,13,
-                                    13,1,5,9,
-                                    14,10,2,6,
-                                    11,15,7,3,
-                                    4,8,12,16,
-                                    6,16,1,11,
-                                    12,5,15,2,
-                                    8,9,3,14,
-                                    13,4,10,7,
-                                    7,12,14,1,
-                                    2,13,8,11,
-                                    16,3,10,5,
-                                    9,6,4,15,
-                                    1,8,15,10,
-                                    9,2,7,16,
-                                    3,12,13,6,
-                                    5,14,11,4};
-              if(users.size() == 16){
-                  for(int i = 0; i < indx_pilots.length; i++){
-                    if(i%4==0 && i != 0){
-                        GRUP_NUM++;
-                        count_man_in_group = 0;
-                    }
-                    count_man_in_group = count_man_in_group + 1;
-                    VS_REGISTRATION user = users.get(indx_pilots[i]-1);
-                    VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
-                    gr.STAGE_ID = stage.ID;
-                    gr.REG_ID = user.ID;
-                    gr.GROUP_NUM = GRUP_NUM;
-                    gr.PILOT = user.VS_USER_NAME;
-                    gr.NUM_IN_GROUP = count_man_in_group;
-                    gr.CHANNEL = channels[count_man_in_group - 1];
-                    gr.REG_ID = user.ID;
-                    gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
-                    //prev_type_pilot = user.PILOT_TYPE;
+            int[] indx_pilots = {1, 2, 3, 4,
+              5, 7, 6, 8,
+              10, 11, 9, 12,
+              15, 14, 16, 13,
+              13, 1, 5, 9,
+              14, 10, 2, 6,
+              11, 15, 7, 3,
+              4, 8, 12, 16,
+              6, 16, 1, 11,
+              12, 5, 15, 2,
+              8, 9, 3, 14,
+              13, 4, 10, 7,
+              7, 12, 14, 1,
+              2, 13, 8, 11,
+              16, 3, 10, 5,
+              9, 6, 4, 15,
+              1, 8, 15, 10,
+              9, 2, 7, 16,
+              3, 12, 13, 6,
+              5, 14, 11, 4};
+            if (users.size() == 16) {
+              for (int i = 0; i < indx_pilots.length; i++) {
+                if (i % 4 == 0 && i != 0) {
+                  GRUP_NUM++;
+                  count_man_in_group = 0;
+                }
+                count_man_in_group = count_man_in_group + 1;
+                VS_REGISTRATION user = users.get(indx_pilots[i] - 1);
+                VS_STAGE_GROUPS gr = new VS_STAGE_GROUPS();
+                gr.STAGE_ID = stage.ID;
+                gr.REG_ID = user.ID;
+                gr.GROUP_NUM = GRUP_NUM;
+                gr.PILOT = user.VS_USER_NAME;
+                gr.NUM_IN_GROUP = count_man_in_group;
+                gr.CHANNEL = channels[count_man_in_group - 1];
+                gr.REG_ID = user.ID;
+                gr.VS_PRIMARY_TRANS = user.VS_TRANS1;
+                //prev_type_pilot = user.PILOT_TYPE;
 
-                    if (qualification != null) {
-                      VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
-                      if (quala != null) {
-                        gr.QUAL_TIME = quala.RACE_TIME;
-                      }
-                    }
-
-                    VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
+                if (qualification != null) {
+                  VS_STAGE_GROUPS quala = qualification.get(gr.PILOT);
+                  if (quala != null) {
+                    gr.QUAL_TIME = quala.RACE_TIME;
                   }
-              }else{
-                  //ERROR
-                  System.out.println("ERROR GREATE GROUPS 16!!! ::"+users.size());
-                  JOptionPane.showConfirmDialog(StageTab.this, "The number of pilots should be 16.", "Error", JOptionPane.YES_OPTION);
+                }
+
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, gr);
               }
-          }else{
+            } else {
+              //ERROR
+              System.out.println("ERROR GREATE GROUPS 16!!! ::" + users.size());
+              JOptionPane.showConfirmDialog(StageTab.this, "The number of pilots should be 16.", "Error", JOptionPane.YES_OPTION);
+            }
+          } else {
             int prev_type_pilot = -1;
             for (VS_REGISTRATION user : users) {
               /*if (user.VS_TRANS1 == 0) {
@@ -2314,15 +2319,15 @@ public class StageTab extends javax.swing.JPanel {
       timerCaption.setText(getTimeIntervelForTimer(0));
       timerCaption.setVisible(true);
       VS_RACE race = null;
-      
-        try {
-            race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
-        } catch (UserException ex) {
-            Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      if(race != null && race.RANDOM_BEEP != 1){
-      InfoForm.init(mainForm, "3").setVisible(true);
-      mainForm.activeGroup = td.group;
+
+      try {
+        race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
+      } catch (UserException ex) {
+        Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      if (race != null && race.RANDOM_BEEP != 1) {
+        InfoForm.init(mainForm, "3").setVisible(true);
+        mainForm.activeGroup = td.group;
         //if (useSpeach) mainForm.speaker.speak("Three!");                
         mainForm.beep.paly("three");
         Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
@@ -2372,7 +2377,7 @@ public class StageTab extends javax.swing.JPanel {
         });
         t1.setRepeats(false);
         t1.start();
-      }else{
+      } else {
         InfoForm.init(mainForm, "!!!").setVisible(true);
         mainForm.beep.palyAndWait("attention");
         mainForm.activeGroup = td.group;

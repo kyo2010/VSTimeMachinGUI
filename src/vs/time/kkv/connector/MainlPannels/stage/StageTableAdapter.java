@@ -230,6 +230,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public void loadData() {
+    
+    //System.out.println("repaint table 2");
+    
     rows = new ArrayList<StageTableData>();
     if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
       //List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? order by GID", parent_stage.ID);          
@@ -1061,8 +1064,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   public static final Color DEFAULT_FOREGROUND_COLOR = Color.BLACK;
   public static final Color DEFAULT_BACKGROUD_COLOR = Color.WHITE;
+  
+  public Component getTableCellRendererComponentTest(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    StageTableData td = rows.get(row);       
+    return label;
+  }
+  
 
-  @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     StageTableData td = rows.get(row);
     JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -1072,8 +1081,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       label.setBackground(Color.LIGHT_GRAY);
       label.setForeground(Color.BLACK);
       label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN      
-      table.setRowHeight(row, 30);
-
       if (column == 1) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Start!"));
         if (tab.mainForm.activeGroup != null && tab.mainForm.activeGroup == td.group) {
@@ -1123,8 +1130,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
                  
       label.setBackground(DEFAULT_BACKGROUD_COLOR);
       label.setForeground(DEFAULT_FOREGROUND_COLOR);
-      table.setRowHeight(row, 30);
-
+      
       if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
         if (isQualificated(td.pilot)) {
         } else {

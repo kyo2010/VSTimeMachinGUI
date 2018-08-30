@@ -362,7 +362,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           VS_STAGE.resetSelectedTab(con, MainForm.this.activeRace.RACE_ID);
           try {
             StageTab p = (StageTab) tabbedPanel.getSelectedComponent();
-            if (p.stage != null) {
+            if (p.stage != null && p.stage.IS_SELECTED!=1) {
               p.stage.IS_SELECTED = 1;
               VS_STAGE.dbControl.save(MainForm.this.con, p.stage);
             }
