@@ -118,9 +118,14 @@ public class StageTab extends javax.swing.JPanel {
       jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
     }
   }
+  
+  public void refreshTable(){
+   jTable.setRowHeight(30);
+   jTable.notifyAll();
+   jTable.updateUI();
+  }
 
   boolean iveSaid10seckudForRaceOver = false;
-
   Timer raceTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -145,9 +150,7 @@ public class StageTab extends javax.swing.JPanel {
           if (jTable != null) {
             //stageTableAdapter.             
             //jTable.addNotify();
-            jTable.setRowHeight(30);
-            jTable.notifyAll();
-            jTable.updateUI();
+            refreshTable();
           }
         }
       } catch (Exception ex) {
@@ -236,7 +239,8 @@ public class StageTab extends javax.swing.JPanel {
             user.RECEIVED_LAPS = false;
           }
           pleaseMakeYelowPilot = false;
-          pleasuUpdateTable = true;
+          //pleasuUpdateTable = true;
+          refreshTable();
         }
 
         checkerCycle++;
@@ -291,7 +295,8 @@ public class StageTab extends javax.swing.JPanel {
                 } catch (Exception ein) {
                 }
                 user.VS_PRIMARY_TRANS = transID;
-                pleasuUpdateTable = true;
+                //pleasuUpdateTable = true;
+                refreshTable();
                 mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
               }
             }
@@ -317,7 +322,8 @@ public class StageTab extends javax.swing.JPanel {
             user.CHECK_FOR_RACE = 0;
           }
         };
-        pleasuUpdateTable = true;
+        //pleasuUpdateTable = true;
+        refreshTable();
         checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
         stopSearch();
