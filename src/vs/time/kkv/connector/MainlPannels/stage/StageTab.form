@@ -55,8 +55,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace pref="63" max="32767" attributes="0"/>
-                  <Component id="autoStratButton" min="-2" pref="63" max="-2" attributes="0"/>
+                  <EmptySpace pref="71" max="32767" attributes="0"/>
+                  <Component id="autoStrartRaceButton" min="-2" pref="55" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bStopChecking" min="-2" pref="61" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -90,7 +90,6 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="autoStratButton" alignment="1" max="32767" attributes="0"/>
                       <Component id="butCopyToWeb" alignment="1" max="32767" attributes="0"/>
                       <Component id="butCopyGropusToClipboard" max="32767" attributes="0"/>
                       <Component id="butCopyToClipboard" max="32767" attributes="0"/>
@@ -106,6 +105,7 @@
                       <Component id="butGroupExport" max="32767" attributes="0"/>
                       <Component id="jchTV" alignment="0" max="32767" attributes="0"/>
                       <Component id="bStopChecking" alignment="1" max="32767" attributes="0"/>
+                      <Component id="autoStrartRaceButton" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -277,13 +277,16 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bStopCheckingActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="autoStratButton">
+        <Component class="javax.swing.JButton" name="autoStrartRaceButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/images/icons/start_button.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Auto Start Race&#xa;Invitation, Start Search, + 3minutes for Ready, Start.. Next group"/>
+            <Property name="toolTipText" type="java.lang.String" value="Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped."/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoStrartRaceButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

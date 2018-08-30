@@ -67,10 +67,12 @@ import java.io.FileOutputStream;
 import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import ru.nkv.var.StringVar;
 import ru.nkv.var.Var;
@@ -134,7 +136,7 @@ public class StageTab extends javax.swing.JPanel {
           //System.out.println("repaint tree");
           if (jTree != null) {
             jTree.notifyAll();
-            jTree.updateUI();          
+            jTree.updateUI();
           }
         }
         if (pleasuUpdateTable) {
@@ -339,6 +341,8 @@ public class StageTab extends javax.swing.JPanel {
     return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0");
   }
 
+  Color BUTTON_BACKGROUND;
+
   /**
    * Creates new form PracticaTableTab
    */
@@ -346,6 +350,7 @@ public class StageTab extends javax.swing.JPanel {
     this.stage = _stage;
     initComponents();
     this.mainForm = main;
+    BUTTON_BACKGROUND = autoStrartRaceButton.getBackground();
     bStopChecking.setVisible(false);
     //topPanel.setVisible(false);              
 
@@ -359,7 +364,6 @@ public class StageTab extends javax.swing.JPanel {
     }
 
     // isOneTable = true; for Debug to hide tree
-
     refreshData(false);
     refreshDataActionPerformedWitoutRecalulation();
 
@@ -829,7 +833,7 @@ public class StageTab extends javax.swing.JPanel {
     butCopyGropusToClipboard = new javax.swing.JButton();
     butCopyToWeb = new javax.swing.JButton();
     bStopChecking = new javax.swing.JButton();
-    autoStratButton = new javax.swing.JToggleButton();
+    autoStrartRaceButton = new javax.swing.JButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -955,8 +959,13 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    autoStratButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/start_button.png"))); // NOI18N
-    autoStratButton.setToolTipText("Auto Start Race\nInvitation, Start Search, + 3minutes for Ready, Start.. Next group");
+    autoStrartRaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/start_button.png"))); // NOI18N
+    autoStrartRaceButton.setToolTipText("Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped.");
+    autoStrartRaceButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        autoStrartRaceButtonActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
@@ -965,8 +974,8 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-        .addComponent(autoStratButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+        .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bStopChecking, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -998,7 +1007,6 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addGap(4, 4, 4)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(autoStratButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1012,7 +1020,8 @@ public class StageTab extends javax.swing.JPanel {
           .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(bStopChecking, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addComponent(bStopChecking, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     butCopyToWeb.setVisible(false);
@@ -1476,6 +1485,97 @@ public class StageTab extends javax.swing.JPanel {
     keyPressed(evt);
   }//GEN-LAST:event_jTableKeyPressed
 
+  private void autoStrartRaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoStrartRaceButtonActionPerformed
+    if (autoStratRaceTimer.isRunning()){
+      currentStateAutoStrat = AUTOSTART_STATE_STOP;     
+      currentStateAutoStrat = 0;
+      autoStratRaceTimer.stop();
+      autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
+    }else{
+      currentStateAutoStrat = 0;     
+      currentStateAutoStrat = 0;
+      autoStratRaceTimer.start();
+      autoStrartRaceButton.setBackground(Color.RED);
+    }
+    
+  }//GEN-LAST:event_autoStrartRaceButtonActionPerformed
+
+  static final int AUTOSTART_STATE_INVATE = 100;
+  static final int AUTOSTART_STATE_SEARCH_TRANS = 200;
+  static final int AUTOSTART_STATE_WAITING = 300;
+  static final int AUTOSTART_STATE_RACE = 400;
+  static final int AUTOSTART_STATE_RACING = 450;  
+  static final int AUTOSTART_STATE_STOP = 500;
+  int currentStateAutoStrat = 0;
+  int currentTimeoutAutoStrat = 0;
+  VS_STAGE_GROUP GROUP_FOR_AUTO_START = null;
+  long WATING_TIME = 1000*60*3; // 3 minutes
+
+  /**
+   * * Timer for Automatic Start Race
+   */
+  Timer autoStratRaceTimer = new Timer(1000, new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (mainForm.activeGroup == null) {
+        if (currentStateAutoStrat == AUTOSTART_STATE_STOP) {
+          autoStratRaceTimer.stop();
+        }
+        currentTimeoutAutoStrat += autoStratRaceTimer.getDelay();
+        if (currentStateAutoStrat == 0 || currentStateAutoStrat == AUTOSTART_STATE_RACING) {
+          // find new group
+          GROUP_FOR_AUTO_START = null;          
+          //List<Integer> keySet = new ArrayList(stage.groups.keySet());
+          //Collections.sort(keySet);
+          for (Integer grup_index : stage.groups.keySet()) {
+            VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+            if (st_gr.users != null && st_gr.users.size() > 0) {
+              if (st_gr.users.get(0).IS_FINISHED==1) continue;
+              if (st_gr.users.get(0).IS_FINISHED==0){
+                GROUP_FOR_AUTO_START = st_gr;
+                break;
+              }
+            }
+          }
+          if (GROUP_FOR_AUTO_START!=null){
+            currentStateAutoStrat = AUTOSTART_STATE_INVATE;
+            currentTimeoutAutoStrat = 0;
+            invateAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
+          }else{
+            autoStratRaceTimer.stop();
+            autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
+            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().stageFinished());
+            JOptionPane.showMessageDialog(mainForm, "The Stage has been finished.", "Information", JOptionPane.INFORMATION_MESSAGE);
+          }          
+        }
+        if (currentStateAutoStrat == AUTOSTART_STATE_INVATE && currentTimeoutAutoStrat>5000 && GROUP_FOR_AUTO_START!=null) {
+          startSearchAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
+          currentStateAutoStrat = AUTOSTART_STATE_WAITING;
+          currentTimeoutAutoStrat = 0;
+        }
+        if (currentStateAutoStrat == AUTOSTART_STATE_WAITING && GROUP_FOR_AUTO_START!=null){
+          //if (currentTimeoutAutoStrat==0) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(WATING_TIME));
+          long interval = WATING_TIME-currentTimeoutAutoStrat;
+          if (interval==1000*60) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
+          if (interval==1000*60*2) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
+          if (interval==1000*60*3) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));          
+          if (interval==1000*30) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
+          if (interval==0 || interval<0) {
+            currentStateAutoStrat = AUTOSTART_STATE_RACE;
+            currentTimeoutAutoStrat = 0;      
+            stopSearch();
+            String message = startRaceAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
+            if (message.equals("")) currentStateAutoStrat = AUTOSTART_STATE_RACING;
+            else {
+              mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().waitingAdmin());
+              JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
+          }
+        }
+      }
+    }
+  });
+
   public void stopSearch() {
     // TODO : 
     mainForm.lap_log.writeFile("---==  Stop Search  ==---");
@@ -1494,7 +1594,7 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JToggleButton autoStratButton;
+  private javax.swing.JButton autoStrartRaceButton;
   private javax.swing.JButton bNewStage;
   private javax.swing.JButton bStopChecking;
   private javax.swing.JButton butConfig;
@@ -2251,7 +2351,7 @@ public class StageTab extends javax.swing.JPanel {
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
     FIRST_RACER_IS_FINISHED = true;
     String message = "";
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.vsTimeConnector != null && showDialog) {
       long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
       if (sec >= 5) {
         message = "The VS Time Machine has not response for " + sec + " seconds.";

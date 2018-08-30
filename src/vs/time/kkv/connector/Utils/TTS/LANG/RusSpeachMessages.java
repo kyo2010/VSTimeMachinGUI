@@ -92,6 +92,22 @@ public class RusSpeachMessages extends ISpeachMessages{
     return "" + lap;
   }
   
+  public SpeekText raceWillBeStarted(long miliseconds) {    
+    long value = miliseconds/1000/60;
+    String value_st = null;
+    String mesure = "минуты";
+    if (value==1) {
+      value_st = "одну";
+      mesure = "минуту";
+    } 
+    if (value==0) {
+      mesure = "секунд";
+      value = miliseconds/1000; 
+    }
+    if (value_st==null) value_st = ""+value;
+    return new SpeekText("Гонка начнется через "+value_st+" "+mesure, 3000);
+  }
+  
    public SpeekText invatieGroup(long num, List<String> pilots){
     String text = "приглашается группа "+num+". ";
     int count_of_chars = 0;
@@ -101,6 +117,14 @@ public class RusSpeachMessages extends ISpeachMessages{
     }
     return new SpeekText(text, 1500+2000*pilots.size() );
   }
+   
+   public SpeekText waitingAdmin() {
+    return new SpeekText("Администраторы проверьте засечку", 1200);
+  }  
+   
+   public SpeekText stageFinished() {
+    return new SpeekText("Этап завершен", 500);
+  } 
    
    public SpeekText findTransponders(long num){
     String text = "поиск транспондеров. Группа "+num;    

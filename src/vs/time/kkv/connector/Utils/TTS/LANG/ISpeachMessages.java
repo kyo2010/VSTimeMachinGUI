@@ -19,8 +19,6 @@ public class ISpeachMessages {
   public SpeekText groupFinished(long groupIndex) {
     return new SpeekText("Group " + groupIndex + " has been finshed", 2000);
   }
-
-  ;
   
   public SpeekText pilotIsChecked(String pilot) {
     return new SpeekText(pilot + " is checked");
@@ -29,6 +27,25 @@ public class ISpeachMessages {
   public SpeekText raceIsOverIn10sec() {
     return new SpeekText("The Race will be finished in ten seconds", 3000);
   }
+  
+  public SpeekText raceWillBeStarted(long miliseconds) {    
+    long value = miliseconds/1000/60;
+    String mesure = "минуты";
+    if (value==1) mesure = "minute"; 
+    if (value==0) {
+      mesure = "seconds";
+      value = miliseconds/1000; 
+    }
+    return new SpeekText("The Race will be started in "+value+" "+mesure, 3000);
+  }
+  
+  public SpeekText waitingAdmin() {
+    return new SpeekText("Administrator please check transponder hub", 1200);
+  }  
+  
+  public SpeekText stageFinished() {
+    return new SpeekText("The stage has been finished", 1000);
+  }  
 
   public SpeekText connected() {
     return new SpeekText("connected", 800);
