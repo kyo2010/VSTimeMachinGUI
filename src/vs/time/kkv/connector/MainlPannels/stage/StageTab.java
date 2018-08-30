@@ -119,7 +119,7 @@ public class StageTab extends javax.swing.JPanel {
 
   boolean iveSaid10seckudForRaceOver = false;
 
-  Timer raceTimer = new Timer(1000, new ActionListener() {
+  Timer raceTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.vsTimeConnector != null) {
@@ -134,7 +134,7 @@ public class StageTab extends javax.swing.JPanel {
           //System.out.println("repaint tree");
           if (jTree != null) {
             jTree.notifyAll();
-            jTree.updateUI();
+            jTree.updateUI();          
           }
         }
         if (pleasuUpdateTable) {
@@ -143,6 +143,7 @@ public class StageTab extends javax.swing.JPanel {
           if (jTable != null) {
             //stageTableAdapter.             
             //jTable.addNotify();
+            jTable.setRowHeight(30);
             jTable.notifyAll();
             jTable.updateUI();
           }
@@ -828,6 +829,7 @@ public class StageTab extends javax.swing.JPanel {
     butCopyGropusToClipboard = new javax.swing.JButton();
     butCopyToWeb = new javax.swing.JButton();
     bStopChecking = new javax.swing.JButton();
+    autoStratButton = new javax.swing.JToggleButton();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -953,6 +955,9 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    autoStratButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/start_button.png"))); // NOI18N
+    autoStratButton.setToolTipText("Auto Start Race\nInvitation, Start Search, + 3minutes for Ready, Start.. Next group");
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -960,7 +965,9 @@ public class StageTab extends javax.swing.JPanel {
       .addGroup(topPanelLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+        .addComponent(autoStratButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bStopChecking, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butCopyToWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -989,9 +996,10 @@ public class StageTab extends javax.swing.JPanel {
     topPanelLayout.setVerticalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(topPanelLayout.createSequentialGroup()
-        .addGap(8, 8, 8)
+        .addGap(4, 4, 4)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(autoStratButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bRestartWebServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1061,7 +1069,7 @@ public class StageTab extends javax.swing.JPanel {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jSplitPane1)
-          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)))
+          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -1465,6 +1473,7 @@ public class StageTab extends javax.swing.JPanel {
 
   private void jTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableKeyPressed
     // TODO add your handling code here:
+    keyPressed(evt);
   }//GEN-LAST:event_jTableKeyPressed
 
   public void stopSearch() {
@@ -1485,6 +1494,7 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JToggleButton autoStratButton;
   private javax.swing.JButton bNewStage;
   private javax.swing.JButton bStopChecking;
   private javax.swing.JButton butConfig;
