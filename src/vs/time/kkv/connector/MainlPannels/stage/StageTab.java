@@ -57,7 +57,10 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -74,6 +77,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import ru.nkv.var.StringVar;
 import ru.nkv.var.Var;
 import ru.nkv.var.VarPool;
@@ -81,6 +86,7 @@ import ru.nkv.var.pub.IVar;
 import static vs.time.kkv.connector.MainForm._toLog;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
+import vs.time.kkv.connector.MainlPannels.TimerForm;
 import vs.time.kkv.connector.SystemOptions;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.Utils.Beep;
@@ -120,9 +126,11 @@ public class StageTab extends javax.swing.JPanel {
   }
   
   public void refreshTable(){
-   jTable.setRowHeight(30);
-   jTable.notifyAll();
-   jTable.updateUI();
+    try{
+      jTable.setRowHeight(30);
+      //jTable.notifyAll();
+      //jTable.updateUI();
+    }catch(Exception e){}      
   }
 
   boolean iveSaid10seckudForRaceOver = false;
@@ -140,8 +148,10 @@ public class StageTab extends javax.swing.JPanel {
           pleasuUpdateTree = false;
           //System.out.println("repaint tree");
           if (jTree != null) {
-            jTree.notifyAll();
-            jTree.updateUI();
+            try{
+              jTree.notifyAll();
+              jTree.updateUI();
+            }catch(Exception ein){}
           }
         }
         if (pleasuUpdateTable) {
@@ -348,6 +358,8 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   Color BUTTON_BACKGROUND;
+  Border BUTTON_DEFAULT_BORDER;
+  Border BUTTON_RED_BORDER;
 
   /**
    * Creates new form PracticaTableTab
@@ -357,6 +369,10 @@ public class StageTab extends javax.swing.JPanel {
     initComponents();
     this.mainForm = main;
     BUTTON_BACKGROUND = autoStrartRaceButton.getBackground();
+    BUTTON_DEFAULT_BORDER = autoStrartRaceButton.getBorder();
+    BUTTON_RED_BORDER = new LineBorder(Color.RED,3);
+    
+    
     bStopChecking.setVisible(false);
     //topPanel.setVisible(false);              
 
@@ -967,6 +983,7 @@ public class StageTab extends javax.swing.JPanel {
 
     autoStrartRaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/start_button.png"))); // NOI18N
     autoStrartRaceButton.setToolTipText("Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped.");
+    autoStrartRaceButton.setBorder(null);
     autoStrartRaceButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         autoStrartRaceButtonActionPerformed(evt);
@@ -1045,6 +1062,7 @@ public class StageTab extends javax.swing.JPanel {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
+    jTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     jTable.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
         jTableKeyPressed(evt);
@@ -1496,12 +1514,23 @@ public class StageTab extends javax.swing.JPanel {
       currentStateAutoStrat = AUTOSTART_STATE_STOP;     
       currentStateAutoStrat = 0;
       autoStratRaceTimer.stop();
-      autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
+      /*autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);    
+      Border b = 
+      autoStrartRaceButton.getBorder();*/
+      autoStrartRaceButton.setBorder(BUTTON_DEFAULT_BORDER);
     }else{
+      int MINUTES = 3;
+      try{
+        MINUTES = Integer.parseInt(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
+      }catch(Exception e){}        
+      WATING_TIME = MINUTES*1000*60;               
+              
       currentStateAutoStrat = 0;     
       currentStateAutoStrat = 0;
       autoStratRaceTimer.start();
-      autoStrartRaceButton.setBackground(Color.RED);
+      mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
+      //autoStrartRaceButton.setBackground(Color.RED);
+      autoStrartRaceButton.setBorder(BUTTON_RED_BORDER);
     }
     
   }//GEN-LAST:event_autoStrartRaceButtonActionPerformed
@@ -1549,7 +1578,8 @@ public class StageTab extends javax.swing.JPanel {
             invateAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
           }else{
             autoStratRaceTimer.stop();
-            autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
+            //autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
+            autoStrartRaceButton.setBorder(BUTTON_DEFAULT_BORDER);
             mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().stageFinished());
             JOptionPane.showMessageDialog(mainForm, "The Stage has been finished.", "Information", JOptionPane.INFORMATION_MESSAGE);
           }          
@@ -1562,9 +1592,10 @@ public class StageTab extends javax.swing.JPanel {
         if (currentStateAutoStrat == AUTOSTART_STATE_WAITING && GROUP_FOR_AUTO_START!=null){
           //if (currentTimeoutAutoStrat==0) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(WATING_TIME));
           long interval = WATING_TIME-currentTimeoutAutoStrat;
-          if (interval==1000*60) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
-          if (interval==1000*60*2) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
-          if (interval==1000*60*3) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));          
+          int min = (int)interval/(1000*60);
+          if (interval==1000*60*min && min!=0) {
+            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
+          }          
           if (interval==1000*30) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
           if (interval==0 || interval<0) {
             currentStateAutoStrat = AUTOSTART_STATE_RACE;

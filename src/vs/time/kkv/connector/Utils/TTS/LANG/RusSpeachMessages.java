@@ -100,6 +100,10 @@ public class RusSpeachMessages extends ISpeachMessages{
       value_st = "одну";
       mesure = "минуту";
     } 
+    if (value==1) {
+      value_st = "пять";
+      mesure = "минут";
+    } 
     if (value==0) {
       mesure = "секунд";
       value = miliseconds/1000; 

@@ -283,6 +283,9 @@
               <Image iconType="3" name="/images/icons/start_button.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped."/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoStrartRaceButtonActionPerformed"/>
@@ -322,6 +325,9 @@
                     <Column editable="true" title="Title 3" type="java.lang.Object"/>
                     <Column editable="true" title="Title 4" type="java.lang.Object"/>
                   </Table>
+                </Property>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>

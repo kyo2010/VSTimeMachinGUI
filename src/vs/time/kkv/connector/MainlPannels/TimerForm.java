@@ -64,6 +64,10 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     }
   });
   
+  public void resetTimer(){
+    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
+  }
+  
   public void setPosition(){
     if (mainForm!=null){
      Point p = mainForm.getLocationOnScreen();
