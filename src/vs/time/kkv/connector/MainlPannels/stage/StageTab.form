@@ -287,6 +287,9 @@
               <Border info="null"/>
             </Property>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value="Auto Start Race: Invitation, Start Search, wait 3minutes and Start Race..."/>
+          </AccessibilityProperties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoStrartRaceButtonActionPerformed"/>
           </Events>

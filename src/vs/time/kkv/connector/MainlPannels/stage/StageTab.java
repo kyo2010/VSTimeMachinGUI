@@ -1048,6 +1048,7 @@ public class StageTab extends javax.swing.JPanel {
     );
 
     butCopyToWeb.setVisible(false);
+    autoStrartRaceButton.getAccessibleContext().setAccessibleDescription("Auto Start Race: Invitation, Start Search, wait 3minutes and Start Race...");
 
     jSplitPane2.setDividerLocation(200);
 

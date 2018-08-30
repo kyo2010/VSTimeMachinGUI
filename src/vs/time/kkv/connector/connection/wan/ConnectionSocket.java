@@ -257,17 +257,13 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
           System.out.println("ip:" + ip + " brodcast:" + ip_host);
           break;
         }
-
       }
-
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   public int getTimeOutForReconnect() {
     return 20;
   }
-;
 }
