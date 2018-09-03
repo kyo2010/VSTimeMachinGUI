@@ -34,6 +34,7 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
  * тест коммита от ККВ
+ *
  * @author kyo
  */
 public class RaceHttpServlet extends HttpServlet {
@@ -41,14 +42,13 @@ public class RaceHttpServlet extends HttpServlet {
   public static boolean USE_CACHE = false;
   String templ = null;
   String templ_button = null;
-  
+
   public static String ACTION_RUN = "run";
   public static String ACTION_STOP = "stop";
   public static String ACTION_CHECK = "check";
   public static String ACTION_STOP_CHECK = "stop_check";
   public static String ACTION_INVATE = "invate";
 
-  
   public String createMenuButton(String caption, String href) {
     if (templ_button == null || USE_CACHE == false) {
       templ_button = Tools.getTextFromFile("web"+File.separator+"button.template.htm");
@@ -83,96 +83,106 @@ public class RaceHttpServlet extends HttpServlet {
     boolean is_admin = false;
     boolean is_refresh = false;
     String logout = req.getParameter("logout");
-    if(logout != null && logout.equals("1")){
-      Cookie cookie = new Cookie("admin","");
-      cookie.setMaxAge(0); 
+    if (logout != null && logout.equals("1")) {
+      Cookie cookie = new Cookie("admin", "");
+      cookie.setMaxAge(0);
       resp.addCookie(cookie);
       req.getSession().removeAttribute("admin");
-    }else if (req.getSession().getAttribute("admin")!=null  && "1".equals(req.getSession().getAttribute("admin"))) {
+    } else if (req.getSession().getAttribute("admin") != null && "1".equals(req.getSession().getAttribute("admin"))) {
       is_admin = true;
       /*if(mainForm.lastCheckingGrpup == null
          || (mainForm.lastCheckingGrpup!=null && !mainForm.lastCheckingGrpup.stageTab.checkerTimer.isRunning())){
         REFRESH_META = "";
       }*/
-    }else{
-        Cookie[] cookies = req.getCookies();
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equalsIgnoreCase("admin") && cookie.getValue().equalsIgnoreCase("1")){
-               
-                req.getSession().setAttribute("admin", "1");
-                is_admin = true;
-            }
+    } else {
+      Cookie[] cookies = req.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if (cookie.getName().equalsIgnoreCase("admin") && cookie.getValue().equalsIgnoreCase("1")) {
+
+            req.getSession().setAttribute("admin", "1");
+            is_admin = true;
+          }
         }
+      }
     }
-    
+
     String message_send = "";
     Long group_num_send = null;
-    if (is_admin){
+    if (is_admin) {
       String action = req.getParameter("action");
       String stage = req.getParameter("stage");
       String message = req.getParameter("message");
-      
-      if (message != null && !message.equalsIgnoreCase("")){
-        PAGE_CONTENT+= "<div class='w3-panel w3-red'>\n";
-        PAGE_CONTENT+= "<h3>"+message+"</h3>\n";
+
+      if (message != null && !message.equalsIgnoreCase("")) {
+        PAGE_CONTENT += "<div class='w3-panel w3-red'>\n";
+        PAGE_CONTENT += "<h3>" + message + "</h3>\n";
         //PAGE_CONTENT+= "<p>"+message+"</p>\n";
-        PAGE_CONTENT+= "</div>\n";
+        PAGE_CONTENT += "</div>\n";
       }
-      
-      /** оброботчик основных событий от группы для админа, приглашение, запуск, стоп */      
+
+      /**
+       * оброботчик основных событий от группы для админа, приглашение, запуск,
+       * стоп
+       */
       Long group_num = null;
-      try{
+      try {
         group_num = Long.parseLong(req.getParameter("group_num"));
-      }catch(Exception e){}
-      if (action==null) action = "";
-      if (action.equalsIgnoreCase(ACTION_STOP)){
-        if (mainForm.activeGroup!=null){
+      } catch (Exception e) {
+      }
+      if (action == null) {
+        action = "";
+      }
+      if (action.equalsIgnoreCase(ACTION_STOP)) {
+        if (mainForm.activeGroup != null) {
           mainForm.activeGroup.stageTab.stopRace();
           is_refresh = true;
         }
-      }else if (action.equalsIgnoreCase(ACTION_STOP_CHECK)){
-        if (mainForm.lastCheckingGrpup!=null){
+      } else if (action.equalsIgnoreCase(ACTION_STOP_CHECK)) {
+        if (mainForm.lastCheckingGrpup != null) {
           mainForm.lastCheckingGrpup.stageTab.stopSearch();
           is_refresh = true;
         }
-      }else if (action.equalsIgnoreCase(ACTION_INVATE)){
-        for (StageTab tab : mainForm.stageTabs){
-          if ((""+tab.stage.ID).equals(stage)){
-            if (group_num!=null){
+      } else if (action.equalsIgnoreCase(ACTION_INVATE)) {
+        for (StageTab tab : mainForm.stageTabs) {
+          if (("" + tab.stage.ID).equals(stage)) {
+            if (group_num != null) {
               message_send = tab.invateAction(group_num, false);
               is_refresh = true;
               //PAGE_CONTENT += "<p>"+message+"</p>";
-            }          
+            }
             break;
-          } 
+          }
         }
-      }else if (action.equalsIgnoreCase(ACTION_RUN)){
-        for (StageTab tab : mainForm.stageTabs){
-          if ((""+tab.stage.ID).equals(stage)){
-            if (group_num!=null){
+      } else if (action.equalsIgnoreCase(ACTION_RUN)) {
+        for (StageTab tab : mainForm.stageTabs) {
+          if (("" + tab.stage.ID).equals(stage)) {
+            if (group_num != null) {
               message_send = tab.startRaceAction(group_num, false);
               is_refresh = true;
               //PAGE_CONTENT += "<p>"+message+"</p>";
-            }          
+            }
             break;
-          } 
+          }
         }
-      }else if (action.equalsIgnoreCase(ACTION_CHECK)){
-        for (StageTab tab : mainForm.stageTabs){
-          if ((""+tab.stage.ID).equals(stage)){
-            if (group_num!=null){
+      } else if (action.equalsIgnoreCase(ACTION_CHECK)) {
+        for (StageTab tab : mainForm.stageTabs) {
+          if (("" + tab.stage.ID).equals(stage)) {
+            if (group_num != null) {
               message_send = tab.startSearchAction(group_num, false);
               is_refresh = true;
               //PAGE_CONTENT += "<p>"+message+"</p>";
-            }          
+            }
             break;
-          } 
+          }
         }
       }
       group_num_send = group_num;
     }
 
-    /** Вывод групп */
+    /**
+     * Вывод групп
+     */
     //resp.getWriter().println("EmbeddedJetty");  
     try {
       if (templ == null || USE_CACHE == false) {
@@ -225,8 +235,6 @@ public class RaceHttpServlet extends HttpServlet {
       } else {
       }
 
-      
-      
       String mode = req.getParameter("mode");
       if (mode != null && mode.equalsIgnoreCase("admin")) {
         REFRESH_META = "";
@@ -236,8 +244,8 @@ public class RaceHttpServlet extends HttpServlet {
         if (user != null && password != null) {
           if (user.equalsIgnoreCase("admin") && password.equals("test1")) {
             req.getSession().setAttribute("admin", "1");
-            Cookie cookie = new Cookie("admin","1");
-            cookie.setMaxAge(60 * 60 * 24); 
+            Cookie cookie = new Cookie("admin", "1");
+            cookie.setMaxAge(60 * 60 * 24);
             resp.addCookie(cookie);
             PAGE_CONTENT = "<div class='w3-container w3-card-4'>\n";
             PAGE_CONTENT += "<p>You are an administrator!</p><p>Welocome to control Drone Racing System!</p>\n";
@@ -246,7 +254,7 @@ public class RaceHttpServlet extends HttpServlet {
             show_login_form = false;
           }
         }
-        
+
         STAGE_CAPTION = "Admin menu";
         if (show_login_form) {
           PAGE_CONTENT = "<form class='w3-container w3-card-4' action='index.htm' method='POST'>\n";
@@ -306,34 +314,29 @@ public class RaceHttpServlet extends HttpServlet {
               if (currentGroup != user.GROUP_NUM) {
                 PAGE_CONTENT += "<tr class='w3-light-gray w3-xlarge'>\n";
                 String control_buttons = "";
-                if (is_admin && mainForm.activeGroup==null && active_stage!=null &&
-                        (  mainForm.lastCheckingGrpup==null || 
-                          ( mainForm.lastCheckingGrpup!=null && !mainForm.lastCheckingGrpup.stageTab.checkerTimer.isRunning() )
-                        ) &&
-                     ( active_stage.STAGE_TYPE==MainForm.STAGE_PRACTICA ||
-                       active_stage.STAGE_TYPE==MainForm.STAGE_QUALIFICATION ||
-                       active_stage.STAGE_TYPE==MainForm.STAGE_RACE 
-                     ))
-                {
-                  control_buttons += "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_RUN+"' class='w3-teal w3-button'>"+
-                                    "Run Race</a>&nbsp;&nbsp;&nbsp;";
-                  control_buttons += "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_CHECK+"' class='w3-teal w3-button'>"+
-                                    "Check</a>&nbsp;&nbsp;&nbsp;";
-                  control_buttons += "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_INVATE+"' class='w3-teal w3-button'>"+
-                                    "Invate</a>";
+                if (is_admin && mainForm.activeGroup == null && active_stage != null
+                        && (mainForm.lastCheckingGrpup == null
+                        || (mainForm.lastCheckingGrpup != null && !mainForm.lastCheckingGrpup.stageTab.checkerTimer.isRunning()))
+                        && (active_stage.STAGE_TYPE == MainForm.STAGE_PRACTICA
+                        || active_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION
+                        || active_stage.STAGE_TYPE == MainForm.STAGE_RACE)) {
+                  control_buttons += "<a href='index.htm?stage=" + active_stage.ID + "&group_num=" + user.GROUP_NUM + "&action=" + ACTION_RUN + "' class='w3-teal w3-button'>"
+                          + "Run Race</a>&nbsp;&nbsp;&nbsp;";
+                  control_buttons += "<a href='index.htm?stage=" + active_stage.ID + "&group_num=" + user.GROUP_NUM + "&action=" + ACTION_CHECK + "' class='w3-teal w3-button'>"
+                          + "Check</a>&nbsp;&nbsp;&nbsp;";
+                  control_buttons += "<a href='index.htm?stage=" + active_stage.ID + "&group_num=" + user.GROUP_NUM + "&action=" + ACTION_INVATE + "' class='w3-teal w3-button'>"
+                          + "Invate</a>";
                 }
-                if (is_admin && mainForm.activeGroup!=null && active_stage.ID==mainForm.activeGroup.stage.ID &&
-                    user.GROUP_NUM==mainForm.activeGroup.GROUP_NUM
-                    )
-                {
-                  control_buttons = "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_STOP+"' class='w3-teal w3-button'>"+
-                                    "Stop Race</a>";
+                if (is_admin && mainForm.activeGroup != null && active_stage.ID == mainForm.activeGroup.stage.ID
+                        && user.GROUP_NUM == mainForm.activeGroup.GROUP_NUM) {
+                  control_buttons = "<a href='index.htm?stage=" + active_stage.ID + "&group_num=" + user.GROUP_NUM + "&action=" + ACTION_STOP + "' class='w3-teal w3-button'>"
+                          + "Stop Race</a>";
                 }
-                if (mainForm.lastCheckingGrpup!=null && mainForm.lastCheckingGrpup.stageTab.checkerTimer.isRunning()){
-                   control_buttons = "<a href='index.htm?stage="+active_stage.ID+"&group_num="+user.GROUP_NUM+"&action="+ACTION_STOP_CHECK+"' class='w3-teal w3-button'>"+
-                                    "Stop Search</a>";
-                }                
-                PAGE_CONTENT += "  <td colspan='9'><a  name='group_"+user.GROUP_NUM+"'></a><b>Group" + user.GROUP_NUM + "</b> "+control_buttons+"</td>\n";                                               
+                if (mainForm.lastCheckingGrpup != null && mainForm.lastCheckingGrpup.stageTab.checkerTimer.isRunning()) {
+                  control_buttons = "<a href='index.htm?stage=" + active_stage.ID + "&group_num=" + user.GROUP_NUM + "&action=" + ACTION_STOP_CHECK + "' class='w3-teal w3-button'>"
+                          + "Stop Search</a>";
+                }
+                PAGE_CONTENT += "  <td colspan='9'><a  name='group_" + user.GROUP_NUM + "'></a><b>Group" + user.GROUP_NUM + "</b> " + control_buttons + "</td>\n";
                 PAGE_CONTENT += "</tr>\n";
                 currentGroup = user.GROUP_NUM;
               }
@@ -360,21 +363,23 @@ public class RaceHttpServlet extends HttpServlet {
                   activeGroupNum = user.GROUP_NUM;
                 }
               }
-              if(user.IS_FINISHED == 1 && user.RACE_TIME > 0){
-                 int coutFinish = 0;
-                 for (VS_STAGE_GROUPS user2 : groups) {
-                    if(user.GROUP_NUM == user2.GROUP_NUM && user2.IS_FINISHED == 1) coutFinish++; 
-                 }
-                 pos = coutFinish;
-                 for (VS_STAGE_GROUPS user2 : groups) {
-                    if(user.GROUP_NUM == user2.GROUP_NUM 
-                            && user2.IS_FINISHED == 1 
-                            && user2.RACE_TIME > 0 
-                            && user.RACE_TIME < user2.RACE_TIME){
-                          pos--;
-                    }
-                 }
-               }
+              if (user.IS_FINISHED == 1 && user.RACE_TIME > 0) {
+                int coutFinish = 0;
+                for (VS_STAGE_GROUPS user2 : groups) {
+                  if (user.GROUP_NUM == user2.GROUP_NUM && user2.IS_FINISHED == 1) {
+                    coutFinish++;
+                  }
+                }
+                pos = coutFinish;
+                for (VS_STAGE_GROUPS user2 : groups) {
+                  if (user.GROUP_NUM == user2.GROUP_NUM
+                          && user2.IS_FINISHED == 1
+                          && user2.RACE_TIME > 0
+                          && user.RACE_TIME < user2.RACE_TIME) {
+                    pos--;
+                  }
+                }
+              }
               ///String bgcolor = "#ffffff";           
               PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' ><b>" + user.CHANNEL + "</b></td>"
                       + "<td align='center'>" + user.LAPS + "</td>"
@@ -382,7 +387,7 @@ public class RaceHttpServlet extends HttpServlet {
                       + "<td>" + (user.LAST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.LAST_LAP)) + "</td>"
                       + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
                       + status + "</td>"
-                      + "<td  align='center'>" + (pos == 0 ? "" : (user.RACE_TIME == VS_STAGE_GROUPS.MAX_TIME? "DNF": pos)) + "</td>\n";
+                      + "<td  align='center'>" + (pos == 0 ? "" : (user.RACE_TIME == VS_STAGE_GROUPS.MAX_TIME ? "DNF" : pos)) + "</td>\n";
               PAGE_CONTENT += "</tr>\n";
             }
             PAGE_CONTENT += "</table>\n";
@@ -395,7 +400,7 @@ public class RaceHttpServlet extends HttpServlet {
 
       }
       IVar varsPool = new VarPool();
-      varsPool.addChild(new StringVar("TITLE", "Drone Racing System" + (is_admin?" [Admin]":"")));
+      varsPool.addChild(new StringVar("TITLE", "Drone Racing System" + (is_admin ? " [Admin]" : "")));
       varsPool.addChild(new StringVar("RACE_CAPTION", race == null ? "None" : race.RACE_NAME));
       varsPool.addChild(new StringVar("STAGE_CAPTION", STAGE_CAPTION));
       varsPool.addChild(new StringVar("MENU", MENU));
@@ -406,15 +411,14 @@ public class RaceHttpServlet extends HttpServlet {
       }
       varsPool.addChild(new StringVar("INFO", INFO));
 
-      if(is_refresh && active_stage != null){
-          resp.setStatus(HttpServletResponse.SC_SEE_OTHER);
-          resp.setHeader("Location", "index.htm?stage="+active_stage.ID+
-                  ((!message_send.equalsIgnoreCase(""))? "&message="+message_send : "")+
-                  (group_num_send != null? "#group_"+group_num_send:""));
+      if (is_refresh && active_stage != null) {
+        resp.setStatus(HttpServletResponse.SC_SEE_OTHER);
+        resp.setHeader("Location", "index.htm?stage=" + active_stage.ID
+                + ((!message_send.equalsIgnoreCase("")) ? "&message=" + message_send : "")
+                + (group_num_send != null ? "#group_" + group_num_send : ""));
       }
       String html = varsPool.applyValues(templ);
       resp.getWriter().println(html);
-      
 
     } catch (Exception e) {
       e.printStackTrace();
