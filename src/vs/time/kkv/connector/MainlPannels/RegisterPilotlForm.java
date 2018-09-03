@@ -454,7 +454,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           };
           return;
         }
-        if (check2 != null) {
+        if (check2 != null && usr.VS_TRANS2!=0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
           if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS2+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
             check2.VS_TRANS2 = 0;
@@ -462,7 +462,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           };
           return;
         }
-        if (check3 != null) {
+        if (check3 != null && usr.VS_TRANS3!=0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
           if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS3+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
             check3.VS_TRANS3 = 0;
