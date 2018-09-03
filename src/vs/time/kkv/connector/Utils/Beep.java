@@ -91,7 +91,7 @@ public class Beep {
     public PreLoadSound(String file) {
       try {
         String dir = new File("sounds").getAbsolutePath();
-        File tadaSound = new File(dir + "\\" + file);
+        File tadaSound = new File(dir + File.separator + file);
         if (FileUtils.exists(tadaSound.getAbsolutePath())) {
 
           FileInputStream fis = new FileInputStream(tadaSound);

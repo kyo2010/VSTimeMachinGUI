@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.web;
 
 import KKV.Utils.Tools;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -127,12 +128,12 @@ public class TVTranslationServlet2 extends HttpServlet {
 
   public void showGroup(HttpServletRequest req, HttpServletResponse resp, VS_STAGE_GROUP group, boolean isRace) throws ServletException, IOException {
     String html = "";
-    //if (isRace) html = Tools.getTextFromFile("web\\tv.template.race.htm");
+    //if (isRace) html = Tools.getTextFromFile("web"+File.separator+"tv.template.race.htm");
     //else 
     if(isRace){
-        html = Tools.getTextFromFile("web\\tv.template2.htm");
+        html = Tools.getTextFromFile("web"+File.separator+"tv.template2.htm");
     }else{
-        html = Tools.getTextFromFile("web\\tv.template2.invate.htm");
+        html = Tools.getTextFromFile("web"+File.separator+"tv.template2.invate.htm");
     }
 
     String channels_st = "";
@@ -181,7 +182,7 @@ public class TVTranslationServlet2 extends HttpServlet {
   }
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
-    String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
+    String html = Tools.getTextFromFile("web"+File.separator+"tv.template.blank.htm");
     String CONTENT = "";
 
     boolean showGroupNumber = false;
@@ -403,7 +404,7 @@ public class TVTranslationServlet2 extends HttpServlet {
       } else if (mainForm.activeStage != null) {
         showStage(req, resp, mainForm.activeStage);
       } else {
-        String html = Tools.getTextFromFile("web\\tv.template.blank.htm");
+        String html = Tools.getTextFromFile("web"+File.separator+"tv.template.blank.htm");
         String CONTENT = "";
         IVar varsPool = new VarPool();
         varsPool.addChild(new StringVar("CONTENT", CONTENT));
