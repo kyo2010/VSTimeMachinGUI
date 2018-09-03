@@ -446,7 +446,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           JOptionPane.showConfirmDialog(this, "Pilot '" + usr.VS_USER_NAME + "' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
           return;
         }
-        if (check1 != null) {
+        if (check1 != null && usr.VS_TRANS1!=0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
           if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS1+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
             check1.VS_TRANS1 = 0;
