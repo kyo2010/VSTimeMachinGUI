@@ -654,7 +654,7 @@ public class StageTab extends javax.swing.JPanel {
     //return BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H",BaseFont.EMBEDDED);
     String path = (new File("")).getAbsolutePath();
     String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
-    BaseFont bfComic = BaseFont.createFont(path + "\\font.ttf", encode, BaseFont.EMBEDDED);
+    BaseFont bfComic = BaseFont.createFont(path + File.separator+"font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
   }
 
@@ -706,7 +706,7 @@ public class StageTab extends javax.swing.JPanel {
       File dir = new File("reports");
       dir.mkdirs();
       JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath() + "\\" + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
+      String fileName = dir.getAbsolutePath() + File.separator + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
 
       BaseFont bf = getRussianFont();
       Font font = new Font(bf);
@@ -767,7 +767,7 @@ public class StageTab extends javax.swing.JPanel {
       File dir = new File("reports");
       dir.mkdirs();
       JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath() + "\\" + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
+      String fileName = dir.getAbsolutePath() + File.separator + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
 
       BaseFont bf = getRussianFont();
       Font font = new Font(bf);

@@ -43,6 +43,7 @@ public class VS_STAGE {
   public String REP_COLS = "";
   public int USE_REG_ID_FOR_LAP = 1;
   public StageTab tab = null;
+  public String TRANSS = "";
 
   //public VS_RACE race = null;
 
@@ -66,6 +67,7 @@ public class VS_STAGE {
     new DBModelField("COUNT_PILOTS_IN_GROUP").setDbFieldName("\"COUNT_PILOTS_IN_GROUP\""),
     new DBModelField("CHANNELS").setDbFieldName("\"CHANNELS\""),
     new DBModelField("COLORS").setDbFieldName("\"COLORS\""),
+    new DBModelField("TRANSS").setDbFieldName("\"TRANSS\""),    
     new DBModelField("LAPS").setDbFieldName("\"LAPS\""),
     new DBModelField("MIN_LAP_TIME").setDbFieldName("\"MIN_LAP_TIME\""),
     new DBModelField("IS_GROUP_CREATED").setDbFieldName("\"IS_GROUP_CREATED\""),

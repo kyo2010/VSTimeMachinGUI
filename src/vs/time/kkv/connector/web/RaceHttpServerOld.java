@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -76,7 +77,7 @@ public class RaceHttpServerOld implements HttpHandler, Runnable {
   public void handle(HttpExchange exchange) {
 
     try {
-      if (templ==null) templ = Tools.getTextFromFile("web\\index.html");
+      if (templ==null) templ = Tools.getTextFromFile("web"+File.separator+"index.html");
       VS_RACE race = null;
       List<VS_STAGE> stages = null;
       int race_id = -1;

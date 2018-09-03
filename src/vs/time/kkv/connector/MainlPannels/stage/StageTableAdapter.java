@@ -1089,13 +1089,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           but.setForeground(Color.RED);
         }
         td.raceButton = but;
-        if (isSelected) {
+        /*if (isSelected) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(table.getSelectionBackground());
         } else {
           but.setForeground(table.getForeground());
           but.setBackground(UIManager.getColor("Button.background"));
-        }
+        }*/
         if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
 
         } else {
@@ -1106,24 +1106,24 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       }
       if (column == 3) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Invate"));
-        if (td.isGrpup && td.group == tab.checkingGrpup) {
+        /*if (td.isGrpup && td.group == tab.checkingGrpup) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(new Color(193, 211, 245));
         } else {
           but.setForeground(table.getForeground());
           but.setBackground(UIManager.getColor("Button.background"));
-        }
+        }*/
         return but;
       }
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Check"));
-        if (td.isGrpup && td.group == tab.checkingGrpup) {
+        /*if (td.isGrpup && td.group == tab.checkingGrpup) {
           but.setForeground(table.getSelectionForeground());
           but.setBackground(new Color(193, 211, 245));
         } else {
           but.setForeground(table.getForeground());
           but.setBackground(UIManager.getColor("Button.background"));
-        }
+        }*/
         return but;
       }
     } else {

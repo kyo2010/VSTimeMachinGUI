@@ -147,7 +147,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="WEB_PORT">
       <Properties>
-        <Property name="text" type="java.lang.String" value="80"/>
+        <Property name="text" type="java.lang.String" value="8181"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel1">
