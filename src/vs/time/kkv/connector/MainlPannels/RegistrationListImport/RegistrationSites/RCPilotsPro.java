@@ -74,9 +74,18 @@ public class RCPilotsPro extends IRegSite {
             user.PILOT_TYPE = 0;
             user.WEB_SID = json_pilot.getString("id");
             user.WEB_SYSTEM = getSystemName();
-            user.VS_USER_NAME = json_pilot.getString("osd_name");
+            user.VS_USER_NAME = json_pilot.getString("osd_name").trim();
             user.FIRST_NAME= json_pilot.getString("fname");
             user.SECOND_NAME= json_pilot.getString("lname");
+            if (user.VS_USER_NAME.equalsIgnoreCase("")){
+              String nik  = "";
+              nik+=user.FIRST_NAME.trim();
+              if (!nik.equalsIgnoreCase("") && !user.SECOND_NAME.equals("")){
+                nik += " ";
+              }    
+              nik+=user.SECOND_NAME.trim();              
+              user.VS_USER_NAME = nik;
+            }
             
             user.PICTURE_FILENAME = "";
             user.PHOTO = "";

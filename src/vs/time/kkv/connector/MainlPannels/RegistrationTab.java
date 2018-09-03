@@ -149,10 +149,10 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
                RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
             }          
         }
-      }
-
-      public void mouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger()) {
+        
+        
+        if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
+          //mouseReleased(e);
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
           int column = source.columnAtPoint(e.getPoint());
@@ -161,7 +161,18 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           }
           popup.show(e.getComponent(), e.getX(), e.getY());
         }
+      }
 
+      public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+          /*JTable source = (JTable) e.getSource();
+          int row = source.rowAtPoint(e.getPoint());
+          int column = source.columnAtPoint(e.getPoint());
+          if (!source.isRowSelected(row)) {
+            source.changeSelection(row, column, false, false);
+          }
+          popup.show(e.getComponent(), e.getX(), e.getY());*/
+        }
       }
 
     });
