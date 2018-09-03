@@ -33,8 +33,8 @@ import vs.time.kkv.models.VS_REGISTRATION;
 public class RCPilotsPro extends IRegSite {
  
   {
-    REG_SITE_URL = "https://rcpilots.pro/rest_api/get_events.php?type=1&hash=read_only";
-    REG_SITE_NAME = "rcpilots.pro";
+    REG_SITE_URL = "https://rcpilots.pro/rest_api/get_events.php?type=0&hash=read_only";
+    REG_SITE_NAME = "RCPilots.pro";
   }
   
   @Override
@@ -61,12 +61,12 @@ public class RCPilotsPro extends IRegSite {
           race.RACE_ID = Integer.parseInt(json_race.getString("id")); 
           race.RACE_DATE =  new JDEDate();
           race.RACE_DATE.setJDEDateAsDDMMYYYY(json_race.getString("date_event"), "."); 
-          race.RACE_NAME = json_race.getString("name"); 
+          race.RACE_NAME = "["+race.RACE_DATE.getDateAsYYYYMMDD("-") +"] " +json_race.getString("name"); 
           races.add(race);
           
-          JSONArray json_users = obj.getJSONArray("pilots");
+          JSONArray json_users = json_race.getJSONArray("pilots");
           for (int j = 0; j < json_users.length(); j++) {
-            JSONObject json_pilot = json_races.getJSONObject(j); 
+            JSONObject json_pilot = json_users.getJSONObject(j); 
             VS_REGISTRATION user = new VS_REGISTRATION();
             user.NUM = j+1;
             user.IS_ACTIVE = 1;
@@ -77,6 +77,19 @@ public class RCPilotsPro extends IRegSite {
             user.VS_USER_NAME = json_pilot.getString("osd_name");
             user.FIRST_NAME= json_pilot.getString("fname");
             user.SECOND_NAME= json_pilot.getString("lname");
+            
+            user.PICTURE_FILENAME = "";
+            user.PHOTO = "";
+            try {
+              // https://rcpilots.pro/pilots_foto/266291517.jpg
+              user.PICTURE_FILENAME = json_pilot.getString("photo_file").trim();
+              user.WEB_PHOTO_URL = "https://rcpilots.pro/pilots_foto/"+user.PICTURE_FILENAME;
+              if (!user.PICTURE_FILENAME.equalsIgnoreCase("")) {
+                user.PHOTO = "https://rcpilots.pro/pilots_foto/"+user.PICTURE_FILENAME;
+              }
+            } catch (Exception e) {
+            };
+            
             race.users.add(user);
           }           
         }catch(Exception e){

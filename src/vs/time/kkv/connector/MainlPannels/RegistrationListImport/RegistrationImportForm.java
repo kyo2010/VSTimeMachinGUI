@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.FPVSport;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
+import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.RCPilotsPro;
 import vs.time.kkv.connector.MainlPannels.RegistrationTab;
 import vs.time.kkv.connector.Utils.TTS.TextToSpeachFactory;
 import vs.time.kkv.models.VS_RACE;
@@ -48,6 +49,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
   
   static{
     sites.add(new FPVSport());
+    sites.add(new RCPilotsPro());
   }
 
   public final String PLEASE_SELECT_WEB_SYSTEM = "none";
