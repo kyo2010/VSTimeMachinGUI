@@ -1299,18 +1299,27 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
 
         // Find User by Channel Trans     
-        if (!activeGroup.stage.TRANSS.equals("")) {
-          int pos = activeGroup.stage.TRANSS.indexOf("" + lap.transponderID);
-          if (pos >= 0) {
-            int currentUserPos = 0;
-            for (int i = 0; i < pos; i++) {
-              if (activeGroup.stage.TRANSS.indexOf(i) == ':') {
-                currentUserPos++;
+        if (!activeGroup.stage.TRANSS.equals("") && user == null) {
+          try {
+            String[] transs = activeGroup.stage.TRANSS.split(":");
+            if (transs != null) {
+              for (int i = 0; i < transs.length; i++) {
+                String[] transiki = transs[i].split(";");
+                if (transiki != null) {
+                  for (int j=0;j<transiki.length;j++){
+                  if ((""+lap.transponderID).equalsIgnoreCase(transiki[j].trim())){
+                    if (activeGroup.users.size() > i) {
+                      user = activeGroup.users.get(i);
+                      user.VS_PRIMARY_TRANS = lap.transponderID;
+                      break;
+                    }                  
+                  };                  
+                }
+                }
+                if (user!=null) break;
               }
-            };
-            if (activeGroup.users.size()>currentUserPos) {
-              user = activeGroup.users.get(currentUserPos);              
             }
+          } catch (Exception e) {
           }
         }
 

@@ -470,12 +470,10 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           };
           return;
         }
-
         VS_REGISTRATION.dbControl.update(mainForm.con, usr);
 
         /*// add user to all stages
-        for (int s_idx=0; s_idx<mainForm.getTabbedPanels().getComponentCount(); s_idx++){
-                  
+        for (int s_idx=0; s_idx<mainForm.getTabbedPanels().getComponentCount(); s_idx++){                  
         }*/
       } else {
         isNew = true;
