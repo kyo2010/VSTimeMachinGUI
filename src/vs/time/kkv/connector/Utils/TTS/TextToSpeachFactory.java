@@ -41,6 +41,11 @@ public class TextToSpeachFactory {
     }catch(RuntimeException re){  
     }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
     }  
+    try{
+      TTS_LIST.add(new TextToSpeechMAC());
+    }catch(RuntimeException re){  
+    }catch(java.lang.UnsatisfiedLinkError | Exception | NoClassDefFoundError e){      
+    }         
   }
   
   public static String[] getTTSNames(){
