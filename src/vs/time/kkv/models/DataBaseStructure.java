@@ -11,6 +11,8 @@ import KKV.Utils.Tools;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 
 /**
  *
@@ -144,6 +146,13 @@ public class DataBaseStructure {
             stat = conn.prepareStatement(addon.sql);
             stat.execute();
           }  
+        }catch(Exception e){
+            int res = JOptionPane.showConfirmDialog(null, "Do you want to continue? Addon sql version " + addon.sql + ", sql:"+addon.sql, "Please check database and restart programm", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+            
+            }else{
+              throw e;
+            }          
         }finally{
           if (rs!=null) rs.close();
           if (stat!=null) stat.close();
