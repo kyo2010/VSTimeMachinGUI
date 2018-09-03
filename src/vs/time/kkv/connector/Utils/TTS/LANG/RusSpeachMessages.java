@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class RusSpeachMessages extends ISpeachMessages{
   public SpeekText groupFinished(long groupIndex){
-    return new SpeekText("гонка группы " + groupIndex + " закончена",2000);
+    return new SpeekText("гонка группы " + groupIndex + " завершена",2000);
   };
   
   public SpeekText pilotIsChecked(String pilot){
