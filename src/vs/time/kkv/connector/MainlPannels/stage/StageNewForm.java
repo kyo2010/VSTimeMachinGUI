@@ -278,6 +278,9 @@ public class StageNewForm extends javax.swing.JFrame {
     trans6 = new javax.swing.JTextField();
     trans7 = new javax.swing.JTextField();
     trans8 = new javax.swing.JTextField();
+    jLabel8 = new javax.swing.JLabel();
+    jLabel10 = new javax.swing.JLabel();
+    jLabel11 = new javax.swing.JLabel();
     panelQualificationResult = new javax.swing.JPanel();
     panelQualificationResult2 = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
@@ -428,6 +431,12 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
+    jLabel8.setText("Ch");
+
+    jLabel10.setText("Colors");
+
+    jLabel11.setText("Channel Trans");
+
     javax.swing.GroupLayout stagePanelLayout = new javax.swing.GroupLayout(stagePanel);
     stagePanel.setLayout(stagePanelLayout);
     stagePanelLayout.setHorizontalGroup(
@@ -440,65 +449,78 @@ public class StageNewForm extends javax.swing.JFrame {
           .addComponent(jlChannel3)
           .addComponent(jlChannel4))
         .addGap(20, 20, 20)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(jcbChannel3, 0, 44, Short.MAX_VALUE)
-          .addComponent(jcbChannel4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jcbChannel1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jcbChannel2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addComponent(jcbChannel3, 0, 44, Short.MAX_VALUE)
+            .addComponent(jcbChannel4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jcbChannel1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jcbChannel2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addComponent(jLabel8))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jcbColor1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jcbColor2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jcbColor3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addComponent(jcbColor4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jLabel10)
+          .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jcbColor1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jcbColor2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jcbColor3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jcbColor4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(8, 8, 8)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(stagePanelLayout.createSequentialGroup()
-            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(trans2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-              .addComponent(trans1))
-            .addGap(17, 17, 17)
-            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jlChannel5, javax.swing.GroupLayout.Alignment.TRAILING)
-              .addComponent(jlChannel6, javax.swing.GroupLayout.Alignment.TRAILING)))
-          .addGroup(stagePanelLayout.createSequentialGroup()
-            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(trans3)
-              .addComponent(trans4))
-            .addGap(17, 17, 17)
-            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jlChannel7, javax.swing.GroupLayout.Alignment.TRAILING)
-              .addComponent(jlChannel8, javax.swing.GroupLayout.Alignment.TRAILING))))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jcbChannel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jcbChannel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jcbChannel7, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jcbChannel8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jcbColor6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(trans2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                  .addComponent(trans1))
+                .addGap(17, 17, 17)
+                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jlChannel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                  .addComponent(jlChannel6, javax.swing.GroupLayout.Alignment.TRAILING)))
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(trans3)
+                  .addComponent(trans4))
+                .addGap(17, 17, 17)
+                .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jlChannel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                  .addComponent(jlChannel8, javax.swing.GroupLayout.Alignment.TRAILING))))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(trans6))
-          .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jcbColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addComponent(jcbChannel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jcbChannel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jcbChannel7, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jcbChannel8, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(trans7))
+            .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addComponent(jcbColor6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trans6))
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addComponent(jcbColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trans7))
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addComponent(jcbColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trans8))
+              .addGroup(stagePanelLayout.createSequentialGroup()
+                .addComponent(jcbColor5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trans5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
           .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jcbColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(trans8))
-          .addGroup(stagePanelLayout.createSequentialGroup()
-            .addComponent(jcbColor5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(trans5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addComponent(jLabel11)
+            .addGap(0, 0, Short.MAX_VALUE))))
     );
     stagePanelLayout.setVerticalGroup(
       stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, stagePanelLayout.createSequentialGroup()
-        .addContainerGap()
+        .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel8)
+          .addComponent(jLabel10)
+          .addComponent(jLabel11))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(stagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jlChannel1)
           .addComponent(jcbChannel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -548,7 +570,7 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(tabRaceLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
+          .addComponent(jchGroupByPilotType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(tabRaceLayout.createSequentialGroup()
             .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(tabRaceLayout.createSequentialGroup()
@@ -564,7 +586,7 @@ public class StageNewForm extends javax.swing.JFrame {
                   .addComponent(jtCountOfPilots, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                   .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
               .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(0, 0, Short.MAX_VALUE)))
+            .addGap(0, 57, Short.MAX_VALUE)))
         .addContainerGap())
     );
     tabRaceLayout.setVerticalGroup(
@@ -654,7 +676,7 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(panelQualificationResultLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(panelQualificationResult2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(207, Short.MAX_VALUE))
+        .addContainerGap(235, Short.MAX_VALUE))
     );
 
     tabPane.addTab("Result Parameters", panelQualificationResult);
@@ -673,7 +695,7 @@ public class StageNewForm extends javax.swing.JFrame {
           .addGroup(tabRaceReportLayout.createSequentialGroup()
             .addComponent(jLabel9)
             .addGap(0, 0, Short.MAX_VALUE))
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE))
         .addContainerGap())
     );
     tabRaceReportLayout.setVerticalGroup(
@@ -682,7 +704,7 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap()
         .addComponent(jLabel9)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -1143,12 +1165,15 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JButton butRecrateGropus;
   private javax.swing.JList<CheckListItem> columnsList;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel10;
+  private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
+  private javax.swing.JLabel jLabel8;
   private javax.swing.JLabel jLabel9;
   private javax.swing.JComboBox<String> jOrderBy;
   private javax.swing.JPanel jPanel1;
