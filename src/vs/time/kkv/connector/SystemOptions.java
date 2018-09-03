@@ -129,7 +129,7 @@ public class SystemOptions extends javax.swing.JFrame {
 
     jLabel1.setText("HTTP Server Port");
 
-    WEB_PORT.setText("80");
+    WEB_PORT.setText("8181");
 
     jButOk.setText("Ok");
     jButOk.addActionListener(new java.awt.event.ActionListener() {

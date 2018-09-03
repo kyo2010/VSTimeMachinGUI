@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vs.time.kkv.connector; 
+package vs.time.kkv.connector;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
 import vs.time.kkv.connector.connection.VSTimeConnector;
@@ -97,7 +97,7 @@ import vs.time.kkv.models.VS_USERS;
  * @author kyo
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, VSTimeConnector.VSSendListener {
-  
+
   public boolean SAY_SECONDS_FOR_LAP = false;
 
   public static final int STAGE_PRACTICA = 0;
@@ -236,7 +236,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         boolean isFound = false;
         StageTab stage1 = null;
         stageTabs.clear();
-        for (VS_STAGE stage : stages) {          
+        for (VS_STAGE stage : stages) {
           StageTab p = new StageTab(this, stage);
           stageTabs.add(p);
           stage.tab = p;
@@ -283,8 +283,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } else {
       jmAddStageToRace.setVisible(false);
     }
-    if (activeRace!=null){
-      lap_log.writeFile("---==  Set Active Race  ==---  ;"+activeRace.RACE_NAME+" ["+activeRace.RACE_ID+"]");      
+    if (activeRace != null) {
+      lap_log.writeFile("---==  Set Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
   }
 
@@ -362,7 +362,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           VS_STAGE.resetSelectedTab(con, MainForm.this.activeRace.RACE_ID);
           try {
             StageTab p = (StageTab) tabbedPanel.getSelectedComponent();
-            if (p.stage != null && p.stage.IS_SELECTED!=1) {
+            if (p.stage != null && p.stage.IS_SELECTED != 1) {
               p.stage.IS_SELECTED = 1;
               VS_STAGE.dbControl.save(MainForm.this.con, p.stage);
             }
@@ -394,16 +394,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       //e.printStackTrace();
     }
     autoUploadToWebTimer.start();
-    lap_log.writeFile("---==  Progam is loaded  ==--- ");      
-    if (activeRace!=null){
-      lap_log.writeFile("---==  Active Race  ==---  ;"+activeRace.RACE_NAME+" ["+activeRace.RACE_ID+"]");      
+    lap_log.writeFile("---==  Progam is loaded  ==--- ");
+    if (activeRace != null) {
+      lap_log.writeFile("---==  Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
   }
-  
+
   public AtomicBoolean treadIsRunning = new AtomicBoolean(false);
-  public class uploadThrad extends Thread{
-    @Override 
-    public void run(){
+
+  public class uploadThrad extends Thread {
+
+    @Override
+    public void run() {
       treadIsRunning.set(true);
       try {
         if (activeRace != null) {
@@ -438,12 +440,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   // Autouploader Timer to web-site - One time per minute
-  Timer autoUploadToWebTimer = new Timer(AUTO_UPDATER_TIME*2000, new ActionListener() {
+  Timer autoUploadToWebTimer = new Timer(AUTO_UPDATER_TIME * 2000, new ActionListener() {
     @Override
-    public void actionPerformed(ActionEvent e) {      
-      if (treadIsRunning.get()==false){
+    public void actionPerformed(ActionEvent e) {
+      if (treadIsRunning.get() == false) {
         new uploadThrad().start();
-      }      
+      }
     }
   });
 
@@ -1212,13 +1214,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         VSTeamConsole.addText(data);
       }
     }
-    
+
     jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
-      if (lap==null){
-        lap_log.writeFile("RCV;" + data);      
+      if (lap == null) {
+        lap_log.writeFile("RCV;" + data);
       }
     }
     if (lap != null) {
@@ -1296,6 +1298,23 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             break;
           }
         }
+
+        // Find User by Channel Trans     
+        if (!activeGroup.stage.TRANSS.equals("")) {
+          int pos = activeGroup.stage.TRANSS.indexOf("" + lap.transponderID);
+          if (pos >= 0) {
+            int currentUserPos = 0;
+            for (int i = 0; i < pos; i++) {
+              if (activeGroup.stage.TRANSS.indexOf(i) == ':') {
+                currentUserPos++;
+              }
+            };
+            if (activeGroup.users.size()>currentUserPos) {
+              user = activeGroup.users.get(currentUserPos);              
+            }
+          }
+        }
+
         if (user == null) { // find user by TransID
           for (VS_STAGE_GROUPS usr : activeGroup.users) {
             if (usr.isTransponderForUser(con, activeRace.RACE_ID, lap.transponderID)) {
@@ -1408,7 +1427,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (VSTeamConsole.isOpened) {
       VSTeamConsole.addText(text);
     }
-    lap_log.writeFile("SND;" + text);    
+    lap_log.writeFile("SND;" + text);
   }
 
   public interface LastTransponderListener {
