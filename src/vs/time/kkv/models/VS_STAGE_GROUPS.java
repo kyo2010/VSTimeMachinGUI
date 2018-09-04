@@ -31,7 +31,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     } catch (Exception e) {
     }
   }
-  
+
   public long GID;   //  NOT_DETECTED
   public long STAGE_ID;   //  NOT_DETECTED
   public long GROUP_NUM;   //  NOT_DETECTED
@@ -58,17 +58,17 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int CHECK_FOR_RACE = 0;
   public VSColor color = null;
   public boolean RECEIVED_LAPS = true;
-  
+
   public long QUAL_TIME = 0;
   public long QUAL_POS = 0;
   public long RACE_TIME_FINAL = 0;
   public long RACE_TIME_HALF_FINAL = 0;
   public long RACE_TIME_QUART_FINAL = 0;
-  
+
   public long GROUP_FINAL = 0;
   public long GROUP_HALF_FINAL = 0;
   public long GROUP_QUART_FINAL = 0;
-  public int GROUP_TYPE = 0; 
+  public int GROUP_TYPE = 0;
   public int IS_PANDING = 0;
 
   public VS_REGISTRATION registration = null;   //  NOT_DETECTED
@@ -106,71 +106,98 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("ACTIVE_FOR_NEXT_STAGE").setDbFieldName("\"ACTIVE_FOR_NEXT_STAGE\""),
     new DBModelField("CHECK_FOR_RACE").setDbFieldName("\"CHECK_FOR_RACE\""),
     new DBModelField("FIRST_LAP").setDbFieldName("\"FIRST_LAP\""),
-  
     new DBModelField("QUAL_TIME").setDbFieldName("\"QUAL_TIME\""),
     new DBModelField("QUAL_POS").setDbFieldName("\"QUAL_POS\""),
     new DBModelField("RACE_TIME_FINAL").setDbFieldName("\"RACE_TIME_FINAL\""),
     new DBModelField("RACE_TIME_HALF_FINAL").setDbFieldName("\"RACE_TIME_HALF_FINAL\""),
     new DBModelField("RACE_TIME_QUART_FINAL").setDbFieldName("\"RACE_TIME_QUART_FINAL\""),
-     
     new DBModelField("GROUP_FINAL").setDbFieldName("\"GROUP_FINAL\""),
     new DBModelField("GROUP_HALF_FINAL").setDbFieldName("\"GROUP_HALF_FINAL\""),
-    new DBModelField("GROUP_QUART_FINAL").setDbFieldName("\"GROUP_QUART_FINAL\""),    
-    
-    new DBModelField("GROUP_TYPE").setDbFieldName("\"GROUP_TYPE\""),    
-    new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),    
-  });
+    new DBModelField("GROUP_QUART_FINAL").setDbFieldName("\"GROUP_QUART_FINAL\""),
+    new DBModelField("GROUP_TYPE").setDbFieldName("\"GROUP_TYPE\""),
+    new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),});
 
-  public VS_REGISTRATION getRegistration(Connection conn, long raceID){
-    loadRegistration(conn,raceID);
+  public VS_REGISTRATION getRegistration(Connection conn, long raceID) {
+    loadRegistration(conn, raceID);
     return registration;
   }
-  
-  public void resetRegistration(){
+
+  public void resetRegistration() {
     registration = null;
-  };
+  }
+
+  ;
   
   public void loadRegistration(Connection conn, long raceID) {
     try {
       if (registration == null && REG_ID != 0) {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and ID=?", raceID, REG_ID);
       }
-      if (registration == null && (REG_ID == -1 || REG_ID==0) ) {
+      if (registration == null && (REG_ID == -1 || REG_ID == 0)) {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and VS_USER_NAME=?", raceID, PILOT.trim());
-        if (registration!=null) {
+        if (registration != null) {
           REG_ID = registration.ID;
           dbControl.update(conn, this);
-        }  
+        }
       }
     } catch (Exception e) {
     }
   }
-  
-  public Collection<Integer> getUserTransponders(Connection conn, long raceID){
+
+  public Collection<Integer> getUserTransponders(Connection conn, long raceID, VS_STAGE stage) {
     loadRegistration(conn, raceID);
     Set<Integer> trans = new TreeSet<>();
     //List<Integer> trans = new ArrayList<>();
     trans.add(VS_PRIMARY_TRANS);
-    if (registration!=null){
-      if (registration.VS_TRANS1!=0 && registration.VS_TRANS1!=-1)
+    if (registration != null) {
+      if (registration.VS_TRANS1 != 0 && registration.VS_TRANS1 != -1) {
         trans.add(registration.VS_TRANS1);
-      if (registration.VS_TRANS2!=0 && registration.VS_TRANS2!=-1)
+      }
+      if (registration.VS_TRANS2 != 0 && registration.VS_TRANS2 != -1) {
         trans.add(registration.VS_TRANS2);
-      if (registration.VS_TRANS3!=0 && registration.VS_TRANS3!=-1)      
-        trans.add(registration.VS_TRANS3); 
+      }
+      if (registration.VS_TRANS3 != 0 && registration.VS_TRANS3 != -1) {
+        trans.add(registration.VS_TRANS3);
+      }
     }
-    return trans;        
+    // add Guest transponders
+    try {
+      if (!stage.TRANSS.equalsIgnoreCase("")) {
+        Map<String, List<String>> transChannels = stage.getTanspondersForChannels();
+        List<String> trans_channel = transChannels.get(CHANNEL);
+        if (trans_channel!=null){        
+          for (String trans_st : trans_channel) {
+            try{
+              // convert to int
+              int trans_int = Integer.parseInt(trans_st);
+              trans.add(trans_int);
+            }catch(Exception e){}
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return trans;
   }
-  
-  
-  public boolean isTransponderForUser(Connection conn, long raceID, int trans){
-    if (this.VS_PRIMARY_TRANS==trans) return true;
+
+  public boolean isTransponderForUser(Connection conn, long raceID, int trans) {
+    if (this.VS_PRIMARY_TRANS == trans) {
+      return true;
+    }
     loadRegistration(conn, raceID);
-    if (registration!=null){
-      if (registration.VS_TRANS1==trans) return true;
-      if (registration.VS_TRANS2==trans) return true;
-      if (registration.VS_TRANS3==trans) return true;
-    } 
+    if (registration != null) {
+      if (registration.VS_TRANS1 == trans) {
+        return true;
+      }
+      if (registration.VS_TRANS2 == trans) {
+        return true;
+      }
+      if (registration.VS_TRANS3 == trans) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -210,10 +237,12 @@ public class VS_STAGE_GROUPS implements Transferable {
     return max;
   }
 
-  /** return maximum laps */
+  /**
+   * return maximum laps
+   */
   public long recalculateLapTimes(Connection conn, VS_STAGE stage, boolean please_recalculate) {
     long result = 0;
-    try {      
+    try {
       if (IS_RECALULATED == 1 && please_recalculate != true) {
 
       } else {
@@ -223,23 +252,25 @@ public class VS_STAGE_GROUPS implements Transferable {
         LAPS = 0;
         boolean all_laps_is_exist = false;
         try {
-          if (stage.ID==114){
+          if (stage.ID == 114) {
             int y = 0;
-          }          
+          }
           boolean hasSkip = false;
-          
+
           Map<String, VS_RACE_LAP> laps = null;
-          if (stage.USE_REG_ID_FOR_LAP==1){
+          if (stage.USE_REG_ID_FOR_LAP == 1) {
             laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + REG_ID);
-          }else{
+          } else {
             laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS);
-          }     
+          }
           LAPS_INTO_BD = stage.LAPS;
-          for (VS_RACE_LAP lap : laps.values()){
-            if (lap!=null && LAPS_INTO_BD<lap.LAP) LAPS_INTO_BD=lap.LAP;
-          }     
+          for (VS_RACE_LAP lap : laps.values()) {
+            if (lap != null && LAPS_INTO_BD < lap.LAP) {
+              LAPS_INTO_BD = lap.LAP;
+            }
+          }
           result = LAPS_INTO_BD;
-          
+
           for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
             VS_RACE_LAP lap = laps.get("" + lap_num);
@@ -286,5 +317,5 @@ public class VS_STAGE_GROUPS implements Transferable {
     } catch (Exception e) {
     }
     return result;
-  }  
+  }
 }

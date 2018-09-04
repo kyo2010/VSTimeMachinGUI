@@ -1167,6 +1167,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               }
               if (td.pilot != null && td.pilot.color != null) {
                 label.setBackground(td.pilot.color.getColor());
+                if (td.pilot.color.getColor().equals(Color.black)){
+                  label.setForeground(Color.white);
+                }
               } else {
                 label.setBackground(Color.YELLOW);
               }

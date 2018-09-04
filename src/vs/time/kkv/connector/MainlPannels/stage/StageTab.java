@@ -261,7 +261,7 @@ public class StageTab extends javax.swing.JPanel {
         if (checkingGrpup != null) {
           int pilot_num = checkerCycle % checkingGrpup.users.size();
           if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
-            Collection<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID);
+            Collection<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID, stage);
             VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
             VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
             for (Integer transID : userTrans) {
@@ -294,7 +294,7 @@ public class StageTab extends javax.swing.JPanel {
           //}                                     
         }
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-          Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID);
+          Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID,stage);
           for (Integer transID : userTrans) {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
               if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {

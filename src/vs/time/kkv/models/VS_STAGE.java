@@ -363,4 +363,37 @@ public class VS_STAGE {
     }
     return lap_return;
   }
+  
+  String cashe_TRANSS = null;
+  Map<String, List<String>> cashe_TRANSS_ARRAY = null;
+  
+  public Map<String, List<String>> getTanspondersForChannels(){
+    if (cashe_TRANSS!=null && cashe_TRANSS.equals(TRANSS)){
+      return cashe_TRANSS_ARRAY;
+    }    
+    Map<String, List<String>> result = new HashMap();
+    if (!TRANSS.equalsIgnoreCase("")){
+      String[] masTrans = TRANSS.split(":");
+      String[] channels = CHANNELS.split(";");
+      if (masTrans!=null && channels!=null){        
+        for (int channel=0; channel<masTrans.length; channel++){
+          List<String> trans_list = new ArrayList();
+          if (channel>=channels.length) break;
+          String channel_st = channels[channel];
+          result.put( channel_st, trans_list);
+          String trans[] = masTrans[channel].split(";");
+          if (trans!=null){
+            for (int i=0; i<trans.length; i++){
+              if (!trans[i].trim().equals("")){
+                trans_list.add(trans[i].trim());
+              }
+            }
+          }        
+        }
+      }
+    }
+    cashe_TRANSS = TRANSS;
+    cashe_TRANSS_ARRAY = result;
+    return result;
+  }
 }

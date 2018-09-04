@@ -48,6 +48,7 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -1301,24 +1302,22 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         // Find User by Channel Trans     
         if (!activeGroup.stage.TRANSS.equals("") && user == null) {
           try {
-            String[] transs = activeGroup.stage.TRANSS.split(":");
-            if (transs != null) {
-              for (int i = 0; i < transs.length; i++) {
-                String[] transiki = transs[i].split(";");
-                if (transiki != null) {
-                  for (int j=0;j<transiki.length;j++){
-                  if ((""+lap.transponderID).equalsIgnoreCase(transiki[j].trim())){
-                    if (activeGroup.users.size() > i) {
-                      user = activeGroup.users.get(i);
-                      user.VS_PRIMARY_TRANS = lap.transponderID;
-                      break;
-                    }                  
-                  };                  
-                }
+            Map<String,List<String>> trans_by_channels =  activeGroup.stage.getTanspondersForChannels();
+            for (String channel: trans_by_channels.keySet()){
+              for (String trans_st : trans_by_channels.get(channel)){
+                if ((""+ lap.transponderID).equalsIgnoreCase(trans_st)){
+                    for (VS_STAGE_GROUPS all_user : activeGroup.users ){
+                      if (all_user.CHANNEL.equalsIgnoreCase(channel)){
+                        user = all_user;
+                        user.VS_PRIMARY_TRANS = lap.transponderID;
+                        break;
+                      }  
+                    }  
                 }
                 if (user!=null) break;
               }
-            }
+              if (user!=null) break;
+            }                               
           } catch (Exception e) {
           }
         }

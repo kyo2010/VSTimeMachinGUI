@@ -21,6 +21,8 @@ public abstract class IGroupCreater {
   /** The genaral function for group creation */
   public abstract void createGroup(StageTab tab);
   
+  /** Service function */
+  
   // add user to group, if group is full, create new group
   public void addUserToGroup(VS_STAGE_GROUPS add_usr, List<VS_STAGE_GROUPS> users, int max_pilots_in_groups) {
     Map<Long, Integer> count_pilots_in_group = new HashMap();
