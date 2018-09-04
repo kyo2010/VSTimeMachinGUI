@@ -399,6 +399,10 @@ public class StageTab extends javax.swing.JPanel {
         if (stage.IS_LOCK == 1) {
           return;
         }
+        if (mainForm.activeGroup != null) {
+          JOptionPane.showMessageDialog(StageTab.this, "Please stop the Active Race.");
+          return;
+        }
         if (SwingUtilities.isRightMouseButton(e)) {
           int row = jTree.getClosestRowForLocation(e.getX(), e.getY());
           jTree.setSelectionRow(row);

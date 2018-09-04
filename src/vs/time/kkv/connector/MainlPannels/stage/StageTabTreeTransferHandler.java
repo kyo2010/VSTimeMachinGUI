@@ -44,6 +44,7 @@ class StageTabTreeTransferHandler extends TransferHandler {
 
   @Override
   public boolean canImport(TransferHandler.TransferSupport support) {
+    if (stageTab.mainForm.activeGroup!=null) return false;
     if (stageTab.stage.IS_LOCK==1) return false;
     if (!support.isDrop()) {
       return false;
