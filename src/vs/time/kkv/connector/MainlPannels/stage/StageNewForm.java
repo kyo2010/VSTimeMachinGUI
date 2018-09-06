@@ -30,6 +30,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.SCORE.ScoreCalulationFactory;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
@@ -137,11 +138,13 @@ public class StageNewForm extends javax.swing.JFrame {
         last_stage = stages_st[i];
       }
     }
+    SCORE_CALCULATION.setModel(new javax.swing.DefaultComboBoxModel(ScoreCalulationFactory.getScoreCalulationNames()));
     parentStage.setModel(new javax.swing.DefaultComboBoxModel(stages_st));
 
     if (stage != null) {
       butRecrateGropus.setVisible(true);
       jtCaption.setText(stage.CAPTION);
+       SCORE_CALCULATION.setSelectedIndex(ScoreCalulationFactory.getScoreCalulationIndex(stage.SCORE_CALCULATION));
       jchGroupByPilotType.setSelected(stage.FLAG_BY_PYLOT_TYPE == 1);
       jtLapsCount.setText("" + stage.LAPS);
       jtMinLapTime.setText("" + stage.MIN_LAP_TIME);
@@ -178,6 +181,7 @@ public class StageNewForm extends javax.swing.JFrame {
     } else {
       VS_RACE race = mainForm.activeRace;
       //jtLapsCount.setText("" + 3);
+      SCORE_CALCULATION.setSelectedIndex(0);
       jtLapsCount.setText("" + race.COUNT_OF_LAPS);
       jtMinLapTime.setText("" + race.MIN_LAP_TIME);
       parentStage.setSelectedItem(last_stage);
@@ -281,6 +285,8 @@ public class StageNewForm extends javax.swing.JFrame {
     jLabel8 = new javax.swing.JLabel();
     jLabel10 = new javax.swing.JLabel();
     jLabel11 = new javax.swing.JLabel();
+    jLabel12 = new javax.swing.JLabel();
+    SCORE_CALCULATION = new javax.swing.JComboBox<>();
     panelQualificationResult = new javax.swing.JPanel();
     panelQualificationResult2 = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
@@ -563,6 +569,10 @@ public class StageNewForm extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
+    jLabel12.setText("Score Calculation");
+
+    SCORE_CALCULATION.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
     javax.swing.GroupLayout tabRaceLayout = new javax.swing.GroupLayout(tabRace);
     tabRace.setLayout(tabRaceLayout);
     tabRaceLayout.setHorizontalGroup(
@@ -584,7 +594,11 @@ public class StageNewForm extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                   .addComponent(jtCountOfPilots, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                  .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(75, 75, 75)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(SCORE_CALCULATION, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
               .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(0, 57, Short.MAX_VALUE)))
         .addContainerGap())
@@ -601,7 +615,9 @@ public class StageNewForm extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
-          .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jtMinLapTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel12)
+          .addComponent(SCORE_CALCULATION, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(tabRaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
@@ -855,7 +871,7 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.SORT_TYPE = jOrderBy.getSelectedIndex();
       stage.CAPTION = jtCaption.getText();
       stage.FLAG_BY_PYLOT_TYPE = jchGroupByPilotType.isSelected() ? 1 : 0;
-
+      stage.SCORE_CALCULATION = ScoreCalulationFactory.getScoreCalulationIndex(SCORE_CALCULATION.getSelectedIndex()).getScoresCode();
       try {
         stage.LAPS = Integer.parseInt(jtLapsCount.getText());
       } catch (Exception e) {
@@ -1160,6 +1176,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel Caption;
   private javax.swing.JLabel LapsCaption;
   private javax.swing.JTextField PilotsForNextRound;
+  private javax.swing.JComboBox<String> SCORE_CALCULATION;
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
   private javax.swing.JButton butRecrateGropus;
@@ -1167,6 +1184,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
+  private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

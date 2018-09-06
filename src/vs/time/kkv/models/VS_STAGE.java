@@ -44,6 +44,7 @@ public class VS_STAGE {
   public int USE_REG_ID_FOR_LAP = 1;
   public StageTab tab = null;
   public String TRANSS = "";
+  public String SCORE_CALCULATION = "";
 
   //public VS_RACE race = null;
 
@@ -80,7 +81,9 @@ public class VS_STAGE {
     new DBModelField("IS_LOCK").setDbFieldName("\"IS_LOCK\""),
     new DBModelField("PILOTS_FOR_NEXT_ROUND").setDbFieldName("\"PILOTS_FOR_NEXT_ROUND\""),
     new DBModelField("REP_COLS").setDbFieldName("\"REP_COLS\""),
-    new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),});
+    new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),
+    new DBModelField("SCORE_CALCULATION").setDbFieldName("\"SCORE_CALCULATION\""),      
+  });
 
   public static void resetSelectedTab(Connection conn, long raceID) {
     try {
@@ -179,7 +182,11 @@ public class VS_STAGE {
           usr.isError = 1;
         }
         if (userNames.contains(usr.PILOT)) {
-          usr.isError = 2;
+          if (STAGE_TYPE==MainForm.STAGE_RACE && RACE_TYPE==MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16){
+            // skip;
+          }else{
+            usr.isError = 2;
+          }  
         }
         userNames.add(usr.PILOT);
         group.useChannels += usr.CHANNEL + ";";

@@ -120,8 +120,8 @@ public class DataBaseStructure {
     new DBAddonStructure(4.4, "ALTER TABLE VS_RACE ADD HYBRID_MODE INTEGER NOT NULL DEFAULT 1;"),
     new DBAddonStructure(4.5, "ALTER TABLE VS_RACE ADD RANDOM_BEEP INTEGER NOT NULL DEFAULT 1;"),
     
-    new DBAddonStructure(4.6, "ALTER TABLE VS_STAGE ADD TRANSS TEXT NOT NULL DEFAULT '';"),
-
+    new DBAddonStructure(4.6, "ALTER TABLE VS_STAGE ADD TRANSS TEXT NOT NULL DEFAULT '';"),    
+    new DBAddonStructure(4.7, "ALTER TABLE VS_STAGE ADD SCORE_CALCULATION TEXT NOT NULL DEFAULT '';"),        
   };
 
   public static class DBAddonStructure {

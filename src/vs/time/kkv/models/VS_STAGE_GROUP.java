@@ -17,6 +17,7 @@ import java.util.List;
 import javafx.collections.transformation.SortedList;
 import javax.swing.TransferHandler;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.SCORE.ScoreCalulationFactory;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import static vs.time.kkv.models.VS_STAGE_GROUPS.VS_STAGE_GROUPS_FLOWER;
 
@@ -41,7 +42,7 @@ public class VS_STAGE_GROUP implements Transferable {
   public String toString() {
     return "Group " + GROUP_NUM;
   }
-
+  
   @Override
   public DataFlavor[] getTransferDataFlavors() {
     return new DataFlavor[]{VS_STAGE_GROUPS_FLOWER};
@@ -241,8 +242,23 @@ public class VS_STAGE_GROUP implements Transferable {
       int WIN_USERS = Math.round(size / 2);
       int count = 1;
       int SCORE = stage.COUNT_PILOTS_IN_GROUP;
-      for (VS_STAGE_GROUPS user : sorted_users) {
-        user.SCORE = SCORE;
+      
+      List<Integer> scores = null;
+      try{
+        scores = ScoreCalulationFactory.getScoreCalulation(stage.SCORE_CALCULATION).getScores(stage, sorted_users);
+      }catch(Exception e){}
+     
+      int i = 0;
+      for (VS_STAGE_GROUPS user : sorted_users) {        
+        if (scores!=null) {
+          user.SCORE = 0;
+          try{
+            user.SCORE = scores.get(i);
+          }catch(Exception e){}
+        }else{
+          user.SCORE = SCORE;
+        }
+        
         if (count <= WIN_USERS) {
           user.WIN = 1;
           user.LOSE = 0;          
@@ -258,6 +274,7 @@ public class VS_STAGE_GROUP implements Transferable {
         } catch (Exception e) {
           MainForm._toLog(e);
         }
+        i++;
       }
     }
   }

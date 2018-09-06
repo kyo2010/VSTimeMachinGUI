@@ -530,6 +530,7 @@ public class StageTab extends javax.swing.JPanel {
             if (checkerTimer.isRunning()) {
               //checkerTimer.stop();
               stopSearch();
+              refreshTable();
               return;
             }
             startSearchAction(td.group.GROUP_NUM, true);
@@ -537,6 +538,7 @@ public class StageTab extends javax.swing.JPanel {
           if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) { // Start Race
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
               stopRace();
+              refreshTable();
               //timerCaption.setVisible(false);              
             } else {
               startRaceAction(td.group.GROUP_NUM, true);
@@ -1137,7 +1139,7 @@ public class StageTab extends javax.swing.JPanel {
     }
 
     // refresh data tab
-    refreshDataActionPerformed(evt);
+    //refreshDataActionPerformed(evt);
     StageNewForm.init(mainForm, stage).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
@@ -2510,6 +2512,7 @@ public class StageTab extends javax.swing.JPanel {
                     raceTimer.start();
                     FIRST_RACER_IS_FINISHED = false;
                     jTree.updateUI();
+                    refreshTable();
                     Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
                         InfoForm.init(mainForm, "").setVisible(false);
