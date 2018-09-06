@@ -118,7 +118,7 @@ public class RaceListModelTable extends AbstractTableModel implements TableCellR
   public void showEditDialog(int row){
     if (row<rows.size() && row>=0){
       VS_RACE race = rows.get(row);      
-      RaceControlForm.init(mainForm, race.RACE_ID).setVisible(true);
+      RaceControlForm.init(mainForm, race.RACE_ID,true).setVisible(true);
     }  
   }
   

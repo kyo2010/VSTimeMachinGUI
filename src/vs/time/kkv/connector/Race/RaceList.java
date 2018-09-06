@@ -299,7 +299,7 @@ public class RaceList extends javax.swing.JFrame {
   }//GEN-LAST:event_butCloseActionPerformed
 
   private void butAddNewRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butAddNewRaceActionPerformed
-    RaceControlForm.init(mainForm, -1).setVisible(true);
+    RaceControlForm.init(mainForm, -1,true).setVisible(true);
   }//GEN-LAST:event_butAddNewRaceActionPerformed
 
   private void butRaceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRaceEditActionPerformed

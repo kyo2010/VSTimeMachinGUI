@@ -24,6 +24,7 @@ public class RaceControlForm extends javax.swing.JFrame {
   MainForm mainForm = null;
   int raceID = -1;
   VS_RACE race = null;
+  boolean isForList = false;
 
   /**
    * Creates new form UserControlForm
@@ -35,14 +36,15 @@ public class RaceControlForm extends javax.swing.JFrame {
 
   private static RaceControlForm form = null;
 
-  public static RaceControlForm init(MainForm mainForm, int raceID) {
+  public static RaceControlForm init(MainForm mainForm, int raceID, boolean isForList) {
     if (form == null) {
       form = new RaceControlForm(mainForm);
       if (mainForm != null) {
         mainForm.setFormOnCenter(form);
       }
     }
-    form.setVisible(false);    
+    form.setVisible(false); 
+    form.isForList = isForList;
     form.raceID = raceID;   
     form.prepareForm();
 
@@ -50,7 +52,13 @@ public class RaceControlForm extends javax.swing.JFrame {
   }
 
   public void prepareForm() {
-
+    
+    if (isForList && raceID!=-1){
+      butSelect.setVisible(true);
+    }else{
+      butSelect.setVisible(false);
+    }
+   
     if (raceID != -1) {
       try {
         race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?",raceID);        
@@ -395,6 +403,7 @@ public class RaceControlForm extends javax.swing.JFrame {
         VS_RACE.dbControl.update(mainForm.con,race);        
         if (mainForm.activeRace!=null && mainForm.activeRace.RACE_ID==race.RACE_ID){
           mainForm.activeRace = race;
+          mainForm.setActiveRace(race);
         }
       } else { 
         VS_RACE.dbControl.insert(mainForm.con, race);

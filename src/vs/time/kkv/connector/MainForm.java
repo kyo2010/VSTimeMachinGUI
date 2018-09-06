@@ -29,6 +29,7 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.Utils.TempFileWrite;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -220,66 +221,96 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       return;
     }
 
-    activeRace = race;
     setTitle("Race - " + race.RACE_NAME);
     // Open Tabs
+
+    try {
+      VS_RACE.dbControl.execSql(con, "UPDATE VS_RACE SET IS_ACTIVE=0 WHERE IS_ACTIVE<>0");
+      race.IS_ACTIVE = 1;
+      VS_RACE.dbControl.update(con, race);
+    } catch (Exception e) {
+    }
+
+    if (activeRace != null && activeRace.RACE_ID == race.RACE_ID) {
+      return;
+    }
+    activeRace = race;
+
     tabListenerEnabled = false;
     tabbedPanel.removeAll();
+    try {
+      tabbedPanel.repaint();
+    } catch (Exception e) {
+    }
 
     if (race != null) {
-      jmAddStageToRace.setVisible(true);
-      regForm = new RegistrationTab(MainForm.this);
-      tabbedPanel.add("Registration", regForm);
-
       try {
-        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(con, "RACE_ID=? order by STAGE_NUM", race.RACE_ID);
-        int index = 1;
-        boolean isFound = false;
-        StageTab stage1 = null;
-        stageTabs.clear();
-        for (VS_STAGE stage : stages) {
-          StageTab p = new StageTab(this, stage);
-          stageTabs.add(p);
-          stage.tab = p;
-          String prefix = "";
-          if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {
-            try {
-              prefix = " [" + MainForm.PILOT_TYPES[stage.PILOT_TYPE] + "]";
-            } catch (Exception e) {
-            }
-          }
-          tabbedPanel.add(stage.CAPTION + prefix, p);
+        try {
+          this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+          InfoForm.init(this, "Loading...", 48).setVisible(true);
+        } catch (Exception e) {
+        }
+        jmAddStageToRace.setVisible(true);
+        regForm = new RegistrationTab(MainForm.this);
+        tabbedPanel.add("Registration", regForm);
 
-          //tabbedPanel.setForegroundAt(index, Color.BLUE);
-          //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
-          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
-            tabbedPanel.setForegroundAt(index, Color.BLUE);
+        try {
+          List<VS_STAGE> stages = VS_STAGE.dbControl.getList(con, "RACE_ID=? order by STAGE_NUM", race.RACE_ID);
+          int index = 1;
+          boolean isFound = false;
+          StageTab stage1 = null;
+          stageTabs.clear();
+
+          for (VS_STAGE stage : stages) {
+            StageTab p = new StageTab(this, stage);
+            stageTabs.add(p);
+            stage.tab = p;
+            String prefix = "";
+            if (stage.STAGE_TYPE > MainForm.STAGE_QUALIFICATION && stage.PILOT_TYPE < MainForm.PILOT_TYPE_NONE_INDEX) {
+              try {
+                prefix = " [" + MainForm.PILOT_TYPES[stage.PILOT_TYPE] + "]";
+              } catch (Exception e) {
+              }
+            }
+            tabbedPanel.add(stage.CAPTION + prefix, p);
+
+            //tabbedPanel.setForegroundAt(index, Color.BLUE);
+            //tabbedPanel.setBackgroundAt(index, Color.ORANGE);
+            if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION) {
+              tabbedPanel.setForegroundAt(index, Color.BLUE);
+            }
+            if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+              tabbedPanel.setForegroundAt(index, Color.RED);
+            }
+            if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
+              tabbedPanel.setForegroundAt(index, new Color(00, 99, 00));
+            }
+            if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+              tabbedPanel.setForegroundAt(index, Color.MAGENTA);
+            }
+            if (stage.IS_LOCK == 1) {
+              tabbedPanel.setForegroundAt(index, Color.CYAN);
+            }
+            if (stage.IS_SELECTED == 1) {
+              tabbedPanel.setSelectedComponent(p);
+              isFound = true;
+            }
+            stage1 = p;
+            index++;
           }
-          if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
-            tabbedPanel.setForegroundAt(index, Color.RED);
+          if (!isFound && stage1 != null) {
+            tabbedPanel.setSelectedComponent(stage1);
           }
-          if (stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
-            tabbedPanel.setForegroundAt(index, new Color(00, 99, 00));
-          }
-          if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
-            tabbedPanel.setForegroundAt(index, Color.MAGENTA);
-          }
-          if (stage.IS_LOCK == 1) {
-            tabbedPanel.setForegroundAt(index, Color.CYAN);
-          }
-          if (stage.IS_SELECTED == 1) {
-            tabbedPanel.setSelectedComponent(p);
-            isFound = true;
-          }
-          stage1 = p;
-          index++;
+          tabListenerEnabled = true;
+        } catch (Exception e) {
+          toLog(e);
         }
-        if (!isFound && stage1 != null) {
-          tabbedPanel.setSelectedComponent(stage1);
+      } finally {
+        try {
+          this.setCursor(Cursor.getDefaultCursor());
+          InfoForm.init(this, "Loading...").setVisible(false);
+        } catch (Exception e) {
         }
-        tabListenerEnabled = true;
-      } catch (Exception e) {
-        toLog(e);
       }
     } else {
       jmAddStageToRace.setVisible(false);
@@ -287,6 +318,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (activeRace != null) {
       lap_log.writeFile("---==  Set Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
+
   }
 
   boolean tabListenerEnabled = false;
@@ -938,7 +970,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_jMenuItem2ActionPerformed
 
   private void miAddNewRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddNewRaceActionPerformed
-    RaceControlForm.init(this, -1).setVisible(true);
+    RaceControlForm.init(this, -1, false).setVisible(true);
   }//GEN-LAST:event_miAddNewRaceActionPerformed
 
   private void jmAddStageToRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAddStageToRaceActionPerformed
@@ -1195,8 +1227,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   public void setFormOnCenter(Window form) {
-    Point p = this.getLocationOnScreen();
-    form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
+    try {
+      Point p = this.getLocationOnScreen();
+      form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
+    } catch (Exception e) {
+    }
   }
 
   @Override
@@ -1302,22 +1337,26 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         // Find User by Channel Trans     
         if (!activeGroup.stage.TRANSS.equals("") && user == null) {
           try {
-            Map<String,List<String>> trans_by_channels =  activeGroup.stage.getTanspondersForChannels();
-            for (String channel: trans_by_channels.keySet()){
-              for (String trans_st : trans_by_channels.get(channel)){
-                if ((""+ lap.transponderID).equalsIgnoreCase(trans_st)){
-                    for (VS_STAGE_GROUPS all_user : activeGroup.users ){
-                      if (all_user.CHANNEL.equalsIgnoreCase(channel)){
-                        user = all_user;
-                        user.VS_PRIMARY_TRANS = lap.transponderID;
-                        break;
-                      }  
-                    }  
+            Map<String, List<String>> trans_by_channels = activeGroup.stage.getTanspondersForChannels();
+            for (String channel : trans_by_channels.keySet()) {
+              for (String trans_st : trans_by_channels.get(channel)) {
+                if (("" + lap.transponderID).equalsIgnoreCase(trans_st)) {
+                  for (VS_STAGE_GROUPS all_user : activeGroup.users) {
+                    if (all_user.CHANNEL.equalsIgnoreCase(channel)) {
+                      user = all_user;
+                      user.VS_PRIMARY_TRANS = lap.transponderID;
+                      break;
+                    }
+                  }
                 }
-                if (user!=null) break;
+                if (user != null) {
+                  break;
+                }
               }
-              if (user!=null) break;
-            }                               
+              if (user != null) {
+                break;
+              }
+            }
           } catch (Exception e) {
           }
         }

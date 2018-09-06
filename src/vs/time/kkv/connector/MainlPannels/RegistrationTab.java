@@ -37,6 +37,7 @@ import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImp
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
@@ -219,6 +220,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     butImport = new javax.swing.JButton();
     butUploadToSite = new javax.swing.JButton();
     unRaceLapSound = new javax.swing.JCheckBox();
+    bRaceSetting = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -283,15 +285,25 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     unRaceLapSound.setText("Lap Info Voice");
     unRaceLapSound.setToolTipText("Enable Sound Lap Info for UNRace mode");
 
+    bRaceSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/options.png"))); // NOI18N
+    bRaceSetting.setToolTipText("Race Setting");
+    bRaceSetting.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bRaceSettingActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(butRegistPilot)
-        .addGap(10, 10, 10)
-        .addComponent(butAddNewStage)
+        .addGap(3, 3, 3)
+        .addComponent(bRaceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -300,7 +312,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGap(101, 101, 101)
         .addComponent(unRaceLapSound)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(activeTransponder, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -310,16 +322,18 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addGap(4, 4, 4)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-          .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addComponent(butUploadToSite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(unRaceLapSound, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(bRaceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(butRegistPilot, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(butAddNewStage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(butUploadToSite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(unRaceLapSound, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -427,6 +441,11 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     }    
   }//GEN-LAST:event_butUploadToSiteActionPerformed
 
+  private void bRaceSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRaceSettingActionPerformed
+    // TODO add your handling code here:
+    RaceControlForm.init(mainForm, mainForm.activeRace.RACE_ID, false).setVisible(true);
+  }//GEN-LAST:event_bRaceSettingActionPerformed
+
   public void tableToXLS() {
     try {
       JDEDate jd = new JDEDate();
@@ -483,6 +502,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel activeTransponder;
+  private javax.swing.JButton bRaceSetting;
   private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butExport;
   private javax.swing.JButton butImport;
