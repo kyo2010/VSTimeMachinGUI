@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -28,7 +29,7 @@ import javax.swing.Timer;
 public class UpdaterForm extends javax.swing.JFrame {
 
   public static String UPDATE_PATH = "update/";
-  ParseIniFile pif = new ParseIniFile("uploader.ini");
+  ParseIniFile pif = new ParseIniFile("Updater.ini");
 
   String serverUri = "";
 
@@ -42,10 +43,14 @@ public class UpdaterForm extends javax.swing.JFrame {
       //Setting up proxies
       Properties systemSettings = System.getProperties();
       try{
-        systemSettings.put("proxySet",  pif.getParam("proxySet"));
-        systemSettings.put("https.proxyHost", pif.getParam("proxyHost"));
-        systemSettings.put("https.proxyPort",  pif.getParam("proxyPort"));
-        System.setProperty("java.net.useSystemProxies",  pif.getParam("useSystemProxies"));
+        if (pif.getParam("proxySet").equalsIgnoreCase("true")){
+          systemSettings.put("proxySet",  pif.getParam("proxySet"));
+          systemSettings.put("https.proxyHost", pif.getParam("proxyHost"));
+          systemSettings.put("https.proxyPort",  pif.getParam("proxyPort"));
+        }  
+        if (!pif.getParam("useSystemProxies").equalsIgnoreCase("")){
+          System.setProperty("java.net.useSystemProxies",  pif.getParam("useSystemProxies"));
+        }  
       }catch(Exception e){}
       //The same way we could also set proxy for http            
       System.out.println("Server uri : " + serverUri);
@@ -59,10 +64,26 @@ public class UpdaterForm extends javax.swing.JFrame {
       });
     } catch (Exception e) {
     }
-  }
+  }    
   
   public void uploadNewFiles(){
+    Map<String, UploadFileInfo> newFiles = UploadFileInfo.getFileInfo(UPDATE_PATH + "update.list");
+    Map<String, UploadFileInfo> oldFiles = UploadFileInfo.getFileInfo("update.list");
     
+    int countNewFile = 0;
+    for (String fileName : newFiles.keySet()){
+      UploadFileInfo newFile =  newFiles.get(fileName);
+      UploadFileInfo oldFile = oldFiles.get(fileName);
+      if (oldFile==null){
+        countNewFile++;
+      }else{
+        if (oldFile.version==null || !oldFile.version.equalsIgnoreCase(newFile.version)){        
+          countNewFile++;
+        }
+      }
+    }
+    lInfo1.setText("Finding "+countNewFile+" new components");
+    lInfo2.setText(" ");    
   }
   
   interface UploaderActions{
@@ -79,7 +100,8 @@ public class UpdaterForm extends javax.swing.JFrame {
     }
     
     public UploadTimer(final String url, final String filename) {          
-      super(100, null);            
+      super(100, null);   
+      setRepeats(false);
       addActionListener(new ActionListener() {        
         @Override
         public void actionPerformed(ActionEvent ae) {
@@ -120,7 +142,7 @@ public class UpdaterForm extends javax.swing.JFrame {
             e.printStackTrace();
           } catch (IOException e) {
             if (UploadTimer.this.action!=null) UploadTimer.this.action.errorFile(filename);
-            JOptionPane.showMessageDialog(UpdaterForm.this, "Savinf file is error", "Error", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(UpdaterForm.this, "File uploading is error", "Error", JOptionPane.INFORMATION_MESSAGE);
             e.printStackTrace();
           } finally {
             if (outStream != null) {
@@ -147,7 +169,10 @@ public class UpdaterForm extends javax.swing.JFrame {
 
     bCancel = new javax.swing.JButton();
     progressBar = new javax.swing.JProgressBar();
+    lInfo1 = new javax.swing.JLabel();
+    lInfo2 = new javax.swing.JLabel();
 
+    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setResizable(false);
 
     bCancel.setText("Cancel");
@@ -157,23 +182,38 @@ public class UpdaterForm extends javax.swing.JFrame {
       }
     });
 
+    lInfo1.setText("   ");
+
+    lInfo2.setText("  ");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(layout.createSequentialGroup()
+            .addGap(159, 159, 159)
+            .addComponent(bCancel)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(lInfo1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(lInfo2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         .addContainerGap())
-      .addGroup(layout.createSequentialGroup()
-        .addGap(159, 159, 159)
-        .addComponent(bCancel)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addContainerGap(165, Short.MAX_VALUE)
+        .addGap(23, 23, 23)
+        .addComponent(lInfo1)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(lInfo2)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bCancel)
@@ -263,6 +303,8 @@ public class UpdaterForm extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bCancel;
+  private javax.swing.JLabel lInfo1;
+  private javax.swing.JLabel lInfo2;
   private javax.swing.JProgressBar progressBar;
   // End of variables declaration//GEN-END:variables
 }
