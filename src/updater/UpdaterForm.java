@@ -17,6 +17,9 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.swing.JOptionPane;
@@ -29,15 +32,19 @@ import javax.swing.Timer;
 public class UpdaterForm extends javax.swing.JFrame {
 
   public static String UPDATE_PATH = "update/";
+  public static String UPDATE_OLD_PATH = "update_old/";
   ParseIniFile pif = new ParseIniFile("Updater.ini");
+  
 
   String serverUri = "";
+  List<UploadFileInfo> filesForUpdate = new ArrayList();
 
   /**
    * Creates new form UpdaterForm
    */
   public UpdaterForm() {
     initComponents();
+    filesForUpdate.clear();
     try {
       serverUri = pif.getParam("httpHost");
       //Setting up proxies
@@ -54,12 +61,14 @@ public class UpdaterForm extends javax.swing.JFrame {
       }catch(Exception e){}
       //The same way we could also set proxy for http            
       System.out.println("Server uri : " + serverUri);
-      new UploadTimer(serverUri + "/update.list", UPDATE_PATH + "update.list").setAction(new UploaderActions() {
+      new UploadTimer(serverUri + "/update.list?time="+Calendar.getInstance().getTimeInMillis(), 
+                      UPDATE_PATH + "update.list",true).setAction(new UploaderActions() {
         @Override
         public void finishFile(String fileName) {          
           uploadNewFiles();
         }
-        public void errorFile(String fileName) {                         
+        public void errorFile(String fileName) { 
+          lInfo1.setText("Server don't response. Please check your connection.");    
         }
       });
     } catch (Exception e) {
@@ -68,7 +77,7 @@ public class UpdaterForm extends javax.swing.JFrame {
   
   public void uploadNewFiles(){
     Map<String, UploadFileInfo> newFiles = UploadFileInfo.getFileInfo(UPDATE_PATH + "update.list");
-    Map<String, UploadFileInfo> oldFiles = UploadFileInfo.getFileInfo("update.list");
+    Map<String, UploadFileInfo> oldFiles = UploadFileInfo.getFileInfo("update.list");    
     
     int countNewFile = 0;
     for (String fileName : newFiles.keySet()){
@@ -76,14 +85,67 @@ public class UpdaterForm extends javax.swing.JFrame {
       UploadFileInfo oldFile = oldFiles.get(fileName);
       if (oldFile==null){
         countNewFile++;
+        filesForUpdate.add(newFile);
       }else{
         if (oldFile.version==null || !oldFile.version.equalsIgnoreCase(newFile.version)){        
           countNewFile++;
+          filesForUpdate.add(newFile);
         }
       }
     }
-    lInfo1.setText("Finding "+countNewFile+" new components");
-    lInfo2.setText(" ");    
+    if (countNewFile==0){
+      bCancel.setText("Ok");
+      lInfo1.setText("Your version is actual. There are no updates.");         
+      progressBar.setValue(progressBar.getMaximum());
+    }else{
+      lInfo1.setText("Finding "+countNewFile+" new components");  
+      progressBar.setValue(0);
+      progressBar.setMaximum(countNewFile);
+      uploadNextNewFile();
+    }  
+  }
+  
+  UploadFileInfo nextFile = null;
+  
+  public void uploadNextNewFile(){    
+    if (!UpdaterForm.this.isVisible()) return;
+    int count = 0;
+    nextFile = null;
+    for (UploadFileInfo fi : filesForUpdate){
+      count++;
+      if (!fi.uploaded){
+        nextFile = fi;        
+        break;
+      }
+    }    
+    if (nextFile!=null){
+      lInfo1.setText("Uploading a new component "+count+" of "+filesForUpdate.size());  
+      progressBar.setValue(count-1);
+      new UploadTimer(serverUri + "/"+nextFile.name, UPDATE_PATH +nextFile.name,false).setAction(new UploaderActions() {
+        @Override
+        public void finishFile(String fileName) {   
+          nextFile.uploaded = true;
+          uploadNextNewFile();
+        }
+        public void errorFile(String fileName) { 
+          lInfo1.setText("Server don't response. Please check your connection.");    
+        }
+      });
+    }else{      
+      bCancel.setText("Ok");
+      progressBar.setValue(progressBar.getMaximum());
+      lInfo1.setText("All components have been uploaded.");  
+      for (UploadFileInfo fi : filesForUpdate){
+        File currentFile = new File(UPDATE_OLD_PATH+fi.name);
+        currentFile.getParentFile().mkdirs();       
+        currentFile.delete();
+        new File(fi.name).renameTo(currentFile);
+        new File(UPDATE_PATH+fi.name).renameTo(new File(fi.name));
+      }
+      new File("update.list").renameTo(new File(UPDATE_OLD_PATH + "update.list"));      
+      new File(UPDATE_PATH + "update.list").renameTo(new File("update.list"));
+      lInfo1.setText("All components have been updated. Please restart the application.");  
+    }
   }
   
   interface UploaderActions{
@@ -93,15 +155,17 @@ public class UpdaterForm extends javax.swing.JFrame {
 
   public final class UploadTimer extends Timer {    
     public UploaderActions action = null;
+    boolean showProgress = true;
 
     public UploadTimer setAction(UploaderActions action) {
       this.action = action;
       return this;
     }
     
-    public UploadTimer(final String url, final String filename) {          
+    public UploadTimer(final String url, final String filename,boolean showProgress) {          
       super(100, null);   
       setRepeats(false);
+      this.showProgress = showProgress;
       addActionListener(new ActionListener() {        
         @Override
         public void actionPerformed(ActionEvent ae) {
@@ -120,11 +184,12 @@ public class UpdaterForm extends javax.swing.JFrame {
             System.setProperty("java.net.useSystemProxies", "true");*/
           //code to fetch file
           try {
-            progressBar.setValue(0);
+            if (UploadTimer.this.showProgress) progressBar.setValue(0);
             server = new URL(url);
             connection = server.openConnection();
             is = connection.getInputStream();
-            progressBar.setMaximum(is.available());
+            if (UploadTimer.this.showProgress) progressBar.setMaximum(is.available());
+            new File(filename).getParentFile().mkdirs();
 
             byte[] buffer = new byte[1000];
             targetFile = new File(filename);
@@ -133,8 +198,9 @@ public class UpdaterForm extends javax.swing.JFrame {
             while (is.read(buffer) > 0) {
               count++;
               outStream.write(buffer);
-              progressBar.setValue(1000 * count);
-            }            
+              if (UploadTimer.this.showProgress) progressBar.setValue(1000 * count);
+              if (!UpdaterForm.this.isVisible()) return;
+            }                    
             if (UploadTimer.this.action!=null) UploadTimer.this.action.finishFile(filename);
           } catch (MalformedURLException e) {
             if (UploadTimer.this.action!=null) UploadTimer.this.action.errorFile(filename);
@@ -170,9 +236,9 @@ public class UpdaterForm extends javax.swing.JFrame {
     bCancel = new javax.swing.JButton();
     progressBar = new javax.swing.JProgressBar();
     lInfo1 = new javax.swing.JLabel();
-    lInfo2 = new javax.swing.JLabel();
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    setTitle("Updater");
+    setAlwaysOnTop(true);
     setResizable(false);
 
     bCancel.setText("Cancel");
@@ -184,8 +250,6 @@ public class UpdaterForm extends javax.swing.JFrame {
 
     lInfo1.setText("   ");
 
-    lInfo2.setText("  ");
-
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -193,27 +257,23 @@ public class UpdaterForm extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addGap(159, 159, 159)
-            .addComponent(bCancel)
-            .addGap(0, 0, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
             .addContainerGap()
             .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
           .addGroup(layout.createSequentialGroup()
             .addContainerGap()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(lInfo1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(lInfo2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addComponent(lInfo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         .addContainerGap())
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        .addGap(0, 0, Short.MAX_VALUE)
+        .addComponent(bCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(143, 143, 143))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addGap(23, 23, 23)
+        .addContainerGap()
         .addComponent(lInfo1)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(lInfo2)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bCancel)
@@ -225,8 +285,7 @@ public class UpdaterForm extends javax.swing.JFrame {
 
   private void bCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelActionPerformed
     // TODO add your handling code here:
-    setVisible(false);
-    System.exit(0);
+    setVisible(false); 
   }//GEN-LAST:event_bCancelActionPerformed
 
   public void saveUrl(final String filename, final String url) throws IOException {
@@ -300,11 +359,10 @@ public class UpdaterForm extends javax.swing.JFrame {
       }
     });
   }
-
+     
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bCancel;
   private javax.swing.JLabel lInfo1;
-  private javax.swing.JLabel lInfo2;
   private javax.swing.JProgressBar progressBar;
   // End of variables declaration//GEN-END:variables
 }

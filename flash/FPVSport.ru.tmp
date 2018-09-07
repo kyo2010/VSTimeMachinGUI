@@ -1,4 +1,4 @@
-{
+ {
 "data":[
    {
     "id" : "90",
@@ -81,7 +81,7 @@
         "osd_name" : "TJFPV",
         "fname" : "Тимофей",
         "lname" : "Житков",
-        "transID" : "",
+        "transID" : "1411",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -97,7 +97,7 @@
         "osd_name" : "alexx_",
         "fname" : "Алексей",
         "lname" : "Плотников",
-        "transID" : "",
+        "transID" : "1412",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -253,6 +253,162 @@
     ]
    }
   ,{
+    "id" : "91",
+    "name" : "2018.09.16 Осенняя гонка дронов казань",
+    "date_event" : "16.09.2018",
+    "race_url" : "http://fpvsport.ru/race91",
+    "country" : "RUS",
+    "countryName" : "Россия",
+    "countryNameEN" : "Russian Federation",
+    "regionCode" : "16",
+    "region" : "Республика Татарстан (Татарстан)",
+    "regionEN" : "Republic Of Tatarstan (Tatarstan)",
+    "pilots" : [
+       {
+        "id" : "55",
+        "osd_name" : "frankoff",
+        "fname" : "ALEKSANDR",
+        "lname" : "SVETLAKOV",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "118952",
+        "regionCode" : "16",
+        "region" : "Республика Татарстан (Татарстан)",
+        "regionEN" : "Republic Of Tatarstan (Tatarstan)",
+        "PICTURE_OK" : "0",
+        "PICTURE" : ""
+       }
+      ,{
+        "id" : "67",
+        "osd_name" : "Dark",
+        "fname" : "Егор",
+        "lname" : "Басарин",
+        "transID" : "9999",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "118953",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/DarkAngel_2018-06-30.jpg"
+       }
+    ]
+   }
+  ,{
+    "id" : "92",
+    "name" : "2018.09.09 Заречный Туса",
+    "date_event" : "09.09.2018",
+    "race_url" : "http://fpvsport.ru/race92",
+    "country" : "RUS",
+    "countryName" : "Россия",
+    "countryNameEN" : "Russian Federation",
+    "regionCode" : "66",
+    "region" : "Свердловская область",
+    "regionEN" : "Sverdlovsk region",
+    "pilots" : [
+       {
+        "id" : "67",
+        "osd_name" : "Dark",
+        "fname" : "Егор",
+        "lname" : "Басарин",
+        "transID" : "9999",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "118953",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/DarkAngel_2018-06-30.jpg"
+       }
+      ,{
+        "id" : "141",
+        "osd_name" : "BELAVIA",
+        "fname" : "Евгений",
+        "lname" : "Беляев",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-14-1313-08-04_deworkers.png"
+       }
+      ,{
+        "id" : "59",
+        "osd_name" : "TJFPV",
+        "fname" : "Тимофей",
+        "lname" : "Житков",
+        "transID" : "1411",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-13-1212-08-47_______________.jpg"
+       }
+      ,{
+        "id" : "145",
+        "osd_name" : "alexx_",
+        "fname" : "Алексей",
+        "lname" : "Плотников",
+        "transID" : "1412",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-13-2020-08-51_alexx_2002.jpg"
+       }
+      ,{
+        "id" : "172",
+        "osd_name" : "MrFe1ix",
+        "fname" : "Максим",
+        "lname" : "Смирнов",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-14-1515-08-26_MrFelix.jpg"
+       }
+      ,{
+        "id" : "144",
+        "osd_name" : "Rival",
+        "fname" : "Владимир",
+        "lname" : "Соперников",
+        "transID" : "",
+        "country" : "RUS",
+        "countryName" : "Россия",
+        "countryNameEN" : "Russian Federation",
+        "FAI" : "",
+        "regionCode" : "66",
+        "region" : "Свердловская область",
+        "regionEN" : "Sverdlovsk region",
+        "PICTURE_OK" : "1",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-15-2121-08-20_Rival.jpg"
+       }
+    ]
+   }
+  ,{
     "id" : "76",
     "name" : "2018.09.08 FPVDudes Events в Лужниках",
     "date_event" : "08.09.2018",
@@ -315,7 +471,7 @@
         "osd_name" : "TJFPV",
         "fname" : "Тимофей",
         "lname" : "Житков",
-        "transID" : "",
+        "transID" : "1411",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -347,7 +503,7 @@
         "osd_name" : "alexx_",
         "fname" : "Алексей",
         "lname" : "Плотников",
-        "transID" : "",
+        "transID" : "1412",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -388,20 +544,6 @@
         "PICTURE_OK" : "1",
         "PICTURE" : "http://fpvsport.ru/pilots_photo/GarryBu_2018-08-21.jpg"
        }
-    ]
-   }
-  ,{
-    "id" : "84",
-    "name" : "2018.08.29 test",
-    "date_event" : "29.08.2018",
-    "race_url" : "http://fpvsport.ru/race84",
-    "country" : "RUS",
-    "countryName" : "Россия",
-    "countryNameEN" : "Russian Federation",
-    "regionCode" : "77",
-    "region" : "г. Москва + МО",
-    "regionEN" : "Moscow + Moscow Region",
-    "pilots" : [
     ]
    }
   ,{
@@ -985,8 +1127,8 @@
         "regionCode" : "66",
         "region" : "Свердловская область",
         "regionEN" : "Sverdlovsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/F1int0m_2018-08-13.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/F1int0m_2018-08-31.jpg"
        }
       ,{
         "id" : "170",
@@ -1009,7 +1151,7 @@
         "osd_name" : "TJFPV",
         "fname" : "Тимофей",
         "lname" : "Житков",
-        "transID" : "",
+        "transID" : "1411",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1057,7 +1199,7 @@
         "osd_name" : "alexx_",
         "fname" : "Алексей",
         "lname" : "Плотников",
-        "transID" : "",
+        "transID" : "1412",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",
@@ -1695,8 +1837,8 @@
         "regionCode" : "24",
         "region" : "Красноярский край",
         "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-06-07-1111-06-26_Alexxx_10.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-31-0606-08-39_Alexxx_10.jpg"
        }
       ,{
         "id" : "98",
@@ -2533,8 +2675,8 @@
         "regionCode" : "24",
         "region" : "Красноярский край",
         "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-06-07-1111-06-26_Alexxx_10.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-31-0606-08-39_Alexxx_10.jpg"
        }
       ,{
         "id" : "108",
@@ -3043,8 +3185,8 @@
         "regionCode" : "24",
         "region" : "Красноярский край",
         "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-06-07-1111-06-26_Alexxx_10.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-31-0606-08-39_Alexxx_10.jpg"
        }
       ,{
         "id" : "108",
@@ -3569,8 +3711,8 @@
         "regionCode" : "24",
         "region" : "Красноярский край",
         "regionEN" : "Krasnoyarsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-06-07-1111-06-26_Alexxx_10.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/2018-08-31-0606-08-39_Alexxx_10.jpg"
        }
       ,{
         "id" : "108",
@@ -4651,15 +4793,15 @@
         "regionCode" : "66",
         "region" : "Свердловская область",
         "regionEN" : "Sverdlovsk region",
-        "PICTURE_OK" : "1",
-        "PICTURE" : "http://fpvsport.ru/pilots_photo/F1int0m_2018-08-13.jpg"
+        "PICTURE_OK" : "0",
+        "PICTURE" : "http://fpvsport.ru/pilots_photo/F1int0m_2018-08-31.jpg"
        }
       ,{
         "id" : "59",
         "osd_name" : "TJFPV",
         "fname" : "Тимофей",
         "lname" : "Житков",
-        "transID" : "",
+        "transID" : "1411",
         "country" : "RUS",
         "countryName" : "Россия",
         "countryNameEN" : "Russian Federation",

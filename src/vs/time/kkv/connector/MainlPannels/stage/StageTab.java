@@ -1123,7 +1123,7 @@ public class StageTab extends javax.swing.JPanel {
     if (res == JOptionPane.YES_OPTION) {
       try {
         VS_STAGE.dbControl.delete(mainForm.con, stage);
-        mainForm.setActiveRace(mainForm.activeRace);
+        mainForm.setActiveRace(mainForm.activeRace,true);
       } catch (Exception e) {
         mainForm.toLog(e);
       }

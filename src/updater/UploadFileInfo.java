@@ -19,10 +19,12 @@ public class UploadFileInfo {
 
   public String version;
   public String name;
+  public boolean uploaded = false;
 
   public UploadFileInfo(String version, String name) {
-    this.version = version;
+    this.version = version.toUpperCase();
     this.name = name;
+    this.name = this.name.replaceAll("\\\\", "/");
   }    
 
   public static Map<String, UploadFileInfo> getFileInfo(String fileList) {

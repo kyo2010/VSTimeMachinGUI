@@ -952,7 +952,7 @@ public class StageNewForm extends javax.swing.JFrame {
       }
       setVisible(false);
 
-      mainForm.setActiveRace(mainForm.activeRace);    
+      mainForm.setActiveRace(mainForm.activeRace,isNewSatge);    
     } catch (Exception e) {
       mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(this, "Saving race is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1069,7 +1069,7 @@ public class StageNewForm extends javax.swing.JFrame {
       if (stage != null && stage.ID != -1) {
         stage.IS_GROUP_CREATED = 0;
         VS_STAGE.dbControl.update(mainForm.con, stage);
-        mainForm.setActiveRace(mainForm.activeRace);
+        mainForm.setActiveRace(mainForm.activeRace,true);
         bSaveActionPerformed(evt);
         setVisible(false);
       }

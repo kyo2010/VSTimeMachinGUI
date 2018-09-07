@@ -51,4 +51,20 @@
 
 
 </body>
-</html>
+</html> type="text/javascript">
+   function loadHTML(url){
+     var req = null;
+     if(window.XMLHttpRequest){           
+       req = new XMLHttpRequest();
+       if (req.overrideMimeType) {
+         req.overrideMimeType('text/xml');
+       }
+       req.open("GET", url, false);
+       req.send(null);
+    }else if(window.ActiveXObject){
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+      if(req){
+        req.open("GET", url, false);
+        req.send();
+      }
+    

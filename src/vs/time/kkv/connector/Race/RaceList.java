@@ -149,7 +149,7 @@ public class RaceList extends javax.swing.JFrame {
       mainForm.toLog(ex);
     }
     setVisible(false);
-    mainForm.setActiveRace(race);
+    mainForm.setActiveRace(race,true);
   }
 
   public void refreshData() {
