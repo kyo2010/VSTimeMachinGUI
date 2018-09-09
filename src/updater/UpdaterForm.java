@@ -135,15 +135,18 @@ public class UpdaterForm extends javax.swing.JFrame {
       bCancel.setText("Ok");
       progressBar.setValue(progressBar.getMaximum());
       lInfo1.setText("All components have been uploaded.");  
+      boolean updte_is_ok = true;
       for (UploadFileInfo fi : filesForUpdate){
         File currentFile = new File(UPDATE_OLD_PATH+fi.name);
         currentFile.getParentFile().mkdirs();       
         currentFile.delete();
-        new File(fi.name).renameTo(currentFile);
-        new File(UPDATE_PATH+fi.name).renameTo(new File(fi.name));
+        if (!(new File(fi.name).renameTo(currentFile))) updte_is_ok = false;
+        if (!(new File(UPDATE_PATH+fi.name).renameTo(new File(fi.name)))) updte_is_ok = false;
       }
-      new File("update.list").renameTo(new File(UPDATE_OLD_PATH + "update.list"));      
-      new File(UPDATE_PATH + "update.list").renameTo(new File("update.list"));
+      if (updte_is_ok){
+        new File("update.list").renameTo(new File(UPDATE_OLD_PATH + "update.list"));      
+        new File(UPDATE_PATH + "update.list").renameTo(new File("update.list"));
+      }
       lInfo1.setText("All components have been updated. Please restart the application.");  
     }
   }
