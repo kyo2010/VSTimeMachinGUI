@@ -52,6 +52,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   public MainForm mainForm;
   public RegistrationModelTable regModelTable = null;
   JPopupMenu popup = null;
+  public static int ROW_HEIGHT = 32;
 
   /**
    * Creates new form RegistrationForm
@@ -73,13 +74,15 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         jtPilotRegistration.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));    
       }
     }    
-    jtPilotRegistration.setRowHeight(28);
+    jtPilotRegistration.setRowHeight(ROW_HEIGHT);
 
     popup = new JPopupMenu();
     JMenuItem miEdit = new JMenuItem("Edit");
     popup.add(miEdit);
     JMenuItem miAdd = new JMenuItem("Add");
     popup.add(miAdd);
+    JMenuItem miDeSelectAll = new JMenuItem("Remove Secection from pilots");
+    popup.add(miDeSelectAll);
     JMenuItem miDelete = new JMenuItem("Delete");
     popup.add(miDelete);
     JMenuItem miDeleteAll = new JMenuItem("Delete All");
@@ -117,6 +120,21 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
             }
           }
         }
+      }
+    });
+    
+    miDeSelectAll.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to remove selection from all pilots?", "Confirmation", JOptionPane.YES_NO_OPTION);
+          if (res == JOptionPane.YES_OPTION) {
+            try {
+              VS_REGISTRATION.dbControl.execSql(mainForm.con, "update "+VS_REGISTRATION.dbControl.getTableAlias()+" SET IS_ACTIVE=0 "+" where VS_RACE_ID=?",mainForm.activeRace.RACE_ID);                            
+              RegistrationTab.this.refreshData();
+            } catch (Exception ex) {
+              mainForm.error_log.writeFile(ex);
+            }
+          }
       }
     });
     
@@ -196,8 +214,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   public void refreshData() {
     activeTransponder.setVisible(false);
     regModelTable.loadData();
-    jtPilotRegistration.addNotify();
-    jtPilotRegistration.updateUI();
+    //jtPilotRegistration.addNotify();
+    //jtPilotRegistration.updateUI();
+    jtPilotRegistration.setRowHeight(21);
     mainForm.setTransponderListener(this);
   }
 
@@ -223,6 +242,10 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     bRaceSetting = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
+    jPanel3 = new javax.swing.JPanel();
+    jLabel1 = new javax.swing.JLabel();
+    edFind = new javax.swing.JTextField();
+    bClearFind = new javax.swing.JButton();
 
     butRegistPilot.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/user_add.png"))); // NOI18N
     butRegistPilot.setText("Register");
@@ -326,7 +349,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           .addComponent(bRaceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
             .addComponent(butExport, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(butImport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(butImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(activeTransponder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(butReload, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -362,19 +385,61 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     ));
     jScrollPane1.setViewportView(jtPilotRegistration);
 
+    jLabel1.setText("Find");
+
+    edFind.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyReleased(java.awt.event.KeyEvent evt) {
+        seachKey(evt);
+      }
+    });
+
+    bClearFind.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/remove2.png"))); // NOI18N
+    bClearFind.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bClearFindActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+    jPanel3.setLayout(jPanel3Layout);
+    jPanel3Layout.setHorizontalGroup(
+      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel3Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabel1)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(edFind, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(bClearFind, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+    jPanel3Layout.setVerticalGroup(
+      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+          .addComponent(edFind)
+          .addComponent(jLabel1)
+          .addComponent(bClearFind, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+        .addGap(3, 3, 3))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addComponent(jScrollPane1)
+      .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(1, 1, 1)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+        .addGap(2, 2, 2)
+        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -446,6 +511,18 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     RaceControlForm.init(mainForm, mainForm.activeRace.RACE_ID, false).setVisible(true);
   }//GEN-LAST:event_bRaceSettingActionPerformed
 
+  private void seachKey(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_seachKey
+    // TODO add your handling code here:
+    regModelTable.applayFilter();
+    jtPilotRegistration.setRowHeight(25);
+  }//GEN-LAST:event_seachKey
+
+  private void bClearFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearFindActionPerformed
+    edFind.setText("");
+    regModelTable.applayFilter();
+    jtPilotRegistration.setRowHeight(25);
+  }//GEN-LAST:event_bClearFindActionPerformed
+
   public void tableToXLS() {
     try {
       JDEDate jd = new JDEDate();
@@ -502,6 +579,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel activeTransponder;
+  private javax.swing.JButton bClearFind;
   private javax.swing.JButton bRaceSetting;
   private javax.swing.JButton butAddNewStage;
   private javax.swing.JButton butExport;
@@ -509,8 +587,11 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private javax.swing.JButton butRegistPilot;
   private javax.swing.JButton butReload;
   private javax.swing.JButton butUploadToSite;
+  public javax.swing.JTextField edFind;
+  private javax.swing.JLabel jLabel1;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
+  private javax.swing.JPanel jPanel3;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTable jtPilotRegistration;
   public javax.swing.JCheckBox unRaceLapSound;

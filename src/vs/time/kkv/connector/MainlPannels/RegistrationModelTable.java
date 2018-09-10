@@ -35,7 +35,8 @@ import vs.time.kkv.models.VS_USERS;
 public class RegistrationModelTable extends AbstractTableModel {
 
   public List<VS_REGISTRATION> rows = new ArrayList<>();
-  private RegistrationTab regForm = null;
+  public List<VS_REGISTRATION> rowsAll = new ArrayList<>();
+  private RegistrationTab regForm = null;  
   public String findString = "";
   
   public RegistrationModelTable(RegistrationTab regForm) {
@@ -45,10 +46,32 @@ public class RegistrationModelTable extends AbstractTableModel {
 
   public void loadData() {
     try {             
-      rows = VS_REGISTRATION.dbControl.getList(regForm.mainForm.con, "VS_RACE_ID=? ORDER by NUM",regForm.mainForm.activeRace.RACE_ID);
+      rowsAll = VS_REGISTRATION.dbControl.getList(regForm.mainForm.con, "VS_RACE_ID=? ORDER by NUM",regForm.mainForm.activeRace.RACE_ID);
+      //rows = rowsAll;
+      applayFilter();
     } catch (UserException e) {
       regForm.mainForm.error_log.writeFile(e);
       JOptionPane.showMessageDialog(regForm.mainForm, "Loading pilots is error. " + e.error + " " + e.details, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+  
+  public void applayFilter(){
+    String find = regForm.edFind.getText();  
+    find = find.trim();
+    String findLo = find.trim();
+    if (find.equalsIgnoreCase("")){
+      rows = rowsAll;
+    }else{
+      rows = new ArrayList();
+      for (VS_REGISTRATION reg : rowsAll){
+        if (reg.FIRST_NAME.toLowerCase().indexOf(findLo)>=0 /*|| reg.FIRST_NAME.indexOf(find)>=0*/){
+          rows.add(reg);
+        }else if (reg.SECOND_NAME.toLowerCase().indexOf(findLo)>=0 /*|| reg.SECOND_NAME.indexOf(find)>=0*/){
+          rows.add(reg);
+        }else if (reg.VS_USER_NAME.toLowerCase().indexOf(findLo)>=0 /* || reg.VS_USER_NAME.indexOf(find)>=0*/){
+          rows.add(reg);
+        };
+      }      
     }
   }
 

@@ -67,7 +67,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jssc.SerialNativeInterface;
 import jssc.SerialPortList;
-import updater.UpdaterForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
@@ -1104,10 +1103,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_jMenuItemTVMonitorActionPerformed
 
   private void updaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updaterActionPerformed
-    // TODO add your handling code here:
-    UpdaterForm form = new UpdaterForm();
-    setFormOnCenter(form);
-    form.setVisible(true);
+    try {     
+      Process proc = Runtime.getRuntime().exec("java -jar Updater.jar");
+    } catch (IOException ex) {
+      JOptionPane.showMessageDialog(this, "Java is not found", "Information", JOptionPane.INFORMATION_MESSAGE);      
+    }
   }//GEN-LAST:event_updaterActionPerformed
 
   public static ImageIcon windowsIcon = null;
