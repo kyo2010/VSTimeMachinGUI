@@ -2,7 +2,7 @@
 GUI for VS TimeMachine
 
 ## Download Windows version:
-https://github.com/kyo2010/VSTimeMachinGUI/raw/master2/!dis/DroneRacingSystem.zip
+http://jteam.ru/vsTeam/DroneRacingSystem.zip
 
 ### Please note: 
 1. Program stable works via USB connection (wire, you can use 20m cable).
