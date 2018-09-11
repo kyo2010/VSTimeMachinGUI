@@ -104,6 +104,13 @@ public class RegistrationModelTable extends AbstractTableModel {
     new STAGE_COLUMN(RWSQ_SECOND_NAME, "Second Name", 200),
   };
   
+  public List<STAGE_COLUMN> getColumns(){
+    List<STAGE_COLUMN> cols = new ArrayList();
+    for (STAGE_COLUMN col : STAGE_COLUMNS_STAGE){
+      cols.add(col);
+    }
+    return cols;
+  }
 
   @Override
   public String getColumnName(int columnIndex) {

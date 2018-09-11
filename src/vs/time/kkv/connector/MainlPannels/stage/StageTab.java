@@ -5,11 +5,13 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
-import KKV.Utils.UserException;
+
 import KKV.Export2excel.OutReport;
 import KKV.Export2excel.XLSMaker;
 import KKV.Utils.JDEDate;
 import KKV.Utils.Tools;
+import KKV.Utils.UserException;
+import com.lowagie.text.pdf.BaseFont;
 import java.awt.BorderLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -47,15 +49,6 @@ import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Font;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -95,6 +88,13 @@ import vs.time.kkv.connector.Utils.MultiLineHeaderRenderer;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_SETTING;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import vs.time.kkv.connector.Utils.TableToXLS;
+
+
 
 /**
  *
@@ -656,15 +656,19 @@ public class StageTab extends javax.swing.JPanel {
     }
   }
 
-  public BaseFont getRussianFont() throws DocumentException, IOException {
+  /*public BaseFont getRussianFont() throws DocumentException, IOException {
     //return BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H",BaseFont.EMBEDDED);
     String path = (new File("")).getAbsolutePath();
     String encode = VS_SETTING.getParam(mainForm.con, "PDF-encode", "CP1251");
     BaseFont bfComic = BaseFont.createFont(path + File.separator+"font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
+  }*/
+  
+  public void treeToXLS() {
+    TableToXLS.groups2xls(stage);
   }
 
-  public void treeToXLS() {
+  public void treeToXLS_old() {
     try {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
@@ -704,137 +708,6 @@ public class StageTab extends javax.swing.JPanel {
     } catch (Exception e) {
       e.printStackTrace();
       mainForm._toLog(e);
-    }
-  }
-
-  public void treeToPDF() {
-    try {
-      File dir = new File("reports");
-      dir.mkdirs();
-      JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath() + File.separator + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
-
-      BaseFont bf = getRussianFont();
-      Font font = new Font(bf);
-
-      try {
-        int rowCount = jTable.getRowCount();
-        //Document document = new Document();
-        Document document = new Document(/*PageSize.A4.rotate()*/);
-        PdfWriter.getInstance(document, new FileOutputStream(fileName));
-        document.open();
-
-        Font font1 = new Font(bf, 16);
-
-        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
-        Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, font1);
-        race_caption.getFont().setStyle(Font.BOLD);
-        document.add(race_caption);
-
-        Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, font1);
-        caption.getFont().setStyle(Font.BOLD);
-        document.add(caption);
-
-        //text1 = "Test";
-        document.add(new Paragraph(" ", font));
-
-        for (Integer groupNum : stage.groups.keySet()) {
-          VS_STAGE_GROUP group = stage.groups.get(groupNum);
-          Paragraph grpup_pr = new Paragraph("Group" + group.GROUP_NUM, font);
-          grpup_pr.getFont().setStyle(Font.BOLD);
-          document.add(grpup_pr);
-          for (VS_STAGE_GROUPS usr : group.users) {
-            Paragraph user_pr = new Paragraph(usr.NUM_IN_GROUP + ". " + usr.PILOT + ", cahnnel: " + usr.CHANNEL, font);
-            user_pr.getFont().setStyle(Font.NORMAL);
-            document.add(user_pr);
-          }
-          document.add(new Paragraph(" ", font));
-        }
-
-        document.close();
-
-        try //try statement 
-        {
-          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName + "\"");   //open the file chart.pdf 
-
-        } catch (Exception e) //catch any exceptions here 
-        {
-          System.out.println("Error" + e);  //print the error 
-        }
-
-      } catch (Exception e) {
-      }
-    } catch (Exception e) {
-    }
-  }
-
-  public void tableToPDF() {
-    try {
-      File dir = new File("reports");
-      dir.mkdirs();
-      JDEDate jd = new JDEDate();
-      String fileName = dir.getAbsolutePath() + File.separator + jd.getDateAsYYYYMMDD_andTime("-", "_") + ".pdf";
-
-      BaseFont bf = getRussianFont();
-      Font font = new Font(bf);
-      Font fontBold = new Font(bf);
-      fontBold.setStyle(Font.BOLD);
-      Font fontCption = new Font(bf, 16);
-      fontCption.setStyle(Font.BOLD);
-
-      try {
-        int rowCount = jTable.getRowCount();
-        //Document document = new Document();
-        Document document = new Document(/*PageSize.A4.rotate()*/);
-        PdfWriter.getInstance(document, new FileOutputStream(fileName));
-        document.open();
-        int colCount = jTable.getColumnCount();
-        PdfPTable tab = new PdfPTable(jTable.getColumnCount());
-
-        int[] widths = new int[colCount];
-        int max_width = 0;
-        for (int i = 0; i < jTable.getColumnCount(); i++) {
-          Paragraph paragraph = new Paragraph(jTable.getColumnName(i), fontBold);
-          tab.addCell(paragraph);
-          widths[i] = stageTableAdapter.getMinWidth(i);
-          max_width += widths[i];
-        }
-        tab.setWidths(widths);
-        tab.setWidthPercentage(100);
-
-        for (int row = 0; row < rowCount; row++) {
-          for (int col = 0; col < colCount; col++) {
-            Object obj = jTable.getModel().getValueAt(row, col);
-            Paragraph paragraph = new Paragraph(obj.toString(), font);
-            paragraph.getFont().setStyle(Font.NORMAL);
-            tab.addCell(paragraph);
-          }
-        }
-
-        VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
-        Paragraph race_caption = new Paragraph("Race : " + race.RACE_NAME, fontCption);
-        document.add(race_caption);
-
-        Paragraph caption = new Paragraph("Stage : " + stage.CAPTION, fontCption);
-        document.add(caption);
-
-        //text1 = "Test";
-        document.add(new Paragraph(" ", font));
-
-        tab.setHorizontalAlignment(PdfPTable.ALIGN_LEFT);
-        document.add(tab);
-        document.close();
-
-        try //try statement 
-        {
-          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler \"" + fileName + "\"");   //open the file chart.pdf 
-        } catch (Exception e) //catch any exceptions here 
-        {
-          System.out.println("Error" + e);  //print the error 
-        }
-      } catch (Exception e) {
-      }
-    } catch (Exception e) {
     }
   }
 
@@ -1149,14 +1022,14 @@ public class StageTab extends javax.swing.JPanel {
     tableToXLS();
   }//GEN-LAST:event_pdfButtonActionPerformed
 
-  public void tableToXLS() {
+  public void tableToXLS_old() {
     try {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
       out.setReportName(jd.getDDMMYYYY("-") + "_stage");
 
-      tableToXLS(out);
+      tableToXLS_old(out);
 
       out.closeDataStreams();
       String xlsFile = XLSMaker.makeXLS(out);
@@ -1166,8 +1039,22 @@ public class StageTab extends javax.swing.JPanel {
       mainForm._toLog(e);
     }
   }
+  
+   public void tableToXLS() {
+     tableToXLS(null);
+   }
+  
+  // POI
+   public void tableToXLS(Workbook wb) {
+    try {
+      TableToXLS.tableToXLS2(wb, stage.CAPTION,mainForm.activeRace.RACE_NAME, stage.CAPTION, jTable, this.stageTableAdapter.getColumns(),true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      mainForm._toLog(e);
+    }
+  }
 
-  public void tableToXLS(OutReport out) {
+  public void tableToXLS_old(OutReport out) {
     try {
       JDEDate jd = new JDEDate();
       int sheet = out.addStream();

@@ -8,6 +8,7 @@ package vs.time.kkv.connector.MainlPannels;
 import KKV.Export2excel.OutReport;
 import KKV.Export2excel.XLSMaker;
 import KKV.Utils.JDEDate;
+import KKV.Utils.Tools;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
@@ -28,6 +29,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.nkv.var.StringVar;
 import ru.nkv.var.VarPool;
 import ru.nkv.var.pub.IVar;
@@ -40,6 +42,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 
@@ -62,18 +65,17 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     this.mainForm = _mainForm;
     regModelTable = new RegistrationModelTable(this);
     jtPilotRegistration.setModel(regModelTable);
-    
+
     //jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     //jtPilotRegistration.getColumnModel().getColumn(4).setPreferredWidth(800);    
-    
     jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    for (int i=0; i<regModelTable.getColumnCount(); i++){
+    for (int i = 0; i < regModelTable.getColumnCount(); i++) {
       jtPilotRegistration.getColumnModel().getColumn(i).setPreferredWidth(regModelTable.getColumnWidth(i));
       STAGE_COLUMN colInfo = regModelTable.getColumn(i);
-      if (colInfo.ID==regModelTable.RWSQ_PILOT_TYPE){
-        jtPilotRegistration.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));    
+      if (colInfo.ID == regModelTable.RWSQ_PILOT_TYPE) {
+        jtPilotRegistration.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(ListEditTools.generateBox(mainForm.PILOT_TYPES)));
       }
-    }    
+    }
     jtPilotRegistration.setRowHeight(ROW_HEIGHT);
 
     popup = new JPopupMenu();
@@ -87,7 +89,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     popup.add(miDelete);
     JMenuItem miDeleteAll = new JMenuItem("Delete All");
     popup.add(miDeleteAll);
-    
+
     miEdit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -122,34 +124,34 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         }
       }
     });
-    
+
     miDeSelectAll.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to remove selection from all pilots?", "Confirmation", JOptionPane.YES_NO_OPTION);
-          if (res == JOptionPane.YES_OPTION) {
-            try {
-              VS_REGISTRATION.dbControl.execSql(mainForm.con, "update "+VS_REGISTRATION.dbControl.getTableAlias()+" SET IS_ACTIVE=0 "+" where VS_RACE_ID=?",mainForm.activeRace.RACE_ID);                            
-              RegistrationTab.this.refreshData();
-            } catch (Exception ex) {
-              mainForm.error_log.writeFile(ex);
-            }
+        if (res == JOptionPane.YES_OPTION) {
+          try {
+            VS_REGISTRATION.dbControl.execSql(mainForm.con, "update " + VS_REGISTRATION.dbControl.getTableAlias() + " SET IS_ACTIVE=0 " + " where VS_RACE_ID=?", mainForm.activeRace.RACE_ID);
+            RegistrationTab.this.refreshData();
+          } catch (Exception ex) {
+            mainForm.error_log.writeFile(ex);
           }
+        }
       }
     });
-    
+
     miDeleteAll.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-          int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to delete all registrations?", "Confirmation", JOptionPane.YES_NO_OPTION);
-          if (res == JOptionPane.YES_OPTION) {
-            try {
-              VS_REGISTRATION.dbControl.execSql(mainForm.con, "DELETE from "+VS_REGISTRATION.dbControl.getTableAlias()+" where VS_RACE_ID=?",mainForm.activeRace.RACE_ID);
-              RegistrationTab.this.refreshData();
-            } catch (Exception ex) {
-              mainForm.error_log.writeFile(ex);
-            }
+        int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to delete all registrations?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+          try {
+            VS_REGISTRATION.dbControl.execSql(mainForm.con, "DELETE from " + VS_REGISTRATION.dbControl.getTableAlias() + " where VS_RACE_ID=?", mainForm.activeRace.RACE_ID);
+            RegistrationTab.this.refreshData();
+          } catch (Exception ex) {
+            mainForm.error_log.writeFile(ex);
           }
+        }
       }
     });
     jtPilotRegistration.add(popup);
@@ -161,15 +163,14 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           JTable source = (JTable) e.getSource();
           int row = source.rowAtPoint(e.getPoint());
           int column = source.columnAtPoint(e.getPoint());
-          
-            source.changeSelection(row, column, false, false);
-            VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
-            if (regInfo != null) {
-               RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
-            }          
+
+          source.changeSelection(row, column, false, false);
+          VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
+          if (regInfo != null) {
+            RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
+          }
         }
-        
-        
+
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
           //mouseReleased(e);
           JTable source = (JTable) e.getSource();
@@ -200,14 +201,14 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   }
 
   long transponder = -1;
-   VS_REGISTRATION last_user = null;
+  VS_REGISTRATION last_user = null;
 
   @Override
   public void newTransponder(long transponder, VS_REGISTRATION user) {
     activeTransponder.setVisible(true);
     this.transponder = transponder;
-    String info = (user!=null?(user.VS_USER_NAME + " - "):"") + mainForm.lastTranponderID;
-    activeTransponder.setText( info );    
+    String info = (user != null ? (user.VS_USER_NAME + " - ") : "") + mainForm.lastTranponderID;
+    activeTransponder.setText(info);
     last_user = user;
   }
 
@@ -483,27 +484,27 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
 
   private void butUploadToSiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butUploadToSiteActionPerformed
     // TODO add your handling code here:
-    
+
     IRegSite site = null;
-    if (mainForm.activeRace.WEB_RACE_ID!=null && !mainForm.activeRace.WEB_RACE_ID.equals("")){
+    if (mainForm.activeRace.WEB_RACE_ID != null && !mainForm.activeRace.WEB_RACE_ID.equals("")) {
       site = RegistrationImportForm.getSite(mainForm.activeRace.WEB_SYSTEM_SID);
-      if (site==null) {
-        JOptionPane.showMessageDialog(null,"Please make a link with web system");
+      if (site == null) {
+        JOptionPane.showMessageDialog(null, "Please make a link with web system");
         return;
       }
-      if (site.isSuportedToWebUpload()){        
-      }else{
-        JOptionPane.showMessageDialog(null,"Update race data is not supported for site :"+site.REG_SITE_NAME);
+      if (site.isSuportedToWebUpload()) {
+      } else {
+        JOptionPane.showMessageDialog(null, "Update race data is not supported for site :" + site.REG_SITE_NAME);
       }
-    }else{
-      JOptionPane.showMessageDialog(null,"Please make a link with web system");
+    } else {
+      JOptionPane.showMessageDialog(null, "Please make a link with web system");
       return;
     }
-       
-    site.uploadToWebSystem(this, null, true,true);
+
+    site.uploadToWebSystem(this, null, true, true);
     for (StageTab stageTab : mainForm.stageTabs) {
       site.uploadToWebSystem(null, stageTab, false, true);
-    }    
+    }
   }//GEN-LAST:event_butUploadToSiteActionPerformed
 
   private void bRaceSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRaceSettingActionPerformed
@@ -525,12 +526,40 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
 
   public void tableToXLS() {
     try {
+      XSSFWorkbook wb = new XSSFWorkbook(); //or new HSSFWorkbook();
+
+      vs.time.kkv.connector.Utils.TableToXLS.tableToXLS2(wb, "Registration", mainForm.activeRace.RACE_NAME, "Registration", jtPilotRegistration, regModelTable.getColumns(), false);
+      for (StageTab stageTab : mainForm.stageTabs) {
+        try {
+          stageTab.tableToXLS(wb);
+        } catch (Exception e) {
+        }
+      }
+
+      new File("XLS").mkdirs();
+      String xlsFile = "XLS/" + Tools.createName(new JDEDate().getDateAsYYYYMMDD("-") + "_", 5) + ".xlsx";
+      FileOutputStream fileOut = new FileOutputStream(xlsFile);
+      wb.write(fileOut);
+      fileOut.close();
+
+      OSDetector.open(new File(xlsFile));
+    } catch (Exception eout) {
+      mainForm.toLog(eout);
+      eout.printStackTrace();
+      JOptionPane.showMessageDialog(this, "Creating xls-file is error.");
+
+    }
+
+  }
+
+  public void tableToXLS_old() {
+    try {
       JDEDate jd = new JDEDate();
       OutReport out = new OutReport(jd.getDDMMYYYY("-"));
       //out.setShowExcel(true);
 
       String sheetName = "Registration";
-      out.setReportName(jd.getDDMMYYYY("-")+"_reg");
+      out.setReportName(jd.getDDMMYYYY("-") + "_reg");
       int sheet = out.addStream();
 
       out.setReportName(sheet, sheetName);
@@ -565,7 +594,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
 
       for (StageTab stageTab : mainForm.stageTabs) {
-        stageTab.tableToXLS(out);
+        stageTab.tableToXLS_old(out);
       }
 
       out.closeDataStreams();
