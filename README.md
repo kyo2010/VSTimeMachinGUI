@@ -1,7 +1,7 @@
 # VSTimeMachinGUI
 GUI for VS TimeMachine
 
-## Download Windows version:
+## Download Windows/Mac version:
 http://jteam.ru/vsTeam/DroneRacingSystem.zip
 
 ### Please note: 
