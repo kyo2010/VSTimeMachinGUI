@@ -46,7 +46,7 @@ public class TableToXLS {
       Sheet sheet = wb.createSheet(sheetName);
 
       Font font2 = wb.createFont();
-      font2.setFontHeightInPoints((short) 14);
+      font2.setFontHeightInPoints((short) 10);
       font2.setFontName("Calibri");
       //font2.setColor(IndexedColors.GREEN.getIndex());
       CellStyle style2 = wb.createCellStyle();
@@ -130,7 +130,7 @@ public class TableToXLS {
       sheet.setColumnWidth(0, 5 * 100);
       for (int col = 0; col < colCount; col++) {
         try {
-          sheet.setColumnWidth(col + 1, (short) jTable.getColumnModel().getColumn(col).getWidth() * 50);
+          sheet.setColumnWidth(col + 1, (short) jTable.getColumnModel().getColumn(col).getWidth() * 30);
           //columns.get(col).width*100);         
         } catch (Exception e) {
         }
@@ -160,7 +160,7 @@ public class TableToXLS {
       Sheet sheet = wb.createSheet(stage.CAPTION);
 
       Font font2 = wb.createFont();
-      font2.setFontHeightInPoints((short) 14);
+      font2.setFontHeightInPoints((short) 10);
       font2.setFontName("Calibri");
       //font2.setColor(IndexedColors.GREEN.getIndex());
       CellStyle style2 = wb.createCellStyle();

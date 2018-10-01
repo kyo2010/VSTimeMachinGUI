@@ -5,10 +5,13 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage.GroupCreater;
 
+import KKV.Utils.UserException;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
@@ -17,11 +20,15 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  */
 public abstract class IGroupCreater { 
   /** Check what kind stage and race type supported this alg */
-  public abstract boolean isSupport(int stageType, int racyType); ;
-  /** The genaral function for group creation */
-  public abstract void createGroup(StageTab tab);
+  public abstract int getRaceType();
+  public abstract String getRaceTypeName(); 
+  public boolean isAllowDuplicatedPilotInStage(){ return false; };
+ 
   
-  /** Service function */
+  /** The genaral function for group creation */
+  public abstract void createGroup(VS_STAGE stage, VS_STAGE parent_stage, Connection con) throws UserException;
+  
+  /** Service functions */
   
   // add user to group, if group is full, create new group
   public void addUserToGroup(VS_STAGE_GROUPS add_usr, List<VS_STAGE_GROUPS> users, int max_pilots_in_groups) {

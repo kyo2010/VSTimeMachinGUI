@@ -70,7 +70,7 @@ public class TextToSpeechCOM2 implements IKKVSpeek {
   }
 
   public String getTTSName() {
-    return "Windows TTS2";
+    return "Windows TTS2 [RU]";
   }
 
   ;

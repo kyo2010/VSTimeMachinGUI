@@ -157,11 +157,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="jRaceType">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel(MainForm.RACE_TYPES)" type="code"/>
-                </Property>
-              </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
@@ -826,7 +821,7 @@
                     <Component class="javax.swing.JComboBox" name="jOrderBy">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new javax.swing.DefaultComboBoxModel(MainForm.STAGE_SORTS)" type="code"/>
+                          <Connection code="new javax.swing.DefaultComboBoxModel(vs.time.kkv.connector.MainlPannels.stage.Sorting.SortFactory.getSortOrders())" type="code"/>
                         </Property>
                       </Properties>
                       <AuxValues>

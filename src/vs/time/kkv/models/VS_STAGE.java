@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
+import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.IGroupCreater;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
@@ -45,6 +47,7 @@ public class VS_STAGE {
   public StageTab tab = null;
   public String TRANSS = "";
   public String SCORE_CALCULATION = "";
+  public IGroupCreater groupCreater = null;
 
   //public VS_RACE race = null;
 
@@ -96,6 +99,9 @@ public class VS_STAGE {
   public void loadGroups(Connection conn, long race_id, long stage_id) {
     try {
       groups.clear();
+      if (STAGE_TYPE==MainForm.STAGE_RACE){
+        groupCreater = GroupFactory.getRaceCreatorByCode(RACE_TYPE);
+      }
       int GROUP_INDEX = 0;
       Map<Long, Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);
@@ -182,7 +188,9 @@ public class VS_STAGE {
           usr.isError = 1;
         }
         if (userNames.contains(usr.PILOT)) {
-          if (STAGE_TYPE==MainForm.STAGE_RACE && RACE_TYPE==MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16){
+          if (STAGE_TYPE==MainForm.STAGE_RACE && RACE_TYPE==MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16
+              || (groupCreater!=null && groupCreater.isAllowDuplicatedPilotInStage()))    
+          {
             // skip;
           }else{
             usr.isError = 2;

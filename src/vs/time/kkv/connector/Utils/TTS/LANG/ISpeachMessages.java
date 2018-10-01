@@ -30,7 +30,7 @@ public class ISpeachMessages {
   
   public SpeekText raceWillBeStarted(long miliseconds) {    
     long value = miliseconds/1000/60;
-    String mesure = "минуты";
+    String mesure = "minutes";
     if (value==1) mesure = "minute"; 
     if (value==0) {
       mesure = "seconds";

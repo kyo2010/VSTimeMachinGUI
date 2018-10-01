@@ -30,6 +30,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.MainlPannels.stage.SCORE.ScoreCalulationFactory;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_STAGE;
@@ -80,14 +81,16 @@ public class StageNewForm extends javax.swing.JFrame {
   }
 
   private static StageNewForm form = null;
+  StageTab tab = null;
 
-  public static StageNewForm init(MainForm mainForm, VS_STAGE stage) {
+  public static StageNewForm init(MainForm mainForm, VS_STAGE stage, StageTab tab) {
     if (form == null) {
       form = new StageNewForm(mainForm);
       if (mainForm != null) {
         mainForm.setFormOnCenter(form);
       }
     }
+    form.tab = tab;
     form.setVisible(false);
     form.stage = stage;
     form.prepareForm();
@@ -119,6 +122,8 @@ public class StageNewForm extends javax.swing.JFrame {
 
   public void prepareForm() {
 
+    
+    
     jPilotType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.PILOT_TYPES_NONE));
     List<VS_STAGE> stages = null;
     try {
@@ -140,11 +145,13 @@ public class StageNewForm extends javax.swing.JFrame {
     }
     SCORE_CALCULATION.setModel(new javax.swing.DefaultComboBoxModel(ScoreCalulationFactory.getScoreCalulationNames()));
     parentStage.setModel(new javax.swing.DefaultComboBoxModel(stages_st));
+    
+    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes()));
 
     if (stage != null) {
       butRecrateGropus.setVisible(true);
       jtCaption.setText(stage.CAPTION);
-       SCORE_CALCULATION.setSelectedIndex(ScoreCalulationFactory.getScoreCalulationIndex(stage.SCORE_CALCULATION));
+      SCORE_CALCULATION.setSelectedIndex(ScoreCalulationFactory.getScoreCalulationIndex(stage.SCORE_CALCULATION));
       jchGroupByPilotType.setSelected(stage.FLAG_BY_PYLOT_TYPE == 1);
       jtLapsCount.setText("" + stage.LAPS);
       jtMinLapTime.setText("" + stage.MIN_LAP_TIME);
@@ -177,7 +184,7 @@ public class StageNewForm extends javax.swing.JFrame {
       jPilotType.setSelectedIndex(stage.PILOT_TYPE);
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
       PilotsForNextRound.setText("" + stage.PILOTS_FOR_NEXT_ROUND);
-      jRaceType.setSelectedIndex(stage.RACE_TYPE);
+      jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode( stage.RACE_TYPE)  );
     } else {
       VS_RACE race = mainForm.activeRace;
       //jtLapsCount.setText("" + 3);
@@ -324,8 +331,6 @@ public class StageNewForm extends javax.swing.JFrame {
     });
 
     jRaceTypeLabel.setText("Race Type");
-
-    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.RACE_TYPES));
 
     javax.swing.GroupLayout racePanelLayout = new javax.swing.GroupLayout(racePanel);
     racePanel.setLayout(racePanelLayout);
@@ -635,7 +640,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
     jLabel6.setText("Order by");
 
-    jOrderBy.setModel(new javax.swing.DefaultComboBoxModel(MainForm.STAGE_SORTS));
+    jOrderBy.setModel(new javax.swing.DefaultComboBoxModel(vs.time.kkv.connector.MainlPannels.stage.Sorting.SortFactory.getSortOrders()));
 
     jLabel7.setText("Pilots for next round");
 
@@ -883,8 +888,10 @@ public class StageNewForm extends javax.swing.JFrame {
       int count_of_pilots = jtCountOfPilots.getSelectedIndex() + 1;
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
-      stage.RACE_TYPE = jRaceType.getSelectedIndex();
-
+      try{
+        stage.RACE_TYPE = GroupFactory.getRaceCodeByName((String)jRaceType.getSelectedItem())  ;
+      }catch(Exception e){}
+        
       try {
         stage.PILOTS_FOR_NEXT_ROUND = Integer.parseInt(PilotsForNextRound.getText());
       } catch (Exception e) {
@@ -921,14 +928,14 @@ public class StageNewForm extends javax.swing.JFrame {
         if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
           if (parent_stage != null) {
             stage.PILOT_TYPE = parent_stage.PILOT_TYPE;
-            stage.SORT_TYPE = MainForm.STAGE_SORT_BY_RACE_TIME;
+            stage.SORT_TYPE = 0;//MainForm.STAGE_SORT_BY_RACE_TIME;
           }
         }
 
         if (isNewSatge && stage.STAGE_TYPE == MainForm.STAGE_RACE
                 && (stage.RACE_TYPE == MainForm.RACE_TYPE_WHOOP
                 /*|| stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE*/)) {
-          stage.SORT_TYPE = MainForm.STAGE_SORT_BY_SCORE_DESC;
+          stage.SORT_TYPE = 0;//MainForm.STAGE_SORT_BY_SCORE_DESC;
           stage.ID = -1;
           String caption = stage.CAPTION;
           stage.CAPTION = caption + "_1";
@@ -942,13 +949,17 @@ public class StageNewForm extends javax.swing.JFrame {
           stage.CAPTION = caption + " result";
           stage.ID = -1;
           stage.STAGE_TYPE = MainForm.STAGE_RACE_RESULT;
-          stage.SORT_TYPE = MainForm.STAGE_SORT_BY_LOSS_DESC;
+          stage.SORT_TYPE = 0;//MainForm.STAGE_SORT_BY_LOSS_DESC;
           stage.dbControl.insert(mainForm.con, stage);
         } else {
           stage.dbControl.insert(mainForm.con, stage);
         }
       } else {
         stage.dbControl.update(mainForm.con, stage);
+        if (tab!=null) {
+        //tab.refreshTable();
+          tab.refreshButton();
+        }
       }
       setVisible(false);
 
@@ -1068,9 +1079,9 @@ public class StageNewForm extends javax.swing.JFrame {
     try {
       if (stage != null && stage.ID != -1) {
         stage.IS_GROUP_CREATED = 0;
-        VS_STAGE.dbControl.update(mainForm.con, stage);
-        mainForm.setActiveRace(mainForm.activeRace,true);
         bSaveActionPerformed(evt);
+        VS_STAGE.dbControl.update(mainForm.con, stage);
+        mainForm.setActiveRace(mainForm.activeRace,true);       
         setVisible(false);
       }
     } catch (Exception e) {

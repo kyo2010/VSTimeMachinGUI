@@ -122,6 +122,10 @@ public class DataBaseStructure {
     
     new DBAddonStructure(4.6, "ALTER TABLE VS_STAGE ADD TRANSS TEXT NOT NULL DEFAULT '';"),    
     new DBAddonStructure(4.7, "ALTER TABLE VS_STAGE ADD SCORE_CALCULATION TEXT NOT NULL DEFAULT '';"),        
+    
+    new DBAddonStructure(4.8, "ALTER TABLE VS_STAGE_GROUPS ADD WINS INTEGER NOT NULL DEFAULT 0;"),
+    new DBAddonStructure(4.8, "ALTER TABLE VS_STAGE_GROUPS ADD LOSES INTEGER NOT NULL DEFAULT 0;"),
+    
   };
 
   public static class DBAddonStructure {

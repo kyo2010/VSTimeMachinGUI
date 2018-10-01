@@ -95,14 +95,18 @@ public class RusSpeachMessages extends ISpeachMessages{
   public SpeekText raceWillBeStarted(long miliseconds) {    
     long value = miliseconds/1000/60;
     String value_st = null;
-    String mesure = "минуты";
+    String mesure = "минут";
     if (value==1) {
       value_st = "одну";
       mesure = "минуту";
     } 
-    if (value==1) {
-      value_st = "пять";
-      mesure = "минут";
+    if (value==2) {
+      value_st = "две";
+      mesure = "минуты";
+    } 
+    if (value==3) {
+      value_st = "три";
+      mesure = "минуты";
     } 
     if (value==0) {
       mesure = "секунд";

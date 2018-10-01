@@ -92,6 +92,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.Utils.TableToXLS;
 
 
@@ -584,6 +585,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.activeGroup.recalculateScores(mainForm);
     mainForm.activeGroup = null;
     jTree.updateUI();
+    refreshTable();
     //mainForm.speaker.speak("The Stage finshed");
     mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().groupFinished(group_num));
   }
@@ -1013,7 +1015,7 @@ public class StageTab extends javax.swing.JPanel {
 
     // refresh data tab
     //refreshDataActionPerformed(evt);
-    StageNewForm.init(mainForm, stage).setVisible(true);
+    StageNewForm.init(mainForm, stage, this).setVisible(true);
   }//GEN-LAST:event_butConfigActionPerformed
 
   private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
@@ -1118,6 +1120,10 @@ public class StageTab extends javax.swing.JPanel {
       e.printStackTrace();
       mainForm._toLog(e);
     }
+  }
+  
+  public void refreshButton(){
+    refreshDataActionPerformed(null);
   }
 
   private void refreshDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshDataActionPerformed
@@ -1240,7 +1246,7 @@ public class StageTab extends javax.swing.JPanel {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
       return;
     }
-    StageNewForm.init(mainForm, null).setVisible(true);
+    StageNewForm.init(mainForm, null, null).setVisible(true);
   }//GEN-LAST:event_bNewStageActionPerformed
 
   private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
@@ -1542,7 +1548,7 @@ public class StageTab extends javax.swing.JPanel {
   public javax.swing.JTree jTree;
   public javax.swing.JCheckBox jchTV;
   private javax.swing.JButton pdfButton;
-  private javax.swing.JButton refreshData;
+  public javax.swing.JButton refreshData;
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables
@@ -1916,6 +1922,12 @@ public class StageTab extends javax.swing.JPanel {
                   VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
               }*/
+            } else if (stage.STAGE_TYPE==MainForm.STAGE_RACE && GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE)!=null){
+               try{
+                 GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+               }catch(UserException ue){
+                 JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);            
+               }
             } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
@@ -2369,6 +2381,7 @@ public class StageTab extends javax.swing.JPanel {
       if (race != null && race.RANDOM_BEEP != 1) {
         InfoForm.init(mainForm, "3").setVisible(true);
         mainForm.activeGroup = td.group;
+        refreshTable();
         //if (useSpeach) mainForm.speaker.speak("Three!");                
         mainForm.beep.paly("three");
         Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds

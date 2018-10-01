@@ -32,7 +32,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     }
   }
 
-  public long GID;   //  NOT_DETECTED
+  public long GID = -1;   //  NOT_DETECTED
   public long STAGE_ID;   //  NOT_DETECTED
   public long GROUP_NUM;   //  NOT_DETECTED
   public long NUM_IN_GROUP;   //  NOT_DETECTED
@@ -83,8 +83,35 @@ public class VS_STAGE_GROUPS implements Transferable {
    */
   public VS_STAGE_GROUPS() {
   }
-  ; 
-  
+
+  public VS_STAGE_GROUPS(VS_REGISTRATION reg) {
+    PILOT = reg.VS_USER_NAME;
+    this.registration = reg;
+    this.REG_ID = reg.ID;
+    this.IS_RECALULATED = 0;
+    this.IS_FINISHED = 0;
+  }
+
+  public VS_STAGE_GROUPS(VS_STAGE_GROUPS usr) {
+    try {
+      dbControl.copyObject(usr, this);
+    } catch (Exception e) {
+    }
+    this.GID = -1;
+    this.STAGE_ID = -1;
+    this.isError = 0;
+    this.IS_FINISHED = 0;
+    this.IS_RECALULATED = 0;
+    this.LAPS = 0;
+    this.RACE_TIME = 0;
+    this.BEST_LAP = 0;
+    this.GROUP_NUM = GROUP_NUM;
+    this.NUM_IN_GROUP = NUM_IN_GROUP;
+    this.PILOT = usr.PILOT;
+    this.CHANNEL = usr.CHANNEL;
+    this.REG_ID =  usr.REG_ID;
+  }
+
   public static DBModelControl<VS_STAGE_GROUPS> dbControl = new DBModelControl<VS_STAGE_GROUPS>(VS_STAGE_GROUPS.class, "VS_STAGE_GROUPS", new DBModelField[]{
     new DBModelField("GID").setDbFieldName("\"GID\"").setAutoIncrement(),
     new DBModelField("STAGE_ID").setDbFieldName("\"STAGE_ID\""),
@@ -115,7 +142,11 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("GROUP_HALF_FINAL").setDbFieldName("\"GROUP_HALF_FINAL\""),
     new DBModelField("GROUP_QUART_FINAL").setDbFieldName("\"GROUP_QUART_FINAL\""),
     new DBModelField("GROUP_TYPE").setDbFieldName("\"GROUP_TYPE\""),
-    new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),});
+    new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),
+    new DBModelField("wins").setDbFieldName("\"WINS\""),
+    new DBModelField("loses").setDbFieldName("\"LOSES\""),
+    
+  });
 
   public VS_REGISTRATION getRegistration(Connection conn, long raceID) {
     loadRegistration(conn, raceID);
@@ -165,13 +196,14 @@ public class VS_STAGE_GROUPS implements Transferable {
       if (!stage.TRANSS.equalsIgnoreCase("")) {
         Map<String, List<String>> transChannels = stage.getTanspondersForChannels();
         List<String> trans_channel = transChannels.get(CHANNEL);
-        if (trans_channel!=null){        
+        if (trans_channel != null) {
           for (String trans_st : trans_channel) {
-            try{
+            try {
               // convert to int
               int trans_int = Integer.parseInt(trans_st);
               trans.add(trans_int);
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
           }
         }
       }

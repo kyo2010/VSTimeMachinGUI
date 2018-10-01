@@ -75,7 +75,7 @@ public class TextToSpeechCOM implements IKKVSpeek {
   }
 
   public String getTTSName() {
-    return "Windows TTS";
+    return "Windows TTS [RU]";
   }
 
   ;

@@ -64,24 +64,7 @@ public class VS_STAGE_GROUP implements Transferable {
     return null;
   }
 
-  public static Comparator GROUP_TIME_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
-    @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
-      if (o1.RACE_TIME > o2.RACE_TIME) {
-        return 1;
-      }
-      if (o1.RACE_TIME < o2.RACE_TIME) {
-        return -1;
-      }
-      if (o1.BEST_LAP > o2.BEST_LAP) {
-        return 1;
-      }
-      if (o1.BEST_LAP < o2.BEST_LAP) {
-        return -1;
-      }
-      return 0;
-    }
-  };
+  
   
   public static Comparator GROUP_QUAL_TIME_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
     @Override
@@ -106,129 +89,8 @@ public class VS_STAGE_GROUP implements Transferable {
       }
       return 0;
     }
-  };
-  
-  public static Comparator GROUP_LAPS_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
-    @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
-      if (o1.LAPS > o2.LAPS) {
-        return -1;
-      }
-      if (o1.LAPS < o2.LAPS) {
-        return 1;
-      }
-
-      
-      if (o1.RACE_TIME > o2.RACE_TIME) {
-        return 1;
-      }
-      if (o1.RACE_TIME < o2.RACE_TIME) {
-        return -1;
-      }
-      if (o1.BEST_LAP > o2.BEST_LAP) {
-        return 1;
-      }
-      if (o1.BEST_LAP < o2.BEST_LAP) {
-        return -1;
-      }
-      return 0;
-    }
-  };
-  
-  public static Comparator GROUP_LAPS_AND_SCORES_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
-    @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
-      if (o1.LAPS > o2.LAPS) {
-        return -1;
-      }
-      if (o1.LAPS < o2.LAPS) {
-        return 1;
-      }
-    if (o1.SCORE>o2.SCORE){
-        return -1;
-      }
-      if (o1.SCORE<o2.SCORE){
-        return 1;
-      }
-      if (o1.RACE_TIME > o2.RACE_TIME) {
-        return 1;
-      }
-      if (o1.RACE_TIME < o2.RACE_TIME) {
-        return -1;
-      }
-      if (o1.BEST_LAP > o2.BEST_LAP) {
-        return 1;
-      }
-      if (o1.BEST_LAP < o2.BEST_LAP) {
-        return -1;
-      }
-      return 0;
-    }
-  };
-
-  
-  public static Comparator GROUP_SCORE_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
-    @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
-      if (o1.SCORE>o2.SCORE){
-        return -1;
-      }
-      if (o1.SCORE<o2.SCORE){
-        return 1;
-      }
-      if (o1.RACE_TIME > o2.RACE_TIME) {
-        return 1;
-      }
-      if (o1.RACE_TIME < o2.RACE_TIME) {
-        return -1;
-      }
-      if (o1.BEST_LAP > o2.BEST_LAP) {
-        return 1;
-      }
-      if (o1.BEST_LAP < o2.BEST_LAP) {
-        return -1;
-      }
-      return 0;
-    }
-  };
-  
-  public static Comparator GROUP_LOST_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
-    @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
-      if (o1.loses < o2.loses) {
-        return -1;
-      }
-      if (o1.loses > o2.loses) {
-        return 1;
-      }
-      if (o1.wins > o2.wins) {
-        return -1;
-      }
-      if (o1.wins < o2.wins) {
-        return 1;
-      }
-      if (o1.SCORE>o2.SCORE){
-        return -1;
-      }
-      if (o1.SCORE<o2.SCORE){
-        return 1;
-      }
-      if (o1.RACE_TIME > o2.RACE_TIME) {
-        return 1;
-      }
-      if (o1.RACE_TIME < o2.RACE_TIME) {
-        return -1;
-      }
-      if (o1.BEST_LAP > o2.BEST_LAP) {
-        return 1;
-      }
-      if (o1.BEST_LAP < o2.BEST_LAP) {
-        return -1;
-      }      
-      return 0;
-    }
-  };
-
+  };   
+    
   public void recalculateScores(MainForm mainForm) {
     if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
       List<VS_STAGE_GROUPS> sorted_users = new ArrayList<VS_STAGE_GROUPS>();

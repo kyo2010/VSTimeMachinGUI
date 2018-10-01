@@ -109,14 +109,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_RACE_RESULT = 4;
   public static final int STAGE_RACE_REPORT = 5;
 
-  public static final int STAGE_SORT_BY_RACE_TIME = 0;
-  public static final int STAGE_SORT_BY_LAP_TIME = 1;
-  public static final int STAGE_SORT_BY_SCORE_DESC = 2;
-  public static final int STAGE_SORT_BY_LOSS_DESC = 3;
-  public static final int STAGE_SORT_BY_LAPS = 4;
-  public static final int STAGE_SORT_BY_LAPS_AND_SCORES = 5;
-  public final static String[] STAGE_SORTS = new String[]{"Race time", "Best lap time", "Score", "Loss", "Laps & LAP Time", "Laps & Scores"};
-
+  
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -130,8 +123,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int RACE_TYPE_WHOOP = 2;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 0;
-  public final static String[] RACE_TYPES = new String[]{"Single elemination", "Double elemenation", "Whoop Race", "Olimpic Single elemenation", "Everyone with each(only 16)" /*, "Olimpic Losers"*/};
-
+  
   public static final int SCORE_WHOOP_NONE = 0;
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
@@ -986,7 +978,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private void jmAddStageToRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAddStageToRaceActionPerformed
     // TODO add your handling code here:
     if (activeRace != null) {
-      StageNewForm.init(this, null).setVisible(true);
+      StageNewForm.init(this, null, null).setVisible(true);
     }
   }//GEN-LAST:event_jmAddStageToRaceActionPerformed
 

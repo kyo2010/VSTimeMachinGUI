@@ -451,7 +451,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
 
   private void butAddNewStageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butAddNewStageActionPerformed
     // TODO add your handling code here:
-    StageNewForm.init(mainForm, null).setVisible(true);
+    StageNewForm.init(mainForm, null, null).setVisible(true);
   }//GEN-LAST:event_butAddNewStageActionPerformed
 
   private void activeTransponderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_activeTransponderMouseClicked
