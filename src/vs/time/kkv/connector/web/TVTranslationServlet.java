@@ -119,7 +119,8 @@ public class TVTranslationServlet extends HttpServlet {
       varsPool.addChild(new StringVar("PILOT" + index + "_NAME", webName));
       varsPool.addChild(new StringVar("CH" + index, webChannel));
       varsPool.addChild(new StringVar("COLOR" + index, webColor));
-      varsPool.addChild(new StringVar("INFO" + index, webInfo));
+      varsPool.addChild(new StringVar("INFO" + index, webInfo));      
+    
 
       return res;
     }
@@ -162,6 +163,7 @@ public class TVTranslationServlet extends HttpServlet {
     for (PilotInfo pInfo : pInfos) {
       pInfo.addPilotInfo(varsPool, isRace);
     }
+    varsPool.addChild(new StringVar("ACTIVE_GROUP_NUMBER", ""+group.GROUP_NUM ));
 
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
