@@ -2239,9 +2239,7 @@ public class StageTab extends javax.swing.JPanel {
         Thread.currentThread().sleep(200);
         mainForm.vsTimeConnector.setTime();
         Thread.currentThread().sleep(200);
-        mainForm.vsTimeConnector.rfidUnlock();
-        Thread.currentThread().sleep(200);
-        //mainForm.vsTimeConnector.setTime();
+        //mainForm.vsTimeConnector.rfidUnlock();
         //Thread.currentThread().sleep(200);
       }
     } catch (Exception ein) {

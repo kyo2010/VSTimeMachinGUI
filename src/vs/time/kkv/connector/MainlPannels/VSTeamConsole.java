@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.text.AttributeSet;
@@ -42,46 +43,47 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   public VSFlashControl flashControl = new VSFlashControl();
   static int universalTransFlasher = 64444;
-  
+
   /**
    * Creates new form VSTeamConsole
    */
   public VSTeamConsole() {
     initComponents();
-    DefaultCaret caret = (DefaultCaret)jText.getCaret();
+    DefaultCaret caret = (DefaultCaret) jText.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+    updateConsoleTimer.start();
   }
-    
+
   public MainForm mainForm = null;
   public static VSTeamConsole _form = null;
   public static boolean isOpened = false;
   public static boolean showPing = false;
-  
+
   public static VSTeamConsole init(MainForm mainForm) {
-    if (_form == null) {   
+    if (_form == null) {
       _form = new VSTeamConsole();      
       if (mainForm != null) {
-        mainForm.setFormOnCenter(_form);        
+        mainForm.setFormOnCenter(_form);
         //_form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
-        _form.jTransFlash.setText(""+universalTransFlasher);
+        _form.jTransFlash.setText("" + universalTransFlasher);
       }
       _form.updateJSONFile();
     }
-     if (mainForm != null) _form.mainForm = mainForm;        
+    if (mainForm != null) {
+      _form.mainForm = mainForm;
+    }
     _form.jcbShowPing.setSelected(showPing);
-    _form.jtLastTransID.setText( ""+ mainForm.lastTranponderID );
-    _form.setVisible(false);    
+    _form.jtLastTransID.setText("" + mainForm.lastTranponderID);
+    _form.setVisible(false);
     _form.jpFlash.setVisible(false);
     return _form;
-  }  
+  }
 
   @Override
   public void setVisible(boolean b) {
     super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
-    isOpened = b;    
+    isOpened = b;
   }
-  
-  
 
   /**
    * This method is called from within the constructor to initialize the form.
@@ -297,6 +299,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
+    jText.setEditable(false);
     jText.setBackground(new java.awt.Color(0, 0, 0));
     jText.setForeground(new java.awt.Color(255, 255, 255));
     jScrollPane2.setViewportView(jText);
@@ -344,71 +347,69 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   private void butSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSendActionPerformed
     // TODO add your handling code here:    
-    if (mainForm.vsTimeConnector!=null){
-      try{
-        mainForm.vsTimeConnector.sentMessage(jtCommand.getText()+"\r\n");
-        if (jcbAutoClear.isSelected()){
+    if (mainForm.vsTimeConnector != null) {
+      try {
+        mainForm.vsTimeConnector.sentMessage(jtCommand.getText() + "\r\n");
+        if (jcbAutoClear.isSelected()) {
           jtCommand.setText("");
-        }  
-      }catch(Exception e){
-        addText(e.toString(),false,true);
-      }  
-    }else{
-      JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);      
-    }  
+        }
+      } catch (Exception e) {
+        addText(e.toString(), false, true);
+      }
+    } else {
+      JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
   }//GEN-LAST:event_butSendActionPerformed
 
   private void jtCommandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtCommandKeyPressed
     // TODO add your handling code here:
-    if (evt.getKeyCode()==10){
-      butSendActionPerformed(null);      
+    if (evt.getKeyCode() == 10) {
+      butSendActionPerformed(null);
     }
   }//GEN-LAST:event_jtCommandKeyPressed
 
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector!=null){
-      try{
-        mainForm.vsTimeConnector.setColor(0, VSColor.RED.getVSColor() );
-      }catch(Exception e){
-         addText(e.toString(),false,true);
+    if (mainForm.vsTimeConnector != null) {
+      try {
+        mainForm.vsTimeConnector.setColor(0, VSColor.RED.getVSColor());
+      } catch (Exception e) {
+        addText(e.toString(), false, true);
       }
     }
   }//GEN-LAST:event_jButton1ActionPerformed
 
   private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector!=null){
-      try{
-        mainForm.vsTimeConnector.setColor(0, VSColor.GREEN.getVSColor() );
-      }catch(Exception e){
-         addText(e.toString(),false,true);
+    if (mainForm.vsTimeConnector != null) {
+      try {
+        mainForm.vsTimeConnector.setColor(0, VSColor.GREEN.getVSColor());
+      } catch (Exception e) {
+        addText(e.toString(), false, true);
       }
     }
   }//GEN-LAST:event_jButton2ActionPerformed
 
   private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector!=null){
-      try{
-        mainForm.vsTimeConnector.setColor(0, VSColor.OFF.getVSColor() );
-      }catch(Exception e){
-         addText(e.toString(),false,true);
+    if (mainForm.vsTimeConnector != null) {
+      try {
+        mainForm.vsTimeConnector.setColor(0, VSColor.OFF.getVSColor());
+      } catch (Exception e) {
+        addText(e.toString(), false, true);
       }
     }
   }//GEN-LAST:event_jButton3ActionPerformed
 
-  
-  
-    public class UploadTimer extends Timer {
+  public class UploadTimer extends Timer {
 
     public String url, filename;
 
-    public UploadTimer(final String url, final String filename) {      
+    public UploadTimer(final String url, final String filename) {
       super(100, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
-          new File (VSFlashControl.flashDir).mkdirs();
+          new File(VSFlashControl.flashDir).mkdirs();
           OutputStream outStream = null;
           URLConnection connection = null;
           InputStream is = null;
@@ -429,32 +430,33 @@ public class VSTeamConsole extends javax.swing.JFrame {
             connection = server.openConnection();
             is = connection.getInputStream();
             jpFlash.setMaximum(is.available());
-                        
-            byte[] buffer = new byte[1000];            
-            targetFile = new File(VSFlashControl.flashDir+"/"+filename+".tmp"); 
+
+            byte[] buffer = new byte[1000];
+            targetFile = new File(VSFlashControl.flashDir + "/" + filename + ".tmp");
             outStream = new FileOutputStream(targetFile);
             int count = 0;
-            int m=0;
-            while ( (m=is.read(buffer))>0){
-              count++;                         
-              outStream.write(buffer,0,m);
-              jpFlash.setValue(1000*count);
-            }           
-            File distFile = new File(VSFlashControl.flashDir+"/"+filename);
+            int m = 0;
+            while ((m = is.read(buffer)) > 0) {
+              count++;
+              outStream.write(buffer, 0, m);
+              jpFlash.setValue(1000 * count);
+            }
+            File distFile = new File(VSFlashControl.flashDir + "/" + filename);
             distFile.delete();
             FileUtils.copyFile(targetFile, distFile);
-            targetFile.renameTo(new File(VSFlashControl.flashDir+"/"+filename));
-            addText(filename+" has been updated from :"+url,false,true);
-            updateJSONFile();            
-          } catch (MalformedURLException e) {            
-            addText(e.toString(),false,true);
+            targetFile.renameTo(new File(VSFlashControl.flashDir + "/" + filename));
+            addText(filename + " has been updated from :" + url, false, true);
+            updateJSONFile();
+          } catch (MalformedURLException e) {
+            addText(e.toString(), false, true);
           } catch (IOException e) {
-            addText(e.toString(),false,true);
+            addText(e.toString(), false, true);
           } finally {
             if (outStream != null) {
-              try{
+              try {
                 outStream.close();
-              }catch(Exception ein){}  
+              } catch (Exception ein) {
+              }
             }
           }
           jpFlash.setVisible(false);
@@ -466,145 +468,151 @@ public class VSTeamConsole extends javax.swing.JFrame {
       start();
     }
   };
-    
-  public void updateJSONFile(){
+
+  public void updateJSONFile() {
     flashControl.parseJSON();
     jcFlashVersion.setModel(new javax.swing.DefaultComboBoxModel(flashControl.getVersions()));
   }
-  
+
   private void butLoadFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butLoadFlashActionPerformed
     // TODO add your handling code here:
-    try{      
-      new UploadTimer(VSFlashControl.flahURL,VSFlashControl.flashFile);
-    }catch(Exception e){
-      addText(e.toString(),false,true);
-    }    
+    try {
+      new UploadTimer(VSFlashControl.flahURL, VSFlashControl.flashFile);
+    } catch (Exception e) {
+      addText(e.toString(), false, true);
+    }
   }//GEN-LAST:event_butLoadFlashActionPerformed
 
-  static int LAST_SKIP_INDEX = 0;  
-  
+  static int LAST_SKIP_INDEX = 0;
+
   public FlashTimer flashTimer = null;
-    public class FlashTimer extends Timer {   
-     int transponderID; 
-     boolean isUniversalFlash = false;
-     public FlashTimer(int transponderID, final VSFlash flash) {      
-      super(20,null);  
+
+  public class FlashTimer extends Timer {
+
+    int transponderID;
+    boolean isUniversalFlash = false;
+
+    public FlashTimer(int transponderID, final VSFlash flash) {
+      super(20, null);
       this.transponderID = transponderID;
       setRepeats(true);
       mainForm.vsTimeConnector.lastFlashTransponderID = null;
-      mainForm.vsTimeConnector.flashResponse.put(transponderID,null);
+      mainForm.vsTimeConnector.flashResponse.put(transponderID, null);
       jpFlash.setVisible(true);
       jpFlash.setMaximum(flash.data.length());
       jpFlash.setValue(0);
       addActionListener(new ActionListener() {
-        int indexData = 0; 
+        int indexData = 0;
         int waitResponse = 0;
-        boolean sended = false;        
+        boolean sended = false;
         boolean recive_confirmation = true;
         long startTime = Calendar.getInstance().getTimeInMillis();
+
         @Override
-        public void actionPerformed(ActionEvent ae) {         
-          try{
-            if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){                            
-              if (sended==false || waitResponse>15){                
+        public void actionPerformed(ActionEvent ae) {
+          try {
+            if ((indexData + LAST_SKIP_INDEX) < flash.data.length()) {
+              if (sended == false || waitResponse > 15) {
                 waitResponse = 0;
                 mainForm.vsTimeConnector.sendflash(FlashTimer.this.transponderID, flash.data.getString(indexData));
-                
+
                 String ff = "11";
-                try{
-                  ff = flash.data.getString(indexData).substring(7, 9); 
-                }catch(Exception e){}  
-                if (ff.equalsIgnoreCase("00")){ // it is data, we need confirm
+                try {
+                  ff = flash.data.getString(indexData).substring(7, 9);
+                } catch (Exception e) {
+                }
+                if (ff.equalsIgnoreCase("00")) { // it is data, we need confirm
                   sended = true;
-                }else{
-                  indexData++;  
+                } else {
+                  indexData++;
                   waitResponse = 0;
-                }  
-                
+                }
+
               }
             }
-            
-            if (FlashTimer.this.transponderID==universalTransFlasher && mainForm.vsTimeConnector.lastFlashTransponderID!=null){
+
+            if (FlashTimer.this.transponderID == universalTransFlasher && mainForm.vsTimeConnector.lastFlashTransponderID != null) {
               FlashTimer.this.transponderID = mainForm.vsTimeConnector.lastFlashTransponderID;
-              jTransFlash.setText(""+ mainForm.vsTimeConnector.lastFlashTransponderID);
+              jTransFlash.setText("" + mainForm.vsTimeConnector.lastFlashTransponderID);
               isUniversalFlash = true;
             }
-            
-            if (sended && mainForm.vsTimeConnector.flashResponse.get(FlashTimer.this.transponderID)!=null){
-              sended=false;
+
+            if (sended && mainForm.vsTimeConnector.flashResponse.get(FlashTimer.this.transponderID) != null) {
+              sended = false;
               waitResponse = 0;
-              indexData++;  
+              indexData++;
               jpFlash.setValue(indexData);
-            }else{
+            } else {
               waitResponse++;
-              
-              if (waitResponse>10 && !recive_confirmation) {
+
+              if (waitResponse > 10 && !recive_confirmation) {
                 indexData++;
-                sended=false;
+                sended = false;
                 jpFlash.setValue(indexData);
               }
-            }                                    
-            if (sended==false && (indexData+LAST_SKIP_INDEX)>=flash.data.length()){
+            }
+            if (sended == false && (indexData + LAST_SKIP_INDEX) >= flash.data.length()) {
               long stop = Calendar.getInstance().getTimeInMillis();
-              addText("Flash "+FlashTimer.this.transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.",false,true);
+              addText("Flash " + FlashTimer.this.transponderID + " is OK. " + StageTab.getTimeIntervelForTimer(stop - startTime) + " seconds.", false, true);
               stopFlash();
             }
-          }catch(Exception e){
-            addText(e.toString(),false,true);
-          }  
+          } catch (Exception e) {
+            addText(e.toString(), false, true);
+          }
         }
       });
       start();
     }
-  };  
-  
-  public void stopFlash(){
+  };
+
+  public void stopFlash() {
     jpFlash.setVisible(false);
     flashTimer.stop();
-    if (flashTimer.isUniversalFlash){
-       jTransFlash.setText(""+universalTransFlasher);
+    if (flashTimer.isUniversalFlash) {
+      jTransFlash.setText("" + universalTransFlasher);
     }
     flashTimer = null;
     jpFlash.setVisible(false);
-    bFlash.setText("Flash");   
+    bFlash.setText("Flash");
   }
-  
+
   private void bFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFlashActionPerformed
     // TODO add your handling code here:        
-    if (flashTimer==null){
-      if (mainForm.vsTimeConnector==null){
-        JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);         
+    if (flashTimer == null) {
+      if (mainForm.vsTimeConnector == null) {
+        JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);
         return;
       }
       bFlash.setText("Stop");
-      try{
+      try {
         int transponderID = 0;
-        try{
+        try {
           transponderID = Integer.parseInt(jTransFlash.getText());
-          jTransFlash.setText(""+transponderID);
-        }catch(Exception ein){}
+          jTransFlash.setText("" + transponderID);
+        } catch (Exception ein) {
+        }
         //if (transponderID!=0){
-          VS_SETTING.setParam(mainForm.con, "LAST_FLASH_ID", jTransFlash.getText());
-          int index = jcFlashVersion.getSelectedIndex();        
-          flashTimer = new FlashTimer(transponderID, flashControl.flashes.get(index));
+        VS_SETTING.setParam(mainForm.con, "LAST_FLASH_ID", jTransFlash.getText());
+        int index = jcFlashVersion.getSelectedIndex();
+        flashTimer = new FlashTimer(transponderID, flashControl.flashes.get(index));
         //};  
-      }catch(Exception e){
-        addText(e.toString(),false,true);
+      } catch (Exception e) {
+        addText(e.toString(), false, true);
       }
-    }else{
+    } else {
       stopFlash();
     }
   }//GEN-LAST:event_bFlashActionPerformed
 
   private void bHelloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHelloActionPerformed
     // TODO add your handling code here:
-    try{
+    try {
       mainForm.vsTimeConnector.hello();
       mainForm.vsTimeConnector.setTime();
-    }catch(Exception e){
+    } catch (Exception e) {
       mainForm._toLog(e);
-      addText(e.toString(),false,true);
-    }  
+      addText(e.toString(), false, true);
+    }
   }//GEN-LAST:event_bHelloActionPerformed
 
   private void bChanggeTransIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bChanggeTransIDActionPerformed
@@ -646,39 +654,113 @@ public class VSTeamConsole extends javax.swing.JFrame {
       }
     });
   }
-  
-  public static synchronized void addText(String text, boolean fromZacechaka, boolean flagInfo){
-      
+
+  static class ConsoleMessage {
+
+    public String text;
+    public boolean fromZacechka;
+    public boolean flagInfo;
+    public boolean isAdded = false;
+
+    public ConsoleMessage(String text, boolean fromZacechka, boolean flagInfo) {
+      this.text = text;
+      this.fromZacechka = fromZacechka;
+      this.flagInfo = flagInfo;
+    }
+
+  }
+
+  public static Vector<ConsoleMessage> messages = new Vector<ConsoleMessage>();
+
+  public static synchronized void addText(String text, boolean fromZacechaka, boolean flagInfo) {
+
     text = text.trim();
-    SimpleAttributeSet keyWord = new SimpleAttributeSet();
-    
-    if (flagInfo){
+    synchronized (messages) {
+      messages.add(new ConsoleMessage(text, fromZacechaka, flagInfo));
+    }
+
+    /* SimpleAttributeSet keyWord = new SimpleAttributeSet();
+
+    if (flagInfo) {
       StyleConstants.setForeground(keyWord, java.awt.Color.RED);
-    }else{
+    } else {
       if (fromZacechaka) {
         StyleConstants.setForeground(keyWord, java.awt.Color.MAGENTA);
-        text = "-> "+text;
-      }else{
+        text = "-> " + text;
+      } else {
         StyleConstants.setForeground(keyWord, java.awt.Color.GREEN);
-        text = "<- "+text;
+        text = "<- " + text;
       }
     }
-    StyledDocument doc =  _form.jText.getStyledDocument();
-    try{
-      doc.insertString(doc.getLength(), text+"\n", keyWord );
-    }catch(Exception e){}  
 
-    
-   /* if (text.charAt(text.length()-1)=='\n'){
+    StyledDocument doc = _form.jText.getStyledDocument();
+
+    boolean ok = false;
+    do {
+      try {
+        doc.insertString(doc.getLength(), text + "\n", keyWord);
+        ok = true;
+      } catch (RuntimeException e) {
+      } catch (Exception e) {
+      }
+      if (!ok) {
+        try {
+          Thread.currentThread().sleep(50);
+        } catch (Exception ein) {
+        }
+      }
+    } while (!ok);
+
+    try {
+      _form.jText.updateUI();
+    } catch (RuntimeException e) {
+    } catch (Exception e) {
+    }*/
+
+ /* if (text.charAt(text.length()-1)=='\n'){
       _form.jText.append(text);   
     }else{
       _form.jText.append(text+"\n");   
-    }*/  
-  }   
-  
-  public static synchronized void setLastTransID(String text){
+    }*/
+  }
+
+  Timer updateConsoleTimer = new Timer(100, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Vector<ConsoleMessage> messages2 = null;
+      synchronized (messages) {
+        messages2 = messages;
+        messages = new Vector<ConsoleMessage>();
+      }
+
+      for (ConsoleMessage mes : messages2) {
+        try {
+          SimpleAttributeSet keyWord = new SimpleAttributeSet();
+
+          String text = mes.text;
+          if (mes.flagInfo) {
+            StyleConstants.setForeground(keyWord, java.awt.Color.RED);
+          } else {
+            if (mes.fromZacechka) {
+              StyleConstants.setForeground(keyWord, java.awt.Color.MAGENTA);
+              text = "-> " + text;
+            } else {
+              StyleConstants.setForeground(keyWord, java.awt.Color.GREEN);
+              text = "<- " + text;
+            }
+          }
+           StyledDocument doc = _form.jText.getStyledDocument();
+           doc.insertString(doc.getLength(), text + "\n", keyWord);
+        } catch (Exception ein) {
+        }
+      }
+
+    }
+  });
+
+  public static synchronized void setLastTransID(String text) {
     _form.jtLastTransID.setText(text);
-  }   
+  }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton bChanggeTransID;

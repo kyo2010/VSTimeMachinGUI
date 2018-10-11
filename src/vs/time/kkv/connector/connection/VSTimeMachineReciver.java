@@ -13,4 +13,5 @@ import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
  */
 public interface VSTimeMachineReciver {
     public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap);
+    public void receiveDataForLog(String data);
 }

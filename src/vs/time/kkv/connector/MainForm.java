@@ -109,7 +109,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_RACE_RESULT = 4;
   public static final int STAGE_RACE_REPORT = 5;
 
-  
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -123,7 +122,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int RACE_TYPE_WHOOP = 2;
   public static final int RACE_TYPE_DOUBLE = 1;
   public static final int RACE_TYPE_SINGLE = 0;
-  
+
   public static final int SCORE_WHOOP_NONE = 0;
   public static final int SCORE_WHOOP_WON = 1;
   public static final int SCORE_WHOOP_LOST = 2;
@@ -223,7 +222,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (Exception e) {
     }
 
-    if (activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs==false) {
+    if (activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
       return;
     }
     activeRace = race;
@@ -375,7 +374,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     try {
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
       if (race != null) {
-        setActiveRace(race,true);
+        setActiveRace(race, true);
       }
     } catch (Exception e) {
     }
@@ -1095,10 +1094,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_jMenuItemTVMonitorActionPerformed
 
   private void updaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updaterActionPerformed
-    try {     
+    try {
       Process proc = Runtime.getRuntime().exec("java -jar Updater.jar");
     } catch (IOException ex) {
-      JOptionPane.showMessageDialog(this, "Java is not found", "Information", JOptionPane.INFORMATION_MESSAGE);      
+      JOptionPane.showMessageDialog(this, "Java is not found", "Information", JOptionPane.INFORMATION_MESSAGE);
     }
   }//GEN-LAST:event_updaterActionPerformed
 
@@ -1241,9 +1240,24 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     try {
       Point p = this.getLocationOnScreen();
       form.setLocation(p.x + this.getWidth() / 2 - form.getSize().width / 2, p.y + this.getHeight() / 2 - form.getSize().height / 2);
-      
+
       form.setIconImage(getWindowsIcon().getImage());
     } catch (Exception e) {
+    }
+  }
+
+  @Override
+  public void receiveDataForLog(String data) {
+    boolean isPingCommand = false;
+    if (data.indexOf("ping")==0) {
+      isPingCommand = true;
+    }
+    if (VSTeamConsole.isOpened) {
+      if (isPingCommand && !VSTeamConsole.showPing) {
+        // ignore ping
+      } else {
+        VSTeamConsole.addText(data, true, false);
+      }
     }
   }
 
@@ -1253,14 +1267,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     if (commands[0].equalsIgnoreCase("ping")) {
       isPingCommand = true;
-    }
-
-    if (VSTeamConsole.isOpened) {
-      if (isPingCommand && !VSTeamConsole.showPing) {
-        // ignore ping
-      } else {
-        VSTeamConsole.addText(data,true,false);
-      }
     }
 
     jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
@@ -1285,7 +1291,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       long time = lap.time;
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
       if (Math.abs(time - timeS) > 1000 * 60 * 60) {
-        System.out.println("Big gap between Time : "+Math.abs(time - timeS)+" trans time:"+time+" system time:"+timeS);
+        System.out.println("Big gap between Time : " + Math.abs(time - timeS) + " trans time:" + time + " system time:" + timeS);
         time = timeS;//lap.time;
       }
       this.lastTranponderID = lap.transponderID;
@@ -1484,7 +1490,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   @Override
   public void sendVSText(String text) {
     if (VSTeamConsole.isOpened) {
-      VSTeamConsole.addText(text,false,false);
+      VSTeamConsole.addText(text, false, false);
     }
     lap_log.writeFile("SND;" + text);
   }

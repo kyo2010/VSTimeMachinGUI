@@ -46,6 +46,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       try {
         data = serialPort.readString(event.getEventValue());
         data = data.trim();
+        if (receiver!=null) receiver.receiveDataForLog(data);
         if (data.indexOf("ping")==-1){
           int y = 0;
         }

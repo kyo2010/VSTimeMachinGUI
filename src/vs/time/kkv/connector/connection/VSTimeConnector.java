@@ -436,6 +436,7 @@ public class VSTimeConnector {
   public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException, SerialPortException {
     //������� � ����������� ��� �����    
     VSTimeConnector connector = new VSTimeConnector(new VSTimeMachineReciver() {
+      public void receiveDataForLog(String data){}
       @Override
       public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
         //if (data.indexOf("ping")!=0)

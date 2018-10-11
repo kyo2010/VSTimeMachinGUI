@@ -106,6 +106,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
 
           String data = new String(data_b, 0, packet.getLength());
           data = data.trim();
+          if (receiver!=null) receiver.receiveDataForLog(data);
 
           // try{
           /*int len = data == null ? 0 : data.length();
