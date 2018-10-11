@@ -28,6 +28,10 @@ public class ISpeachMessages {
     return new SpeekText("The Race will be finished in ten seconds", 3000);
   }
   
+  public SpeekText raceTimeIsOver() {
+    return new SpeekText("Main Race Time is Over!", 2000);
+  }
+  
   public SpeekText raceWillBeStarted(long miliseconds) {    
     long value = miliseconds/1000/60;
     String mesure = "minutes";

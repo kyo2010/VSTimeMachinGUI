@@ -70,6 +70,8 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long GROUP_QUART_FINAL = 0;
   public int GROUP_TYPE = 0;
   public int IS_PANDING = 0;
+  public int MAIN_TIME_IS_OVER = 0;
+  public boolean hasBeenFlightLastLap = false;
 
   public VS_REGISTRATION registration = null;   //  NOT_DETECTED
 
@@ -144,8 +146,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("GROUP_TYPE").setDbFieldName("\"GROUP_TYPE\""),
     new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),
     new DBModelField("wins").setDbFieldName("\"WINS\""),
-    new DBModelField("loses").setDbFieldName("\"LOSES\""),
-    
+    new DBModelField("loses").setDbFieldName("\"LOSES\""),    
   });
 
   public VS_REGISTRATION getRegistration(Connection conn, long raceID) {

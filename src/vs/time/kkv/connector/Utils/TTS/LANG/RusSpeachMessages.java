@@ -24,6 +24,11 @@ public class RusSpeachMessages extends ISpeachMessages{
    return new SpeekText("гонка закончится через десять секунд",2000);
   }
   
+  
+  public SpeekText raceTimeIsOver() {
+    return new SpeekText("Основное время гонки закончилось!", 2000);
+  }
+  
   public SpeekText connected(){
     return new SpeekText("соединено");
   }

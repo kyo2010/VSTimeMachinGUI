@@ -1285,8 +1285,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       long time = lap.time;
       lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
       if (Math.abs(time - timeS) > 1000 * 60 * 60) {
+        System.out.println("Big gap between Time : "+Math.abs(time - timeS)+" trans time:"+time+" system time:"+timeS);
         time = timeS;//lap.time;
-        System.out.println("Big gap between Time");
       }
       this.lastTranponderID = lap.transponderID;
       VS_STAGE_GROUP activeGroup = this.activeGroup;

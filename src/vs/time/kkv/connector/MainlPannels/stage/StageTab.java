@@ -134,6 +134,7 @@ public class StageTab extends javax.swing.JPanel {
     }catch(Exception e){}      
   }
 
+  boolean raceTimerIsOver = false;
   boolean iveSaid10seckudForRaceOver = false;
   Timer raceTimer = new Timer(500, new ActionListener() {
     @Override
@@ -180,8 +181,8 @@ public class StageTab extends javax.swing.JPanel {
             iveSaid10seckudForRaceOver = true;
           }
         }
-        if (diff_ms < 0) {
-          stopRace();
+        if (diff_ms < 0 && !raceTimerIsOver) {
+          stopRace(true);
         }
       }
     }
@@ -538,7 +539,7 @@ public class StageTab extends javax.swing.JPanel {
           }
           if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) { // Start Race
             if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
-              stopRace();
+              stopRace(false);
               refreshTable();
               //timerCaption.setVisible(false);              
             } else {
@@ -570,13 +571,26 @@ public class StageTab extends javax.swing.JPanel {
 
   /*public void checkGroupConstrain() {      
   }*/
-  public void stopRace() {
+  public void stopRace(boolean byTimer) {
+    
+    if (byTimer && mainForm.activeRace.ALLOW_TO_FINISH_LAP==1){
+      raceTimerIsOver = true;
+      if (mainForm.activeGroup!=null){
+        for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
+          user.MAIN_TIME_IS_OVER = 1;
+        }        
+      }
+      mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceTimeIsOver());
+      return;
+    }
+    
     // To show Table result for TV
     mainForm.lap_log.writeFile("---==  Stop Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + mainForm.activeGroup.GROUP_NUM);
     mainForm.invateGroup = null;
     iveSaid10seckudForRaceOver = false;
-    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
-    raceTimer.stop();
+    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();            
+    raceTimer.stop();        
+    
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true);
@@ -2293,6 +2307,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
     FIRST_RACER_IS_FINISHED = true;
+    raceTimerIsOver = false;    
     String message = "";
     if (mainForm.vsTimeConnector != null && showDialog) {
       long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
@@ -2368,6 +2383,10 @@ public class StageTab extends javax.swing.JPanel {
       td.group.stageTab = StageTab.this;
       for (VS_STAGE_GROUPS user : td.group.users) {
         user.FIRST_LAP = 0;
+        user.MAIN_TIME_IS_OVER = 0;
+        user.hasBeenFlightLastLap = false;
+        //user.BEST_LAP = 0;
+        //user.LAPS =0;
       }
       timerCaption.setText(getTimeIntervelForTimer(0));
       timerCaption.setVisible(true);

@@ -126,6 +126,7 @@ public class DataBaseStructure {
     new DBAddonStructure(4.8, "ALTER TABLE VS_STAGE_GROUPS ADD WINS INTEGER NOT NULL DEFAULT 0;"),
     new DBAddonStructure(4.8, "ALTER TABLE VS_STAGE_GROUPS ADD LOSES INTEGER NOT NULL DEFAULT 0;"),
     
+    new DBAddonStructure(4.9, "ALTER TABLE VS_RACE ADD ALLOW_TO_FINISH_LAP INTEGER NOT NULL DEFAULT 0;"),               
   };
 
   public static class DBAddonStructure {

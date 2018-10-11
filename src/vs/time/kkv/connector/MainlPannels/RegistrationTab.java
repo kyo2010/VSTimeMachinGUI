@@ -15,6 +15,7 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import groovyjarjarantlr.actions.cpp.ActionLexer;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -208,9 +209,19 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     activeTransponder.setVisible(true);
     this.transponder = transponder;
     String info = (user != null ? (user.VS_USER_NAME + " - ") : "") + mainForm.lastTranponderID;
-    activeTransponder.setText(info);
+    activeTransponder.setText(info);    
     last_user = user;
+    clearTransonderTimer.restart();
+    activeTransponder.setToolTipText("Last Transponder ID : "+transponder);
   }
+  
+  Timer clearTransonderTimer = new Timer(5000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      activeTransponder.setText("");      
+      // activeTransponder.setVisible(false);
+    }
+  });
 
   public void refreshData() {
     activeTransponder.setVisible(false);
@@ -268,6 +279,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     activeTransponder.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     activeTransponder.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     activeTransponder.setText("Test");
+    activeTransponder.setToolTipText("");
     activeTransponder.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)));
     activeTransponder.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {

@@ -33,7 +33,7 @@ public class VS_STAGE_GROUP implements Transferable {
   public String useChannels = "";
   public boolean isActive = false;
   public VS_STAGE stage = null;
-  public StageTab stageTab = null;
+  public StageTab stageTab = null; 
 
   public VS_STAGE_GROUP(VS_STAGE stage) {
     this.stage = stage;

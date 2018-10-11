@@ -135,7 +135,7 @@ public class RaceHttpServlet extends HttpServlet {
       }
       if (action.equalsIgnoreCase(ACTION_STOP)) {
         if (mainForm.activeGroup != null) {
-          mainForm.activeGroup.stageTab.stopRace();
+          mainForm.activeGroup.stageTab.stopRace(false);
           is_refresh = true;
         }
       } else if (action.equalsIgnoreCase(ACTION_STOP_CHECK)) {

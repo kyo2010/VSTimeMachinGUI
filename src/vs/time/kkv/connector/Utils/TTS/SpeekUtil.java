@@ -35,8 +35,7 @@ public class SpeekUtil extends Thread {
     "k", "l", "m", "n", "o", "p", "r", "s", "t", /*"u"*/ "oo",
     "f", "h", "tz", "ch", "sh", "sh", "'", "e", "yu", "ya"};
 
-
-  private final Voice voice;
+ // private Voice voice = null;
   public IKKVSpeek defaultSpeaker = null;
 
   TextToSpeech[] tts_mas = new TextToSpeech[]{
@@ -55,17 +54,18 @@ public class SpeekUtil extends Thread {
   }
 
   MainForm mainForm;
+
   public SpeekUtil(MainForm mainForm) {
-
     this.mainForm = mainForm;
-    VoiceManager vm = VoiceManager.getInstance();
-    voice = vm.getVoice(VOICE_KEVIN16);
-    voice.allocate();
-
+    /*try {
+      VoiceManager vm = VoiceManager.getInstance();
+      voice = vm.getVoice(VOICE_KEVIN16);
+      voice.allocate();
+    } catch (Exception e) {
+    }*/
     reset();
     start();
   }
- 
 
   @Override
   public void run() {
@@ -73,7 +73,7 @@ public class SpeekUtil extends Thread {
       if (stack.size() > 0) {
         try {
           SpeekText st = stack.get(0);
-          String txt =st.textToSpeach;
+          String txt = st.textToSpeach;
           stack.remove(0);
           if (defaultSpeaker.useTranslit()) {
             txt = translit(txt);
@@ -92,9 +92,11 @@ public class SpeekUtil extends Thread {
       }
     }
   }
-  
-  public ISpeachMessages getSpeachMessages(){
-    if (defaultSpeaker!=null) return defaultSpeaker.returnSpeachMessages();
+
+  public ISpeachMessages getSpeachMessages() {
+    if (defaultSpeaker != null) {
+      return defaultSpeaker.returnSpeachMessages();
+    }
     return ISpeachMessages.EN;
   }
 
@@ -117,11 +119,12 @@ public class SpeekUtil extends Thread {
       }                 
     }.start();*/
     stack.add(st);
-    if (st.wait>0){
-      try{
+    if (st.wait > 0) {
+      try {
         //wait(st.wait);
         sleep(st.wait);
-      }catch(Exception e){}
+      } catch (Exception e) {
+      }
     }
   }
 
@@ -153,7 +156,5 @@ public class SpeekUtil extends Thread {
     }
     return textOut.toString();
   }
-
-  
 
 }

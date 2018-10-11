@@ -47,7 +47,7 @@ public class VS_STAGE {
   public StageTab tab = null;
   public String TRANSS = "";
   public String SCORE_CALCULATION = "";
-  public IGroupCreater groupCreater = null;
+  public IGroupCreater groupCreater = null;  
 
   //public VS_RACE race = null;
 
@@ -291,8 +291,14 @@ public class VS_STAGE {
     return null;
   }
 
-  public VS_RACE_LAP addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {
+  public VS_RACE_LAP addLapFromKeyPress(MainForm mainForm, VS_STAGE_GROUPS usr, long time) {            
     VS_RACE_LAP lap_return = null;
+    if (usr.MAIN_TIME_IS_OVER==0) usr.hasBeenFlightLastLap = false;
+    if (usr.hasBeenFlightLastLap) {
+      System.out.println("Skip lap for user "+usr.PILOT);
+      mainForm.log.writeFile("Skip lap for user "+usr.PILOT, true);
+      return lap_return;
+    }
     try {
       usr.IS_FINISHED = 0;
       usr.IS_RECALULATED = 0;
@@ -309,7 +315,7 @@ public class VS_STAGE {
       lap.LAP = last_lap == null ? 1 : (last_lap.LAP + 1);
       
       VS_RACE race = mainForm.activeRace;
-      
+            
       if (race != null && race.POST_START==1 && usr.START_TIME!=0 && lap.LAP==1){
         lap.TRANSPONDER_TIME = time - usr.START_TIME;        
       }else{
@@ -358,6 +364,11 @@ public class VS_STAGE {
         }
       }
       usr.IS_RECALULATED = 0;
+      
+      if (mainForm.activeRace.ALLOW_TO_FINISH_LAP==1 && usr.MAIN_TIME_IS_OVER==1){
+        usr.IS_FINISHED = 1;
+        usr.hasBeenFlightLastLap = true;
+      }
 
       String krug = "";
       if (lap_for_sound != null) {
@@ -371,7 +382,7 @@ public class VS_STAGE {
             tab.runFinishCommand();
           }
         }
-      }
+      }            
 
     } catch (Exception e) {
       mainForm._toLog(e);
