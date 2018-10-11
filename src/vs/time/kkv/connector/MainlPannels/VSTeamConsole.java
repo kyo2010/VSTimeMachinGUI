@@ -36,6 +36,7 @@ import vs.time.kkv.models.VS_SETTING;
 public class VSTeamConsole extends javax.swing.JFrame {
 
   public VSFlashControl flashControl = new VSFlashControl();
+  static int universalTransFlasher = 64444;
   
   /**
    * Creates new form VSTeamConsole
@@ -56,7 +57,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
       _form = new VSTeamConsole();      
       if (mainForm != null) {
         mainForm.setFormOnCenter(_form);        
-        _form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
+        //_form.jTransFlash.setText(VS_SETTING.getParam(mainForm.con, "LAST_FLASH_ID", ""));
+        _form.jTransFlash.setText(""+universalTransFlasher);
       }
       _form.updateJSONFile();
     }
@@ -103,6 +105,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     jcFlashVersion = new javax.swing.JComboBox<>();
     butLoadFlash = new javax.swing.JButton();
     bHello = new javax.swing.JButton();
+    bChanggeTransID = new javax.swing.JButton();
     jScrollPane1 = new javax.swing.JScrollPane();
     jText = new javax.swing.JTextArea();
     jpFlash = new javax.swing.JProgressBar();
@@ -181,6 +184,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
     jLabel3.setText("Transponder ID :");
 
+    jTransFlash.setText("6444");
+
     butLoadFlash.setText("Get Flash from WEB");
     butLoadFlash.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +197,14 @@ public class VSTeamConsole extends javax.swing.JFrame {
     bHello.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         bHelloActionPerformed(evt);
+      }
+    });
+
+    bChanggeTransID.setText("Change ID");
+    bChanggeTransID.setToolTipText("Press trans button for 3 seconds \nto enter setup mode");
+    bChanggeTransID.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bChanggeTransIDActionPerformed(evt);
       }
     });
 
@@ -209,6 +222,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bChanggeTransID)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18))
               .addGroup(jPanel1Layout.createSequentialGroup()
@@ -259,7 +274,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
           .addComponent(jcbShowPing)
           .addComponent(jLabel2)
           .addComponent(jtLastTransID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jbClear))
+          .addComponent(jbClear)
+          .addComponent(bChanggeTransID))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton1)
@@ -465,12 +481,22 @@ public class VSTeamConsole extends javax.swing.JFrame {
   static int LAST_SKIP_INDEX = 0;  
   
   public FlashTimer flashTimer = null;
-    public class FlashTimer extends Timer {    
-     public FlashTimer(final int transponderID, final VSFlash flash) {      
-      super(200, new ActionListener() {
+    public class FlashTimer extends Timer {   
+     int transponderID; 
+     boolean isUniversalFlash = false;
+     public FlashTimer(int transponderID, final VSFlash flash) {      
+      super(20,null);  
+      this.transponderID = transponderID;
+      setRepeats(true);
+      mainForm.vsTimeConnector.lastFlashTransponderID = null;
+      mainForm.vsTimeConnector.flashResponse.put(transponderID,null);
+      jpFlash.setVisible(true);
+      jpFlash.setMaximum(flash.data.length());
+      jpFlash.setValue(0);
+      addActionListener(new ActionListener() {
         int indexData = 0; 
         int waitResponse = 0;
-        boolean sended = false;   
+        boolean sended = false;        
         boolean recive_confirmation = true;
         long startTime = Calendar.getInstance().getTimeInMillis();
         @Override
@@ -479,7 +505,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
             if ((indexData+LAST_SKIP_INDEX)<flash.data.length()){                            
               if (sended==false || waitResponse>15){                
                 waitResponse = 0;
-                mainForm.vsTimeConnector.sendflash(transponderID, flash.data.getString(indexData));
+                mainForm.vsTimeConnector.sendflash(FlashTimer.this.transponderID, flash.data.getString(indexData));
                 
                 String ff = "11";
                 try{
@@ -495,7 +521,13 @@ public class VSTeamConsole extends javax.swing.JFrame {
               }
             }
             
-            if (sended && mainForm.vsTimeConnector.flashResponse.get(transponderID)!=null){
+            if (FlashTimer.this.transponderID==universalTransFlasher && mainForm.vsTimeConnector.lastFlashTransponderID!=null){
+              FlashTimer.this.transponderID = mainForm.vsTimeConnector.lastFlashTransponderID;
+              jTransFlash.setText(""+ mainForm.vsTimeConnector.lastFlashTransponderID);
+              isUniversalFlash = true;
+            }
+            
+            if (sended && mainForm.vsTimeConnector.flashResponse.get(FlashTimer.this.transponderID)!=null){
               sended=false;
               waitResponse = 0;
               indexData++;  
@@ -511,18 +543,14 @@ public class VSTeamConsole extends javax.swing.JFrame {
             }                                    
             if (sended==false && (indexData+LAST_SKIP_INDEX)>=flash.data.length()){
               long stop = Calendar.getInstance().getTimeInMillis();
-              addText("Flash "+transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.");
+              addText("Flash "+FlashTimer.this.transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.");
               stopFlash();
             }
           }catch(Exception e){
             addText(e.toString());
           }  
         }
-      });      
-      setRepeats(true);
-      jpFlash.setVisible(true);
-      jpFlash.setMaximum(flash.data.length());
-      jpFlash.setValue(0);
+      });
       start();
     }
   };  
@@ -530,9 +558,12 @@ public class VSTeamConsole extends javax.swing.JFrame {
   public void stopFlash(){
     jpFlash.setVisible(false);
     flashTimer.stop();
+    if (flashTimer.isUniversalFlash){
+       jTransFlash.setText(""+universalTransFlasher);
+    }
     flashTimer = null;
     jpFlash.setVisible(false);
-    bFlash.setText("Flash");
+    bFlash.setText("Flash");   
   }
   
   private void bFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFlashActionPerformed
@@ -544,12 +575,16 @@ public class VSTeamConsole extends javax.swing.JFrame {
       }
       bFlash.setText("Stop");
       try{
-        int transponderID =  Integer.parseInt(jTransFlash.getText());
-        if (transponderID!=0){
+        int transponderID = 0;
+        try{
+          transponderID = Integer.parseInt(jTransFlash.getText());
+          jTransFlash.setText(""+transponderID);
+        }catch(Exception ein){}
+        //if (transponderID!=0){
           VS_SETTING.setParam(mainForm.con, "LAST_FLASH_ID", jTransFlash.getText());
           int index = jcFlashVersion.getSelectedIndex();        
           flashTimer = new FlashTimer(transponderID, flashControl.flashes.get(index));
-        };  
+        //};  
       }catch(Exception e){
         addText(e.toString());
       }
@@ -568,6 +603,11 @@ public class VSTeamConsole extends javax.swing.JFrame {
       addText(e.toString());
     }  
   }//GEN-LAST:event_bHelloActionPerformed
+
+  private void bChanggeTransIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bChanggeTransIDActionPerformed
+    // TODO add your handling code here:
+    jtCommand.setText("changeid:<OLD ID>,<NEW ID>");
+  }//GEN-LAST:event_bChanggeTransIDActionPerformed
 
   /**
    * @param args the command line arguments
@@ -619,6 +659,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   }   
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton bChanggeTransID;
   private javax.swing.JButton bFlash;
   private javax.swing.JButton bHello;
   private javax.swing.JButton butLoadFlash;

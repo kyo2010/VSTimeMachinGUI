@@ -63,6 +63,7 @@ public class VSTimeConnector {
   public boolean WIFI = false;
   public String last_error = "";
   public VSSendListener sendListener = null;
+  public Integer lastFlashTransponderID = null;
   public Map<Integer, String> flashResponse = new HashMap<Integer, String>();
   public boolean waitFirstPing = false;
   public Connection connForParams = null;
@@ -461,6 +462,7 @@ public class VSTimeConnector {
       } else if (commands[0].equalsIgnoreCase("bootflashok")) {
         int trans_id = Integer.parseInt(params[0]);
         flashResponse.put(trans_id, "OK");
+        lastFlashTransponderID = trans_id;
       } else if (commands[0].equalsIgnoreCase("echotrans")) {
         //echotrans:<ID>,<CRC>\r\n  
         if (params.length >= 2) {
