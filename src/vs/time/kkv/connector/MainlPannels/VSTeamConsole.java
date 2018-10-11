@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.MainlPannels;
 
 import com.ibm.icu.util.Calendar;
+import com.sun.prism.paint.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import org.apache.commons.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
 import static vs.time.kkv.connector.MainlPannels.InfoForm.form;
@@ -106,9 +111,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
     butLoadFlash = new javax.swing.JButton();
     bHello = new javax.swing.JButton();
     bChanggeTransID = new javax.swing.JButton();
-    jScrollPane1 = new javax.swing.JScrollPane();
-    jText = new javax.swing.JTextArea();
     jpFlash = new javax.swing.JProgressBar();
+    jScrollPane2 = new javax.swing.JScrollPane();
+    jText = new javax.swing.JTextPane();
 
     setTitle("Console");
     setAlwaysOnTop(true);
@@ -292,21 +297,19 @@ public class VSTeamConsole extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jText.setEditable(false);
-    jText.setColumns(20);
-    jText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    jText.setRows(5);
-    jScrollPane1.setViewportView(jText);
+    jText.setBackground(new java.awt.Color(0, 0, 0));
+    jText.setForeground(new java.awt.Color(255, 255, 255));
+    jScrollPane2.setViewportView(jText);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addGroup(layout.createSequentialGroup()
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane1)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jScrollPane2)
           .addComponent(jpFlash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
@@ -314,8 +317,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
-        .addGap(5, 5, 5)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jpFlash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -348,7 +351,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
           jtCommand.setText("");
         }  
       }catch(Exception e){
-        addText(e.toString());
+        addText(e.toString(),false,true);
       }  
     }else{
       JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);      
@@ -368,7 +371,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
       try{
         mainForm.vsTimeConnector.setColor(0, VSColor.RED.getVSColor() );
       }catch(Exception e){
-         addText(e.toString());
+         addText(e.toString(),false,true);
       }
     }
   }//GEN-LAST:event_jButton1ActionPerformed
@@ -379,7 +382,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
       try{
         mainForm.vsTimeConnector.setColor(0, VSColor.GREEN.getVSColor() );
       }catch(Exception e){
-         addText(e.toString());
+         addText(e.toString(),false,true);
       }
     }
   }//GEN-LAST:event_jButton2ActionPerformed
@@ -390,7 +393,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
       try{
         mainForm.vsTimeConnector.setColor(0, VSColor.OFF.getVSColor() );
       }catch(Exception e){
-         addText(e.toString());
+         addText(e.toString(),false,true);
       }
     }
   }//GEN-LAST:event_jButton3ActionPerformed
@@ -441,12 +444,12 @@ public class VSTeamConsole extends javax.swing.JFrame {
             distFile.delete();
             FileUtils.copyFile(targetFile, distFile);
             targetFile.renameTo(new File(VSFlashControl.flashDir+"/"+filename));
-            addText(filename+" has been updated from :"+url);
+            addText(filename+" has been updated from :"+url,false,true);
             updateJSONFile();            
           } catch (MalformedURLException e) {            
-            addText(e.toString());
+            addText(e.toString(),false,true);
           } catch (IOException e) {
-            addText(e.toString());
+            addText(e.toString(),false,true);
           } finally {
             if (outStream != null) {
               try{
@@ -474,7 +477,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     try{      
       new UploadTimer(VSFlashControl.flahURL,VSFlashControl.flashFile);
     }catch(Exception e){
-      addText(e.toString());
+      addText(e.toString(),false,true);
     }    
   }//GEN-LAST:event_butLoadFlashActionPerformed
 
@@ -543,11 +546,11 @@ public class VSTeamConsole extends javax.swing.JFrame {
             }                                    
             if (sended==false && (indexData+LAST_SKIP_INDEX)>=flash.data.length()){
               long stop = Calendar.getInstance().getTimeInMillis();
-              addText("Flash "+FlashTimer.this.transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.");
+              addText("Flash "+FlashTimer.this.transponderID+" is OK. "+StageTab.getTimeIntervelForTimer(stop-startTime)+" seconds.",false,true);
               stopFlash();
             }
           }catch(Exception e){
-            addText(e.toString());
+            addText(e.toString(),false,true);
           }  
         }
       });
@@ -586,7 +589,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
           flashTimer = new FlashTimer(transponderID, flashControl.flashes.get(index));
         //};  
       }catch(Exception e){
-        addText(e.toString());
+        addText(e.toString(),false,true);
       }
     }else{
       stopFlash();
@@ -600,7 +603,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
       mainForm.vsTimeConnector.setTime();
     }catch(Exception e){
       mainForm._toLog(e);
-      addText(e.toString());
+      addText(e.toString(),false,true);
     }  
   }//GEN-LAST:event_bHelloActionPerformed
 
@@ -644,9 +647,28 @@ public class VSTeamConsole extends javax.swing.JFrame {
     });
   }
   
-  public static synchronized void addText(String text){
+  public static synchronized void addText(String text, boolean fromZacechaka, boolean flagInfo){
+      
     text = text.trim();
-    _form.jText.append(text+"\n");
+    SimpleAttributeSet keyWord = new SimpleAttributeSet();
+    
+    if (flagInfo){
+      StyleConstants.setForeground(keyWord, java.awt.Color.RED);
+    }else{
+      if (fromZacechaka) {
+        StyleConstants.setForeground(keyWord, java.awt.Color.MAGENTA);
+        text = "-> "+text;
+      }else{
+        StyleConstants.setForeground(keyWord, java.awt.Color.GREEN);
+        text = "<- "+text;
+      }
+    }
+    StyledDocument doc =  _form.jText.getStyledDocument();
+    try{
+      doc.insertString(doc.getLength(), text+"\n", keyWord );
+    }catch(Exception e){}  
+
+    
    /* if (text.charAt(text.length()-1)=='\n'){
       _form.jText.append(text);   
     }else{
@@ -671,8 +693,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
-  private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JTextArea jText;
+  private javax.swing.JScrollPane jScrollPane2;
+  private javax.swing.JTextPane jText;
   private javax.swing.JTextField jTransFlash;
   private javax.swing.JButton jbClear;
   private javax.swing.JComboBox<String> jcFlashVersion;

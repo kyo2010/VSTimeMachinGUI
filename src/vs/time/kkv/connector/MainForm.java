@@ -1259,7 +1259,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (isPingCommand && !VSTeamConsole.showPing) {
         // ignore ping
       } else {
-        VSTeamConsole.addText(data);
+        VSTeamConsole.addText(data,true,false);
       }
     }
 
@@ -1484,7 +1484,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   @Override
   public void sendVSText(String text) {
     if (VSTeamConsole.isOpened) {
-      VSTeamConsole.addText(text);
+      VSTeamConsole.addText(text,false,false);
     }
     lap_log.writeFile("SND;" + text);
   }
