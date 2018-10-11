@@ -231,7 +231,7 @@ public class StageTab extends javax.swing.JPanel {
       bStopChecking.setVisible(true);
 
       if (checkerCycle * timer.getInitialDelay() < 1000) {
-        try {
+        /*try {
           mainForm.vsTimeConnector.setColor(0, 0);
         } catch (Exception ein) {
         }
@@ -240,7 +240,7 @@ public class StageTab extends javax.swing.JPanel {
           Thread.currentThread().sleep(150);
         } catch (Exception ein) {
         }
-        try {
+*/        try {
           //mainForm.vsTimeConnector.setPowerMax();
           mainForm.setColorForGate();
         } catch (Exception ein) {
