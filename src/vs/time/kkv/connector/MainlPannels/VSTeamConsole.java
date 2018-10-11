@@ -445,7 +445,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
             distFile.delete();
             FileUtils.copyFile(targetFile, distFile);
             targetFile.renameTo(new File(VSFlashControl.flashDir + "/" + filename));
-            addText(filename + " has been updated from :" + url, false, true);
+            addText("File '"+filename + "' has been updated from : " + url, false, true);
             updateJSONFile();
           } catch (MalformedURLException e) {
             addText(e.toString(), false, true);
