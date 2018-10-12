@@ -2296,7 +2296,7 @@ public class StageTab extends javax.swing.JPanel {
   public void runFinishCommand() {
     Runtime runtime = Runtime.getRuntime();
     try {
-      Process p = runtime.exec("finish.cmd");
+      Process p = runtime.exec("raceEvents/finish.cmd");
       int exitCode = p.waitFor();
     } catch (Exception rt_e) {
       MainForm._toLog(rt_e);
@@ -2416,7 +2416,7 @@ public class StageTab extends javax.swing.JPanel {
                   public void actionPerformed(ActionEvent e) {
                     Runtime runtime = Runtime.getRuntime();
                     try {
-                      Process p = runtime.exec("run.cmd");
+                      Process p = runtime.exec("raceEvents/run.cmd");
                       int exitCode = p.waitFor();
                     } catch (Exception rt_e) {
                       MainForm._toLog(rt_e);
@@ -2458,7 +2458,7 @@ public class StageTab extends javax.swing.JPanel {
           public void actionPerformed(ActionEvent e) {
             Runtime runtime = Runtime.getRuntime();
             try {
-              Process p = runtime.exec("run.cmd");
+              Process p = runtime.exec("raceEvents/run.cmd");
               int exitCode = p.waitFor();
             } catch (Exception rt_e) {
               MainForm._toLog(rt_e);
