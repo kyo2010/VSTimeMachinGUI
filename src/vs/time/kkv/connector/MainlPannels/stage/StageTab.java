@@ -344,11 +344,15 @@ public class StageTab extends javax.swing.JPanel {
   });
 
   public static String getTimeIntervel(long time) {
+    return getTimeIntervel(time,":");
+  }
+  
+  public static String getTimeIntervel(long time, String timeSep) {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
     //milisec = Math.round(milisec / 10);
-    return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0") + ":" + Tools.padl("" + milisec, 3, "0");
+    return Tools.padl("" + min, 2, "0") +timeSep+ Tools.padl("" + sec, 2, "0") + timeSep+ Tools.padl("" + milisec, 3, "0");
   }
 
   public static String getTimeIntervelForTimer(long time) {
