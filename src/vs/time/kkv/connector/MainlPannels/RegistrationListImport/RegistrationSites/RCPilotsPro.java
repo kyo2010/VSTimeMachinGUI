@@ -349,16 +349,22 @@ public class RCPilotsPro extends IRegSite {
             = ("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8);
     byte[] finishBoundaryBytes
             = ("--" + boundary + "--").getBytes(StandardCharsets.UTF_8);
-    http.setRequestProperty("Content-Type",
+    /*http.setRequestProperty("Content-Type",
             "multipart/form-data; charset=UTF-8; boundary=" + boundary);
 
     http.setChunkedStreamingMode(0);
 
     try (OutputStream out = http.getOutputStream()) {
-      out.write(boundaryBytes);
+      //out.write(boundaryBytes);
       out.write( jsonContent.getBytes() ); 
-      out.write(finishBoundaryBytes);
-    }
+      //out.write(finishBoundaryBytes);
+    }*/
+    
+    http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    http.connect();
+     try(OutputStream os = http.getOutputStream()) {
+       os.write(jsonContent.getBytes());
+     }
 
     String response = "";
     int responseCode = http.getResponseCode();
