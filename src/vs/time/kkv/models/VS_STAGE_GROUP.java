@@ -68,7 +68,7 @@ public class VS_STAGE_GROUP implements Transferable {
   
   public static Comparator GROUP_QUAL_TIME_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
     @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
+    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {     
       if (o1.RACE_TIME > o2.RACE_TIME) {
         return 1;
       }
@@ -80,7 +80,13 @@ public class VS_STAGE_GROUP implements Transferable {
       }
       if (o1.QUAL_TIME < o2.QUAL_TIME) {
         return -1;
-      }            
+      }    
+      if (o1.LAPS < o2.LAPS) {
+        return 1;
+      }
+      if (o1.LAPS > o2.LAPS) {
+        return -1;
+      }      
       if (o1.BEST_LAP > o2.BEST_LAP) {
         return 1;
       }
@@ -111,6 +117,7 @@ public class VS_STAGE_GROUP implements Transferable {
       }catch(Exception e){}
      
       int i = 0;
+      int pos = 1;
       for (VS_STAGE_GROUPS user : sorted_users) {        
         if (scores!=null) {
           user.SCORE = 0;
@@ -120,6 +127,9 @@ public class VS_STAGE_GROUP implements Transferable {
         }else{
           user.SCORE = SCORE;
         }
+        
+        //user.NUM_IN_GROUP = pos;
+        pos++;
         
         if (count <= WIN_USERS) {
           user.WIN = 1;
