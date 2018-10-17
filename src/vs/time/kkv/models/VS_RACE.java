@@ -35,6 +35,7 @@ public class VS_RACE {
   public int POST_START = 0;        
   public int LAP_DISTANCE = 0;
   public int ALLOW_TO_FINISH_LAP = 0;
+  public String WEB_UID = "";
   
   public List<VS_REGISTRATION> users = new ArrayList<>();
   
@@ -68,6 +69,7 @@ public class VS_RACE {
     new DBModelField("WEB_RACE_ID").setDbFieldName("\"WEB_RACE_ID\""),    
     new DBModelField("AUTO_WEB_UPDATE").setDbFieldName("\"AUTO_WEB_UPDATE\""), 
     new DBModelField("POST_START").setDbFieldName("\"POST_START\""),     
+    new DBModelField("WEB_UID").setDbFieldName("\"WEB_UID\""),     
     
     new DBModelField("LAP_DISTANCE").setDbFieldName("\"LAP_DISTANCE\""),     
     new DBModelField("ALLOW_TO_FINISH_LAP").setDbFieldName("\"ALLOW_TO_FINISH_LAP\""),     

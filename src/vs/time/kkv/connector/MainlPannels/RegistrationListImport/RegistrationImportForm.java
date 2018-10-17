@@ -398,10 +398,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
               break;
             }
           }
-          regTab.mainForm.activeRace.WEB_SYSTEM_SID = jcbSites.getSelectedItem().toString();
+          regTab.mainForm.activeRace.WEB_SYSTEM_SID = jcbSites.getSelectedItem().toString();         
           regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = jcbRaces.getSelectedItem().toString();          
           if (importRace!=null){
             regTab.mainForm.activeRace.WEB_RACE_ID = ""+importRace.RACE_ID;
+            regTab.mainForm.activeRace.WEB_UID = importRace.WEB_UID;
           }  
           
           regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 0;
@@ -442,6 +443,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
             if (race.RACE_NAME.trim().equalsIgnoreCase(jcbRaces.getSelectedItem().toString())) {
               if (regTab.mainForm.activeRace!=null){
                 regTab.mainForm.activeRace.WEB_RACE_ID = ""+race.RACE_ID;
+                regTab.mainForm.activeRace.WEB_UID = race.WEB_UID;
                 regTab.mainForm.activeRace.WEB_SYSTEM_SID = site.REG_SITE_NAME;
                 regTab.mainForm.activeRace.WEB_SYSTEM_CAPTION = ""+race.RACE_NAME;
                 regTab.mainForm.activeRace.AUTO_WEB_UPDATE = 0;

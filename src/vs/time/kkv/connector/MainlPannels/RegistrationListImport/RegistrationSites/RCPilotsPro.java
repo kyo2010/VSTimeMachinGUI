@@ -80,6 +80,7 @@ public class RCPilotsPro extends IRegSite {
           JSONObject json_race = json_races.getJSONObject(i);
           VS_RACE race = new VS_RACE();
           race.RACE_ID = Integer.parseInt(json_race.getString("id"));
+          race.WEB_UID = json_race.getString("unic");
           race.RACE_DATE = new JDEDate();
           race.RACE_DATE.setJDEDateAsDDMMYYYY(json_race.getString("date_event"), ".");
           race.RACE_NAME = "[" + race.RACE_DATE.getDateAsYYYYMMDD("-") + "] " + json_race.getString("name");
@@ -177,7 +178,7 @@ public class RCPilotsPro extends IRegSite {
     jsonFileName = tab.mainForm.activeRace.RACE_ID + "_" + tab.stage.ID;
 
     //json.put("RACE_ID", regTab.mainForm.activeRace.RACE_ID);
-    json.put("RACE_UNIC", tab.mainForm.activeRace.WEB_RACE_ID);
+    json.put("RACE_UNIC", tab.mainForm.activeRace.WEB_UID);
     json.put("RACE_NAME", tab.mainForm.activeRace.RACE_NAME);
 
 
