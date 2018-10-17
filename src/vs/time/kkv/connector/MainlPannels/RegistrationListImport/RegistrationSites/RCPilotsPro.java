@@ -94,7 +94,8 @@ public class RCPilotsPro extends IRegSite {
             user.IS_ACTIVE = 1;
             user.VS_SOUND_EFFECT = 1;
             user.PILOT_TYPE = 0;
-            user.WEB_SID = json_pilot.getString("id");
+            //user.WEB_SID = json_pilot.getString("id");
+            user.WEB_SID = json_pilot.getString("pilot_id");
             user.WEB_SYSTEM = getSystemName();
             user.VS_USER_NAME = json_pilot.getString("osd_name").trim();
             user.FIRST_NAME = json_pilot.getString("fname");
@@ -168,8 +169,8 @@ public class RCPilotsPro extends IRegSite {
     if (tab == null) {
       return true;
     }
-    if (tab.stage.RACE_TYPE == MainForm.STAGE_PRACTICA || tab.stage.RACE_TYPE == MainForm.STAGE_QUALIFICATION
-            || tab.stage.RACE_TYPE == MainForm.STAGE_RACE) {
+    if (tab.stage.STAGE_TYPE == MainForm.STAGE_PRACTICA || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION
+            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE) {
       // it's ok
     } else {
       return true;
@@ -204,7 +205,7 @@ public class RCPilotsPro extends IRegSite {
     }
 
     JSONArray users_array = new JSONArray();
-    String salt_vals = "";
+    String salt_vals = tab.mainForm.activeRace.WEB_UID;
 
     for (Integer groupNum : tab.stage.groups.keySet()) {
       List<VS_STAGE_GROUPS> users = tab.stage.groups.get(groupNum).users;
