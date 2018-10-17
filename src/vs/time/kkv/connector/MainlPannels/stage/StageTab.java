@@ -880,7 +880,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    autoStrartRaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/start_button.png"))); // NOI18N
+    autoStrartRaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/auto_start.png"))); // NOI18N
     autoStrartRaceButton.setToolTipText("Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped.");
     autoStrartRaceButton.setBorder(null);
     autoStrartRaceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -894,11 +894,11 @@ public class StageTab extends javax.swing.JPanel {
     topPanelLayout.setHorizontalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(topPanelLayout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGap(5, 5, 5)
         .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
         .addComponent(bStopChecking, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butCopyToWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -927,8 +927,9 @@ public class StageTab extends javax.swing.JPanel {
     topPanelLayout.setVerticalGroup(
       topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(topPanelLayout.createSequentialGroup()
-        .addGap(4, 4, 4)
+        .addGap(5, 5, 5)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -943,7 +944,6 @@ public class StageTab extends javax.swing.JPanel {
           .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bStopChecking, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-      .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
     butCopyToWeb.setVisible(false);
@@ -1002,7 +1002,7 @@ public class StageTab extends javax.swing.JPanel {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jSplitPane1)
-          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)))
+          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 

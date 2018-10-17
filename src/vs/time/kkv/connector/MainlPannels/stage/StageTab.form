@@ -37,7 +37,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jSplitPane1" max="32767" attributes="0"/>
-                  <Component id="jSplitPane2" pref="510" max="32767" attributes="0"/>
+                  <Component id="jSplitPane2" pref="457" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -53,11 +53,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Component id="autoStrartRaceButton" min="-2" pref="55" max="-2" attributes="0"/>
-                  <EmptySpace pref="73" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
+                  <EmptySpace pref="82" max="32767" attributes="0"/>
                   <Component id="bStopChecking" min="-2" pref="61" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="butCopyToWeb" min="-2" pref="62" max="-2" attributes="0"/>
@@ -88,8 +88,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="autoStrartRaceButton" max="32767" attributes="0"/>
                       <Component id="butCopyToWeb" alignment="1" max="32767" attributes="0"/>
                       <Component id="butCopyGropusToClipboard" max="32767" attributes="0"/>
                       <Component id="butCopyToClipboard" max="32767" attributes="0"/>
@@ -107,7 +108,6 @@
                       <Component id="bStopChecking" alignment="1" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <Component id="autoStrartRaceButton" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -283,7 +283,7 @@
         <Component class="javax.swing.JButton" name="autoStrartRaceButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/icons/start_button.png"/>
+              <Image iconType="3" name="/images/icons/auto_start.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Auto Start Race Invitation, Start Search, + 3minutes to Ready, Start Race... Next group If You stop AutoStart, Active Race is not be stopped."/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
