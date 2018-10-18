@@ -104,6 +104,7 @@ public class RCPilotsPro extends IRegSite {
             user.VS_USER_NAME = json_pilot.getString("osd_name").trim();
             user.FIRST_NAME = json_pilot.getString("fname");
             user.SECOND_NAME = json_pilot.getString("lname");
+            user.E_MAIL = "";//json_pilot.getString("email"ffff);
             if (user.VS_USER_NAME.equalsIgnoreCase("")) {
               String nik = "";
               nik += user.FIRST_NAME.trim();
@@ -159,24 +160,24 @@ public class RCPilotsPro extends IRegSite {
     return true;
   }
 
-  public static Comparator GROUP_SCORES_COMPARATOR_2= new Comparator<VS_STAGE_GROUPS>() {
+  public static Comparator GROUP_SCORES_COMPARATOR_2 = new Comparator<VS_STAGE_GROUPS>() {
     @Override
-    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {      
+    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
       if (o1.GROUP_NUM < o2.GROUP_NUM) {
         return 1;
       }
       if (o1.GROUP_NUM > o2.GROUP_NUM) {
         return -1;
-      }      
-       if (o1.SCORE < o2.SCORE) {
+      }
+      if (o1.SCORE < o2.SCORE) {
         return 1;
       }
       if (o1.SCORE > o2.SCORE) {
         return -1;
-      }      
+      }
       if (o1.RACE_TIME > o2.RACE_TIME) {
         return 1;
-      }            
+      }
       if (o1.RACE_TIME < o2.RACE_TIME) {
         return -1;
       }
@@ -185,13 +186,13 @@ public class RCPilotsPro extends IRegSite {
       }
       if (o1.QUAL_TIME < o2.QUAL_TIME) {
         return -1;
-      }    
+      }
       if (o1.LAPS < o2.LAPS) {
         return 1;
       }
       if (o1.LAPS > o2.LAPS) {
         return -1;
-      }      
+      }
       if (o1.BEST_LAP > o2.BEST_LAP) {
         return 1;
       }
@@ -200,9 +201,8 @@ public class RCPilotsPro extends IRegSite {
       }
       return 0;
     }
-  };   
-  
-  
+  };
+
   @Override
   public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) {
 
@@ -257,40 +257,45 @@ public class RCPilotsPro extends IRegSite {
 
     for (Integer groupNum : tab.stage.groups.keySet()) {
       List<VS_STAGE_GROUPS> users = tab.stage.groups.get(groupNum).users;
-      
-    List<VS_STAGE_GROUPS> sorted_users = new ArrayList<VS_STAGE_GROUPS>();
+
+      List<VS_STAGE_GROUPS> sorted_users = new ArrayList<VS_STAGE_GROUPS>();
       for (VS_STAGE_GROUPS user : users) {
         sorted_users.add(user);
       }
       //Collections.sort(sorted_users, GROUP_TIME_COMPARATOR);
       Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
-      
+
       if (users != null) {
         int POS = 1;
-        int LAST_GROUP=-1;
+        int LAST_GROUP = -1;
         for (VS_STAGE_GROUPS usr : sorted_users) {
           JSONObject jsonObj = new JSONObject();
           VS_REGISTRATION reg = usr.getRegistration(tab.mainForm.con, tab.mainForm.activeRace.RACE_ID);
           if (reg == null) {
             continue;
           }
-          jsonObj.put("PILOT_ID", reg.WEB_SID);
+
+          if (reg.WEB_SYSTEM.equalsIgnoreCase(getSystemName())) {
+            jsonObj.put("PILOT_ID", reg.WEB_SID);
+          } else {
+            jsonObj.put("PILOT_ID", "");
+          }
+          //jsonObj.put("PILOT_ID", reg.WEB_SID);
           jsonObj.put("PILOT_NAME", reg.VS_USER_NAME);
           salt_vals += reg.VS_USER_NAME;
           JSONArray FLIGHTS = new JSONArray();
-          
-          if (LAST_GROUP!=-1 && LAST_GROUP!=usr.GROUP_NUM){
+
+          if (LAST_GROUP != -1 && LAST_GROUP != usr.GROUP_NUM) {
             POS = 1;
           }
-          
+
           /*if (reg.VS_USER_NAME.equalsIgnoreCase("PandaFPV")){          
           //if (usr.GROUP_NUM==1){
             System.out.println(usr.GROUP_NUM + ":" + reg.VS_USER_NAME + ":" + POS+" score:"+usr.SCORE);
           }*/
-
           JSONObject flight = new JSONObject();
           flight.put("NAME", tab.stage.CAPTION);
-          flight.put("PILOT_POSITION", /*usr.NUM_IN_GROUP*/ POS );                    
+          flight.put("PILOT_POSITION", /*usr.NUM_IN_GROUP*/ POS);
 
           flight.put("PILOT_LAP", usr.LAPS);
           flight.put("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP, "."));
@@ -302,7 +307,7 @@ public class RCPilotsPro extends IRegSite {
           // $flight['NAME'].$flight['PILOT_POSITION'].$flight['BEST_LAP'].$flight['GROUP_NUM'];
 
           POS++;
-          
+
           FLIGHTS.put(flight);
           jsonObj.put("FLIGHTS", FLIGHTS);
           users_array.put(jsonObj);
@@ -371,8 +376,8 @@ public class RCPilotsPro extends IRegSite {
     }
 
     if (pleaseUpdate) {
-      try {                        
-        String response = uploadToWeb(fileName, message,authCode, removeAllStages);
+      try {
+        String response = uploadToWeb(fileName, message, authCode, removeAllStages);
         response = response.replaceAll("<br>", "\n");
         FileTools.copyFile(new File(fileName), new File(fileNameCashe));
         if (showMessages) {
@@ -430,12 +435,12 @@ public class RCPilotsPro extends IRegSite {
       out.write( jsonContent.getBytes() ); 
       //out.write(finishBoundaryBytes);
     }*/
-    
+
     http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     http.connect();
-     try(OutputStream os = http.getOutputStream()) {
-       os.write(jsonContent.getBytes());
-     }
+    try (OutputStream os = http.getOutputStream()) {
+      os.write(jsonContent.getBytes());
+    }
 
     String response = "";
     int responseCode = http.getResponseCode();

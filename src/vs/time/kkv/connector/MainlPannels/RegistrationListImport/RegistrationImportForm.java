@@ -311,9 +311,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
 
                   Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(con, "VS_USER_NAME", "VS_RACE_ID=?", regTab.mainForm.activeRace.RACE_ID);
 
-                  /*if (pilot.VS_USER_NAME.trim().equalsIgnoreCase("Daniel_orlov")){
+                  if (pilot.VS_USER_NAME.trim().equalsIgnoreCase("KKV") || 
+                      pilot.VS_USER_NAME.trim().equalsIgnoreCase("BAHA")                              
+                  ){
                     int y = 0;
-                  }*/
+                  }
                   
                   VS_REGISTRATION reg = null;
                   for (VS_REGISTRATION reg1 : regs.values()) {
@@ -322,7 +324,10 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                       break;
                     }
                     try {
-                      if (!"".equalsIgnoreCase(reg1.WEB_SID) && reg1.WEB_SID.trim().equalsIgnoreCase(pilot.WEB_SID.trim())) {
+                      if (!"".equalsIgnoreCase(reg1.WEB_SID) && 
+                              (  reg1.WEB_SID.trim().equalsIgnoreCase(pilot.WEB_SID.trim()) && 
+                                 reg1.WEB_SYSTEM.trim().equalsIgnoreCase(pilot.WEB_SYSTEM.trim())
+                              )) {
                         reg = reg1;
                         break;
                       }
@@ -348,7 +353,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
                         pilot.PHOTO = site.getImageFromWeb(pilot.PHOTO);
                         count_updated_photos_pilots++;
                       }
-
+                      
                       pilot.IS_ACTIVE=0;
                       VS_REGISTRATION.dbControl.insert(con, pilot);
                       VS_USERS global_user = VS_REGISTRATION.updateGlobalUserPHOTO(con, pilot);
@@ -358,6 +363,11 @@ public class RegistrationImportForm extends javax.swing.JFrame {
 
                     }
                   } else {
+                    if (reg.E_MAIL.equalsIgnoreCase("")){
+                      reg.E_MAIL= pilot.E_MAIL;
+                      VS_REGISTRATION.dbControl.update(con, reg);
+                    }
+                    
                     if (pilot.VS_TRANS1 != 0
                             && (reg.VS_TRANS1 != pilot.VS_TRANS1 || reg.VS_TRANS2 != pilot.VS_TRANS2 || reg.VS_TRANS3 != pilot.VS_TRANS3)) {
                       /*pilot.ID = reg.ID;

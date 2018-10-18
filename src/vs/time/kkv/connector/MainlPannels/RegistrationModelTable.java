@@ -36,6 +36,7 @@ public class RegistrationModelTable extends AbstractTableModel {
 
   public List<VS_REGISTRATION> rows = new ArrayList<>();
   public List<VS_REGISTRATION> rowsAll = new ArrayList<>();
+  public int activePilots = 0;
   private RegistrationTab regForm = null;  
   public String findString = "";
   
@@ -48,6 +49,10 @@ public class RegistrationModelTable extends AbstractTableModel {
     try {             
       rowsAll = VS_REGISTRATION.dbControl.getList(regForm.mainForm.con, "VS_RACE_ID=? ORDER by NUM",regForm.mainForm.activeRace.RACE_ID);
       //rows = rowsAll;
+      activePilots = 0;
+      for (VS_REGISTRATION reg : rowsAll){
+        if (reg.IS_ACTIVE==1) activePilots++;
+      }
       applayFilter();
     } catch (UserException e) {
       regForm.mainForm.error_log.writeFile(e);
@@ -91,7 +96,8 @@ public class RegistrationModelTable extends AbstractTableModel {
   public static final int RWSQ_TRANS  = 50;
   public static final int RWSQ_OSD_NAME = 60;
   public static final int RWSQ_FIRST_NAME = 70;
-  public static final int RWSQ_SECOND_NAME = 80;  
+  public static final int RWSQ_SECOND_NAME = 80;
+  public static final int RWSQ_WEB_SYSTEM = 90;  
     
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(RWSQ_ACT, "Act", 50),
@@ -102,6 +108,7 @@ public class RegistrationModelTable extends AbstractTableModel {
     new STAGE_COLUMN(RWSQ_OSD_NAME, "OSD Name", 200),
     new STAGE_COLUMN(RWSQ_FIRST_NAME, "First Name", 200),
     new STAGE_COLUMN(RWSQ_SECOND_NAME, "Second Name", 200),
+    new STAGE_COLUMN(RWSQ_WEB_SYSTEM, "Reg.System", 200),
   };
   
   public List<STAGE_COLUMN> getColumns(){
@@ -174,6 +181,9 @@ public class RegistrationModelTable extends AbstractTableModel {
       if (col.ID == RWSQ_SECOND_NAME) {
         return reg.SECOND_NAME;
       }
+      if (col.ID==RWSQ_WEB_SYSTEM){
+        return reg.WEB_SYSTEM;
+      }
     }
     return "";
   }
@@ -215,6 +225,11 @@ public class RegistrationModelTable extends AbstractTableModel {
           }        
         }
         reg.IS_ACTIVE = (Boolean)value?1:0;        
+        if (reg.IS_ACTIVE==1) activePilots++;
+        if (reg.IS_ACTIVE==0) activePilots--;
+        if (activePilots<0) activePilots = 0;
+        if (activePilots>rowsAll.size()) activePilots = rowsAll.size();
+        regForm.lActivePilotsCount.setText(""+activePilots);
         try {
           reg.dbControl.update(regForm.mainForm.con, reg);
           //UserList.init(mainForm).refresh();

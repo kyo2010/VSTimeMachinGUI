@@ -126,6 +126,7 @@ public class UserControlForm extends javax.swing.JFrame {
     jPanel2 = new javax.swing.JPanel();
     bSave = new javax.swing.JButton();
     bCancel = new javax.swing.JButton();
+    butDel = new javax.swing.JButton();
 
     setTitle("Pilot Card");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -240,7 +241,7 @@ public class UserControlForm extends javax.swing.JFrame {
                     .addGap(45, 45, 45)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(edFAI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                  .addComponent(edFAI, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
@@ -306,6 +307,13 @@ public class UserControlForm extends javax.swing.JFrame {
       }
     });
 
+    butDel.setText("Delete");
+    butDel.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        butDelActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -313,6 +321,8 @@ public class UserControlForm extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(bSave)
+        .addGap(29, 29, 29)
+        .addComponent(butDel)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
         .addContainerGap())
@@ -323,7 +333,8 @@ public class UserControlForm extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(bSave)
-          .addComponent(bCancel))
+          .addComponent(bCancel)
+          .addComponent(butDel))
         .addContainerGap())
     );
 
@@ -438,6 +449,22 @@ public class UserControlForm extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_PHOTOMouseClicked
 
+  private void butDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butDelActionPerformed
+    // TODO add your handling code here:     
+    if (flagNew) return;
+    if (usr!=null) {
+      try{
+       VS_USERS.dbControl.delete(mainForm.con,usr);
+       UserList.init(mainForm,null).refreshData();
+        setVisible(false);
+      }catch(Exception e){
+        mainForm.error_log.writeFile("Delete user is error");
+        mainForm.error_log.writeFile(e);
+        JOptionPane.showMessageDialog(this, "Delete user is error. " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);           
+      } 
+    }
+  }//GEN-LAST:event_butDelActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -477,6 +504,7 @@ public class UserControlForm extends javax.swing.JFrame {
   private vs.time.kkv.connector.MainlPannels.ImageImplement PHOTO;
   private javax.swing.JButton bCancel;
   private javax.swing.JButton bSave;
+  private javax.swing.JButton butDel;
   private javax.swing.JButton butUseLastTransponderID;
   private javax.swing.JCheckBox chEnabledSound;
   private javax.swing.JTextField edFAI;

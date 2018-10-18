@@ -5,7 +5,6 @@
 /nbproject/private/
 /build/
 /dist/
-/web/pilots_photo/
 /online/
 /update_old/
 /update/
@@ -16,3 +15,4 @@ lap.log
 flash
 online
 /VSTimeMachine.log
+/web/pilots_photo/

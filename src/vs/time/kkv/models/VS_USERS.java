@@ -20,7 +20,7 @@ public class VS_USERS {
   public String FIRST_NAME;   //  NOT_DETECTED
   public String SECOND_NAME;   //  NOT_DETECTED
   public String WEB_SYSTEM;
-  public String WEB_SID;
+  public String WEB_SID;  
   public String PHOTO;
   public String REGION = "";
   public String FAI = "";
@@ -46,7 +46,7 @@ public class VS_USERS {
     
     new DBModelField("PHOTO").setDbFieldName("PHOTO"),
     new DBModelField("REGION").setDbFieldName("REGION"),
-    new DBModelField("FAI").setDbFieldName("FAI"),    
+    new DBModelField("FAI").setDbFieldName("FAI"),            
     
   });
   

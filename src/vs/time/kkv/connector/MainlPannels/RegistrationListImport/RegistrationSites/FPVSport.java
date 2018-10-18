@@ -92,6 +92,7 @@ public class FPVSport extends IRegSite {
             user.WEB_SID = json_pilot.getString("id");
             user.WEB_SYSTEM = getSystemName();
             user.VS_USER_NAME = json_pilot.getString("osd_name");
+            user.E_MAIL = json_pilot.getString("email");
             user.FIRST_NAME = json_pilot.getString("fname");
             user.SECOND_NAME = json_pilot.getString("lname");
             if (user.VS_USER_NAME == null || user.VS_USER_NAME.equals("")) {
@@ -294,8 +295,13 @@ public class FPVSport extends IRegSite {
             JSONObject jsonObj = new JSONObject();
             VS_REGISTRATION reg = usr.getRegistration(tab.mainForm.con, tab.mainForm.activeRace.RACE_ID);
             if (reg != null) {
-              jsonObj.put("WEB_SID", reg.WEB_SID);
-              jsonObj.put("WEB_SYSTEM", reg.WEB_SYSTEM);
+              if (reg.WEB_SYSTEM.equalsIgnoreCase(getSystemName())){
+                jsonObj.put("WEB_SID", reg.WEB_SID);              
+                jsonObj.put("WEB_SYSTEM", reg.WEB_SYSTEM);
+              }else{
+                jsonObj.put("WEB_SID", "");              
+                jsonObj.put("WEB_SYSTEM", "");
+              }
               jsonObj.put("FIRST_NAME", reg.FIRST_NAME);
               jsonObj.put("SECOND_NAME", reg.SECOND_NAME);
               jsonObj.put("VS_USER_NAME", reg.VS_USER_NAME);
@@ -313,6 +319,11 @@ public class FPVSport extends IRegSite {
               jsonObj.put("VS_TRANS3", "");
             }
             jsonObj.put("PILOT", usr.PILOT);
+            if (usr.registration!=null){
+              jsonObj.put("email", usr.registration.E_MAIL);
+            }else{
+              jsonObj.put("email", "");
+            }
             jsonObj.put("CHANNEL", usr.CHANNEL);
             jsonObj.put("BEST_LAP", usr.BEST_LAP);
             jsonObj.put("RACE_TIME", usr.RACE_TIME);

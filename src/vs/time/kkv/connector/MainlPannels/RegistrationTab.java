@@ -230,6 +230,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     //jtPilotRegistration.updateUI();
     jtPilotRegistration.setRowHeight(21);
     mainForm.setTransponderListener(this);
+    
+    lPilotsCount.setText(""+regModelTable.rowsAll.size());
+    lActivePilotsCount.setText(""+regModelTable.activePilots);
   }
 
   /**
@@ -256,6 +259,10 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jLabel1 = new javax.swing.JLabel();
     edFind = new javax.swing.JTextField();
     bClearFind = new javax.swing.JButton();
+    jLabel2 = new javax.swing.JLabel();
+    lPilotsCount = new javax.swing.JLabel();
+    jLabel3 = new javax.swing.JLabel();
+    lActivePilotsCount = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jtPilotRegistration = new javax.swing.JTable();
 
@@ -387,6 +394,16 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       }
     });
 
+    jLabel2.setText("Pilots:");
+
+    lPilotsCount.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+    lPilotsCount.setText("0");
+
+    jLabel3.setText("Active Pilots:");
+
+    lActivePilotsCount.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+    lActivePilotsCount.setText("0");
+
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
@@ -396,22 +413,35 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
         .addComponent(jLabel1)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(edFind, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(26, 26, 26)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(bClearFind, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(26, 26, 26)
+        .addComponent(jLabel2)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(lPilotsCount)
+        .addGap(33, 33, 33)
+        .addComponent(jLabel3)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(lActivePilotsCount)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+      .addGroup(jPanel3Layout.createSequentialGroup()
         .addGap(5, 5, 5)
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(jLabel1)
-            .addComponent(edFind))
-          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel3Layout.createSequentialGroup()
             .addComponent(bClearFind, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 0, Short.MAX_VALUE)))
-        .addGap(3, 3, 3))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel1)
+              .addComponent(edFind)
+              .addComponent(jLabel2)
+              .addComponent(lPilotsCount)
+              .addComponent(jLabel3)
+              .addComponent(lActivePilotsCount))
+            .addGap(3, 3, 3))))
     );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -425,9 +455,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addGap(0, 0, 0)
-        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(0, 0, 0))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(1, 1, 1))
     );
 
     jtPilotRegistration.setModel(new javax.swing.table.DefaultTableModel(
@@ -455,7 +485,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       .addGroup(layout.createSequentialGroup()
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+        .addGap(3, 3, 3))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -633,11 +664,15 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   private javax.swing.JButton butUploadToSite;
   public javax.swing.JTextField edFind;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTable jtPilotRegistration;
+  public javax.swing.JLabel lActivePilotsCount;
+  private javax.swing.JLabel lPilotsCount;
   public javax.swing.JCheckBox unRaceLapSound;
   // End of variables declaration//GEN-END:variables
 }

@@ -128,7 +128,9 @@ public class DataBaseStructure {
     
     new DBAddonStructure(4.9, "ALTER TABLE VS_RACE ADD ALLOW_TO_FINISH_LAP INTEGER NOT NULL DEFAULT 0;"),     
     
-    new DBAddonStructure(5.0, "ALTER TABLE VS_RACE ADD WEB_UID TEXT NOT NULL DEFAULT '';"),         
+    new DBAddonStructure(5.0, "ALTER TABLE VS_RACE ADD WEB_UID TEXT NOT NULL DEFAULT '';"), 
+    
+    new DBAddonStructure(5.1, "ALTER TABLE VS_REGISTRATION ADD E_MAIL TEXT NOT NULL DEFAULT '';"),     
   };
 
   public static class DBAddonStructure {
