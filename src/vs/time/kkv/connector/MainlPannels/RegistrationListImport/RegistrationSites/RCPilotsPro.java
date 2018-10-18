@@ -218,7 +218,7 @@ public class RCPilotsPro extends IRegSite {
       return true;
     }
     if (tab.stage.STAGE_TYPE == MainForm.STAGE_PRACTICA || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION
-            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE) {
+            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE  || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
       // it's ok
     } else {
       return true;
