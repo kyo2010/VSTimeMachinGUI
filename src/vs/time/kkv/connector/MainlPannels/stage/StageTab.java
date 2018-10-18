@@ -1024,8 +1024,8 @@ public class StageTab extends javax.swing.JPanel {
   }//GEN-LAST:event_butRemoveSatgeActionPerformed
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
-    // TODO add your handling code here:    
-
+    // TODO add your handling code here:      
+    
     if (mainForm.activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
       return;

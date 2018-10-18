@@ -282,6 +282,7 @@ public class RCPilotsPro extends IRegSite {
           }
           //jsonObj.put("PILOT_ID", reg.WEB_SID);
           jsonObj.put("PILOT_NAME", reg.VS_USER_NAME);
+          jsonObj.put("PILOT_EMAIL", reg.E_MAIL);
           salt_vals += reg.VS_USER_NAME;
           JSONArray FLIGHTS = new JSONArray();
 

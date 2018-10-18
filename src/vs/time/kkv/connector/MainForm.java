@@ -223,6 +223,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
 
     if (activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
+      refreshTabbedCaptions();
       return;
     }
     activeRace = race;
@@ -1000,6 +1001,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_tabbedPanelStateChanged
 
+  public void refreshTabbedCaptions(){    
+    for (int tabI=1; tabI<tabbedPanel.getTabCount(); tabI++){
+      StageTab tab = stageTabs.get(tabI-1);
+      tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
+     /* Object tabObject = tabbedPanel.getTabComponentAt(tabI);           
+      if (tabObject != null && tabObject instanceof StageTab) {
+        StageTab tab = (StageTab) tabObject;
+        tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
+      }*/    
+    }
+  }
+  
   private void mSystemOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemOptionsActionPerformed
     // TODO add your handling code here:
     SystemOptions.init(this).setVisible(true);

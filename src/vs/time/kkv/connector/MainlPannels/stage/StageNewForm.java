@@ -875,6 +875,9 @@ public class StageNewForm extends javax.swing.JFrame {
 
       stage.SORT_TYPE = jOrderBy.getSelectedIndex();
       stage.CAPTION = jtCaption.getText();
+      
+      
+      
       stage.FLAG_BY_PYLOT_TYPE = jchGroupByPilotType.isSelected() ? 1 : 0;
       stage.SCORE_CALCULATION = ScoreCalulationFactory.getScoreCalulationIndex(SCORE_CALCULATION.getSelectedIndex()).getScoresCode();
       try {

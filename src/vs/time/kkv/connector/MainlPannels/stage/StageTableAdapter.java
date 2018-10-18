@@ -215,7 +215,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public boolean isQualificated(VS_STAGE_GROUPS pilot) {
-    if (pilot.NUM_IN_GROUP <= tab.stage.PILOTS_FOR_NEXT_ROUND || tab.stage.PILOTS_FOR_NEXT_ROUND == -1) {
+    if (tab.stage.PILOTS_FOR_NEXT_ROUND==0 || pilot.NUM_IN_GROUP <= tab.stage.PILOTS_FOR_NEXT_ROUND || tab.stage.PILOTS_FOR_NEXT_ROUND == -1) {
       return true;
     }
     return false;

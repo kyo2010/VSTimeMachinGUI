@@ -323,7 +323,7 @@ public class RaceControlForm extends javax.swing.JFrame {
       }
     });
 
-    butSelect.setText("Select w/o Save");
+    butSelect.setText("Select");
     butSelect.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butSelectActionPerformed(evt);
