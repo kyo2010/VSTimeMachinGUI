@@ -23,6 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -46,6 +47,7 @@ import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_USERS;
 
 /**
  *
@@ -66,6 +68,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     this.mainForm = _mainForm;
     regModelTable = new RegistrationModelTable(this);
     jtPilotRegistration.setModel(regModelTable);
+    jtPilotRegistration.setDefaultRenderer(Object.class, regModelTable);
 
     //jtPilotRegistration.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     //jtPilotRegistration.getColumnModel().getColumn(4).setPreferredWidth(800);    
@@ -80,6 +83,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jtPilotRegistration.setRowHeight(ROW_HEIGHT);
 
     popup = new JPopupMenu();
+    JMenuItem miGetTrans = new JMenuItem("Get Tranponder ID from previous Races");
+    popup.add(miGetTrans);
     JMenuItem miEdit = new JMenuItem("Edit");
     popup.add(miEdit);
     JMenuItem miAdd = new JMenuItem("Add");
@@ -90,6 +95,48 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     popup.add(miDelete);
     JMenuItem miDeleteAll = new JMenuItem("Delete All");
     popup.add(miDeleteAll);
+
+    miGetTrans.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          List<String[]> res = VS_REGISTRATION.dbControl.getListFromSQL(mainForm.con,
+                  "select VS_USER_NAME, VS_TRANSPONDER, VS_TRANS2, VS_TRANS3\n"
+                  + "from VS_REGISTRATION as reg\n"
+                  + "where reg.VS_RACE_ID = (SELECT MAX(reg1.VS_RACE_ID) from VS_REGISTRATION as reg1\n"
+                  + "                         where\n"
+                  + "                            reg1.VS_USER_NAME=reg.VS_USER_NAME and\n"
+                  + "                            (reg1.VS_TRANSPONDER<>0 or  reg1.VS_TRANS2<>0 or reg1.VS_TRANS3<>0)\n"
+                  + "                       )\n"
+                  + "order by VS_USER_NAME");
+          for (VS_REGISTRATION regInfo : regModelTable.rowsAll){
+            if (regInfo.transIsEmpty()){
+              for (String[] userInfo : res){
+                if (userInfo!=null && userInfo.length>=3){
+                  if (userInfo[0].equalsIgnoreCase(regInfo.VS_USER_NAME)){
+                    try{
+                      regInfo.VS_TRANS1 = Integer.parseInt(userInfo[1]);
+                    }catch(Exception ein){}   
+                    try{
+                      regInfo.VS_TRANS2 = Integer.parseInt(userInfo[2]);
+                    }catch(Exception ein){}   
+                    try{
+                      regInfo.VS_TRANS3 = Integer.parseInt(userInfo[3]);
+                    }catch(Exception ein){}   
+                    try{
+                      VS_REGISTRATION.dbControl.update(mainForm.con, regInfo);
+                    }catch(Exception ein){}
+                  }
+                }
+              }
+            }
+          }
+          RegistrationTab.this.refreshData();
+        } catch (Exception ex) {
+          mainForm.error_log.writeFile(ex);
+        }
+      }
+    });
 
     miEdit.addActionListener(new ActionListener() {
       @Override
@@ -209,16 +256,16 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     activeTransponder.setVisible(true);
     this.transponder = transponder;
     String info = (user != null ? (user.VS_USER_NAME + " - ") : "") + mainForm.lastTranponderID;
-    activeTransponder.setText(info);    
+    activeTransponder.setText(info);
     last_user = user;
     clearTransonderTimer.restart();
-    activeTransponder.setToolTipText("Last Transponder ID : "+transponder);
+    activeTransponder.setToolTipText("Last Transponder ID : " + transponder);
   }
-  
+
   Timer clearTransonderTimer = new Timer(5000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      activeTransponder.setText("");      
+      activeTransponder.setText("");
       // activeTransponder.setVisible(false);
     }
   });
@@ -230,9 +277,9 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     //jtPilotRegistration.updateUI();
     jtPilotRegistration.setRowHeight(21);
     mainForm.setTransponderListener(this);
-    
-    lPilotsCount.setText(""+regModelTable.rowsAll.size());
-    lActivePilotsCount.setText(""+regModelTable.activePilots);
+
+    lPilotsCount.setText("" + regModelTable.rowsAll.size());
+    lActivePilotsCount.setText("" + regModelTable.activePilots);
   }
 
   /**

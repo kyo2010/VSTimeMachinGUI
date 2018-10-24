@@ -8,6 +8,8 @@ package vs.time.kkv.connector.MainlPannels;
 import vs.time.kkv.connector.Race.*;
 import vs.time.kkv.connector.Users.*;
 import KKV.Utils.UserException;
+import java.awt.Color;
+import java.awt.Component;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -15,14 +17,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTableAdapter;
+import vs.time.kkv.connector.MainlPannels.stage.StageTableData;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -32,7 +39,7 @@ import vs.time.kkv.models.VS_USERS;
  *
  * @author kyo
  */
-public class RegistrationModelTable extends AbstractTableModel {
+public class RegistrationModelTable extends AbstractTableModel  implements TableCellRenderer{
 
   public List<VS_REGISTRATION> rows = new ArrayList<>();
   public List<VS_REGISTRATION> rowsAll = new ArrayList<>();
@@ -256,4 +263,25 @@ public class RegistrationModelTable extends AbstractTableModel {
       }
     }
   }    
+  
+  private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    VS_REGISTRATION regInfo = rows.get(row);
+    JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    if (regInfo!=null){
+      if ( regInfo.transIsEmpty() )
+      {
+        label.setBackground(Color.PINK);
+      }else{
+        if (isSelected){
+          label.setBackground(Color.BLUE);          
+        }else{
+          label.setBackground(Color.WHITE);
+        }  
+      }
+    }    
+    return label;
+  }
 }

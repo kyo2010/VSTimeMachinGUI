@@ -108,6 +108,7 @@ public class VS_STAGE_GROUP implements Transferable {
 
       int size = users.size();
       int WIN_USERS = Math.round(size / 2);
+      if (size==3) WIN_USERS=2;
       int count = 1;
       int SCORE = stage.COUNT_PILOTS_IN_GROUP;
       

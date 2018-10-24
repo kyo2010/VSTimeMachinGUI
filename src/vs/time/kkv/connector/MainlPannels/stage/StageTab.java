@@ -1733,16 +1733,24 @@ public class StageTab extends javax.swing.JPanel {
               List<VS_STAGE_GROUPS> new_groups = new ArrayList<VS_STAGE_GROUPS>();
               NUM_IN_GROUP_LOSERS = 1;
               last_loser_goruop = 1;
-              int count_loser_group = groups.size() / 2 / stage.COUNT_PILOTS_IN_GROUP;
+              
+              //int count_loser_group = groups.size() / 2 / stage.COUNT_PILOTS_IN_GROUP;              
+              
+              long count_loser_group = Math.round(Math.ceil( getMaxGroup(groups)/2));                            
+              
+              
               for (VS_STAGE_GROUPS usr : groups_for_detect_losers) {
                 if (usr.LOSE == 1) {
                   if (last_loser_goruop > count_loser_group) {
                     last_loser_goruop = 1;
                     NUM_IN_GROUP_LOSERS++;
-                  }
+                  }                  
                   usr.STAGE_ID = stage.ID;
+                  
                   usr.GROUP_NUM = last_loser_goruop;
-                  usr.NUM_IN_GROUP = NUM_IN_GROUP_LOSERS;
+                  usr.NUM_IN_GROUP = NUM_IN_GROUP_LOSERS;                  
+                  //usr.NUM_IN_GROUP = 1;                  
+                  
                   usr.WIN = 0;
                   usr.LOSE = 0;
                   usr.SCORE = 0;
@@ -1845,9 +1853,16 @@ public class StageTab extends javax.swing.JPanel {
                     }
                   }
                 }
+                int count_pilot = 0;
+                int addon_group = 0;
                 for (VS_STAGE_GROUPS usr : groups_losers_new) {
-                  usr.GROUP_NUM = max_real_groups2 + usr.GROUP_NUM;
+                  usr.GROUP_NUM = max_real_groups2 + usr.GROUP_NUM + addon_group;
                   usr.IS_FINISHED = 0;
+                  /*count_pilot++;
+                  if (count_pilot>stage.COUNT_PILOTS_IN_GROUP){
+                    count_pilot = 0;
+                    addon_group++;
+                  }*/
                   //VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
 
@@ -1894,7 +1909,7 @@ public class StageTab extends javax.swing.JPanel {
                   }
 
                 }
-              }
+              }                           
 
               // Saving to database
               for (VS_STAGE_GROUPS usr : new_groups) {
@@ -2248,6 +2263,14 @@ public class StageTab extends javax.swing.JPanel {
       }
     } catch (Exception ein) {
     }
+  }
+  
+  public long getMaxGroup(List<VS_STAGE_GROUPS> users) {
+    long max_group = 0;
+    for (VS_STAGE_GROUPS usr : users){
+      if (usr.GROUP_NUM>max_group) max_group = usr.GROUP_NUM;
+    }
+    return max_group;
   }
 
   public void addUserToGroup(VS_STAGE_GROUPS add_usr, List<VS_STAGE_GROUPS> users, int max_pilots_in_groups) {

@@ -104,7 +104,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_REG_ID, "Reg ID", 50),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_WINS, "Wins", 50).setCellID("INT").setIsEditing(true),
+    //new STAGE_COLUMN(STAGE_COLUMN.CID_WINS, "Wins", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").setIsEditing(true),

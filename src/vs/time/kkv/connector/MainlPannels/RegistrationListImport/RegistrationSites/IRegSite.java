@@ -86,7 +86,7 @@ public abstract class IRegSite {
         is = connection.getInputStream();
 
         int pos = url.lastIndexOf("/");
-        String newFileName = TMP_PHOTO_NAME + "/" + url.substring(pos + 1);
+        String newFileName = TMP_PHOTO_NAME + "/" + getSystemName() +"_"+url.substring(pos + 1);
 
         byte[] buffer = new byte[1000];
         targetFile = new File(newFileName);
