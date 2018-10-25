@@ -23,7 +23,7 @@ class ButtonEditor extends DefaultCellEditor {
 
     protected JButton button;
     private String label;
-    private boolean isPushed;
+    private boolean isPushed = false;
     public int activeCol = -1;
     public int activeRow = -1;
     ActionListener usersActionListener = null;
@@ -46,16 +46,25 @@ class ButtonEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int row, int column) {
-        if (isSelected) {
-          //button.setForeground(table.getSelectionForeground());
-          //button.setBackground(table.getSelectionBackground());
+        /*if (isSelected) {
+          button.setForeground(table.getSelectionForeground());
+          button.setBackground(table.getSelectionBackground());
         } else {
-          //button.setForeground(table.getForeground());
-          //button.setBackground(table.getBackground());
-        }        
-//      StageTableData td = rows.get(row);        
+          button.setForeground(table.getForeground());
+          button.setBackground(table.getBackground());
+        } */       
+        
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireEditingStopped();
+            }
+         
+        });
+        
         label = table.getModel().getValueAt(row, column).toString();
-        //label = (value == null) ? "" : value.toString();
         button.setText(label);
         activeCol = column;
         activeRow = row;

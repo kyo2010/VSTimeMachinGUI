@@ -53,16 +53,10 @@ public class SpeekUtil extends Thread {
     return tts_mas[0];
   }
 
-  MainForm mainForm;
+  MainForm mainForm; 
 
   public SpeekUtil(MainForm mainForm) {
-    this.mainForm = mainForm;
-    /*try {
-      VoiceManager vm = VoiceManager.getInstance();
-      voice = vm.getVoice(VOICE_KEVIN16);
-      voice.allocate();
-    } catch (Exception e) {
-    }*/
+    this.mainForm = mainForm;    
     reset();
     start();
   }
@@ -104,6 +98,13 @@ public class SpeekUtil extends Thread {
 
   public void reset() {
     defaultSpeaker = TextToSpeachFactory.getByNameTTS(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
+  }
+  
+  public void clearVoiceStack(){
+    try{
+      stack.clear();     
+      //join();
+    }catch(Exception e){}  
   }
 
   public void speak(SpeekText st) {

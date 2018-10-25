@@ -2389,6 +2389,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
     FIRST_RACER_IS_FINISHED = true;
+    mainForm.speaker.clearVoiceStack();
     raceTimerIsOver = false;
     String message = "";
     if (mainForm.vsTimeConnector != null && showDialog) {
