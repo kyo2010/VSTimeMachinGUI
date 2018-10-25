@@ -911,9 +911,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     if (tab.stage.IS_LOCK == 1) {
       return false;
     }
-    if (tab.mainForm.activeGroup != null) {
+    /*if (tab.mainForm.activeGroup != null) {
       return false;
-    }
+    }*/
     StageTableData td = rows.get(row);
     if (td.isGrpup) {
       //if (col==1) return true;
