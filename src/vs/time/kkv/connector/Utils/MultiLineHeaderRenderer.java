@@ -7,35 +7,42 @@ package vs.time.kkv.connector.Utils;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Vector;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-
+import sun.swing.DefaultLookup;
 /**
  *
  * @author kyo
  */
-public class MultiLineHeaderRenderer /*extends JList implements TableCellRenderer*/ 
+public class MultiLineHeaderRenderer  /*extends JList implements TableCellRenderer*/ 
         extends DefaultTableCellRenderer {
+  
+  Border headerBorder = null;
+  
   public MultiLineHeaderRenderer() {
     setOpaque(true);
     setForeground(UIManager.getColor("TableHeader.foreground"));
     setBackground(UIManager.getColor("TableHeader.background"));
-    setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    headerBorder = UIManager.getBorder("TableHeader.cellBorder");
+    setBorder(headerBorder);  
+    //setBorder(getNoFocusBorder());   
     //ListCellRenderer renderer = getCellRenderer();
     //((JLabel) renderer).setHorizontalAlignment(JLabel.CENTER);
     //setCellRenderer(renderer);
   }
-
+  
+  
   public Component getTableCellRendererComponent(JTable table, Object value,
       boolean isSelected, boolean hasFocus, int row, int column) {
     
@@ -45,7 +52,8 @@ public class MultiLineHeaderRenderer /*extends JList implements TableCellRendere
     value_st = "<html><center><b>"+value_st.replaceAll("\n", "<br>")+"</b></center></html>";
     //}
     JLabel label = (JLabel)super.
-            getTableCellRendererComponent(table,value_st, isSelected, hasFocus,row, column);
+            getTableCellRendererComponent(table,value_st, isSelected, hasFocus,row, column);    
+    label.setBorder(headerBorder);
     /*setFont(table.getFont().deriveFont(Font.BOLD));
     String str = (value == null) ? "" : value.toString();
     BufferedReader br = new BufferedReader(new StringReader(str));

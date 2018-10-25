@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JButton;
 import vs.time.kkv.models.VS_STAGE_GROUP;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
@@ -18,6 +20,8 @@ public class StageTableData {
     public VS_STAGE_GROUPS pilot = null;
     public JButton raceButton = null;
     public boolean isGrpup = false;
+    // int col, String button Caption for this row
+    public Map<Integer, String> buttonCaptions = new HashMap();
     public StageTableData(VS_STAGE_GROUP group) {
       this.group = group;
       isGrpup = true;

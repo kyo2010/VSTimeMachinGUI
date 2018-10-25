@@ -48,6 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -72,6 +73,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public List<StageTableData> rows = null;
   private StageTab tab = null;
   private DefaultTableCellRenderer defaultTableCellRendererCellRenderer = new DefaultTableCellRenderer();
+
+  public void rows_add(StageTableData row) {
+    rows.add(row);
+    /*if (row.isGrpup){
+      tab.jTable.getC
+    }*/
+  }
 
   public static boolean SHOW_CHECK_RACE_BUTTON = true;
 
@@ -215,7 +223,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public boolean isQualificated(VS_STAGE_GROUPS pilot) {
-    if (tab.stage.PILOTS_FOR_NEXT_ROUND==0 || pilot.NUM_IN_GROUP <= tab.stage.PILOTS_FOR_NEXT_ROUND || tab.stage.PILOTS_FOR_NEXT_ROUND == -1) {
+    if (tab.stage.PILOTS_FOR_NEXT_ROUND == 0 || pilot.NUM_IN_GROUP <= tab.stage.PILOTS_FOR_NEXT_ROUND || tab.stage.PILOTS_FOR_NEXT_ROUND == -1) {
       return true;
     }
     return false;
@@ -263,10 +271,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               pilot.GROUP_NUM = 1;
               //pilot.IS_FINISHED = 1;
               pilot.IS_RECALULATED = 1;
-
-              //rows.add(new StageTableData(pilot));
               index++;
-
               pilot.GID = -1;
               pilot.STAGE_ID = tab.stage.ID;
               pilots.put(pilot.PILOT, pilot);
@@ -285,10 +290,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
         //result = 
         ISort sc = SortFactory.getSortComparatorByID(tab.stage.SORT_TYPE);
-        if (sc!=null){
+        if (sc != null) {
           Collections.sort(result, sc);
         }
-        
+
         index = 1;
         for (VS_STAGE_GROUPS pilot : result) {
           pilot.NUM_IN_GROUP = index;
@@ -298,10 +303,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             pilot.ACTIVE_FOR_NEXT_STAGE = 0;
           }
           VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
-          rows.add(new StageTableData(pilot));
+          rows_add(new StageTableData(pilot));
           index++;
         }
-        
+
       } catch (Exception ein) {
         MainForm._toLog(ein);
       }
@@ -376,12 +381,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         for (VS_STAGE_GROUPS pilot : pilots.values()) {
           results.add(pilot);
         }
-        
+
         ISort sc = SortFactory.getSortComparatorByID(tab.stage.SORT_TYPE);
-        if (sc!=null){
+        if (sc != null) {
           Collections.sort(results, sc);
         }
-        
+
         //if (tab.stage.SORT_TYPE == MainForm.STAGE_SORT_BY_LOSS_DESC) {
         //  Collections.sort(results, VS_STAGE_GROUP.GROUP_LOST_COMPARATOR);
         //} else 
@@ -417,7 +422,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           } catch (Exception e) {
             tab.mainForm._toLog(e);
           }
-          rows.add(new StageTableData(pilot));
+          rows_add(new StageTableData(pilot));
         }
       } catch (Exception ein) {
         MainForm._toLog(ein);
@@ -563,44 +568,45 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
           SCORE--;
           VS_STAGE_GROUPS.dbControl.insert(tab.mainForm.con, pilot);
-          rows.add(new StageTableData(pilot));
+          rows_add(new StageTableData(pilot));
         }
       } catch (Exception ein) {
 
         MainForm._toLog(ein);
       }
     } else {
-      
+
       Map<String, VS_STAGE_GROUPS> qualification = null;
       if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE) {
-        try{
+        try {
           List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE=? order by ID desc", tab.stage.RACE_ID, MainForm.STAGE_QUALIFICATION_RESULT);
           if (stages != null && stages.size() > 0) {
             qualification = VS_STAGE_GROUPS.dbControl.getMap(tab.mainForm.con, "PILOT", "STAGE_ID=?", stages.get(0).ID);
           }
-        }catch(Exception e){}  
+        } catch (Exception e) {
+        }
       }
-       
+
       for (Integer groupId : tab.stage.groups.keySet()) {
         VS_STAGE_GROUP group = tab.stage.groups.get(groupId);
-        rows.add(new StageTableData(group));
+        rows_add(new StageTableData(group));
         for (VS_STAGE_GROUPS pilot : group.users) {
           pilot.IS_RECALULATED = 0;
-          if (qualification!=null){
-            if (qualification.get(pilot.PILOT)!=null){
+          if (qualification != null) {
+            if (qualification.get(pilot.PILOT) != null) {
               VS_STAGE_GROUPS quala = qualification.get(pilot.PILOT);
-              if ( pilot.QUAL_POS != quala.NUM_IN_GROUP ||
-                   pilot.QUAL_TIME != quala.RACE_TIME)
-              {
+              if (pilot.QUAL_POS != quala.NUM_IN_GROUP
+                      || pilot.QUAL_TIME != quala.RACE_TIME) {
                 pilot.QUAL_POS = quala.NUM_IN_GROUP;
                 pilot.QUAL_TIME = quala.RACE_TIME;
-                try{
+                try {
                   VS_STAGE_GROUPS.dbControl.update(tab.mainForm.con, pilot);
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
               }
             }
           }
-          rows.add(new StageTableData(pilot));
+          rows_add(new StageTableData(pilot));
         }
       }
       try {
@@ -668,7 +674,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
+    if (columnIndex==1 || columnIndex==2 || columnIndex==3)
+      return JButton.class;
     return String.class;
+
   }
 
   @Override
@@ -685,7 +694,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
           return " -= " + tab.mainForm.getLocaleString("Group") + " " + td.group.GROUP_NUM + " =- " + addon;
         }
-        return "";
+        String value = td.buttonCaptions.get(columnIndex);
+        return value==null?"":value;
       } else {
         STAGE_COLUMN sc = null;
         if (columnIndex < getColumns().size()) {
@@ -735,7 +745,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (sc != null && sc.ID == STAGE_COLUMN.CID_REG_ID) {
           return "[ " + td.pilot.REG_ID + " ]";
         }
-        
+
         if (sc != null && sc.ID == STAGE_COLUMN.CID_WINS) {
           return td.pilot.wins;
         }
@@ -907,6 +917,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     StageTableData td = rows.get(row);
     if (td.isGrpup) {
       //if (col==1) return true;
+      if (col==1 || col==2 || col==3) return true;
       return false;
     }
     STAGE_COLUMN sc = null;
@@ -1165,7 +1176,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         VS_RACE_LAP.dbControl.delete(tab.mainForm.con, "RACE_ID=? and STAGE_ID=? and GROUP_NUM=? and REG_ID=?", tab.stage.RACE_ID, tab.stage.ID, td.pilot.GROUP_NUM, td.pilot.REG_ID);
         for (int i = 0; i < needed_laps; i++) {
           long lapTime = avr_lap_time;
-          if (laps.size()>i) lapTime = laps.get(i);                  
+          if (laps.size() > i) {
+            lapTime = laps.get(i);
+          }
           VS_RACE_LAP lap = VS_RACE_LAP.saveTime(tab.mainForm.con, tab.stage, td.pilot.parent, lapTime, td.pilot.VS_PRIMARY_TRANS, td.pilot.REG_ID, i + 1);
           if (tab.stage.USE_REG_ID_FOR_LAP == 1) {
             VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.REG_ID, "" + (i + 1), lap);
@@ -1194,9 +1207,48 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     StageTableData td = rows.get(row);
-    JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    //JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);        
     if (td.isGrpup) {
-      label.setVerticalTextPosition(SwingConstants.CENTER);
+      //JButton label = (JButton) value;       
+      JButton label =null;
+
+      if (column == 1) {
+         
+        if (tab.mainForm.activeGroup != null && tab.mainForm.activeGroup == td.group) {
+          String caption = tab.mainForm.getLocaleString("Stop");
+          td.buttonCaptions.put(column, caption);
+          label = new JButton(caption);       
+          //label.setText(tab.mainForm.getLocaleString("Stop"));
+          label.setFont(label.getFont().deriveFont(Font.BOLD));
+          label.setForeground(Color.RED);
+          value = caption;
+        } else {
+       //   label.setText(tab.mainForm.getLocaleString("Start!"));
+           String caption = tab.mainForm.getLocaleString("Start!");
+           td.buttonCaptions.put(column, caption);
+           label = new JButton(caption);    
+           value = caption;
+        }
+      }
+
+      if (column == 3) {
+        String caption = tab.mainForm.getLocaleString("Invate");
+        td.buttonCaptions.put(column, caption);
+        label = new JButton(caption);
+        value = caption;
+        //label.setText(tab.mainForm.getLocaleString("Invate"));
+      }
+
+      if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
+        String caption = tab.mainForm.getLocaleString("Check");
+        td.buttonCaptions.put(column, caption);
+        label = new JButton(caption);
+        value = caption;
+        //label.setText(tab.mainForm.getLocaleString("Check"));
+      }
+      return label;
+
+      /*label.setVerticalTextPosition(SwingConstants.CENTER);
       label.setHorizontalTextPosition(SwingConstants.RIGHT);
       label.setBackground(Color.LIGHT_GRAY);
       label.setForeground(Color.BLACK);
@@ -1209,123 +1261,110 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           but.setForeground(Color.RED);
         }
         td.raceButton = but;
-        /*if (isSelected) {
-          but.setForeground(table.getSelectionForeground());
-          but.setBackground(table.getSelectionBackground());
-        } else {
-          but.setForeground(table.getForeground());
-          but.setBackground(UIManager.getColor("Button.background"));
-        }*/
         if (td.group != null && td.group.users != null && td.group.users.size() > 0 && td.group.users.get(0).IS_FINISHED == 1) {
 
         } else {
-          //but.setBackground(Color.YELLOW);
-          //label.setBackground(Color.YELLOW);
         }
         return but;
       }
       if (column == 3) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Invate"));
-        /*if (td.isGrpup && td.group == tab.checkingGrpup) {
-          but.setForeground(table.getSelectionForeground());
-          but.setBackground(new Color(193, 211, 245));
-        } else {
-          but.setForeground(table.getForeground());
-          but.setBackground(UIManager.getColor("Button.background"));
-        }*/
         return but;
       }
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {
         JButton but = new JButton(tab.mainForm.getLocaleString("Check"));
-        /*if (td.isGrpup && td.group == tab.checkingGrpup) {
-          but.setForeground(table.getSelectionForeground());
-          but.setBackground(new Color(193, 211, 245));
-        } else {
-          but.setForeground(table.getForeground());
-          but.setBackground(UIManager.getColor("Button.background"));
-        }*/
         return but;
-      }
+      }*/
     } else {
+      //JLabel label = null;
+      JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);            
+      /*try{
+        label = (JLabel) value;
+      }catch(Exception e){}*/
 
-      label.setBackground(DEFAULT_BACKGROUD_COLOR);
-      label.setForeground(DEFAULT_FOREGROUND_COLOR);
+      if (label != null) {
+        label.setBackground(DEFAULT_BACKGROUD_COLOR);
+        label.setForeground(DEFAULT_FOREGROUND_COLOR);
 
-      if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
-        if (isQualificated(td.pilot)) {
-        } else {
-          label.setForeground(Color.RED);
-        }
-      } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
+        if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+          if (isQualificated(td.pilot)) {
+          } else {
+            label.setForeground(Color.RED);
+          }
+        } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
 
-      } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
-        /*if (isOut(td.pilot)) {
+        } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+          /*if (isOut(td.pilot)) {
           label.setForeground(Color.RED);
         } else {
         }*/
-        if (isQualificated(td.pilot)) {
-        } else {
-          label.setForeground(Color.RED);
-        }
-      } else {
-        //if (tab.stage.CAPTION.equalsIgnoreCase("Qualification5"))
-        if (show_laps && !td.isGrpup && column >= (getColumns().size() + tab.stage.LAPS)) {
-          label.setBackground(Color.LIGHT_GRAY);
-        } else {
-          if (this.tab.stage.ID == 245) {
-            int y = 0;
-          }
-
-          if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
-            if (td.pilot.CHECK_FOR_RACE == 0) {
-              label.setBackground(Color.WHITE);
-            } else if (td.pilot.CHECK_FOR_RACE == 2) {
-              label.setBackground(Color.LIGHT_GRAY);
-            } else {
-              if (td.pilot.color == null) {
-                td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
-              }
-              if (td.pilot != null && td.pilot.color != null) {
-                label.setBackground(td.pilot.color.getColor());
-                if (td.pilot.color.getColor().equals(Color.black)) {
-                  label.setForeground(Color.white);
-                }
-              } else {
-                label.setBackground(Color.YELLOW);
-              }
-            }
+          if (isQualificated(td.pilot)) {
           } else {
-            if (td.pilot.parent == tab.mainForm.activeGroup) {
-              if (td.pilot.IS_FINISHED == 1) {
-                label.setBackground(Color.GREEN);
-              } else {
-                label.setBackground(Color.ORANGE);
-              }
-              label.setForeground(Color.BLACK);
-              label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
-            } else {
-              if (td.pilot.IS_FINISHED == 1) {
-                label.setBackground(Color.GREEN);
-              }
+            label.setForeground(Color.RED);
+          }
+        } else {
+          //if (tab.stage.CAPTION.equalsIgnoreCase("Qualification5"))
+          if (show_laps && !td.isGrpup && column >= (getColumns().size() + tab.stage.LAPS)) {
+            label.setBackground(Color.LIGHT_GRAY);
+          } else {
+            if (this.tab.stage.ID == 245) {
+              int y = 0;
             }
-            if (column == 2) {
-              /*
+
+            if (column == 0 && SHOW_CHECK_RACE_BUTTON) {
+              if (td.pilot.CHECK_FOR_RACE == 0) {
+                label.setBackground(Color.WHITE);
+              } else if (td.pilot.CHECK_FOR_RACE == 2) {
+                label.setBackground(Color.LIGHT_GRAY);
+              } else {
+                if (td.pilot.color == null) {
+                  td.pilot.color = VSColor.getColorForChannel(td.pilot.CHANNEL, tab.stage.CHANNELS, tab.stage.COLORS);
+                }
+                if (td.pilot != null && td.pilot.color != null) {
+                  label.setBackground(td.pilot.color.getColor());
+                  if (td.pilot.color.getColor().equals(Color.black)) {
+                    label.setForeground(Color.white);
+                  }
+                } else {
+                  label.setBackground(Color.YELLOW);
+                }
+              }
+            } else {
+              if (td.pilot.parent == tab.mainForm.activeGroup) {
+                if (td.pilot.IS_FINISHED == 1) {
+                  label.setBackground(Color.GREEN);
+                } else {
+                  label.setBackground(Color.ORANGE);
+                }
+                label.setForeground(Color.BLACK);
+                label.setFont(label.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
+              } else {
+                if (td.pilot.IS_FINISHED == 1) {
+                  label.setBackground(Color.GREEN);
+                }
+              }
+              if (column == 2) {
+                /*
               STAGE_COLUMN sc = null;
         if (columnIndex < getColumns().size()) {
           sc = getColumns().get(columnIndex);
               
-               */
-              if (td.pilot.RECEIVED_LAPS) {
-                label.setBackground(Color.GREEN);
-              } else {
-                label.setBackground(Color.YELLOW);
+                 */
+                if (td.pilot.RECEIVED_LAPS) {
+                  label.setBackground(Color.GREEN);
+                } else {
+                  label.setBackground(Color.YELLOW);
+                }
               }
             }
           }
         }
-      }
+        return label;
+      }else{
+        return null;
+      }      
     }
-    return label;
+    //return value;
   }
 
 }

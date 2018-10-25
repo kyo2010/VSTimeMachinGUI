@@ -523,7 +523,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (langFile != null) {
       try {
         String val = langFile.getParam(caption);
-        if (val != null) {
+        if (val != null && !val.equalsIgnoreCase("")) {
           return val;
         }
       } catch (Exception e) {

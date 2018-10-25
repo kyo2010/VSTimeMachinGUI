@@ -5,7 +5,6 @@
  */
 package vs.time.kkv.connector.MainlPannels.stage;
 
-
 import KKV.Export2excel.OutReport;
 import KKV.Export2excel.XLSMaker;
 import KKV.Utils.JDEDate;
@@ -13,6 +12,7 @@ import KKV.Utils.Tools;
 import KKV.Utils.UserException;
 import com.lowagie.text.pdf.BaseFont;
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -70,6 +70,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import ru.nkv.var.StringVar;
@@ -94,8 +95,6 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.Utils.TableToXLS;
-
-
 
 /**
  *
@@ -125,13 +124,14 @@ public class StageTab extends javax.swing.JPanel {
       jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
     }
   }
-  
-  public void refreshTable(){
-    try{
+
+  public void refreshTable() {
+    try {
       jTable.setRowHeight(30);
       //jTable.notifyAll();
       //jTable.updateUI();
-    }catch(Exception e){}      
+    } catch (Exception e) {
+    }
   }
 
   boolean raceTimerIsOver = false;
@@ -150,10 +150,11 @@ public class StageTab extends javax.swing.JPanel {
           pleasuUpdateTree = false;
           //System.out.println("repaint tree");
           if (jTree != null) {
-            try{
+            try {
               jTree.notifyAll();
               jTree.updateUI();
-            }catch(Exception ein){}
+            } catch (Exception ein) {
+            }
           }
         }
         if (pleasuUpdateTable) {
@@ -240,7 +241,7 @@ public class StageTab extends javax.swing.JPanel {
           Thread.currentThread().sleep(150);
         } catch (Exception ein) {
         }
-*/        try {
+         */ try {
           //mainForm.vsTimeConnector.setPowerMax();
           mainForm.setColorForGate();
         } catch (Exception ein) {
@@ -296,7 +297,7 @@ public class StageTab extends javax.swing.JPanel {
           //}                                     
         }
         for (VS_STAGE_GROUPS user : checkingGrpup.users) {
-          Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID,stage);
+          Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID, stage);
           for (Integer transID : userTrans) {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
               if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
@@ -344,15 +345,15 @@ public class StageTab extends javax.swing.JPanel {
   });
 
   public static String getTimeIntervel(long time) {
-    return getTimeIntervel(time,":");
+    return getTimeIntervel(time, ":");
   }
-  
+
   public static String getTimeIntervel(long time, String timeSep) {
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
     //milisec = Math.round(milisec / 10);
-    return Tools.padl("" + min, 2, "0") +timeSep+ Tools.padl("" + sec, 2, "0") + timeSep+ Tools.padl("" + milisec, 3, "0");
+    return Tools.padl("" + min, 2, "0") + timeSep + Tools.padl("" + sec, 2, "0") + timeSep + Tools.padl("" + milisec, 3, "0");
   }
 
   public static String getTimeIntervelForTimer(long time) {
@@ -376,9 +377,8 @@ public class StageTab extends javax.swing.JPanel {
     this.mainForm = main;
     BUTTON_BACKGROUND = autoStrartRaceButton.getBackground();
     BUTTON_DEFAULT_BORDER = autoStrartRaceButton.getBorder();
-    BUTTON_RED_BORDER = new LineBorder(Color.RED,3);
-    
-    
+    BUTTON_RED_BORDER = new LineBorder(Color.RED, 3);
+
     bStopChecking.setVisible(false);
     //topPanel.setVisible(false);              
 
@@ -505,7 +505,9 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    jTable.addMouseListener(new MouseAdapter() {
+    /* boolean infoWindowRunning = false;
+      Add to ButtonEdtor Listener
+      jTable.addMouseListener(new MouseAdapter() {
       boolean infoWindowRunning = false;
 
       @Override
@@ -556,8 +558,7 @@ public class StageTab extends javax.swing.JPanel {
       public void mouseReleased(MouseEvent e) {
       }
 
-    });
-
+    });*/
     if (isOneTable) {
       jSplitPane1.setVisible(false);
       jTree.setVisible(false);
@@ -576,25 +577,25 @@ public class StageTab extends javax.swing.JPanel {
   /*public void checkGroupConstrain() {      
   }*/
   public void stopRace(boolean byTimer) {
-    
-    if (byTimer && mainForm.activeRace.ALLOW_TO_FINISH_LAP==1){
+
+    if (byTimer && mainForm.activeRace.ALLOW_TO_FINISH_LAP == 1) {
       raceTimerIsOver = true;
-      if (mainForm.activeGroup!=null){
+      if (mainForm.activeGroup != null) {
         for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
           user.MAIN_TIME_IS_OVER = 1;
-        }        
+        }
       }
       mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceTimeIsOver());
       return;
     }
-    
+
     // To show Table result for TV
     mainForm.lap_log.writeFile("---==  Stop Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + mainForm.activeGroup.GROUP_NUM);
     mainForm.invateGroup = null;
     iveSaid10seckudForRaceOver = false;
-    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();            
-    raceTimer.stop();        
-    
+    mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
+    raceTimer.stop();
+
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true);
@@ -683,7 +684,6 @@ public class StageTab extends javax.swing.JPanel {
     BaseFont bfComic = BaseFont.createFont(path + File.separator+"font.ttf", encode, BaseFont.EMBEDDED);
     return bfComic;
   }*/
-  
   public void treeToXLS() {
     TableToXLS.groups2xls(stage);
   }
@@ -1016,7 +1016,7 @@ public class StageTab extends javax.swing.JPanel {
     if (res == JOptionPane.YES_OPTION) {
       try {
         VS_STAGE.dbControl.delete(mainForm.con, stage);
-        mainForm.setActiveRace(mainForm.activeRace,true);
+        mainForm.setActiveRace(mainForm.activeRace, true);
       } catch (Exception e) {
         mainForm.toLog(e);
       }
@@ -1025,7 +1025,7 @@ public class StageTab extends javax.swing.JPanel {
 
   private void butConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butConfigActionPerformed
     // TODO add your handling code here:      
-    
+
     if (mainForm.activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop the Active Race.");
       return;
@@ -1059,15 +1059,15 @@ public class StageTab extends javax.swing.JPanel {
       mainForm._toLog(e);
     }
   }
-  
-   public void tableToXLS() {
-     tableToXLS(null);
-   }
-  
+
+  public void tableToXLS() {
+    tableToXLS(null);
+  }
+
   // POI
-   public void tableToXLS(Workbook wb) {
+  public void tableToXLS(Workbook wb) {
     try {
-      TableToXLS.tableToXLS2(wb, stage.CAPTION,mainForm.activeRace.RACE_NAME, stage.CAPTION, jTable, this.stageTableAdapter.getColumns(),true);
+      TableToXLS.tableToXLS2(wb, stage.CAPTION, mainForm.activeRace.RACE_NAME, stage.CAPTION, jTable, this.stageTableAdapter.getColumns(), true);
     } catch (Exception e) {
       e.printStackTrace();
       mainForm._toLog(e);
@@ -1139,8 +1139,8 @@ public class StageTab extends javax.swing.JPanel {
       mainForm._toLog(e);
     }
   }
-  
-  public void refreshButton(){
+
+  public void refreshButton() {
     refreshDataActionPerformed(null);
   }
 
@@ -1195,7 +1195,58 @@ public class StageTab extends javax.swing.JPanel {
     jTable.setRowHeight(30);
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
+    //jTable.setC
+    //jTable.setDefaultRenderer(Button.class, new ButtonEditor()); 
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+    jTable.setDefaultEditor(JButton.class, new ButtonEditor(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          ButtonEditor be = (ButtonEditor) e.getSource();
+          if (be != null) {
+            if (isOneTable) {
+              return;
+            }
+            if (stage.IS_LOCK == 1) {
+              return;
+            }
+            int row = be.activeRow;
+            int column = be.activeCol;
+            /*if (!source.isRowSelected(row)) {
+              source.changeSelection(row, column, false, false);
+            }*/
+              StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+              if (td == null || !td.isGrpup) {
+                return;
+              }
+              //INAVITATION          
+              if (column == 3 && td != null && td.isGrpup) {  // Press invate
+                invateAction(td.group.GROUP_NUM, true);
+              }
+
+              if (column == 2 && td != null && td.isGrpup) { // Seach and Check and Ligting
+                if (checkerTimer.isRunning()) {
+                  //checkerTimer.stop();
+                  stopSearch();
+                  refreshTable();
+                  return;
+                }
+                startSearchAction(td.group.GROUP_NUM, true);
+              }
+              if (column == 1 && td != null && td.isGrpup) { // Start Race
+                if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
+                  stopRace(false);
+                  refreshTable();
+                  //timerCaption.setVisible(false);              
+                } else {
+                  startRaceAction(td.group.GROUP_NUM, true);
+                }
+              }           
+          }
+        } catch (Exception ein) {
+        }
+      }
+    }));
 
     MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();
     for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
@@ -1428,41 +1479,42 @@ public class StageTab extends javax.swing.JPanel {
   }//GEN-LAST:event_jTableKeyPressed
 
   private void autoStrartRaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoStrartRaceButtonActionPerformed
-    if (autoStratRaceTimer.isRunning()){
-      currentStateAutoStrat = AUTOSTART_STATE_STOP;     
+    if (autoStratRaceTimer.isRunning()) {
+      currentStateAutoStrat = AUTOSTART_STATE_STOP;
       currentStateAutoStrat = 0;
       autoStratRaceTimer.stop();
       /*autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);    
       Border b = 
       autoStrartRaceButton.getBorder();*/
       autoStrartRaceButton.setBorder(BUTTON_DEFAULT_BORDER);
-    }else{
+    } else {
       int MINUTES = 3;
-      try{
+      try {
         MINUTES = Integer.parseInt(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
-      }catch(Exception e){}        
-      WATING_TIME = MINUTES*1000*60;               
-              
-      currentStateAutoStrat = 0;     
+      } catch (Exception e) {
+      }
+      WATING_TIME = MINUTES * 1000 * 60;
+
+      currentStateAutoStrat = 0;
       currentStateAutoStrat = 0;
       autoStratRaceTimer.start();
       mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
       //autoStrartRaceButton.setBackground(Color.RED);
       autoStrartRaceButton.setBorder(BUTTON_RED_BORDER);
     }
-    
+
   }//GEN-LAST:event_autoStrartRaceButtonActionPerformed
 
   static final int AUTOSTART_STATE_INVATE = 100;
   static final int AUTOSTART_STATE_SEARCH_TRANS = 200;
   static final int AUTOSTART_STATE_WAITING = 300;
   static final int AUTOSTART_STATE_RACE = 400;
-  static final int AUTOSTART_STATE_RACING = 450;  
+  static final int AUTOSTART_STATE_RACING = 450;
   static final int AUTOSTART_STATE_STOP = 500;
   int currentStateAutoStrat = 0;
   int currentTimeoutAutoStrat = 0;
   VS_STAGE_GROUP GROUP_FOR_AUTO_START = null;
-  long WATING_TIME = 1000*60*3; // 3 minutes
+  long WATING_TIME = 1000 * 60 * 3; // 3 minutes
 
   /**
    * * Timer for Automatic Start Race
@@ -1477,51 +1529,56 @@ public class StageTab extends javax.swing.JPanel {
         currentTimeoutAutoStrat += autoStratRaceTimer.getDelay();
         if (currentStateAutoStrat == 0 || currentStateAutoStrat == AUTOSTART_STATE_RACING) {
           // find new group
-          GROUP_FOR_AUTO_START = null;          
+          GROUP_FOR_AUTO_START = null;
           //List<Integer> keySet = new ArrayList(stage.groups.keySet());
           //Collections.sort(keySet);
           for (Integer grup_index : stage.groups.keySet()) {
             VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
             if (st_gr.users != null && st_gr.users.size() > 0) {
-              if (st_gr.users.get(0).IS_FINISHED==1) continue;
-              if (st_gr.users.get(0).IS_FINISHED==0){
+              if (st_gr.users.get(0).IS_FINISHED == 1) {
+                continue;
+              }
+              if (st_gr.users.get(0).IS_FINISHED == 0) {
                 GROUP_FOR_AUTO_START = st_gr;
                 break;
               }
             }
           }
-          if (GROUP_FOR_AUTO_START!=null){
+          if (GROUP_FOR_AUTO_START != null) {
             currentStateAutoStrat = AUTOSTART_STATE_INVATE;
             currentTimeoutAutoStrat = 0;
             invateAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
-          }else{
+          } else {
             autoStratRaceTimer.stop();
             //autoStrartRaceButton.setBackground(BUTTON_BACKGROUND);
             autoStrartRaceButton.setBorder(BUTTON_DEFAULT_BORDER);
             mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().stageFinished());
             JOptionPane.showMessageDialog(mainForm, "The Stage has been finished.", "Information", JOptionPane.INFORMATION_MESSAGE);
-          }          
+          }
         }
-        if (currentStateAutoStrat == AUTOSTART_STATE_INVATE && currentTimeoutAutoStrat>5000 && GROUP_FOR_AUTO_START!=null) {
+        if (currentStateAutoStrat == AUTOSTART_STATE_INVATE && currentTimeoutAutoStrat > 5000 && GROUP_FOR_AUTO_START != null) {
           startSearchAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
           currentStateAutoStrat = AUTOSTART_STATE_WAITING;
           currentTimeoutAutoStrat = 0;
         }
-        if (currentStateAutoStrat == AUTOSTART_STATE_WAITING && GROUP_FOR_AUTO_START!=null){
+        if (currentStateAutoStrat == AUTOSTART_STATE_WAITING && GROUP_FOR_AUTO_START != null) {
           //if (currentTimeoutAutoStrat==0) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(WATING_TIME));
-          long interval = WATING_TIME-currentTimeoutAutoStrat;
-          int min = (int)interval/(1000*60);
-          if (interval==1000*60*min && min!=0) {
+          long interval = WATING_TIME - currentTimeoutAutoStrat;
+          int min = (int) interval / (1000 * 60);
+          if (interval == 1000 * 60 * min && min != 0) {
             mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
-          }          
-          if (interval==1000*30) mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
-          if (interval==0 || interval<0) {
+          }
+          if (interval == 1000 * 30) {
+            mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceWillBeStarted(interval));
+          }
+          if (interval == 0 || interval < 0) {
             currentStateAutoStrat = AUTOSTART_STATE_RACE;
-            currentTimeoutAutoStrat = 0;      
+            currentTimeoutAutoStrat = 0;
             stopSearch();
             String message = startRaceAction(GROUP_FOR_AUTO_START.GROUP_NUM, false);
-            if (message.equals("")) currentStateAutoStrat = AUTOSTART_STATE_RACING;
-            else {
+            if (message.equals("")) {
+              currentStateAutoStrat = AUTOSTART_STATE_RACING;
+            } else {
               mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().waitingAdmin());
               JOptionPane.showMessageDialog(mainForm, message, "Information", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -1733,24 +1790,22 @@ public class StageTab extends javax.swing.JPanel {
               List<VS_STAGE_GROUPS> new_groups = new ArrayList<VS_STAGE_GROUPS>();
               NUM_IN_GROUP_LOSERS = 1;
               last_loser_goruop = 1;
-              
+
               //int count_loser_group = groups.size() / 2 / stage.COUNT_PILOTS_IN_GROUP;              
-              
-              long count_loser_group = Math.round(Math.ceil( getMaxGroup(groups)/2));                            
-              
-              
+              long count_loser_group = Math.round(Math.ceil(getMaxGroup(groups) / 2));
+
               for (VS_STAGE_GROUPS usr : groups_for_detect_losers) {
                 if (usr.LOSE == 1) {
                   if (last_loser_goruop > count_loser_group) {
                     last_loser_goruop = 1;
                     NUM_IN_GROUP_LOSERS++;
-                  }                  
+                  }
                   usr.STAGE_ID = stage.ID;
-                  
+
                   usr.GROUP_NUM = last_loser_goruop;
-                  usr.NUM_IN_GROUP = NUM_IN_GROUP_LOSERS;                  
+                  usr.NUM_IN_GROUP = NUM_IN_GROUP_LOSERS;
                   //usr.NUM_IN_GROUP = 1;                  
-                  
+
                   usr.WIN = 0;
                   usr.LOSE = 0;
                   usr.SCORE = 0;
@@ -1909,7 +1964,7 @@ public class StageTab extends javax.swing.JPanel {
                   }
 
                 }
-              }                           
+              }
 
               // Saving to database
               for (VS_STAGE_GROUPS usr : new_groups) {
@@ -1955,12 +2010,12 @@ public class StageTab extends javax.swing.JPanel {
                   VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
               }*/
-            } else if (stage.STAGE_TYPE==MainForm.STAGE_RACE && GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE)!=null){
-               try{
-                 GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
-               }catch(UserException ue){
-                 JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);            
-               }
+            } else if (stage.STAGE_TYPE == MainForm.STAGE_RACE && GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE) != null) {
+              try {
+                GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+              } catch (UserException ue) {
+                JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
+              }
             } else {
               // based on best time
               groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
@@ -2264,11 +2319,13 @@ public class StageTab extends javax.swing.JPanel {
     } catch (Exception ein) {
     }
   }
-  
+
   public long getMaxGroup(List<VS_STAGE_GROUPS> users) {
     long max_group = 0;
-    for (VS_STAGE_GROUPS usr : users){
-      if (usr.GROUP_NUM>max_group) max_group = usr.GROUP_NUM;
+    for (VS_STAGE_GROUPS usr : users) {
+      if (usr.GROUP_NUM > max_group) {
+        max_group = usr.GROUP_NUM;
+      }
     }
     return max_group;
   }
@@ -2332,7 +2389,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
     FIRST_RACER_IS_FINISHED = true;
-    raceTimerIsOver = false;    
+    raceTimerIsOver = false;
     String message = "";
     if (mainForm.vsTimeConnector != null && showDialog) {
       long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
