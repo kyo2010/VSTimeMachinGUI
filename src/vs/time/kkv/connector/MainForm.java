@@ -194,6 +194,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_STAGE_GROUP lastCheckingGrpup = null;
   public VS_STAGE activeStage = null;
   public StageTab activeStageTab = null;
+  public VS_STAGE_GROUP checkingGrpup = null;
 
   public RegistrationTab regForm = null;
   public long raceTime = 0;

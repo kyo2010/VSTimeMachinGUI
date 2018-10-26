@@ -106,8 +106,7 @@ public class StageTab extends javax.swing.JPanel {
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
-  public StageTableAdapter stageTableAdapter = null;
-  public VS_STAGE_GROUP checkingGrpup = null;
+  public StageTableAdapter stageTableAdapter = null;  
   public boolean FIRST_RACER_IS_FINISHED = false;
 
   public boolean pleasuUpdateTree = false;
@@ -223,8 +222,8 @@ public class StageTab extends javax.swing.JPanel {
         }
       } catch (Exception ein) {
       }
-      if (checkingGrpup != null && checkingGrpup.users != null) {
-        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+      if (mainForm.checkingGrpup != null && mainForm.checkingGrpup.users != null) {
+        for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
           user.RECEIVED_LAPS = false;
         }
       }
@@ -248,7 +247,7 @@ public class StageTab extends javax.swing.JPanel {
         }
 
         if (pleaseMakeYelowPilot) {
-          for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+          for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
             user.RECEIVED_LAPS = false;
           }
           pleaseMakeYelowPilot = false;
@@ -261,11 +260,11 @@ public class StageTab extends javax.swing.JPanel {
       }
 
       try {
-        if (checkingGrpup != null) {
-          int pilot_num = checkerCycle % checkingGrpup.users.size();
-          if (checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
-            Collection<Integer> userTrans = checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID, stage);
-            VSColor vs_color = VSColor.getColorForChannel(checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
+        if (mainForm.checkingGrpup != null) {
+          int pilot_num = checkerCycle % mainForm.checkingGrpup.users.size();
+          if (mainForm.checkingGrpup.users.get(pilot_num).CHECK_FOR_RACE == 2) {
+            Collection<Integer> userTrans = mainForm.checkingGrpup.users.get(pilot_num).getUserTransponders(mainForm.con, stage.RACE_ID, stage);
+            VSColor vs_color = VSColor.getColorForChannel(mainForm.checkingGrpup.users.get(pilot_num).CHANNEL, stage.CHANNELS, stage.COLORS);
             VS_RACE race = VS_RACE.dbControl.getItem(mainForm.con, "RACE_ID=?", stage.RACE_ID);
             for (Integer transID : userTrans) {
               int vs_color_to_send = vs_color.getVSColor();
@@ -280,7 +279,7 @@ public class StageTab extends javax.swing.JPanel {
               } catch (Exception ein) {
               }
             }
-            checkingGrpup.users.get(pilot_num).color = vs_color;
+            mainForm.checkingGrpup.users.get(pilot_num).color = vs_color;
             try {
               //System.out.println("time1: " + Calendar.getInstance().getTimeInMillis());
               //Thread.currentThread().wait(400);              
@@ -296,7 +295,7 @@ public class StageTab extends javax.swing.JPanel {
           //  mainForm.vsTimeConnector.setColor(checkingGrpup.users.get(pilot_num).TRANSPONDER, vs_color.getVSColor());
           //}                                     
         }
-        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+        for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
           Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID, stage);
           for (Integer transID : userTrans) {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
@@ -319,7 +318,7 @@ public class StageTab extends javax.swing.JPanel {
       }
       checkerCycle++;
       boolean all_ok = true;
-      for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+      for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
         if (user.CHECK_FOR_RACE != 1) {
           all_ok = false;
         }
@@ -330,14 +329,14 @@ public class StageTab extends javax.swing.JPanel {
       }
       if (checkerCycle * timer.getInitialDelay() > 1000 * 300 || all_ok) {
         timer.stop();
-        for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+        for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
           if (user.CHECK_FOR_RACE == 2) {
             user.CHECK_FOR_RACE = 0;
           }
         };
         //pleasuUpdateTable = true;
         refreshTable();
-        checkingGrpup = null;
+        mainForm.checkingGrpup = null;
         InfoForm.init(mainForm, "").setVisible(false);
         stopSearch();
       }
@@ -604,6 +603,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.activeGroup.recalculateScores(mainForm);
     mainForm.activeGroup = null;
     jTree.updateUI();
+    mainForm.raceTime = 0;
     refreshTable();
     //mainForm.speaker.speak("The Stage finshed");
     mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().groupFinished(group_num));
@@ -1592,6 +1592,8 @@ public class StageTab extends javax.swing.JPanel {
     // TODO : 
     mainForm.lap_log.writeFile("---==  Stop Search  ==---");
     checkerTimer.stop();
+    mainForm.checkingGrpup = null;
+    
     InfoForm.init(mainForm, "", 100).setVisible(false);
     if (mainForm.vsTimeConnector != null) {
       preapreTimeMachineToRace();
@@ -2598,10 +2600,10 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.lap_log.writeFile("---==  Start Search  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
     mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().findTransponders(td.group.GROUP_NUM));
     mainForm.vsTimeConnector.clearTransponderSearchQueue();
-    checkingGrpup = td.group;
-    checkingGrpup.stageTab = this;
-    mainForm.lastCheckingGrpup = checkingGrpup;
-    for (VS_STAGE_GROUPS user : checkingGrpup.users) {
+    mainForm.checkingGrpup = td.group;
+    mainForm.checkingGrpup.stageTab = this;
+    mainForm.lastCheckingGrpup = mainForm.checkingGrpup;
+    for (VS_STAGE_GROUPS user : mainForm.checkingGrpup.users) {
       user.CHECK_FOR_RACE = 2;
       user.FIRST_LAP = 0;
       user.RECEIVED_LAPS = false;

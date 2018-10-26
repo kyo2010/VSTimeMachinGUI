@@ -1,0 +1,27 @@
+<div class="status orange">{MESSAGE1}</div>
+<div class="status green">{MESSAGE2}</div>
+
+<table width="100%">
+  <tbody>   
+    <tr>
+      <td>
+        <div class="pilot">{PILOT1_PHOTO}</div>
+        <div class="channel color-{COLOR1}">{CH1}</div></td>
+      <td>
+        <div class="pilot">{PILOT2_PHOTO}</div>
+        <div class="channel color-{COLOR2}">{CH2}</div></td>
+      <td>
+        <div class="pilot">{PILOT3_PHOTO}</div>
+        <div class="channel color-{COLOR3}">{CH3}</div></td>
+      <td>
+        <div class="pilot">{PILOT4_PHOTO}</div>
+        <div class="channel color-{COLOR4}">{CH4}</div></td>
+    </tr>
+    <tr>
+      <td class="color-{FIND_COLOR1}"><img src="images/land-sign.svg"></td>
+      <td class="color-{FIND_COLOR2}"><img src="images/land-sign.svg"></td>
+      <td class="color-{FIND_COLOR3}"><img src="images/land-sign.svg"></td>
+      <td class="color-{FIND_COLOR4}"><img src="images/land-sign.svg"></td>
+    </tr>
+  </tbody>
+</table>
