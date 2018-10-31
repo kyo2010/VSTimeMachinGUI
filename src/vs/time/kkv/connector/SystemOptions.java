@@ -23,7 +23,7 @@ import vs.time.kkv.models.VS_SETTING;
 public class SystemOptions extends javax.swing.JFrame {
 
   MainForm mainForm = null;
-  
+
   /**
    * Creates new form WLANSetting
    */
@@ -32,63 +32,76 @@ public class SystemOptions extends javax.swing.JFrame {
     this.mainForm = mainForm;
     setVisible(false);
   }
-   
-  static SystemOptions singelton  = null;
-  public static SystemOptions init(MainForm mainForm){
-    if (singelton==null){
+
+  static SystemOptions singelton = null;
+
+  public static SystemOptions init(MainForm mainForm) {
+    if (singelton == null) {
       singelton = new SystemOptions(mainForm);
     }
-    
-    TreeSet<String> langs = new TreeSet<String>();    
+
+    TreeSet<String> langs = new TreeSet<String>();
     langs.add("EN");
-    try{
+    try {
       File lanDir = new File("locale");
       String[] files = lanDir.list();
-      for (String file : files){
+      for (String file : files) {
         int pos = file.lastIndexOf(".ini");
-        if (pos>0){
+        if (pos > 0) {
           langs.add(file.substring(0, pos));
         }
       }
-    }catch(Exception e){}
+    } catch (Exception e) {
+    }
     singelton.jcLang.removeAllItems();
-    for (String lang : langs){
+    for (String lang : langs) {
       singelton.jcLang.addItem(lang);
     }
-    
-    singelton.jcLang.setSelectedItem(VS_SETTING.getParam(mainForm.con, "LANG", "EN"));      
-    singelton.WEB_PORT.setText(VS_SETTING.getParam(mainForm.con, "WEB_PORT", "80"));      
-    singelton.WebServiceStartOnRun.setSelected( VS_SETTING.getParam(mainForm.con, "START_HTTPD_ON_RUN", 0)==1?true:false );
+
+    singelton.jcLang.setSelectedItem(VS_SETTING.getParam(mainForm.con, "LANG", "EN"));
+    singelton.WEB_PORT.setText(VS_SETTING.getParam(mainForm.con, "WEB_PORT", "80"));
+    singelton.WebServiceStartOnRun.setSelected(VS_SETTING.getParam(mainForm.con, "START_HTTPD_ON_RUN", 0) == 1 ? true : false);
     singelton.jcTTS_API.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TTS_API", ""));
-    singelton.checkRaceGroup.setSelected( VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1)==1?true:false );    
-    
-    singelton.USE_TRANS_FOR_GATE.setSelected( VS_SETTING.getParam(mainForm.con, "USE_TRANS_FOR_GATE", 0)==1?true:false);    
-    singelton.TRANS_FOR_GATE.setText(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE", "0"));                     
-    singelton.TRANS_FOR_GATE_BLINK.setSelected( VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_BLINK", 0)==1?true:false);    
-    singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));                             
-    
-    singelton.edWaitingTime.setText( VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3") );
-    
-    
+    singelton.checkRaceGroup.setSelected(VS_SETTING.getParam(mainForm.con, "CHECK_RACE_GROUP", 1) == 1 ? true : false);
+
+    singelton.USE_TRANS_FOR_GATE.setSelected(VS_SETTING.getParam(mainForm.con, "USE_TRANS_FOR_GATE", 0) == 1 ? true : false);
+    singelton.TRANS_FOR_GATE.setText(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE", "0"));
+    singelton.TRANS_FOR_GATE_BLINK.setSelected(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false);
+    singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));
+
+    singelton.edWaitingTime.setText(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
+
     File dir = new File("web/images");
     List<String> files = new ArrayList();
-    for (String fileName : dir.list()){
-      if (fileName.indexOf(".png")>0 || fileName.indexOf(".jpg")>0){
+    for (String fileName : dir.list()) {
+      if (fileName.indexOf(".png") > 0 || fileName.indexOf(".jpg") > 0) {
         files.add(fileName);
         //singelton.backgroundImagesForTv.addItem(fileName);
       }
     }
-    singelton.backgroundImagesForTv.setModel(new DefaultComboBoxModel(files.toArray()));    
-    singelton.backgroundImagesForTv.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TV_BACKGROUND", "chromokey.png"));    
-    
+    singelton.backgroundImagesForTv.setModel(new DefaultComboBoxModel(files.toArray()));
+    singelton.backgroundImagesForTv.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TV_BACKGROUND", "chromokey.png"));
+
     SystemOptions th = singelton;
     Point p = mainForm.getLocationOnScreen();
     th.setLocation(p.x + mainForm.getWidth() / 2 - th.getSize().width / 2, p.y + mainForm.getHeight() / 2 - th.getSize().height / 2);
     th.setAlwaysOnTop(true);
-    th.setResizable(false);  
+    th.setResizable(false);
     th.buttnCaptionRefresh();
-    
+    th.fillFormParams();
+
     return singelton;
+  }
+  
+  public void fillFormParams(){
+     OBS_USE_WEB_SOCKET.setSelected(mainForm.obsConfig.OBS_USE_WEB_SOCKET);
+     OBS_AUTO_RECORDING.setSelected(mainForm.obsConfig.OBS_AUTO_RECORDING);
+     OBS_HOST.setText(mainForm.obsConfig.OBS_HOST);
+     
+     OBS_PORT.setText(mainForm.obsConfig.OBS_PORT);
+     OBS_SCENE_RACE.setText(mainForm.obsConfig.OBS_SCENE_RACE);
+     OBS_SCENE_FINISH.setText(mainForm.obsConfig.OBS_SCENE_FINISH);
+     OBS_SCENE_INVATE.setText(mainForm.obsConfig.OBS_SCENE_INVATE);          
   }
 
   /**
@@ -100,36 +113,49 @@ public class SystemOptions extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabel1 = new javax.swing.JLabel();
-    WEB_PORT = new javax.swing.JTextField();
     jPanel1 = new javax.swing.JPanel();
     jButOk = new javax.swing.JButton();
     jButCancel = new javax.swing.JButton();
-    WebServiceStartOnRun = new javax.swing.JCheckBox();
-    bHTTPServer = new javax.swing.JButton();
+    jTabbedPane1 = new javax.swing.JTabbedPane();
+    jPanel2 = new javax.swing.JPanel();
+    jLabel3 = new javax.swing.JLabel();
+    jcLang = new javax.swing.JComboBox<>();
     jLabel2 = new javax.swing.JLabel();
     jcTTS_API = new javax.swing.JComboBox<>();
     checkRaceGroup = new javax.swing.JCheckBox();
-    jLabel3 = new javax.swing.JLabel();
-    jcLang = new javax.swing.JComboBox<>();
+    jLabel7 = new javax.swing.JLabel();
+    edWaitingTime = new javax.swing.JTextField();
+    jPanel3 = new javax.swing.JPanel();
+    jLabel1 = new javax.swing.JLabel();
+    WEB_PORT = new javax.swing.JTextField();
+    WebServiceStartOnRun = new javax.swing.JCheckBox();
+    bHTTPServer = new javax.swing.JButton();
+    jLabel6 = new javax.swing.JLabel();
+    backgroundImagesForTv = new javax.swing.JComboBox<>();
+    jPanel4 = new javax.swing.JPanel();
     USE_TRANS_FOR_GATE = new javax.swing.JCheckBox();
     jLabel4 = new javax.swing.JLabel();
     TRANS_FOR_GATE = new javax.swing.JTextField();
     jLabel5 = new javax.swing.JLabel();
     TRANS_FOR_GATE_COLOR = new javax.swing.JComboBox<>();
     TRANS_FOR_GATE_BLINK = new javax.swing.JCheckBox();
-    jLabel6 = new javax.swing.JLabel();
-    backgroundImagesForTv = new javax.swing.JComboBox<>();
-    jLabel7 = new javax.swing.JLabel();
-    edWaitingTime = new javax.swing.JTextField();
+    jPanel5 = new javax.swing.JPanel();
+    OBS_USE_WEB_SOCKET = new javax.swing.JCheckBox();
+    jLabel8 = new javax.swing.JLabel();
+    jLabel9 = new javax.swing.JLabel();
+    OBS_HOST = new javax.swing.JTextField();
+    OBS_PORT = new javax.swing.JTextField();
+    OBS_AUTO_RECORDING = new javax.swing.JCheckBox();
+    jLabel10 = new javax.swing.JLabel();
+    OBS_SCENE_RACE = new javax.swing.JTextField();
+    jLabel11 = new javax.swing.JLabel();
+    OBS_SCENE_FINISH = new javax.swing.JTextField();
+    jLabel12 = new javax.swing.JLabel();
+    OBS_SCENE_INVATE = new javax.swing.JTextField();
 
     setTitle("System Settings");
     setIconImage(MainForm.getWindowsIcon().getImage());
     setResizable(false);
-
-    jLabel1.setText("HTTP Server Port");
-
-    WEB_PORT.setText("8181");
 
     jButOk.setText("Ok");
     jButOk.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +192,75 @@ public class SystemOptions extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
+    jLabel3.setText("Language");
+
+    jcLang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+    jLabel2.setText("Text to speach API");
+
+    jcTTS_API.setModel(new javax.swing.DefaultComboBoxModel(TextToSpeachFactory.getTTSNames()));
+    jcTTS_API.setName(""); // NOI18N
+
+    checkRaceGroup.setText("Check : Race Group = Invate Group");
+    checkRaceGroup.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+    jLabel7.setText("Waiting time for automatic start (min) ");
+
+    edWaitingTime.setText("3");
+
+    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel2)
+              .addComponent(jLabel3))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jcTTS_API, 0, 323, Short.MAX_VALUE)
+              .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))))
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(checkRaceGroup)
+              .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel7)
+                .addGap(27, 27, 27)
+                .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(0, 0, Short.MAX_VALUE)))
+        .addContainerGap())
+    );
+    jPanel2Layout.setVerticalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel2)
+          .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(checkRaceGroup)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel7)
+          .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(162, Short.MAX_VALUE))
+    );
+
+    jTabbedPane1.addTab("General", jPanel2);
+
+    jLabel1.setText("HTTP Server Port");
+
+    WEB_PORT.setText("8181");
+
     WebServiceStartOnRun.setText("Start HTTP Server automatically");
     WebServiceStartOnRun.setToolTipText("");
     WebServiceStartOnRun.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -182,17 +277,51 @@ public class SystemOptions extends javax.swing.JFrame {
       }
     });
 
-    jLabel2.setText("Text to speach API");
+    jLabel6.setText("Background for TV monitor");
 
-    jcTTS_API.setModel(new javax.swing.DefaultComboBoxModel(TextToSpeachFactory.getTTSNames()));
-    jcTTS_API.setName(""); // NOI18N
+    backgroundImagesForTv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-    checkRaceGroup.setText("Check : Race Group = Invate Group");
-    checkRaceGroup.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+    javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+    jPanel3.setLayout(jPanel3Layout);
+    jPanel3Layout.setHorizontalGroup(
+      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel3Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(WebServiceStartOnRun)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(bHTTPServer, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(jLabel1)
+            .addGap(18, 18, 18)
+            .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(jLabel6)
+            .addGap(18, 18, 18)
+            .addComponent(backgroundImagesForTv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        .addContainerGap())
+    );
+    jPanel3Layout.setVerticalGroup(
+      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel3Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel1)
+          .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(18, 18, 18)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(WebServiceStartOnRun)
+          .addComponent(bHTTPServer))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel6)
+          .addComponent(backgroundImagesForTv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(178, Short.MAX_VALUE))
+    );
 
-    jLabel3.setText("Language");
-
-    jcLang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    jTabbedPane1.addTab("HTTP", jPanel3);
 
     USE_TRANS_FOR_GATE.setText("Use transponder for gate");
     USE_TRANS_FOR_GATE.setToolTipText("You can control colors of gate");
@@ -207,103 +336,151 @@ public class SystemOptions extends javax.swing.JFrame {
 
     TRANS_FOR_GATE_BLINK.setText("Blink");
 
-    jLabel6.setText("Background for TV monitor");
+    javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+    jPanel4.setLayout(jPanel4Layout);
+    jPanel4Layout.setHorizontalGroup(
+      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel4Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(USE_TRANS_FOR_GATE)
+          .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel4)
+              .addComponent(jLabel5))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(TRANS_FOR_GATE_COLOR, 0, 160, Short.MAX_VALUE)
+              .addComponent(TRANS_FOR_GATE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(TRANS_FOR_GATE_BLINK)))
+        .addContainerGap(80, Short.MAX_VALUE))
+    );
+    jPanel4Layout.setVerticalGroup(
+      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel4Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(USE_TRANS_FOR_GATE)
+        .addGap(18, 18, 18)
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel4)
+          .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(18, 18, 18)
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel5)
+          .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(TRANS_FOR_GATE_BLINK))
+        .addContainerGap(169, Short.MAX_VALUE))
+    );
 
-    backgroundImagesForTv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    jTabbedPane1.addTab("Gate", jPanel4);
 
-    jLabel7.setText("Waiting time for automatic start (min) ");
+    OBS_USE_WEB_SOCKET.setText("Use OBS Web Socket");
+    OBS_USE_WEB_SOCKET.setToolTipText("");
+    OBS_USE_WEB_SOCKET.setActionCommand("");
 
-    edWaitingTime.setText("3");
+    jLabel8.setText("OBS Web Socket");
+    jLabel8.setToolTipText("Instal OBS Web Socket plugin");
+
+    jLabel9.setText("port");
+
+    OBS_HOST.setText("jTextField1");
+
+    OBS_PORT.setText("jTextField2");
+
+    OBS_AUTO_RECORDING.setText("Automatic Start/Stop Recording for a race");
+    OBS_AUTO_RECORDING.setToolTipText("");
+    OBS_AUTO_RECORDING.setActionCommand("");
+
+    jLabel10.setText("OBS Scene for Start");
+
+    OBS_SCENE_RACE.setText("OBS_SCENE_RACE");
+
+    jLabel11.setText("OBS Scene for Invitation");
+
+    OBS_SCENE_FINISH.setText("OBS_SCENE_RACE");
+
+    jLabel12.setText("OBS Scene for Finish");
+
+    OBS_SCENE_INVATE.setText("OBS_SCENE_INVTATION");
+
+    javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+    jPanel5.setLayout(jPanel5Layout);
+    jPanel5Layout.setHorizontalGroup(
+      jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel5Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel5Layout.createSequentialGroup()
+            .addComponent(jLabel8)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(OBS_HOST, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jLabel9)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(OBS_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(54, 54, 54))
+          .addGroup(jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(OBS_USE_WEB_SOCKET)
+              .addComponent(OBS_AUTO_RECORDING))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel10)
+              .addComponent(jLabel12)
+              .addComponent(jLabel11))
+            .addGap(32, 32, 32)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(OBS_SCENE_INVATE, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 0, Short.MAX_VALUE))))
+    );
+    jPanel5Layout.setVerticalGroup(
+      jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel5Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jLabel12))
+          .addGroup(jPanel5Layout.createSequentialGroup()
+            .addComponent(OBS_USE_WEB_SOCKET)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel8)
+              .addComponent(jLabel9)
+              .addComponent(OBS_HOST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(OBS_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(18, 18, 18)
+            .addComponent(OBS_AUTO_RECORDING)
+            .addGap(21, 21, 21)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel10)
+              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(34, 34, 34)))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(OBS_SCENE_INVATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel11))
+        .addContainerGap(62, Short.MAX_VALUE))
+    );
+
+    jTabbedPane1.addTab("OBS", jPanel5);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(USE_TRANS_FOR_GATE)
-            .addGap(18, 18, 18)
-            .addComponent(jLabel4)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jLabel2)
-            .addGap(18, 18, 18)
-            .addComponent(jcTTS_API, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(WebServiceStartOnRun)
-              .addComponent(jLabel6))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(backgroundImagesForTv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(bHTTPServer, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)))
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(TRANS_FOR_GATE_BLINK))
-              .addComponent(jLabel3)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(62, 62, 62)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-              .addComponent(checkRaceGroup)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(0, 0, Short.MAX_VALUE)))
-        .addContainerGap())
+      .addComponent(jTabbedPane1)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel3)
-          .addComponent(jcLang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(WebServiceStartOnRun)
-          .addComponent(bHTTPServer))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(backgroundImagesForTv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel6))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel2)
-          .addComponent(jcTTS_API, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(checkRaceGroup)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel7)
-          .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(USE_TRANS_FOR_GATE)
-          .addComponent(jLabel4)
-          .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel5)
-          .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(TRANS_FOR_GATE_BLINK))
-        .addGap(18, 18, 18)
+        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -316,32 +493,43 @@ public class SystemOptions extends javax.swing.JFrame {
 
   private void jButOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButOkActionPerformed
     int WEB_PORT_INT = 80;
-    try{
+    try {
       WEB_PORT_INT = Integer.parseInt(WEB_PORT.getText());
-    }catch(Exception e){}
-    
-    VS_SETTING.setParam(mainForm.con, "WEB_PORT", ""+WEB_PORT_INT);
-    VS_SETTING.setParam(mainForm.con, "START_HTTPD_ON_RUN", ""+ (WebServiceStartOnRun.isSelected() ? 1 : 0));
-    VS_SETTING.setParam(mainForm.con, "TTS_API", ""+jcTTS_API.getSelectedItem());    
-    VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", ""+ (checkRaceGroup.isSelected() ? 1 : 0));       
-    VS_SETTING.setParam(mainForm.con, "LANG", ""+jcLang.getSelectedItem());    
+    } catch (Exception e) {
+    }
+
+    VS_SETTING.setParam(mainForm.con, "WEB_PORT", "" + WEB_PORT_INT);
+    VS_SETTING.setParam(mainForm.con, "START_HTTPD_ON_RUN", "" + (WebServiceStartOnRun.isSelected() ? 1 : 0));
+    VS_SETTING.setParam(mainForm.con, "TTS_API", "" + jcTTS_API.getSelectedItem());
+    VS_SETTING.setParam(mainForm.con, "CHECK_RACE_GROUP", "" + (checkRaceGroup.isSelected() ? 1 : 0));
+    VS_SETTING.setParam(mainForm.con, "LANG", "" + jcLang.getSelectedItem());
 
     int MINUTES = 3;
-    try{
+    try {
       MINUTES = Integer.parseInt(edWaitingTime.getText());
-    }catch(Exception e){}   
-    VS_SETTING.setParam(mainForm.con, "WAITING_TIME", ""+MINUTES);
-    
-    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE", ""+TRANS_FOR_GATE.getText());
-    VS_SETTING.setParam(mainForm.con, "USE_TRANS_FOR_GATE", ""+ (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));      
-    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_COLOR", ""+TRANS_FOR_GATE_COLOR.getSelectedItem());
-    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", ""+ (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));    
-    
-    VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", ""+backgroundImagesForTv.getSelectedItem());
-   
+    } catch (Exception e) {
+    }
+    VS_SETTING.setParam(mainForm.con, "WAITING_TIME", "" + MINUTES);
+
+    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE", "" + TRANS_FOR_GATE.getText());
+    VS_SETTING.setParam(mainForm.con, "USE_TRANS_FOR_GATE", "" + (USE_TRANS_FOR_GATE.isSelected() ? 1 : 0));
+    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "" + TRANS_FOR_GATE_COLOR.getSelectedItem());
+    VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", "" + (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));
+
+    VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", "" + backgroundImagesForTv.getSelectedItem());
+
+    mainForm.obsConfig.OBS_USE_WEB_SOCKET = OBS_USE_WEB_SOCKET.isSelected();
+    mainForm.obsConfig.OBS_AUTO_RECORDING = OBS_AUTO_RECORDING.isSelected();
+    mainForm.obsConfig.OBS_HOST = OBS_HOST.getText();
+    mainForm.obsConfig.OBS_PORT = OBS_PORT.getText();
+    mainForm.obsConfig.OBS_SCENE_RACE = OBS_SCENE_RACE.getText();
+    mainForm.obsConfig.OBS_SCENE_FINISH = OBS_SCENE_FINISH.getText();
+    mainForm.obsConfig.OBS_SCENE_INVATE = OBS_SCENE_INVATE.getText();
+
     mainForm.applayLanguage();
     mainForm.speaker.reset();
-    
+    mainForm.obsConfig.save();
+
     setVisible(false);
   }//GEN-LAST:event_jButOkActionPerformed
 
@@ -349,34 +537,41 @@ public class SystemOptions extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_WebServiceStartOnRunActionPerformed
 
-  public void buttnCaptionRefresh(){
-    if (mainForm.httpServer==null || !mainForm.httpServer.connected){
+  public void buttnCaptionRefresh() {
+    if (mainForm.httpServer == null || !mainForm.httpServer.connected) {
       bHTTPServer.setText("Start HTTP Server");
-    }else{
+    } else {
       bHTTPServer.setText("Stop HTTP Server");
     }
   }
-  
-  public static void runWebServer(MainForm mainForm, boolean runOrStop){
-    if (runOrStop){
+
+  public static void runWebServer(MainForm mainForm, boolean runOrStop) {
+    if (runOrStop) {
       mainForm.httpServer = new RaceHttpServer(mainForm, VS_SETTING.getParam(mainForm.con, "WEB_PORT", 80));
-    }else{
+    } else {
       mainForm.httpServer.disconnect();
       mainForm.httpServer = null;
-    } 
+    }
   }
-  
+
   private void bHTTPServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHTTPServerActionPerformed
     // TODO add your handling code here:
-    if (mainForm.httpServer==null || !mainForm.httpServer.connected){      
-       runWebServer(mainForm,true);
-    }else{
-      runWebServer(mainForm,false);
-    }    
+    if (mainForm.httpServer == null || !mainForm.httpServer.connected) {
+      runWebServer(mainForm, true);
+    } else {
+      runWebServer(mainForm, false);
+    }
     buttnCaptionRefresh();
   }//GEN-LAST:event_bHTTPServerActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox OBS_AUTO_RECORDING;
+  private javax.swing.JTextField OBS_HOST;
+  private javax.swing.JTextField OBS_PORT;
+  private javax.swing.JTextField OBS_SCENE_FINISH;
+  private javax.swing.JTextField OBS_SCENE_INVATE;
+  private javax.swing.JTextField OBS_SCENE_RACE;
+  private javax.swing.JCheckBox OBS_USE_WEB_SOCKET;
   private javax.swing.JTextField TRANS_FOR_GATE;
   private javax.swing.JCheckBox TRANS_FOR_GATE_BLINK;
   private javax.swing.JComboBox<String> TRANS_FOR_GATE_COLOR;
@@ -390,13 +585,23 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JButton jButCancel;
   private javax.swing.JButton jButOk;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel10;
+  private javax.swing.JLabel jLabel11;
+  private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
+  private javax.swing.JLabel jLabel8;
+  private javax.swing.JLabel jLabel9;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JPanel jPanel2;
+  private javax.swing.JPanel jPanel3;
+  private javax.swing.JPanel jPanel4;
+  private javax.swing.JPanel jPanel5;
+  private javax.swing.JTabbedPane jTabbedPane1;
   private javax.swing.JComboBox<String> jcLang;
   private javax.swing.JComboBox<String> jcTTS_API;
   // End of variables declaration//GEN-END:variables

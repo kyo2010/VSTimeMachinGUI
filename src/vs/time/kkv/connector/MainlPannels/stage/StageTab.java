@@ -441,6 +441,10 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
     popupMenuJTree = new JPopupMenu();
+    
+    JMenuItem miCopyResultToBuffer = new JMenuItem("Copy Result to buffer");
+    popupMenuJTree.add(miCopyResultToBuffer);
+    
     JMenuItem miExport = new JMenuItem("Export");
     popupMenuJTree.add(miExport);
 
@@ -466,6 +470,21 @@ public class StageTab extends javax.swing.JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         addUserToTreeTree();
+      }
+    });
+    
+    miCopyResultToBuffer.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+Object obj = null;
+        if (jTree.getSelectionPath() != null && jTree.getSelectionPath().getLastPathComponent() != null) {
+          obj = jTree.getSelectionPath().getLastPathComponent();
+        }        
+        if (obj != null && obj instanceof VS_STAGE_GROUP) {
+          VS_STAGE_GROUP group = (VS_STAGE_GROUP) obj;
+          copyResultToClipBoard(group);
+        }        
+        
       }
     });
     miDelete.addActionListener(new ActionListener() {
@@ -594,7 +613,8 @@ public class StageTab extends javax.swing.JPanel {
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
-
+    mainForm.obsConfig.changeSceneForFinish();
+    
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true);
@@ -1428,8 +1448,39 @@ public class StageTab extends javax.swing.JPanel {
 
   }//GEN-LAST:event_butCopyToClipboardActionPerformed
 
+  public void copyResultToClipBoard(VS_STAGE_GROUP st_gr){
+  boolean useBold = true;
+
+    int len = getMaxPilotName();
+    String sep = " | ";
+    StringBuffer text = new StringBuffer();
+
+    //text.append(mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "\n");
+    int laps = stage.LAPS;
+    if (laps>=20) laps=999;
+    text.append(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION +" "+ mainForm.getLocaleString("Group")+st_gr.GROUP_NUM+ "\n");
+      for (VS_STAGE_GROUPS usr : st_gr.users) {
+        if (useBold) text.append("**");
+        text.append( usr.getFI());
+        if (useBold) text.append("**");
+        text.append("\n");                          
+        text.append("— "+mainForm.getLocaleString("Laps") +" : "+usr.LAPS+ " "+mainForm.getLocaleString("of")+" "+laps + "\n");
+        text.append("  "+mainForm.getLocaleString("Best Lap") +": "+ getTimeIntervel(usr.BEST_LAP) + "\n");
+        if (laps<999){
+          text.append("  "+mainForm.getLocaleString("Race Time") +": "+ getTimeIntervel(usr.RACE_TIME) + "\n");       
+        }
+      }
+    
+    StringSelection data = new StringSelection(text.toString());
+    Clipboard cb = Toolkit.getDefaultToolkit()
+            .getSystemClipboard();
+    cb.setContents(data, data);
+  }
+  
   private void butCopyGropusToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyGropusToClipboardActionPerformed
     // TODO add your handling code here:
+    
+    boolean useBold = true;
 
     int len = getMaxPilotName();
     String sep = " | ";
@@ -1437,14 +1488,15 @@ public class StageTab extends javax.swing.JPanel {
 
     text.append(mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "\n");
     text.append(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + "\n");
-    text.append("\n");
-
     for (Integer grup_index : stage.groups.keySet()) {
-      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);      
+      if (useBold) text.append("**");
+      text.append(mainForm.getLocaleString("Group") + st_gr.GROUP_NUM);
+      if (useBold) text.append("**");
+      text.append("\n");      
       for (VS_STAGE_GROUPS usr : st_gr.users) {
-        text.append(mainForm.getLocaleString("Group") + usr.GROUP_NUM + sep + Tools.padr(usr.PILOT.trim(), len) + sep + usr.CHANNEL + "\n");
+        text.append(usr.NUM_IN_GROUP+". ("+usr.CHANNEL+") " +usr.getFI() + "\n");
       }
-      text.append("\n");
     }
 
     StringSelection data = new StringSelection(text.toString());
@@ -2482,10 +2534,11 @@ public class StageTab extends javax.swing.JPanel {
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
+      mainForm.obsConfig.changeSceneForRace();
       if (race != null && race.RANDOM_BEEP != 1) {
         InfoForm.init(mainForm, "3").setVisible(true);
         mainForm.activeGroup = td.group;
-        refreshTable();
+        refreshTable();       
         //if (useSpeach) mainForm.speaker.speak("Three!");                
         mainForm.beep.paly("three");
         Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
@@ -2638,6 +2691,7 @@ public class StageTab extends javax.swing.JPanel {
     }
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
+      mainForm.obsConfig.changeSceneForInvate();
       mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {

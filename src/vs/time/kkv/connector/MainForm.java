@@ -11,6 +11,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
 import KKV.DBControlSqlLite.DBModelTest;
+import KKV.OBS.OBSConfig;
 import KKV.Utils.UserException;
 import KKV.Utils.JDEDate;
 import KKV.Utils.ParseIniFile;
@@ -132,6 +133,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public int TRANS_FOR_GATE = 0;
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
+  public OBSConfig obsConfig = null;
 
   public String BACKGROUND_FOR_TV = "";
 
@@ -371,6 +373,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
     }
     applayLanguage();
+    obsConfig = new OBSConfig(con);
 
     jmAddStageToRace.setVisible(false);
     try {

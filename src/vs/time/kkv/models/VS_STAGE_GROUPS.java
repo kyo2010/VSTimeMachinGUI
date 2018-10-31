@@ -237,6 +237,15 @@ public class VS_STAGE_GROUPS implements Transferable {
   public String toString() {
     return PILOT + " (" + CHANNEL + ")";
   }
+  
+  public String getFI(){
+    if (registration==null) return PILOT;
+    String res = registration.FIRST_NAME+" "+registration.SECOND_NAME;
+    if (res.trim().equals("")){
+      res = registration.VS_USER_NAME;
+    }
+    return res;
+  }
 
   @Override
   public DataFlavor[] getTransferDataFlavors() {

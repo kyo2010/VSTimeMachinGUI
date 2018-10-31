@@ -84,10 +84,13 @@ public class TextToSpeechMAC implements IKKVSpeek {
   }
   
   void speak(String text){
-    try {
-      Process p = Runtime.getRuntime().exec("say \""+text+"\"");
+    String msg = "say \""+text+"\"";
+    try {  //  say "Privet mir"      
+      Process p = Runtime.getRuntime().exec(msg);
+      System.out.println("msg : "+msg);
     } catch (IOException ex) {
     }    
+    //System.out.println("msg : "+msg);
   }
   
 

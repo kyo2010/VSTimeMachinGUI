@@ -1211,6 +1211,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     if (td.isGrpup) {
       //JButton label = (JButton) value;       
       JButton label =null;
+      
+      if (column==0){
+        JLabel cap = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);            
+        cap.setFont(cap.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
+        return cap;
+      }
 
       if (column == 1) {
          

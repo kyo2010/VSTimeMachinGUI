@@ -67,7 +67,10 @@ public class StartHttpServlet extends HttpServlet {
       }
       if (pilot.color != null) {
         webColor = pilot.color.colorname.toLowerCase();
-        if (pilot.CHECK_FOR_RACE==1 && mainForm.lastCheckingGrpup==mainForm.lastInvateGroup){
+        if (pilot.CHECK_FOR_RACE==1 && 
+            mainForm.lastCheckingGrpup!=null && mainForm.lastInvateGroup!=null &&    
+            mainForm.lastCheckingGrpup.GROUP_NUM==mainForm.lastInvateGroup.GROUP_NUM
+        ){
           findColor = pilot.color.colorname.toLowerCase();
         }  
       }

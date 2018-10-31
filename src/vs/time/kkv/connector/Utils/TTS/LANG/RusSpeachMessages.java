@@ -125,7 +125,8 @@ public class RusSpeachMessages extends ISpeachMessages{
     String text = "приглашается группа "+num+". ";
     int count_of_chars = 0;
     for (String pilot :  pilots){
-      text += pilot+".  ";   
+      if (!text.equalsIgnoreCase("")) text+=", ";
+      text += pilot;   
       count_of_chars += pilot.length();
     }
     return new SpeekText(text, 1500+2000*pilots.size() );
