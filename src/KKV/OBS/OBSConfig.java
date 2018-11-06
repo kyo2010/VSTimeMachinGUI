@@ -5,6 +5,7 @@
  */
 package KKV.OBS;
 
+import com.alibaba.fastjson.JSONObject;
 import java.sql.Connection;
 import vs.time.kkv.models.VS_SETTING;
 
@@ -21,6 +22,8 @@ public class OBSConfig {
   public String OBS_SCENE_RACE = "";
   public String OBS_SCENE_FINISH = "";
   public String OBS_SCENE_INVATE = "";
+  public boolean useDisconnect = true;
+  public boolean sendInfo = true;
 
   Connection con;
 
@@ -49,7 +52,7 @@ public class OBSConfig {
     VS_SETTING.getParam(con, "OBS_SCENE_INVATE", OBS_SCENE_INVATE);
   }
 
-  public void changeSceneForRace() {
+  public void changeSceneForRace(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -61,14 +64,15 @@ public class OBSConfig {
         }
         if (OBS_AUTO_RECORDING) {
           obsSocket.api.StartRecording();
-        }
-        obsSocket.disconnect();
+        }        
+        if (sendInfo) obsSocket.api.SetText("info", info, func);         
+        if (useDisconnect) obsSocket.disconnect();
       } catch (Exception e) {
       }
     }
   }
 
-  public void changeSceneForFinish() {
+  public void changeSceneForFinish(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -81,13 +85,14 @@ public class OBSConfig {
         if (!OBS_SCENE_FINISH.equals("")) {
           obsSocket.api.SetCurrentScene(OBS_SCENE_FINISH, null);
         }
-        obsSocket.disconnect();
+        if (sendInfo) obsSocket.api.SetText("info",info, func);   
+        if (useDisconnect) obsSocket.disconnect();
       } catch (Exception e) {
       }
     }
   }
 
-  public void changeSceneForInvate() {
+  public void changeSceneForInvate(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -97,10 +102,23 @@ public class OBSConfig {
         if (!OBS_SCENE_INVATE.equals("")) {
           obsSocket.api.SetCurrentScene(OBS_SCENE_INVATE, null);
         }
-        obsSocket.disconnect();
+        if (sendInfo) obsSocket.api.SetText("info",info, func);   
+        if (useDisconnect) obsSocket.disconnect();
       } catch (Exception e) {
       }
     }
 
   }
+  
+  AdapterFunction func = new AdapterFunction(){
+     @Override
+	public void call(JSONObject json) {
+		if(null==json)return;
+		String status = json.getString("status");
+		String error = json.getString("error");
+		StringBuffer sb = new StringBuffer();
+    System.out.println("STATUS : "+status);
+    System.out.println("ERROR  : "+error);	
+        }
+  };
 }

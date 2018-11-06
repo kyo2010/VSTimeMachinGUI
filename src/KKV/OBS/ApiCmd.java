@@ -177,6 +177,23 @@ public class ApiCmd {
 			args.put("render", render);
 			send("SetSourceRender", args, callback);
 	}
+        
+        
+        public  void  SetText(String source, String text, Function callback){
+           Map<String,Object> args = Maps.newHashMap();
+           args.put("sourceName", source);
+           Map<String,Object> settings = Maps.newHashMap();
+           settings.put("text", text);                                      
+	   args.put("sourceSettings", settings);
+           send("SetSourceSettings", args, callback);
+        }
+        
+        public  void  SetTextGDIPlusProperties(String source, String text, Function callback){
+           Map<String,Object> args = Maps.newHashMap();
+           args.put("source", source);
+	   args.put("text", text);
+           send("SetTextGDIPlusProperties", args, callback);
+        }
 	
 	/**设置场景源位置大小**/
 	public void SetSceneItemPositionAndSize(){

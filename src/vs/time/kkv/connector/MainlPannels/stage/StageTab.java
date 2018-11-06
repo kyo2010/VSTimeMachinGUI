@@ -613,7 +613,7 @@ Object obj = null;
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
-    mainForm.obsConfig.changeSceneForFinish();
+    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION);
     
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
@@ -2534,7 +2534,7 @@ Object obj = null;
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
-      mainForm.obsConfig.changeSceneForRace();
+      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
       if (race != null && race.RANDOM_BEEP != 1) {
         InfoForm.init(mainForm, "3").setVisible(true);
         mainForm.activeGroup = td.group;
@@ -2691,7 +2691,7 @@ Object obj = null;
     }
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
-      mainForm.obsConfig.changeSceneForInvate();
+      mainForm.obsConfig.changeSceneForInvate(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION);
       mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {
