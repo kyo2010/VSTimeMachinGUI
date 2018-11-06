@@ -2534,7 +2534,7 @@ Object obj = null;
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
-      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
+      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " - "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
       if (race != null && race.RANDOM_BEEP != 1) {
         InfoForm.init(mainForm, "3").setVisible(true);
         mainForm.activeGroup = td.group;
