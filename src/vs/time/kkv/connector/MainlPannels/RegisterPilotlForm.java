@@ -70,23 +70,23 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         usr = VS_REGISTRATION.dbControl.getItem(mainForm.con, "ID=?", reg_Id);
         edUser.setText(usr.VS_USER_NAME);
         chEnabledSound.setSelected(usr.VS_SOUND_EFFECT == 1);
-        
+
         VS_USERS global_user = VS_USERS.dbControl.getItem(mainForm.con, "VS_NAME=?", usr.VS_USER_NAME);
-        if (global_user!=null && global_user.PHOTO!=null && !global_user.PHOTO.equals("")){
+        if (global_user != null && global_user.PHOTO != null && !global_user.PHOTO.equals("")) {
           usr.PHOTO = global_user.PHOTO;
-        }        
+        }
       } catch (Exception e) {
         mainForm.error_log.writeFile(e);
         JOptionPane.showMessageDialog(this, "Loading user is error. " + getName().toString(), "Error", JOptionPane.ERROR_MESSAGE);
       }
     } else {
       usr = new VS_REGISTRATION();
-    }        
-    
+    }
+
     edFAI.setText(usr.FAI);
     edEmail.setText(usr.E_MAIL);
     PHOTO.setImage(usr.PHOTO);
-    PHOTO.isChaged = false;       
+    PHOTO.isChaged = false;
 
     if (reg_Id != -1) {
       edTransponder.setText("" + usr.VS_TRANS1);
@@ -420,7 +420,12 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       if (usr == null) {
         usr = new VS_REGISTRATION();
       }
-      usr.VS_TRANS1 = Integer.parseInt(edTransponder.getText());
+
+      try {
+        usr.VS_TRANS1 = Integer.parseInt(edTransponder.getText());
+      } catch (Exception e) {
+        usr.VS_TRANS1 = 0;
+      }
       usr.VS_TRANS2 = 0;
       usr.VS_TRANS3 = 0;
       try {
@@ -439,6 +444,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       usr.FIRST_NAME = edFirstName.getText();
       usr.SECOND_NAME = edSecondName.getText();
       usr.VS_SOUND_EFFECT = chEnabledSound.isSelected() ? 1 : 0;
+      usr.PHOTO = "";
+      usr.PICTURE_FILENAME = "";
       usr.PILOT_TYPE = jcbPilotType.getSelectedIndex();
       usr.REGION = edRegion.getText();
       boolean isNew = false;
@@ -457,27 +464,27 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           JOptionPane.showConfirmDialog(this, "Pilot '" + usr.VS_USER_NAME + "' has been registred.\nPlease change the pilot name?", "Pilot has been registred.", JOptionPane.CLOSED_OPTION);
           return;
         }
-        if (check1 != null && usr.VS_TRANS1!=0) {
+        if (check1 != null && usr.VS_TRANS1 != 0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS1+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS1 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check1.VS_TRANS1 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check1);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check1);
           };
           return;
         }
-        if (check2 != null && usr.VS_TRANS2!=0) {
+        if (check2 != null && usr.VS_TRANS2 != 0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS2+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS2 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check2.VS_TRANS2 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check2);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check2);
           };
           return;
         }
-        if (check3 != null && usr.VS_TRANS3!=0) {
+        if (check3 != null && usr.VS_TRANS3 != 0) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS3+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS3 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check3.VS_TRANS3 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check3);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check3);
           };
           return;
         }
@@ -490,7 +497,9 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
         isNew = true;
         usr.NUM = VS_REGISTRATION.maxNum(mainForm.con, usr.VS_RACE_ID) + 1;
         String sql_check = "VS_RACE_ID=? and (VS_TRANSPONDER=? or VS_TRANS2=? or VS_TRANS3=?)";
-        check1 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS1, usr.VS_TRANS1, usr.VS_TRANS1);
+        if (usr.VS_TRANS1 != 0 && usr.VS_TRANS1 != -1) {
+          check1 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS1, usr.VS_TRANS1, usr.VS_TRANS1);
+        }
         if (usr.VS_TRANS2 != 0 && usr.VS_TRANS2 != -1) {
           check2 = VS_REGISTRATION.dbControl.getItem(mainForm.con, sql_check, usr.VS_RACE_ID, usr.VS_TRANS2, usr.VS_TRANS2, usr.VS_TRANS2);
         }
@@ -504,82 +513,84 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           return;
         }
         if (check1 != null) {
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS1+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS1 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check1.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS1 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check1.VS_TRANS1 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check1);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check1);
           };
           return;
         }
         if (check2 != null) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS2+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS2 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS2 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check2.VS_TRANS2 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check2);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check2);
           };
-          
+
           return;
         }
         if (check3 != null) {
           //JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nPlease change the transponder ID?\nPilot:" + check3.VS_USER_NAME, "Transponder has been registred.", JOptionPane.CLOSED_OPTION);
-          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '"+usr.VS_TRANS3+"' transponder from other pilot", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION){
+          if (JOptionPane.showConfirmDialog(this, "Transponder '" + usr.VS_TRANS3 + "' has been registred.\nDo you want to change the transponder ID?\nPilot:" + check2.VS_USER_NAME, "Transponder has been registred.\nDo You want unlinck '" + usr.VS_TRANS3 + "' transponder from other pilot", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             check3.VS_TRANS3 = 0;
-            VS_REGISTRATION.dbControl.update(mainForm.con, check3);            
+            VS_REGISTRATION.dbControl.update(mainForm.con, check3);
           };
           return;
         }
         VS_REGISTRATION.dbControl.insert(mainForm.con, usr);
 
       }
-      
-      VS_USERS global_user = VS_USERS.dbControl.getItem(mainForm.con, "VS_NAME=?", usr.VS_USER_NAME);
-      
-      // Creating global user     
-      if (global_user==null){
-        global_user = new VS_USERS();
-        global_user.FIRST_NAME = usr.FIRST_NAME;
-        global_user.SECOND_NAME = usr.SECOND_NAME;
-        global_user.VS_NAME = usr.VS_USER_NAME;
-        global_user.VS_NAME_UPPER = global_user.VS_NAME.toUpperCase();
-        global_user.VSID1 =usr.VS_TRANS1;
-        global_user.VSID2 =usr.VS_TRANS2;
-        global_user.VSID3 =usr.VS_TRANS3;
-        global_user.VS_SOUND_EFFECT = usr.VS_SOUND_EFFECT;
-        global_user.WEB_SID = usr.WEB_SID;
-        global_user.WEB_SYSTEM = usr.WEB_SYSTEM;
-        global_user.PHOTO = usr.PHOTO;
-        global_user.REGION = usr.REGION;
+
+      if (!usr.VS_USER_NAME.equalsIgnoreCase("")) {
+        VS_USERS global_user = VS_USERS.dbControl.getItem(mainForm.con, "VS_NAME=?", usr.VS_USER_NAME);
+
+        // Creating global user     
+        if (global_user == null) {
+          global_user = new VS_USERS();
+          global_user.FIRST_NAME = usr.FIRST_NAME;
+          global_user.SECOND_NAME = usr.SECOND_NAME;
+          global_user.VS_NAME = usr.VS_USER_NAME;
+          global_user.VS_NAME_UPPER = global_user.VS_NAME.toUpperCase();
+          global_user.VSID1 = usr.VS_TRANS1;
+          global_user.VSID2 = usr.VS_TRANS2;
+          global_user.VSID3 = usr.VS_TRANS3;
+          global_user.VS_SOUND_EFFECT = usr.VS_SOUND_EFFECT;
+          global_user.WEB_SID = usr.WEB_SID;
+          global_user.WEB_SYSTEM = usr.WEB_SYSTEM;
+          global_user.PHOTO = usr.PHOTO;
+          global_user.REGION = usr.REGION;
+          global_user.FAI = usr.FAI;
+          VS_USERS.dbControl.insert(mainForm.con, global_user);
+        }
         global_user.FAI = usr.FAI;
-        VS_USERS.dbControl.insert(mainForm.con, global_user);
+
+        if (global_user != null && global_user.PHOTO != null && !global_user.PHOTO.equals("")) {
+          usr.PHOTO = global_user.PHOTO;
+        }
+
+        // PHOTO           
+        if (PHOTO.isChaged) {
+          if (!isNew && !usr.PHOTO.equalsIgnoreCase("") && !usr.PHOTO.equalsIgnoreCase(PHOTO.imgFileName)) {
+            new File(usr.PHOTO).delete();
+          }
+          if (PHOTO.imgFileName == null || PHOTO.imgFileName.equals("")) {
+            usr.PHOTO = "";
+            global_user.PHOTO = "";
+          } else {
+            //String fileName = usr.PHOTO;
+            //if (isNew || fileName==null ||fileName.equalsIgnoreCase("")){
+            String fileName = VS_REGISTRATION.PHOTO_PATH + "pilot_" + global_user.ID + "." + FilenameUtils.getExtension(PHOTO.imgFileName);
+            // }
+            new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
+            //FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
+            ImageImplement.savePhotoAndResize(PHOTO.imgFileName, fileName);
+            usr.PHOTO = fileName;
+            global_user.PHOTO = fileName;
+          }
+          VS_REGISTRATION.dbControl.update(mainForm.con, usr);
+          VS_USERS.dbControl.update(mainForm.con, global_user);
+        }
       }
-      global_user.FAI = usr.FAI;
-      
-      if (global_user!=null && global_user.PHOTO!=null && !global_user.PHOTO.equals("")){
-        usr.PHOTO = global_user.PHOTO;
-      }           
-      
-      // PHOTO           
-      if (PHOTO.isChaged){                        
-        if (!isNew && !usr.PHOTO.equalsIgnoreCase("") && !usr.PHOTO.equalsIgnoreCase(PHOTO.imgFileName)) {
-          new File(usr.PHOTO).delete();                    
-        }        
-        if (PHOTO.imgFileName==null || PHOTO.imgFileName.equals("")){
-          usr.PHOTO = "";
-          global_user.PHOTO = "";
-        }else{
-          //String fileName = usr.PHOTO;
-          //if (isNew || fileName==null ||fileName.equalsIgnoreCase("")){
-            String fileName = VS_REGISTRATION.PHOTO_PATH+"pilot_"+global_user.ID+"."+ FilenameUtils.getExtension(PHOTO.imgFileName);
-         // }
-          new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
-          //FileUtils.copyFile(new File(PHOTO.imgFileName), new File(fileName));
-          ImageImplement.savePhotoAndResize(PHOTO.imgFileName,fileName);
-          usr.PHOTO = fileName;
-          global_user.PHOTO = fileName;
-        }   
-        VS_REGISTRATION.dbControl.update(mainForm.con,usr);    
-        VS_USERS.dbControl.update(mainForm.con,global_user);       
-      }      
-      
+
       setVisible(false);
       if (mainForm != null && mainForm.regForm != null) {
         mainForm.regForm.refreshData();
@@ -608,10 +619,14 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
           edTransponder3.setText("");
           edEmail.setText("");
           edFAI.setText(user.FAI);
-          if (user.VSID2!=0) edTransponder2.setText("" + user.VSID2);
-          if (user.VSID3!=0) edTransponder3.setText("" + user.VSID3);
+          if (user.VSID2 != 0) {
+            edTransponder2.setText("" + user.VSID2);
+          }
+          if (user.VSID3 != 0) {
+            edTransponder3.setText("" + user.VSID3);
+          }
           edFirstName.setText("" + user.FIRST_NAME);
-          edSecondName.setText("" + user.SECOND_NAME);           
+          edSecondName.setText("" + user.SECOND_NAME);
           edRegion.setText(user.REGION);
           PHOTO.setImage(user.PHOTO);
           PHOTO.isChaged = false;
