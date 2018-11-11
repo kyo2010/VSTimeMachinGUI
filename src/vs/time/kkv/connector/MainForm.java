@@ -80,7 +80,7 @@ import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.Users.UserControlForm;
 import vs.time.kkv.connector.Users.UserList;
 import vs.time.kkv.connector.Utils.Beep;
-import vs.time.kkv.connector.Utils.Html;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import static vs.time.kkv.connector.WLANSetting.singelton;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
@@ -325,8 +325,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     _mainForm = this;
 
     try {
-      UIManager.setLookAndFeel(
+        if (OSDetector.isWindows()){
+         UIManager.setLookAndFeel(
               UIManager.getSystemLookAndFeelClassName());
+        }
     } catch (Exception e) {
     }
 

@@ -29,8 +29,11 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
    */
   public TimerForm() {
     this.setUndecorated(true);
-    com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
-    com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);
+    //com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
+    //com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);
+    
+    //setOpacity(0.75f);
+    setOpacity(0.75f);
     
     setBounds(getGraphicsConfiguration().getBounds());
     //getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
@@ -59,8 +62,15 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
       }      
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.unRaceTime;
+      //infoLabel.setText("                        ");
+      //setVisible(false);
+      
       infoLabel.setText(StageTab.getTimeIntervelForTimer(d));
+      try{
+        
+      }catch(Exception ein){}
       setPosition();
+      //setVisible(true);
     }
   });
   
@@ -117,8 +127,8 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(infoLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();

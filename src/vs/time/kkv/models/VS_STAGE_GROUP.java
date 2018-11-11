@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javafx.collections.transformation.SortedList;
+//import javafx.collections.transformation.SortedList;
 import javax.swing.TransferHandler;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.SCORE.ScoreCalulationFactory;
