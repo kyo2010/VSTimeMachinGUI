@@ -87,42 +87,42 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
   }
   
   @SuppressWarnings("unchecked")
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-  private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    infoLabel = new javax.swing.JLabel();
+        infoLabel = new javax.swing.JLabel();
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-    setAlwaysOnTop(true);
-    setFocusable(false);
-    setFocusableWindowState(false);
-    setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setFocusable(false);
+        setFocusableWindowState(false);
+        setResizable(false);
 
-    infoLabel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-    infoLabel.setForeground(new java.awt.Color(153, 0, 0));
-    infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    infoLabel.setText("1");
-    infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    infoLabel.setInheritsPopupMenu(false);
+        infoLabel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        infoLabel.setForeground(new java.awt.Color(153, 0, 0));
+        infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoLabel.setText("  ");
+        infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        infoLabel.setInheritsPopupMenu(false);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addGap(0, 0, 0)
-        .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-        .addGap(0, 0, 0))
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addComponent(infoLabel)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(infoLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-    pack();
-  }// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
   /**
    * @param args the command line arguments
@@ -160,7 +160,7 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     });
   }
 
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JLabel infoLabel;
-  // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel infoLabel;
+    // End of variables declaration//GEN-END:variables
 }
