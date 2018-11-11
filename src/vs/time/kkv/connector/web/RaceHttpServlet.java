@@ -274,11 +274,8 @@ public class RaceHttpServlet extends HttpServlet {
           if (mainForm.raceTime != 0) {
             INFO = "Race is active. Stage: " + activeGroup.stage.CAPTION + ". Group" + activeGroupNum + ". Race time: " + StageTab.getTimeIntervelForTimer(time - mainForm.raceTime);
           }
-        };
-        InfoForm infoForm = InfoForm.getCurrentInfo();
-        if (infoForm != null) {
-          INFO = infoForm.caption;
-        }
+        };        
+        INFO = InfoForm.getCurrentInfo();
         if (active_stage == null) {
           STAGE_CAPTION = "Registration";
           PAGE_CONTENT += "<table class='w3-table w3-striped w3-bordered' style='width:300px'>\n";

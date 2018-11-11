@@ -25,7 +25,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="297" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="270" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -73,10 +73,8 @@
                       <Component id="butExport" min="-2" pref="63" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="butReload" min="-2" pref="63" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
-                      <Component id="unRaceLapSound" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="activeTransponder" min="-2" pref="390" max="-2" attributes="0"/>
+                      <EmptySpace pref="141" max="32767" attributes="0"/>
+                      <Component id="activeTransponder" min="-2" pref="306" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -97,7 +95,6 @@
                                   <Component id="butAddNewStage" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                               </Group>
                               <Component id="butUploadToSite" alignment="0" max="32767" attributes="0"/>
-                              <Component id="unRaceLapSound" alignment="0" min="-2" pref="55" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -193,15 +190,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butUploadToSiteActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="unRaceLapSound">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Lap Info Voice"/>
-                <Property name="toolTipText" type="java.lang.String" value="Enable Sound Lap Info for UNRace mode"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
-              </AuxValues>
-            </Component>
             <Component class="javax.swing.JButton" name="bRaceSetting">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -235,6 +223,8 @@
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lActivePilotsCount" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Component id="unRaceLapSound" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -256,6 +246,7 @@
                                   <Component id="lPilotsCount" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lActivePilotsCount" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="unRaceLapSound" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           </Group>
@@ -312,6 +303,15 @@
                   <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="0"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="unRaceLapSound">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lap Info Voice"/>
+                <Property name="toolTipText" type="java.lang.String" value="Enable Sound Lap Info for UNRace mode"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

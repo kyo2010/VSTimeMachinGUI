@@ -694,8 +694,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
           return " -= " + tab.mainForm.getLocaleString("Group") + " " + td.group.GROUP_NUM + " =- " + addon;
         }
-        String value = td.buttonCaptions.get(columnIndex);
-        return value==null?"":value;
+        //String value = td.buttonCaptions.get(columnIndex);
+        //return value==null?"":value;
+        return "";
       } else {
         STAGE_COLUMN sc = null;
         if (columnIndex < getColumns().size()) {
@@ -1215,6 +1216,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       if (column==0){
         JLabel cap = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);            
         cap.setFont(cap.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
+        cap.setBackground(Color.GREEN);
+        //label.setBackground(DEFAULT_BACKGROUD_COLOR);
+        //label.setForeground(DEFAULT_FOREGROUND_COLOR);
         return cap;
       }
 
@@ -1227,13 +1231,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           //label.setText(tab.mainForm.getLocaleString("Stop"));
           label.setFont(label.getFont().deriveFont(Font.BOLD));
           label.setForeground(Color.RED);
-          value = caption;
+          //value = caption;
         } else {
        //   label.setText(tab.mainForm.getLocaleString("Start!"));
            String caption = tab.mainForm.getLocaleString("Start!");
            td.buttonCaptions.put(column, caption);
            label = new JButton(caption);    
-           value = caption;
+           //value = caption;
         }
       }
 
@@ -1241,7 +1245,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         String caption = tab.mainForm.getLocaleString("Invate");
         td.buttonCaptions.put(column, caption);
         label = new JButton(caption);
-        value = caption;
+        //value = caption;
         //label.setText(tab.mainForm.getLocaleString("Invate"));
       }
 
@@ -1249,7 +1253,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         String caption = tab.mainForm.getLocaleString("Check");
         td.buttonCaptions.put(column, caption);
         label = new JButton(caption);
-        value = caption;
+        //value = caption;
         //label.setText(tab.mainForm.getLocaleString("Check"));
       }
       return label;

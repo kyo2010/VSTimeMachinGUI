@@ -94,6 +94,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
+import vs.time.kkv.connector.Utils.FrozenTablePane;
 import vs.time.kkv.connector.Utils.TableToXLS;
 
 /**
@@ -211,7 +212,9 @@ public class StageTab extends javax.swing.JPanel {
         mainForm.vsTimeConnector.checkConnection();
       }
       Timer timer = (Timer) e.getSource();
-      InfoForm.init(mainForm, "Check", 100).setVisible(true);
+      if (checkerCycle == 0){
+        new InfoForm(mainForm, "Check", 100);
+      }
 
       try {
         mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
@@ -337,7 +340,7 @@ public class StageTab extends javax.swing.JPanel {
         //pleasuUpdateTable = true;
         refreshTable();
         mainForm.checkingGrpup = null;
-        InfoForm.init(mainForm, "").setVisible(false);
+        InfoForm.closeLastInfoFrom();
         stopSearch();
       }
     }
@@ -1255,8 +1258,16 @@ Object obj = null;
               }
               if (column == 1 && td != null && td.isGrpup) { // Start Race
                 if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
-                  stopRace(false);
-                  refreshTable();
+                  if (Math.abs(Calendar.getInstance().getTimeInMillis() - mainForm.raceTime)<5000){
+                    int res = JOptionPane.showConfirmDialog(StageTab.this,  "Do you want to stop the Race ?", "Information", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                      stopRace(false);
+                      refreshTable();  
+                    }
+                  }else{  
+                    stopRace(false);
+                    refreshTable();
+                  }  
                   //timerCaption.setVisible(false);              
                 } else {
                   startRaceAction(td.group.GROUP_NUM, true);
@@ -1276,6 +1287,7 @@ Object obj = null;
     jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     refreshData(true);
+    //FrozenTablePane frozenPane = new FrozenTablePane(jTable,1);
 
     /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
       StageTableAdapter.STAGE_COLUMN[] columns = stageTableAdapter.getColumns();
@@ -1646,15 +1658,14 @@ Object obj = null;
     checkerTimer.stop();
     mainForm.checkingGrpup = null;
     
-    InfoForm.init(mainForm, "", 100).setVisible(false);
+    InfoForm.closeLastInfoFrom();
     if (mainForm.vsTimeConnector != null) {
       preapreTimeMachineToRace();
       try {
         Thread.currentThread().sleep(300);
       } catch (Exception ein) {
       }
-      preapreTimeMachineToRace();
-      InfoForm.init(mainForm, "", 100).setVisible(false);
+      preapreTimeMachineToRace();     
     }
     this.bStopChecking.setVisible(false);
   }
@@ -2536,19 +2547,19 @@ Object obj = null;
       }
       mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " - "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
       if (race != null && race.RANDOM_BEEP != 1) {
-        InfoForm.init(mainForm, "3").setVisible(true);
+        new InfoForm(mainForm, "3");
         mainForm.activeGroup = td.group;
         refreshTable();       
         //if (useSpeach) mainForm.speaker.speak("Three!");                
         mainForm.beep.paly("three");
         Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
           public void actionPerformed(ActionEvent e) {
-            InfoForm.init(mainForm, "2").setVisible(true);
+            new InfoForm(mainForm, "2");
             //if (useSpeach) mainForm.speaker.speak("Two!");
             mainForm.beep.paly("two");
             Timer t2 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
               public void actionPerformed(ActionEvent e) {
-                InfoForm.init(mainForm, "1").setVisible(true);
+                new InfoForm(mainForm, "1");
                 //if (useSpeach) mainForm.speaker.speak("One!");                        
                 mainForm.beep.paly("one");
                 //int rnd = (int) (Math.random() * 3000);
@@ -2561,7 +2572,7 @@ Object obj = null;
                     } catch (Exception rt_e) {
                       MainForm._toLog(rt_e);
                     }
-                    InfoForm.init(mainForm, "Go!").setVisible(true);
+                    new InfoForm(mainForm, "Go!");
                     mainForm.beep.paly("beep");
                     //if (useSpeach) mainForm.speaker.speak("Go!");
                     mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
@@ -2572,7 +2583,7 @@ Object obj = null;
                     refreshTable();
                     Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
                       public void actionPerformed(ActionEvent e) {
-                        InfoForm.init(mainForm, "").setVisible(false);
+                        InfoForm.closeLastInfoFrom();
                       }
                     });
                     t4.setRepeats(false);
@@ -2590,7 +2601,7 @@ Object obj = null;
         t1.setRepeats(false);
         t1.start();
       } else {
-        InfoForm.init(mainForm, "!!!").setVisible(true);
+        new InfoForm(mainForm, "!!!");
         mainForm.beep.palyAndWait("attention");
         mainForm.activeGroup = td.group;
         int rnd = (int) (Math.random() * 3000);
@@ -2603,7 +2614,7 @@ Object obj = null;
             } catch (Exception rt_e) {
               MainForm._toLog(rt_e);
             }
-            InfoForm.init(mainForm, "Go!").setVisible(true);
+            new InfoForm(mainForm, "Go!");
             mainForm.beep.paly("beep");
             //if (useSpeach) mainForm.speaker.speak("Go!");
             mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
@@ -2613,7 +2624,7 @@ Object obj = null;
             jTree.updateUI();
             Timer t4 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
               public void actionPerformed(ActionEvent e) {
-                InfoForm.init(mainForm, "").setVisible(false);
+                InfoForm.closeLastInfoFrom();
               }
             });
             t4.setRepeats(false);

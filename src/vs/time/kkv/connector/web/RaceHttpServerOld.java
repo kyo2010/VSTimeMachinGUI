@@ -138,11 +138,8 @@ public class RaceHttpServerOld implements HttpHandler, Runnable {
         }
       };
 
-      InfoForm infoForm = InfoForm.getCurrentInfo();
-      if (infoForm != null) {
-        INFO = infoForm.caption;
-      }
-
+      INFO = InfoForm.getCurrentInfo();
+      
       String STAGE_CAPTION = "";
       String PAGE_CONTENT = "";
       if (active_stage == null) {

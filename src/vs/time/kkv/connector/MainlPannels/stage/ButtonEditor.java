@@ -65,6 +65,13 @@ class ButtonEditor extends DefaultCellEditor {
         });
         
         label = table.getModel().getValueAt(row, column).toString();
+        if (label.equalsIgnoreCase("")){
+          StageTableAdapter m = (StageTableAdapter) table.getModel();  
+          StageTableData td = m.getTableData(row);
+          if (td.isGrpup && td.buttonCaptions!=null){
+            label = td.buttonCaptions.get(column);
+          }
+        }
         button.setText(label);
         activeCol = column;
         activeRow = row;

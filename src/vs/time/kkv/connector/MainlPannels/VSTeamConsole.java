@@ -28,7 +28,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import org.apache.commons.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
-import static vs.time.kkv.connector.MainlPannels.InfoForm.form;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.TimeMachine.VSFlash;

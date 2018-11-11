@@ -242,7 +242,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       try {
         try {
           this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-          InfoForm.init(this, "Loading...", 48).setVisible(true);
+          new InfoForm(this, "Loading...", 48).setVisible(true);
         } catch (Exception e) {
         }
         jmAddStageToRace.setVisible(true);
@@ -303,7 +303,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       } finally {
         try {
           this.setCursor(Cursor.getDefaultCursor());
-          InfoForm.init(this, "Loading...").setVisible(false);
+          InfoForm.closeLastInfoFrom();
         } catch (Exception e) {
         }
       }
