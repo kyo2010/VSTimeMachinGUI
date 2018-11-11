@@ -18,13 +18,13 @@ import vs.time.kkv.connector.MainForm;
  *
  * @author kyo
  */
-public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
+public class SplashForm extends /*javax.swing.JFrame*/ JDialog {
   
   //MainForm mainForm = null;
   //static InfoForm form = null;
   public String caption = "";
   
-  public static InfoForm lastIfoFrom  =null;
+  public static SplashForm lastIfoFrom  =null;
   public static void closeLastInfoFrom(){
     if (lastIfoFrom!=null){
       lastIfoFrom.setVisible(false);
@@ -33,24 +33,25 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
   }
   
 
-  public InfoForm(MainForm mainForm, String caption) {     
-    this(mainForm,caption, 210);         
+  public SplashForm(MainForm mainForm, String caption) {     
+    this(mainForm);         
   }
   
   /**
    * Creates new form InfoForm
    */
-  public InfoForm(MainForm mainForm, String caption, int fontsize) {          
+  public SplashForm(MainForm mainForm) {          
     this.setUndecorated(true);
     
+    this.setLocationRelativeTo(null);
     //  setOpacity(0.75f);
     closeLastInfoFrom();
     
     setBounds(getGraphicsConfiguration().getBounds());
     
     initComponents();
-    jLabel1.setText(caption);   
-    jLabel1.setFont(new Font(jLabel1.getFont().getFontName(),Font.BOLD,fontsize));
+    //jLabel1.setText(caption);   
+    //jLabel1.setFont(new Font(jLabel1.getFont().getFontName(),Font.BOLD,fontsize));
     
     this.caption = caption;    
     lastIfoFrom = this;
@@ -113,6 +114,7 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -120,11 +122,9 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
         setFocusableWindowState(false);
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 210)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("1");
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel1.setInheritsPopupMenu(false);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/vs-logo.png"))); // NOI18N
+
+        jLabel2.setText("Please wait...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,15 +132,21 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                .addGap(24, 24, 24))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2))
         );
 
         pack();
@@ -163,14 +169,15 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
         }
       }
     } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(InfoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(SplashForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(InfoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(SplashForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(InfoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(SplashForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(InfoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(SplashForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
     //</editor-fold>
 
     /* Create and display the form */
@@ -183,5 +190,6 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

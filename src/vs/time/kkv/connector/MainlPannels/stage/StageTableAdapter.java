@@ -1206,6 +1206,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     return label;
   }
 
+  @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     StageTableData td = rows.get(row);
     //JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);        

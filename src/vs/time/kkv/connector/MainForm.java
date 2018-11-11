@@ -242,7 +242,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       try {
         try {
           this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-          new InfoForm(this, "Loading...", 48).setVisible(true);
+          new SplashForm(null);
         } catch (Exception e) {
         }
         jmAddStageToRace.setVisible(true);
@@ -303,7 +303,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       } finally {
         try {
           this.setCursor(Cursor.getDefaultCursor());
-          InfoForm.closeLastInfoFrom();
         } catch (Exception e) {
         }
       }
@@ -313,6 +312,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (activeRace != null) {
       lap_log.writeFile("---==  Set Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
+    SplashForm.closeLastInfoFrom();
+       
 
   }
 
@@ -322,17 +323,28 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
    * Creates new form MainForm
    */
   public MainForm(String caption) {
-    _mainForm = this;
+    _mainForm = this;   
 
     try {
         if (OSDetector.isWindows()){
          UIManager.setLookAndFeel(
               UIManager.getSystemLookAndFeelClassName());
         }
+        if (OSDetector.isMac()){
+         UIManager.setLookAndFeel(
+              UIManager.getSystemLookAndFeelClassName());
+        }
+        if (OSDetector.isLinux()){
+            UIManager.setLookAndFeel(
+              UIManager.getSystemLookAndFeelClassName());            
+            UIManager.put("TableUI", "javax.swing.plaf.basic.BasicTableUI");
+        }
     } catch (Exception e) {
     }
-
+      
     setTitle(caption);
+    new SplashForm(null);
+     
     initComponents();
 
     bRefreshActionPerformed(null);
@@ -410,8 +422,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //beep.paly("three");
     //beep.paly("two");
     //beep.paly("one");
-    //beep.paly("beep");
-    TimerForm.init(this).setVisible(true);
+    //beep.paly("beep");    
 
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this, true);
@@ -429,6 +440,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (activeRace != null) {
       lap_log.writeFile("---==  Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
+    TimerForm.init(this).setVisible(true);
   }
 
   public AtomicBoolean treadIsRunning = new AtomicBoolean(false);

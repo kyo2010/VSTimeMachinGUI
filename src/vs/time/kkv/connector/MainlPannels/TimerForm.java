@@ -34,6 +34,7 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     //com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);
     
     //setOpacity(0.75f);
+    setVisible(false);    
     setOpacity(0.75f);
     
     setBounds(getGraphicsConfiguration().getBounds());
@@ -41,7 +42,7 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     
     initComponents();
     pack();
-    setVisible(false);    
+    
     //setFocusPainted(false);
     //setBorderPainted(false);
     //int w = i.getWidth();

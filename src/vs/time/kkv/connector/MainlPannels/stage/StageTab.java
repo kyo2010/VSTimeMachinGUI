@@ -71,6 +71,7 @@ import java.util.TreeSet;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import ru.nkv.var.StringVar;
@@ -95,6 +96,7 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.Utils.FrozenTablePane;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TableToXLS;
 
 /**
@@ -1216,11 +1218,13 @@ Object obj = null;
     }
 
     jTable.setRowHeight(30);
+     
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
-    //jTable.setC
-    //jTable.setDefaultRenderer(Button.class, new ButtonEditor()); 
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+   
+    //System.out.println("Table UI:"+jTable.getUI().getClass().toString());
+    
     jTable.setDefaultEditor(JButton.class, new ButtonEditor(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
