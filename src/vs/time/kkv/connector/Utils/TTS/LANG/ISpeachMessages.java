@@ -136,9 +136,10 @@ public class ISpeachMessages {
   }
   
   public SpeekText invatieGroup(long num, List<String> pilots){
-    String text = "Invate Group "+num+". Pilots : ";
+    String text = "Invate Group "+num+". ";
     for (String pilot :  pilots){
-      text += pilot+".  ";      
+      if (!text.equalsIgnoreCase("")) text+=", ";
+      text += pilot;      
     }
     return new SpeekText(text, 1500+2000*pilots.size());
   }

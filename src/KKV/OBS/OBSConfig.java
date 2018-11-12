@@ -41,6 +41,33 @@ public class OBSConfig {
     OBS_SCENE_FINISH = VS_SETTING.getParam(con, "OBS_SCENE_FINISH", "camera");
     OBS_SCENE_INVATE = VS_SETTING.getParam(con, "OBS_SCENE_INVATE", "");
   }
+  
+  public class Task extends Thread{
+    int TASK_ID = 0;
+    String TASK_INFO = "";
+    static final int TASK_FOR_RACE = 1;
+    static final int TASK_FOR_FINISH = 2;
+    static final int TASK_FOR_INVATE = 3;
+    
+    public Task(int TASK_ID, String TASK_INFO){
+      this.TASK_ID = TASK_ID;
+      this.TASK_INFO = TASK_INFO;   
+      start();
+    }
+    
+    @Override
+    public void run(){
+      if (TASK_ID==TASK_FOR_RACE){
+        __changeSceneForRace(TASK_INFO);
+      }
+      if (TASK_ID==TASK_FOR_FINISH){
+        __changeSceneForFinish(TASK_INFO);
+      }
+      if (TASK_ID==TASK_FOR_INVATE){
+        __changeSceneForInvate(TASK_INFO);
+      }
+    }
+  };
 
   public void save() {
     VS_SETTING.setParam(con, "OBS_HOST", OBS_HOST);
@@ -51,13 +78,24 @@ public class OBSConfig {
     VS_SETTING.setParam(con, "OBS_SCENE_FINISH", OBS_SCENE_FINISH);
     VS_SETTING.getParam(con, "OBS_SCENE_INVATE", OBS_SCENE_INVATE);
   }
-
+  
   public void changeSceneForRace(String info) {
+    new Task(Task.TASK_FOR_RACE, info);
+  }
+  public void changeSceneForFinish(String info) {
+    new Task(Task.TASK_FOR_FINISH, info); 
+  }
+  public void changeSceneForInvate(String info) {
+    new Task(Task.TASK_FOR_INVATE, info);
+  }
+
+  public void __changeSceneForRace(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
     if (OBS_AUTO_RECORDING || !OBS_SCENE_RACE.equalsIgnoreCase("")) {
       try {
+        System.out.println("OBS Race");
         OBSSocket obsSocket = new OBSSocket(OBS_HOST, OBS_PORT);        
         if (!OBS_SCENE_RACE.equals("")) {
           obsSocket.api.SetCurrentScene(OBS_SCENE_RACE, null);
@@ -72,11 +110,12 @@ public class OBSConfig {
     }
   }
 
-  public void changeSceneForFinish(String info) {
+  public void __changeSceneForFinish(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
     if (OBS_AUTO_RECORDING || !OBS_SCENE_FINISH.equalsIgnoreCase("")) {
+      System.out.println("OBS Finish");
       try {
         OBSSocket obsSocket = new OBSSocket(OBS_HOST, OBS_PORT);
         if (OBS_AUTO_RECORDING) {
@@ -92,11 +131,12 @@ public class OBSConfig {
     }
   }
 
-  public void changeSceneForInvate(String info) {
+  public void __changeSceneForInvate(String info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
     if (!OBS_SCENE_INVATE.equalsIgnoreCase("")) {
+      System.out.println("OBS Invate");
       try {
         OBSSocket obsSocket = new OBSSocket(OBS_HOST, OBS_PORT);
         if (!OBS_SCENE_INVATE.equals("")) {

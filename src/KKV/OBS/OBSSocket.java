@@ -102,7 +102,7 @@ public class OBSSocket {
   @OnWebSocketClose
   public void onClose(Session session, int code, String msg) {
     InetSocketAddress isa = session.getLocalAddress();
-    System.out.printf("Close %s:%s,  code=%d,cmd=%s %n", isa.getAddress(), isa.getPort(), code, msg);
+    System.out.printf("Close %s:%s,  code=%d,cmd=%s %n\n", isa.getAddress(), isa.getPort(), code, msg);
   }
 
   @OnWebSocketError
@@ -111,7 +111,7 @@ public class OBSSocket {
       InetSocketAddress isa = session.getLocalAddress();
       System.out.printf("Error %s:%s,  error=%s %n", isa.getAddress(), isa.getPort(), throwable.getMessage());
     } else {
-      System.out.printf("OBS connection is error");
+      System.out.println("OBS connection is error");
 
     }
   }
