@@ -242,7 +242,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       try {
         try {
           this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-          new SplashForm(null);
+          //new SplashForm(null);
         } catch (Exception e) {
         }
         jmAddStageToRace.setVisible(true);
@@ -314,7 +314,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     SplashForm.closeLastInfoFrom();
        
-
   }
 
   boolean tabListenerEnabled = false;
@@ -342,8 +341,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (Exception e) {
     }
       
-    setTitle(caption);
-    new SplashForm(null);
+    setTitle(caption);    
      
     initComponents();
 
@@ -394,6 +392,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
       if (race != null) {
         setActiveRace(race, true);
+      }else{
+        SplashForm.closeLastInfoFrom();
       }
     } catch (Exception e) {
     }
@@ -1146,9 +1146,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
    * @param args the command line arguments
    */
   public static void main(String args[]) {
+    new SplashForm(null);
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-
+        
         /*try{
           
           for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1167,6 +1168,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFee");
           UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }catch(Exception ein){}*/
+        //new SplashForm(null);
         MainForm mainForm = new MainForm("VS Time Connector");
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
@@ -1176,6 +1178,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         //mainForm.setSize( dim.width, dim.height);
         mainForm.setLocation(dim.width / 2 - mainForm.getSize().width / 2, dim.height / 2 - mainForm.getSize().height / 2);
         mainForm.setVisible(true);
+        //SplashForm.closeLastInfoFrom();
       }
     });
 
