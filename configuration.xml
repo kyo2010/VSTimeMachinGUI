@@ -3,5 +3,6 @@
 <properties>
 <comment>Configuration file for the System</comment>
 <entry key="AUTORIZE_CODE_RCPilots.pro">f2zF9pKFGMHW2JyXeSME</entry>
+<entry key="webAdminPassword">admin</entry>
 <entry key="AUTORIZE_CODE_FPVSport.ru">ud6fipEKq5dZLno</entry>
 </properties>

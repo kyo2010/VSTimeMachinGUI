@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector;
 
+import KKV.Utils.Tools;
 import vs.time.kkv.connector.web.RaceHttpServer;
 import java.awt.Point;
 import java.io.File;
@@ -23,6 +24,14 @@ import vs.time.kkv.models.VS_SETTING;
 public class SystemOptions extends javax.swing.JFrame {
 
   MainForm mainForm = null;
+  
+  public static String getPasswordForAdminWeb(){
+    String pwd = Tools.getPreference("webAdminPassword");
+    if (pwd==null || pwd.equals("")){
+      return "test1";
+    }
+    return pwd;
+  }
 
   /**
    * Creates new form WLANSetting
@@ -70,6 +79,8 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));
 
     singelton.edWaitingTime.setText(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
+    
+    singelton.webAdminPassword.setText(getPasswordForAdminWeb());    
 
     File dir = new File("web/images");
     List<String> files = new ArrayList();
@@ -132,6 +143,8 @@ public class SystemOptions extends javax.swing.JFrame {
     bHTTPServer = new javax.swing.JButton();
     jLabel6 = new javax.swing.JLabel();
     backgroundImagesForTv = new javax.swing.JComboBox<>();
+    jLabel13 = new javax.swing.JLabel();
+    webAdminPassword = new javax.swing.JTextField();
     jPanel4 = new javax.swing.JPanel();
     USE_TRANS_FOR_GATE = new javax.swing.JCheckBox();
     jLabel4 = new javax.swing.JLabel();
@@ -257,7 +270,7 @@ public class SystemOptions extends javax.swing.JFrame {
 
     jTabbedPane1.addTab("General", jPanel2);
 
-    jLabel1.setText("HTTP Server Port");
+    jLabel1.setText("HTTP Server Port :");
 
     WEB_PORT.setText("8181");
 
@@ -277,9 +290,13 @@ public class SystemOptions extends javax.swing.JFrame {
       }
     });
 
-    jLabel6.setText("Background for TV monitor");
+    jLabel6.setText("Background for TV monitor :");
 
     backgroundImagesForTv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+    jLabel13.setText("Web Admin Password : ");
+
+    webAdminPassword.setText("test1");
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -298,9 +315,13 @@ public class SystemOptions extends javax.swing.JFrame {
             .addComponent(WEB_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(0, 0, Short.MAX_VALUE))
           .addGroup(jPanel3Layout.createSequentialGroup()
-            .addComponent(jLabel6)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel6)
+              .addComponent(jLabel13))
             .addGap(18, 18, 18)
-            .addComponent(backgroundImagesForTv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(backgroundImagesForTv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(webAdminPassword))))
         .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
@@ -318,7 +339,11 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel6)
           .addComponent(backgroundImagesForTv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(178, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel13)
+          .addComponent(webAdminPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(138, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("HTTP", jPanel3);
@@ -456,15 +481,14 @@ public class SystemOptions extends javax.swing.JFrame {
             .addGap(18, 18, 18)
             .addComponent(OBS_AUTO_RECORDING)
             .addGap(21, 21, 21)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel10)
-              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel10))
             .addGap(34, 34, 34)))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(OBS_SCENE_INVATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel11))
-        .addContainerGap(62, Short.MAX_VALUE))
+        .addContainerGap(70, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("OBS", jPanel5);
@@ -517,6 +541,7 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", "" + (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));
 
     VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", "" + backgroundImagesForTv.getSelectedItem());
+    Tools.setPreference("webAdminPassword", webAdminPassword.getText());
 
     mainForm.obsConfig.OBS_USE_WEB_SOCKET = OBS_USE_WEB_SOCKET.isSelected();
     mainForm.obsConfig.OBS_AUTO_RECORDING = OBS_AUTO_RECORDING.isSelected();
@@ -588,6 +613,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
+  private javax.swing.JLabel jLabel13;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
@@ -604,5 +630,6 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JTabbedPane jTabbedPane1;
   private javax.swing.JComboBox<String> jcLang;
   private javax.swing.JComboBox<String> jcTTS_API;
+  private javax.swing.JTextField webAdminPassword;
   // End of variables declaration//GEN-END:variables
 }

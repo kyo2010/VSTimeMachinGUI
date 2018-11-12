@@ -80,7 +80,8 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       }
     });
   }
-
+  
+  
   static RegistrationImportForm singelton = null;
 
   public static RegistrationImportForm init(RegistrationTab regTab) {

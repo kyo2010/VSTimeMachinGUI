@@ -25,6 +25,7 @@ import ru.nkv.var.pub.IVar;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.InfoForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.SystemOptions;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -242,7 +243,7 @@ public class RaceHttpServlet extends HttpServlet {
         String password = req.getParameter("pwd");
         boolean show_login_form = true;
         if (user != null && password != null) {
-          if (user.equalsIgnoreCase("admin") && password.equals("test1")) {
+          if (user.equalsIgnoreCase("admin") && password.equals(SystemOptions.getPasswordForAdminWeb())) {
             req.getSession().setAttribute("admin", "1");
             Cookie cookie = new Cookie("admin", "1");
             cookie.setMaxAge(60 * 60 * 24);

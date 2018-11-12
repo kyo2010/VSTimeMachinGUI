@@ -313,7 +313,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       lap_log.writeFile("---==  Set Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
     SplashForm.closeLastInfoFrom();
-       
+
   }
 
   boolean tabListenerEnabled = false;
@@ -322,27 +322,27 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
    * Creates new form MainForm
    */
   public MainForm(String caption) {
-    _mainForm = this;   
+    _mainForm = this;
 
     try {
-        if (OSDetector.isWindows()){
-         UIManager.setLookAndFeel(
-              UIManager.getSystemLookAndFeelClassName());
-        }
-        if (OSDetector.isMac()){
-         UIManager.setLookAndFeel(
-              UIManager.getSystemLookAndFeelClassName());
-        }
-        if (OSDetector.isLinux()){
-            UIManager.setLookAndFeel(
-              UIManager.getSystemLookAndFeelClassName());            
-            UIManager.put("TableUI", "javax.swing.plaf.basic.BasicTableUI");
-        }
+      if (OSDetector.isWindows()) {
+        UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+      }
+      if (OSDetector.isMac()) {
+        UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+      }
+      if (OSDetector.isLinux()) {
+        UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+        UIManager.put("TableUI", "javax.swing.plaf.basic.BasicTableUI");
+      }
     } catch (Exception e) {
     }
-      
-    setTitle(caption);    
-     
+
+    setTitle(caption);
+
     initComponents();
 
     bRefreshActionPerformed(null);
@@ -392,7 +392,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
       if (race != null) {
         setActiveRace(race, true);
-      }else{
+      } else {
         SplashForm.closeLastInfoFrom();
       }
     } catch (Exception e) {
@@ -423,7 +423,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //beep.paly("two");
     //beep.paly("one");
     //beep.paly("beep");    
-
     if (VS_SETTING.getParam(con, "START_HTTPD_ON_RUN", 0) == 1) {
       SystemOptions.runWebServer(this, true);
     }
@@ -586,6 +585,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu3 = new javax.swing.JMenu();
     mSystemOptions = new javax.swing.JMenuItem();
+    jMenuIWebAdmin = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem(){
@@ -730,6 +730,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(mSystemOptions);
+
+    jMenuIWebAdmin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuIWebAdmin.setText("Web Admin");
+    jMenuIWebAdmin.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuIWebAdminActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuIWebAdmin);
 
     mSystemMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     mSystemMonitor.setText("Web Monitor");
@@ -1019,18 +1028,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_tabbedPanelStateChanged
 
-  public void refreshTabbedCaptions(){    
-    for (int tabI=1; tabI<tabbedPanel.getTabCount(); tabI++){
-      StageTab tab = stageTabs.get(tabI-1);
+  public void refreshTabbedCaptions() {
+    for (int tabI = 1; tabI < tabbedPanel.getTabCount(); tabI++) {
+      StageTab tab = stageTabs.get(tabI - 1);
       tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
-     /* Object tabObject = tabbedPanel.getTabComponentAt(tabI);           
+      /* Object tabObject = tabbedPanel.getTabComponentAt(tabI);           
       if (tabObject != null && tabObject instanceof StageTab) {
         StageTab tab = (StageTab) tabObject;
         tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
-      }*/    
+      }*/
     }
   }
-  
+
   private void mSystemOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemOptionsActionPerformed
     // TODO add your handling code here:
     SystemOptions.init(this).setVisible(true);
@@ -1132,6 +1141,31 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_updaterActionPerformed
 
+  private void jMenuIWebAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuIWebAdminActionPerformed
+    // TODO add your handling code here:
+    if (httpServer == null) {
+      SystemOptions.runWebServer(this, true);
+    }
+
+    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80)+"/index.htm?mode=admin";
+    System.out.println("open url:" + uri);
+
+    if (Desktop.isDesktopSupported()) {
+      try {
+        Desktop.getDesktop().browse(new URI(uri));
+      } catch (Exception e) {
+        _toLog(e);
+      }
+    } else {
+      Runtime runtime = Runtime.getRuntime();
+      try {
+        runtime.exec("xdg-open " + uri);
+      } catch (IOException e) {
+        _toLog(e);
+      }
+    }
+  }//GEN-LAST:event_jMenuIWebAdminActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1149,7 +1183,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     new SplashForm(null);
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        
+
         /*try{
           
           for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1242,6 +1276,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
   private javax.swing.JMenuBar jMenuBar1;
+  private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItemTVMonitor;
   private javax.swing.JPanel jPanel1;
@@ -1283,7 +1318,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   @Override
   public void receiveDataForLog(String data) {
     boolean isPingCommand = false;
-    if (data.indexOf("ping")==0) {
+    if (data.indexOf("ping") == 0) {
       isPingCommand = true;
     }
     if (VSTeamConsole.isOpened) {
