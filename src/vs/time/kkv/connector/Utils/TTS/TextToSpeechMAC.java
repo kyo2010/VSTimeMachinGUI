@@ -44,8 +44,8 @@ public class TextToSpeechMAC implements IKKVSpeek {
 
   public void say(String text) {
     try {
-      //speak.speak(text);
-        speak(text);
+      //speak.speak(text);      
+      speak(text);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -86,8 +86,8 @@ public class TextToSpeechMAC implements IKKVSpeek {
   void speak(String text){
     String msg = "say \""+text+"\"";
     try {  //  say "Privet mir"      
-      Process p = Runtime.getRuntime().exec(msg);
-      System.out.println("msg : "+msg);
+      System.out.println(msg);
+      Process p = Runtime.getRuntime().exec(msg);      
     } catch (IOException ex) {
     }    
     //System.out.println("msg : "+msg);
