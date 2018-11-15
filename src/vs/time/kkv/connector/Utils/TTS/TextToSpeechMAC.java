@@ -23,6 +23,7 @@ import javax.sound.sampled.DataLine;
 import jp.ne.so_net.ga2.no_ji.jcom.IDispatch;
 import jp.ne.so_net.ga2.no_ji.jcom.JComException;
 import jp.ne.so_net.ga2.no_ji.jcom.ReleaseManager;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.LANG.ISpeachMessages;
 
 /**
@@ -84,9 +85,14 @@ public class TextToSpeechMAC implements IKKVSpeek {
   }
   
   void speak(String text){
-    String msg = "say \""+text+"\"";
+    //(new File()).
+    String[] msg = new String[]{ "say",text};
+    /*String msg = "say \""+text+"\"";
+    if (OSDetector.isLinux()){
+      msg = "say '"+text+"'";
+    }*/
     try {  //  say "Privet mir"      
-      System.out.println(msg);
+      //System.out.println(msg);
       Process p = Runtime.getRuntime().exec(msg);      
     } catch (IOException ex) {
     }    
