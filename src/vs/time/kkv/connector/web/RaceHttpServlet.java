@@ -52,7 +52,7 @@ public class RaceHttpServlet extends HttpServlet {
 
   public String createMenuButton(String caption, String href) {
     if (templ_button == null || USE_CACHE == false) {
-      templ_button = Tools.getTextFromFile("web"+File.separator+"button.template.htm");
+      templ_button = Tools.getTextFromFile("web" + File.separator + "button.template.htm");
     }
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("URL", href));
@@ -79,8 +79,11 @@ public class RaceHttpServlet extends HttpServlet {
     VS_RACE race = null;
     String STAGE_CAPTION = "";
     String PAGE_CONTENT = "";
-    String REFRESH_META = "<meta http-equiv=\"refresh\" content=\"3\">";
+    String REFRESH_META = "<meta http-equiv=\"refresh\" content=\"3\">";      
 
+    //String path = req.getContextPath();
+    //System.out.println("path : "+req.getQueryString());
+    //System.out.println("path : "+req.getServletPath());
     boolean is_admin = false;
     boolean is_refresh = false;
     String logout = req.getParameter("logout");
@@ -187,7 +190,7 @@ public class RaceHttpServlet extends HttpServlet {
     //resp.getWriter().println("EmbeddedJetty");  
     try {
       if (templ == null || USE_CACHE == false) {
-        templ = Tools.getTextFromFile("web"+File.separator+"index.template.htm");
+        templ = Tools.getTextFromFile("web" + File.separator + "index.template.htm");
       }
 
       List<VS_STAGE> stages = null;
@@ -275,7 +278,7 @@ public class RaceHttpServlet extends HttpServlet {
           if (mainForm.raceTime != 0) {
             INFO = "Race is active. Stage: " + activeGroup.stage.CAPTION + ". Group" + activeGroupNum + ". Race time: " + StageTab.getTimeIntervelForTimer(time - mainForm.raceTime);
           }
-        };        
+        };
         INFO = InfoForm.getCurrentInfo();
         if (active_stage == null) {
           STAGE_CAPTION = "Registration";
@@ -397,6 +400,7 @@ public class RaceHttpServlet extends HttpServlet {
         }
 
       }
+
       IVar varsPool = new VarPool();
       varsPool.addChild(new StringVar("TITLE", "Drone Racing System" + (is_admin ? " [Admin]" : "")));
       varsPool.addChild(new StringVar("RACE_CAPTION", race == null ? "None" : race.RACE_NAME));

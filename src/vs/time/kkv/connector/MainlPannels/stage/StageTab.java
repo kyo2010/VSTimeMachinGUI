@@ -2550,10 +2550,12 @@ Object obj = null;
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
       mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " - "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
+      mainForm.activeGroup = td.group;        
+      refreshTable();       
+      mainForm.lastRaceGroup = mainForm.activeGroup;
+                
       if (race != null && race.RANDOM_BEEP != 1) {
         new InfoForm(mainForm, "3");
-        mainForm.activeGroup = td.group;
-        refreshTable();       
         //if (useSpeach) mainForm.speaker.speak("Three!");                
         mainForm.beep.paly("three");
         Timer t1 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
@@ -2606,8 +2608,7 @@ Object obj = null;
         t1.start();
       } else {
         new InfoForm(mainForm, "!!!");
-        mainForm.beep.palyAndWait("attention");
-        mainForm.activeGroup = td.group;
+        mainForm.beep.palyAndWait("attention");        
         int rnd = (int) (Math.random() * 3000);
         Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
           public void actionPerformed(ActionEvent e) {

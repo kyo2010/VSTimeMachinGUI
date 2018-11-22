@@ -194,6 +194,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VS_STAGE_GROUP invateGroup = null;
   public VS_STAGE_GROUP lastInvateGroup = null;
   public VS_STAGE_GROUP lastCheckingGrpup = null;
+  public VS_STAGE_GROUP lastRaceGroup = null;
   public VS_STAGE activeStage = null;
   public StageTab activeStageTab = null;
   public VS_STAGE_GROUP checkingGrpup = null;
@@ -588,6 +589,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuIWebAdmin = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
+    jMenuItem1 = new javax.swing.JMenuItem();
+    updater = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem(){
       @Override
       public KeyStroke getAccelerator()
@@ -595,7 +598,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         return KeyStroke.getKeyStroke(KeyEvent.VK_C, 0);
       }
     };
-    updater = new javax.swing.JMenuItem();
     jMenu1 = new javax.swing.JMenu();
     menuWLANSetting = new javax.swing.JMenuItem();
     menuConnect = new javax.swing.JMenuItem();
@@ -758,14 +760,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(jMenuItemTVMonitor);
 
-    mConsole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    mConsole.setText("VS Team Console");
-    mConsole.addActionListener(new java.awt.event.ActionListener() {
+    jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem1.setText("TV Last Group Result");
+    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        mConsoleActionPerformed(evt);
+        jMenuItem1ActionPerformed(evt);
       }
     });
-    jMenu3.add(mConsole);
+    jMenu3.add(jMenuItem1);
 
     updater.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     updater.setText("Check update");
@@ -775,6 +777,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(updater);
+
+    mConsole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    mConsole.setText("VS Team Console");
+    mConsole.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mConsoleActionPerformed(evt);
+      }
+    });
+    jMenu3.add(mConsole);
 
     jMenuBar1.add(jMenu3);
 
@@ -1046,42 +1057,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_mSystemOptionsActionPerformed
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
-    if (httpServer == null) {
-      SystemOptions.runWebServer(this, true);
-    }
-
-    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80);
-    System.out.println("open url:" + uri);
-
-    //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
-    //Html.createHTMLPane("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80));       
-    if (Desktop.isDesktopSupported()) {
-      try {
-        Desktop.getDesktop().browse(new URI(uri));
-      } catch (Exception e) {
-        _toLog(e);
-      }
-    } else {
-      Runtime runtime = Runtime.getRuntime();
-      try {
-        runtime.exec("xdg-open " + uri);
-      } catch (IOException e) {
-        _toLog(e);
-      }
-
-      //String os = System.getProperty("os.name").toLowerCase();
-      // for Ubuntu
-      // Runtime runtime = Runtime.getRuntime();
-      // runtime.exec("/usr/bin/firefox -new-window " + url);
-      // mac
-      //Runtime rt = Runtime.getRuntime();
-      //rt.exec("open " + url);
-      // windows
-      // rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
-    }
-
-    //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
-    //Html.createHTMLPane("http://reports.root.panasonic.ru/PCISWebReportServer/webServer/index.jsp");
+    openUrl("index.htm");         
   }//GEN-LAST:event_mSystemMonitorActionPerformed
 
   private void mConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mConsoleActionPerformed
@@ -1106,13 +1082,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //ports.addItem("WLAN");
   }//GEN-LAST:event_bRefreshActionPerformed
 
-  private void jMenuItemTVMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTVMonitorActionPerformed
-    // TODO add your handling code here:
+  public void openUrl(String url){
+  // TODO add your handling code here:
     if (httpServer == null) {
       SystemOptions.runWebServer(this, true);
     }
 
-    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80) + "/tv.htm";
+    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80) + "/"+url;
     System.out.println("open url:" + uri);
 
     //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
@@ -1131,6 +1107,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         _toLog(e);
       }
     }
+  }
+  
+  private void jMenuItemTVMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTVMonitorActionPerformed
+    openUrl("tv.htm");
   }//GEN-LAST:event_jMenuItemTVMonitorActionPerformed
 
   private void updaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updaterActionPerformed
@@ -1143,28 +1123,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void jMenuIWebAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuIWebAdminActionPerformed
     // TODO add your handling code here:
-    if (httpServer == null) {
-      SystemOptions.runWebServer(this, true);
-    }
-
-    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80)+"/index.htm?mode=admin";
-    System.out.println("open url:" + uri);
-
-    if (Desktop.isDesktopSupported()) {
-      try {
-        Desktop.getDesktop().browse(new URI(uri));
-      } catch (Exception e) {
-        _toLog(e);
-      }
-    } else {
-      Runtime runtime = Runtime.getRuntime();
-      try {
-        runtime.exec("xdg-open " + uri);
-      } catch (IOException e) {
-        _toLog(e);
-      }
-    }
+    openUrl("index.htm?mode=admin");            
   }//GEN-LAST:event_jMenuIWebAdminActionPerformed
+
+  private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    // TODO add your handling code here:
+    openUrl("group-result.htm");    
+  }//GEN-LAST:event_jMenuItem1ActionPerformed
 
   public static ImageIcon windowsIcon = null;
 
@@ -1277,6 +1242,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenu jMenu3;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuIWebAdmin;
+  private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItemTVMonitor;
   private javax.swing.JPanel jPanel1;

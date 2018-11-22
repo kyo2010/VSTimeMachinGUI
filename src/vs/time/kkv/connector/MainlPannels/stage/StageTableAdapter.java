@@ -430,11 +430,20 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
       try {
         int NUM_IN_GROUP = 1;
+        
+        String PILOT_TYPE_WHERE_FOR_STAGE = "";
+        String PILOT_TYPE_WHERE_FOR_PILOT = "";
+        if (tab.stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
+          PILOT_TYPE_WHERE_FOR_STAGE =" AND PILOT_TYPE="+tab.stage.PILOT_TYPE+" ";
+        }
+        
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
-        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT + ") order by ID desc", tab.stage.RACE_ID);
+        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT + ") "+PILOT_TYPE_WHERE_FOR_STAGE+" order by ID desc", tab.stage.RACE_ID);
         long stage_id_final = 0;
         if (stages.size() == 2) {
           // If Olimpic System, one Qulification and One Race Result, then read all groups
+          
+          
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stages.get(1).ID);
           if (groups.size() >= 16) { // if count pilots>16
             List<VS_STAGE> races = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_RACE + ") order by ID desc", tab.stage.RACE_ID);

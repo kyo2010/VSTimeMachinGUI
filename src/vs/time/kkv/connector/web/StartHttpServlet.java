@@ -102,7 +102,7 @@ public class StartHttpServlet extends HttpServlet {
     String REFRESH_META = "<meta http-equiv=\"refresh\" content=\"3\">";
 
     try {
-      String templ = Tools.getTextFromFile("web" + File.separator + "start-templ.ajax");
+      String templ = Tools.getTextFromFile("web" + File.separator + "start.ajax.htm");
 
       IVar varsPool = new VarPool();
       varsPool.addChild(new StringVar("MENU", ""));

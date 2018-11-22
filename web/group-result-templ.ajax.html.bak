@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1251">
+  </head>
+  <body>
+    <div class="stage_name">{MESSAGE1}</div>
+    <div class="group_num">{MESSAGE2}</div>
+    <br>
+    <table width="100%" border="0">
+      <tbody>
+        <tr>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td>{LAPS_LABEL}</td>
+          <td>{BEST_LAP_LABEL}</td>
+          <td>{RACE_TIME_LABEL}</td>
+        </tr>
+        <tr class="color-{COLOR1}">
+          <td style="width: 28.367px;">{PLACE1}</td>
+          <td style="width: 132.95px;">{PILOT1_PHOTO}</td>
+          <td style="width: 194.417px;">{FIO1}<br>
+            {CH_TXT1} &nbsp;{OSD1}</td>
+          <td style="width: 124.967px;">{LAPS1}</td>
+          <td style="width: 159.933px;">{BEST_LAP1}</td>
+          <td style="width: 400.633px;">{TIME_RACE1}</td>
+        </tr>
+        <tr class="color-{COLOR2}">
+          <td>{PLACE2}</td>
+          <td>{PILOT2_PHOTO} </td>
+          <td>{FIO2}<br>
+            {CH_TXT2} &nbsp;{OSD2} </td>
+          <td>{LAPS2} </td>
+          <td> {BEST_LAP2} </td>
+          <td>{TIME_RACE2} </td>
+        </tr>
+        <tr class="color-{COLOR3}">
+          <td>{PLACE3}</td>
+          <td>{PILOT3_PHOTO} </td>
+          <td>{FIO3}<br>
+            {CH_TXT3} &nbsp;{OSD3} </td>
+          <td>{LAPS3} </td>
+          <td>{BEST_LAP3} </td>
+          <td>{TIME_RACE3} </td>
+        </tr>
+        <tr class="color-{COLOR4}">
+          <td>{PLACE4}</td>
+          <td>{PILOT4_PHOTO} </td>
+          <td>{FIO4}<br>
+            {CH_TXT4} &nbsp;{OSD4} </td>
+          <td>{LAPS4} </td>
+          <td>{BEST_LAP4} </td>
+          <td>{TIME_RACE4} </td>
+        </tr>
+        <tr class="color-{COLOR5}">
+          <td>{PLACE5} </td>
+          <td>{PILOT5_PHOTO} </td>
+          <td>{FIO5}<br>
+            {CH_TXT5} &nbsp;{OSD5} </td>
+          <td>{LAPS5} </td>
+          <td>{BEST_LAP5} </td>
+          <td>{TIME_RACE5} </td>
+        </tr>
+        <tr class="color-{COLOR6}">
+          <td>{PLACE6} </td>
+          <td>{PILOT6_PHOTO} </td>
+          <td>{FIO6}<br>
+            {CH_TXT6} &nbsp;{OSD6} </td>
+          <td>{LAPS6} </td>
+          <td>{BEST_LAP6} </td>
+          <td>{TIME_RACE6} </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
