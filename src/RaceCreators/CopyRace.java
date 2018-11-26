@@ -21,6 +21,18 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  * @author kyo
  */
 public class CopyRace extends IGroupCreater {
+  
+  public boolean isSupportedStageType(int stageType){
+     //if (stageType==MainForm.STAGE_RACE) return true;
+     //return false;
+     if ( stageType==MainForm.STAGE_RACE || 
+          stageType==MainForm.STAGE_PRACTICA || 
+          stageType==MainForm.STAGE_QUALIFICATION ) 
+     {
+       return true;
+     }
+     return false;
+   }
 
   @Override
   public int getRaceType() {
@@ -36,6 +48,8 @@ public class CopyRace extends IGroupCreater {
   @Override
   public void createGroup(VS_STAGE stage, VS_STAGE parent_stage, Connection con) throws UserException{
     try {
+            
+      
       List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 AND GROUP_TYPE=0 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
       /*
       Map<String, VS_STAGE_GROUPS> qualification = null;

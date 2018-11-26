@@ -105,6 +105,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     this.IS_FINISHED = 0;
     this.IS_RECALULATED = 0;
     this.LAPS = 0;
+    this.SCORE = 0;        
     this.RACE_TIME = 0;
     this.BEST_LAP = 0;
     this.GROUP_NUM = GROUP_NUM;
@@ -146,7 +147,8 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("GROUP_TYPE").setDbFieldName("\"GROUP_TYPE\""),
     new DBModelField("IS_PANDING").setDbFieldName("\"IS_PANDING\""),
     new DBModelField("wins").setDbFieldName("\"WINS\""),
-    new DBModelField("loses").setDbFieldName("\"LOSES\""),    
+    new DBModelField("loses").setDbFieldName("\"LOSES\""),  
+    new DBModelField("PILOT_TYPE").setDbFieldName("\"PILOT_TYPE\""),
   });
 
   public VS_REGISTRATION getRegistration(Connection conn, long raceID) {
@@ -169,6 +171,7 @@ public class VS_STAGE_GROUPS implements Transferable {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and VS_USER_NAME=?", raceID, PILOT.trim());
         if (registration != null) {
           REG_ID = registration.ID;
+          PILOT_TYPE = registration.PILOT_TYPE;
           dbControl.update(conn, this);
         }
       }

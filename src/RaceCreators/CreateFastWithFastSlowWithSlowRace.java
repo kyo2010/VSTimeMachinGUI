@@ -40,7 +40,15 @@ public class CreateFastWithFastSlowWithSlowRace extends IGroupCreater {
     return "Faster pilot with the faster pilot";
   }
   
-  
+   public boolean isSupportedStageType(int stageType){
+     if ( stageType==MainForm.STAGE_RACE || 
+          stageType==MainForm.STAGE_PRACTICA || 
+          stageType==MainForm.STAGE_QUALIFICATION ) 
+     {
+       return true;
+     }
+     return false;
+   };
   
   @Override
   public void createGroup(VS_STAGE stage, VS_STAGE parent_stage, Connection con) throws UserException {
@@ -48,8 +56,15 @@ public class CreateFastWithFastSlowWithSlowRace extends IGroupCreater {
       List<VS_REGISTRATION> users = null;
       List<VS_STAGE_GROUPS> groups = null;   
       int countOfUsers = 0;
+
+      String PILOT_TYPE_WHERE_FOR_USERS = "";
+      if (stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
+        PILOT_TYPE_WHERE_FOR_USERS =" AND PILOT_TYPE="+stage.PILOT_TYPE+" ";
+      }
+      
+      
       if (parent_stage==null) {
-        users = VS_REGISTRATION.dbControl.getList(con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID); 
+        users = VS_REGISTRATION.dbControl.getList(con, "VS_RACE_ID=? and IS_ACTIVE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" ORDER BY PILOT_TYPE,NUM", stage.RACE_ID); 
         countOfUsers = users.size();
       }else{      
         if (parent_stage.STAGE_TYPE==MainForm.STAGE_RACE_RESULT || parent_stage.STAGE_TYPE==MainForm.STAGE_QUALIFICATION_RESULT){

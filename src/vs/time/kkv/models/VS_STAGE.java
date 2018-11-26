@@ -99,9 +99,8 @@ public class VS_STAGE {
   public void loadGroups(Connection conn, long race_id, long stage_id) {
     try {
       groups.clear();
-      if (STAGE_TYPE==MainForm.STAGE_RACE){
-        groupCreater = GroupFactory.getRaceCreatorByCode(RACE_TYPE);
-      }
+      groupCreater = GroupFactory.getRaceCreatorByCode(STAGE_TYPE, RACE_TYPE);
+      
       int GROUP_INDEX = 0;
       Map<Long, Integer> indexes = new HashMap<>();
       List<VS_STAGE_GROUPS> users = VS_STAGE_GROUPS.dbControl.getList(conn, "STAGE_ID=? ORDER BY GROUP_NUM, NUM_IN_GROUP", stage_id);

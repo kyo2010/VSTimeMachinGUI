@@ -1725,11 +1725,14 @@ Object obj = null;
             qualification = VS_STAGE_GROUPS.dbControl.getMap(mainForm.con, "PILOT", "STAGE_ID=?", stages.get(0).ID);
           }
         }
-
-        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
+        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);                
+        String PILOT_TYPE_WHERE_FOR_USERS = "";
+        if (stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
+          PILOT_TYPE_WHERE_FOR_USERS =" AND PILOT_TYPE="+stage.PILOT_TYPE+" ";
+        }
 
         if (parent_stage != null) {
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=? order by GROUP_NUM", stage.RACE_ID, parent_stage.ID);
           if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
@@ -2079,15 +2082,15 @@ Object obj = null;
                   VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
                 }
               }*/
-            } else if (stage.STAGE_TYPE == MainForm.STAGE_RACE && GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE) != null) {
+            } else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
               try {
-                GroupFactory.getRaceCreatorByCode(stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+                GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
               } catch (UserException ue) {
                 JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
               }
             } else {
               // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               //checkGroupConstrain();
               //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
@@ -2202,8 +2205,14 @@ Object obj = null;
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
             }
-          } else { // Create pilot list as parent_id - only copy
-            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 order by GID", parent_stage.ID);
+          }else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
+              try {
+                GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+              } catch (UserException ue) {
+                JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
+              }
+          } else { // Create pilot list as parent_id - only copy                       
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by GID", parent_stage.ID);
             // usual copy
             for (VS_STAGE_GROUPS usr : groups) {
               usr.GID = -1;
@@ -2225,8 +2234,14 @@ Object obj = null;
               VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
             }
           }
-        } else { // Parent Stage = null
-          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+        } else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
+              try {
+                GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+              } catch (UserException ue) {
+                JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
+              }
+        }  else { // Parent Stage = null
+          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
           int count_man_in_group = 0;
           int GRUP_NUM = 1;
           String[] channels = stage.CHANNELS.split(";");

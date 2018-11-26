@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_STAGE_GROUPS;
@@ -19,6 +20,12 @@ import vs.time.kkv.models.VS_STAGE_GROUPS;
  * @author kyo
  */
 public abstract class IGroupCreater { 
+  
+   public boolean isSupportedStageType(int stageType){
+     if (stageType==MainForm.STAGE_RACE) return true;
+     return false;
+   };
+  
   /** Check what kind stage and race type supported this alg */
   public abstract int getRaceType();
   public abstract String getRaceTypeName(); 

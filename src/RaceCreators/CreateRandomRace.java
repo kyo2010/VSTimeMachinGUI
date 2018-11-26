@@ -30,6 +30,15 @@ public class CreateRandomRace extends IGroupCreater {
     return 1010;
   }
 
+  public boolean isSupportedStageType(int stageType) {
+    if (stageType == MainForm.STAGE_RACE
+            || stageType == MainForm.STAGE_PRACTICA
+            || stageType == MainForm.STAGE_QUALIFICATION) {
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public String getRaceTypeName() {
     return "Random Race";
@@ -75,8 +84,13 @@ public class CreateRandomRace extends IGroupCreater {
       List<VS_REGISTRATION> users = null;
       List<VS_STAGE_GROUPS> groups = null;
 
+      String PILOT_TYPE_WHERE_FOR_USERS = "";
+      if (stage.PILOT_TYPE != MainForm.PILOT_TYPE_NONE_INDEX) {
+        PILOT_TYPE_WHERE_FOR_USERS = " AND PILOT_TYPE=" + stage.PILOT_TYPE + " ";
+      }
+
       if (parent_stage == null) {
-        users = VS_REGISTRATION.dbControl.getList(con, "VS_RACE_ID=? and IS_ACTIVE=1 ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+        users = VS_REGISTRATION.dbControl.getList(con, "VS_RACE_ID=? and IS_ACTIVE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
         countOfUsers = users.size();
       } else {
         groups = VS_STAGE_GROUPS.dbControl.getList(con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 AND GROUP_TYPE=0 order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);

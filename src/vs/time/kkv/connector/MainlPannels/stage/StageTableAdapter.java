@@ -435,7 +435,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         int NUM_IN_GROUP = 1;
         
         String PILOT_TYPE_WHERE_FOR_STAGE = "";
-        String PILOT_TYPE_WHERE_FOR_PILOT = "";
         if (tab.stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
           PILOT_TYPE_WHERE_FOR_STAGE =" AND PILOT_TYPE="+tab.stage.PILOT_TYPE+" ";
         }

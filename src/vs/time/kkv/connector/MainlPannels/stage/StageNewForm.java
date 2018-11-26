@@ -44,6 +44,8 @@ import vs.time.kkv.models.VS_USERS;
  */
 public class StageNewForm extends javax.swing.JFrame {
 
+  public static boolean SHOW_RCAE_TYPES = true;
+  
   MainForm mainForm = null;
   int tabID = -1;
   VS_STAGE stage = null;
@@ -144,10 +146,8 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     }
     SCORE_CALCULATION.setModel(new javax.swing.DefaultComboBoxModel(ScoreCalulationFactory.getScoreCalulationNames()));
-    parentStage.setModel(new javax.swing.DefaultComboBoxModel(stages_st));
-    
-    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes()));
-
+    parentStage.setModel(new javax.swing.DefaultComboBoxModel(stages_st));   
+        
     if (stage != null) {
       butRecrateGropus.setVisible(true);
       jtCaption.setText(stage.CAPTION);
@@ -184,7 +184,6 @@ public class StageNewForm extends javax.swing.JFrame {
       jPilotType.setSelectedIndex(stage.PILOT_TYPE);
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
       PilotsForNextRound.setText("" + stage.PILOTS_FOR_NEXT_ROUND);
-      jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode( stage.RACE_TYPE)  );
     } else {
       VS_RACE race = mainForm.activeRace;
       //jtLapsCount.setText("" + 3);
@@ -220,6 +219,11 @@ public class StageNewForm extends javax.swing.JFrame {
         index++;
       }
       jtCountOfPilots.setSelectedIndex(channels.length - 1);      
+    }
+    
+    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes( jcbStageType.getSelectedIndex() )));
+    if (stage!=null){
+      jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode(jcbStageType.getSelectedIndex(), stage.RACE_TYPE)  );
     }
 
     if (stage==null){
@@ -871,6 +875,8 @@ public class StageNewForm extends javax.swing.JFrame {
       }
       if (parent_stage != null) {
         stage.PARENT_STAGE_ID = parent_stage.ID;
+      }else{
+        stage.PARENT_STAGE_ID = -1;
       }
 
       stage.SORT_TYPE = jOrderBy.getSelectedIndex();
@@ -892,7 +898,7 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.COUNT_PILOTS_IN_GROUP = count_of_pilots;
       stage.STAGE_TYPE = jcbStageType.getSelectedIndex();
       try{
-        stage.RACE_TYPE = GroupFactory.getRaceCodeByName((String)jRaceType.getSelectedItem())  ;
+        stage.RACE_TYPE = GroupFactory.getRaceCodeByName( jcbStageType.getSelectedIndex(), (String)jRaceType.getSelectedItem())  ;
       }catch(Exception e){}
         
       try {
@@ -988,6 +994,12 @@ public class StageNewForm extends javax.swing.JFrame {
 
   private void jcbStageTypePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcbStageTypePropertyChange
     // TODO add your handling code here:
+    
+    jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes( jcbStageType.getSelectedIndex() )));
+    if (stage!=null){
+      jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode(jcbStageType.getSelectedIndex(), stage.RACE_TYPE)  );
+    }
+      
     if (stage == null) {
       String text = jcbStageType.getSelectedItem().toString();
       int max = 1;
@@ -1049,28 +1061,27 @@ public class StageNewForm extends javax.swing.JFrame {
     }
     columnsList.setModel(items);
 
-    panelQualificationResult2.setVisible(false);
-    racePanel.setVisible(false);
-    stagePanel.setVisible(false);
-
-    /* if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE) {
-      racePanel.setVisible(true);
-    } else {
+    //panelQualificationResult2.setVisible(false);
+    if (!SHOW_RCAE_TYPES){
       racePanel.setVisible(false);
-    }*/
+    }else{
+      racePanel.setVisible(true);
+    }
+    stagePanel.setVisible(false);
+   
     if (jcbStageType.getSelectedIndex() == MainForm.STAGE_QUALIFICATION_RESULT || jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_RESULT) {
       //LapsCaption.setText("Count pilots for next round: ");
       tabPane.setSelectedIndex(1);
-      panelQualificationResult2.setVisible(true);
+      //panelQualificationResult2.setVisible(true);
     } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE_REPORT) {     
-      panelQualificationResult2.setVisible(true);
+      //panelQualificationResult2.setVisible(true);
       tabPane.setSelectedComponent(tabRaceReport);      
     } else if (jcbStageType.getSelectedIndex() == MainForm.STAGE_RACE){  
       racePanel.setVisible(true);
       stagePanel.setVisible(true);
     } else {      
       stagePanel.setVisible(true);
-      panelQualificationResult2.setVisible(false);
+      //panelQualificationResult2.setVisible(false);
       tabPane.setSelectedIndex(0);
     }
     //updateUI();
