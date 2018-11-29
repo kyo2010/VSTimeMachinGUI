@@ -590,6 +590,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     mSystemMonitor = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
     jMenuItem1 = new javax.swing.JMenuItem();
+    jMenuItem3 = new javax.swing.JMenuItem();
+    jMenuItem4 = new javax.swing.JMenuItem();
+    jMenuItem5 = new javax.swing.JMenuItem();
     updater = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem(){
       @Override
@@ -768,6 +771,33 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(jMenuItem1);
+
+    jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem3.setText("TV OSD");
+    jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem3ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem3);
+
+    jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem4.setText("TV Stage result");
+    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem4ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem4);
+
+    jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem5.setText("TV Liderboard 16 ");
+    jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem5ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem5);
 
     updater.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     updater.setText("Check update");
@@ -1131,6 +1161,21 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     openUrl("group-result.htm");    
   }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+  private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    // TODO add your handling code here:
+    openUrl("osd.htm");   
+  }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+  private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    // TODO add your handling code here:
+    openUrl("stage.htm");   
+  }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+  private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    // TODO add your handling code here:
+    openUrl("lb16.htm");   
+  }//GEN-LAST:event_jMenuItem5ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1244,6 +1289,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
+  private javax.swing.JMenuItem jMenuItem3;
+  private javax.swing.JMenuItem jMenuItem4;
+  private javax.swing.JMenuItem jMenuItem5;
   private javax.swing.JMenuItem jMenuItemTVMonitor;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;

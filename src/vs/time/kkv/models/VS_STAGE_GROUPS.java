@@ -77,6 +77,7 @@ public class VS_STAGE_GROUPS implements Transferable {
 
   public int wins = 0;
   public int loses = 0;
+  public String info = "";
 
   public VS_STAGE_GROUP parent = null;
 
