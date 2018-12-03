@@ -44,7 +44,7 @@
     try{
       var place = document.getElementById("place");
       //alert(place);
-      place.innerHTML = loadHTML("stage.ajax?time"+Date.now());
+      place.innerHTML = loadHTML("lb16.ajax?short=1&time"+Date.now());
       cashTime = Date.now();
       var arr = place.getElementsByTagName('script')
       for (var n = 0; n < arr.length; n++){

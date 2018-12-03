@@ -38,16 +38,28 @@
     } 
   }
   updateTable();
-  setInterval('updateTable()', 1000)
+  setInterval('updateTable()', 1000);
+  cashTime = Date.now();
   function updateTable(){
-    var place = document.getElementById("place");
-    //alert(place);
-    place.innerHTML = loadHTML("lb16.ajax?time"+Date.now());
-    var arr = place.getElementsByTagName('script')
-    for (var n = 0; n < arr.length; n++){
-      eval(arr[n].innerHTML);//run script inside div
-    }
+    try{
+      var place = document.getElementById("place");
+      //alert(place);
+      place.innerHTML = loadHTML("lb16.ajax?time"+Date.now());
+      cashTime = Date.now();
+      var arr = place.getElementsByTagName('script')
+      for (var n = 0; n < arr.length; n++){
+        eval(arr[n].innerHTML);//run script inside div
+      }
+    }catch(err){}
   }
+  setInterval('checkCashe()', 1500);
+  function checkCashe(){
+    try {
+      if ((cashTime+3000)<Date.now()){
+        place.innerHTML = "";
+      }
+    }catch(err){}
+  };
 </script>
 
 
