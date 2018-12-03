@@ -593,6 +593,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuItem3 = new javax.swing.JMenuItem();
     jMenuItem4 = new javax.swing.JMenuItem();
     jMenuItem5 = new javax.swing.JMenuItem();
+    jMenuItem6 = new javax.swing.JMenuItem();
     updater = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem(){
       @Override
@@ -798,6 +799,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(jMenuItem5);
+
+    jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem6.setText("TV Liderboard 16 lite");
+    jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem6ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem6);
 
     updater.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     updater.setText("Check update");
@@ -1176,6 +1186,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     openUrl("lb16.htm");   
   }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+  private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    // TODO add your handling code here:
+    openUrl("lb16l.htm");   
+  }//GEN-LAST:event_jMenuItem6ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1292,6 +1307,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JMenuItem jMenuItem4;
   private javax.swing.JMenuItem jMenuItem5;
+  private javax.swing.JMenuItem jMenuItem6;
   private javax.swing.JMenuItem jMenuItemTVMonitor;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
