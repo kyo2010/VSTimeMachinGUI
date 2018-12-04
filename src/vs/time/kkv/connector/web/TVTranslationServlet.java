@@ -69,6 +69,7 @@ public class TVTranslationServlet extends HttpServlet {
       String webName = "";
       String webChannel = "";
       String webColor = "";
+      String webColorW3 = "";
       String webInfo = "";
 
       String lOSD = "";
@@ -102,6 +103,7 @@ public class TVTranslationServlet extends HttpServlet {
 
           if (pilot.color != null) {
             webColor = pilot.color.colorname.toLowerCase();
+            webColorW3 = pilot.color.w3css.toLowerCase();
           }
           if (webColor.equals("")) {
             webColor = "blue";
@@ -114,7 +116,7 @@ public class TVTranslationServlet extends HttpServlet {
           if (isRace == 1) {
             h1 = "h2";
           }
-          webName = "<div class='w3-margin-top w3-container w3-" + webColor + "' style='text-shadow:2px 1px 0 #444'><" + h1 + "><b>" + webName + "</b></" + h1 + "></div>";
+          webName = "<div class='w3-margin-top w3-container " + webColorW3 + "' style='text-shadow:2px 1px 0 #444'><" + h1 + "><b>" + webName + "</b></" + h1 + "></div>";
 
           if (isRace == 1) {
             String bestLap = "";
@@ -128,7 +130,7 @@ public class TVTranslationServlet extends HttpServlet {
             webInfo = "<div class='w3-container w3-white'><h3><b>" + mainForm.getLocaleString("Laps") + " : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
           }
 
-          webChannel = "<div class='w3-badge w3-" + webColor + "'><b>" + pilot.CHANNEL + "</b></div>";
+          webChannel = "<div class='w3-badge " + webColorW3 + "'><b>" + pilot.CHANNEL + "</b></div>";
 
           lOSD = "";
           lFIO = pilot.PILOT;
@@ -156,6 +158,7 @@ public class TVTranslationServlet extends HttpServlet {
             varsPool1.addChild(new StringVar("PILOT_NAME", webName));
             varsPool1.addChild(new StringVar("CH", webChannel));
             varsPool1.addChild(new StringVar("COLOR", webColor));
+            varsPool1.addChild(new StringVar("W3-COLOR", webColorW3));          
             varsPool1.addChild(new StringVar("INFO", webInfo));
             varsPool1.addChild(new StringVar("FIO", lFIO));
             varsPool1.addChild(new StringVar("OSD", lOSD));
@@ -174,6 +177,7 @@ public class TVTranslationServlet extends HttpServlet {
       varsPool.addChild(new StringVar("PILOT" + index + "_NAME", webName));
       varsPool.addChild(new StringVar("CH" + index, webChannel));
       varsPool.addChild(new StringVar("COLOR" + index, webColor));
+      varsPool.addChild(new StringVar("W3-COLOR"+ index, webColorW3));  
       varsPool.addChild(new StringVar("INFO" + index, webInfo));
       varsPool.addChild(new StringVar("FIO" + index, lFIO));
       varsPool.addChild(new StringVar("OSD" + index, lOSD));
@@ -587,6 +591,7 @@ public class TVTranslationServlet extends HttpServlet {
       CONTENT += "<table class='w3-table w3-bordered w3-border w3-card-4'>";
       //CONTENT += "<table>";      
       CONTENT += "<tr>";
+      CONTENT += " <th>" + mainForm.getLocaleString("Pos").trim() + "</th>";
       CONTENT += " <th>" + mainForm.getLocaleString("Pilot").trim() + "</th>";
       CONTENT += " <th><center>" + mainForm.getLocaleString("Score") + "</center></th>";
       if (!shortVersion) {
@@ -598,8 +603,10 @@ public class TVTranslationServlet extends HttpServlet {
       }
       CONTENT += "</tr>";
 
+      int pos = 1;
       for (VS_STAGE_GROUPS usr : users) {
         CONTENT += "<tr>";
+        CONTENT += "<td>" + pos + "</td>";
         CONTENT += "<td>" + usr.PILOT + "</td>";
         CONTENT += "<td><center>" + usr.SCORE + "</center></td>";
         if (!shortVersion) {
@@ -610,6 +617,7 @@ public class TVTranslationServlet extends HttpServlet {
           CONTENT += "<td><center>" + usr.info + "</center></td>";
         }
         CONTENT += "</tr>";
+        pos++;
       }
 
       CONTENT += "</table></p>";
