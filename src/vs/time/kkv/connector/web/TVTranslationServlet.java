@@ -241,11 +241,16 @@ public class TVTranslationServlet extends HttpServlet {
     resp.getWriter().println(outHtml);
   }
 
-  public void showResultGroup(HttpServletRequest req, HttpServletResponse resp, VS_STAGE_GROUP group, int isRace, String pilotTemplate) throws ServletException, IOException {
+  public void showResultGroup(HttpServletRequest req, HttpServletResponse resp, VS_STAGE_GROUP group, int isRace, String pilotTemplate, boolean lite) throws ServletException, IOException {
     String html = "";
     //if (isRace) html = Tools.getTextFromFile("web"+File.separator+"tv.template.race.htm");
     //else 
-    html = Tools.getTextFromFile("web" + File.separator + "group-result-templ.ajax.html");
+    html = "";
+    if (lite){
+      html = Tools.getTextFromFile("web" + File.separator + "group-result-lite-templ.ajax.html");
+    }else{
+      html = Tools.getTextFromFile("web" + File.separator + "group-result-templ.ajax.html");
+    }
 
     String channels_st = "";
     if (group != null) {
@@ -525,7 +530,12 @@ public class TVTranslationServlet extends HttpServlet {
         throw new UserException("", "");
       }
 
-      String html = Tools.getTextFromFile("web" + File.separator + "tv.template.blank.htm");
+      String html = "";
+      if (!shortVersion) {
+        html = Tools.getTextFromFile("web" + File.separator + "lb16.table.htm");
+      }else{
+        html = Tools.getTextFromFile("web" + File.separator + "lb16.table.s.htm");
+      }  
       String CONTENT = "";
 
       List<VS_STAGE_GROUPS> all_users = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=?", stage.ID);
@@ -604,7 +614,14 @@ public class TVTranslationServlet extends HttpServlet {
       CONTENT += "</tr>";
 
       int pos = 1;
+      String ROWS = "";
       for (VS_STAGE_GROUPS usr : users) {
+        String html_row = "";
+        if (!shortVersion) {
+          html_row = Tools.getTextFromFile("web" + File.separator + "lb16.table.row.htm");
+        }else{
+          html_row = Tools.getTextFromFile("web" + File.separator + "lb16.table.row.s.htm");
+        }         
         CONTENT += "<tr>";
         CONTENT += "<td>" + pos + "</td>";
         CONTENT += "<td>" + usr.PILOT + "</td>";
@@ -617,7 +634,21 @@ public class TVTranslationServlet extends HttpServlet {
           CONTENT += "<td><center>" + usr.info + "</center></td>";
         }
         CONTENT += "</tr>";
-        pos++;
+        
+        IVar varsPool1 = new VarPool();
+        varsPool1.addChild(new StringVar("POS", ""+pos));
+        varsPool1.addChild(new StringVar("PILOT", usr.PILOT));
+        varsPool1.addChild(new StringVar("SCORE", ""+usr.SCORE));
+        varsPool1.addChild(new StringVar("RACES", ""+usr.NUM_IN_GROUP));
+        varsPool1.addChild(new StringVar("ALL_RACES", ""+usr.GROUP_NUM));
+        varsPool1.addChild(new StringVar("LAPS", ""+usr.LAPS));
+        varsPool1.addChild(new StringVar("RACE_TIME", StageTab.getTimeIntervel(usr.RACE_TIME)));
+        varsPool1.addChild(new StringVar("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP)));
+        varsPool1.addChild(new StringVar("info", usr.info));        
+        
+        ROWS += varsPool1.applyValues(html_row);
+        
+        pos++;                        
       }
 
       CONTENT += "</table></p>";
@@ -625,6 +656,7 @@ public class TVTranslationServlet extends HttpServlet {
 
       IVar varsPool = new VarPool();
       varsPool.addChild(new StringVar("CONTENT", CONTENT));
+      varsPool.addChild(new StringVar("ROWS", ROWS));
       varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
       String outHtml = varsPool.applyValues(html);
       resp.getWriter().println(outHtml);
@@ -676,7 +708,13 @@ public class TVTranslationServlet extends HttpServlet {
     } else if (req.getServletPath().equalsIgnoreCase("/group_result.ajax")) {
       try {
         if (mainForm.lastRaceGroup != null) {
-          showResultGroup(req, resp, mainForm.lastRaceGroup, 3, "group-result-templ.pilot.html");
+          boolean lite = false;
+          String pilot_templ = "group-result-templ.pilot.html";
+          if (req.getQueryString().indexOf("lite")>=0){ 
+            lite = true; 
+            pilot_templ = "group-result-lite-templ.pilot.html";
+          }
+          showResultGroup(req, resp, mainForm.lastRaceGroup, 3, pilot_templ,lite);
         } else {
           generateBlank(resp);
         }
