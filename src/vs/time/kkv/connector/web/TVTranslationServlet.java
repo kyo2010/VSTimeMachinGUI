@@ -286,15 +286,19 @@ public class TVTranslationServlet extends HttpServlet {
     }
     String[] channels = channels_st.split(";");
 
+   
+    List<VS_STAGE_GROUPS> sorted_users = group.users;
+    Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
+    
     PilotInfo[] pInfos = new PilotInfo[6];
-    for (int i = 0; i < pInfos.length; i++) {
+    for (int i = 0; i < 6; i++) {
       VS_STAGE_GROUPS pilot = null;
-      if (group.users.size() > i) {
-        pilot = group.users.get(i);
+      if (sorted_users.size() > i) {
+        pilot = sorted_users.get(i);
       }
       pInfos[i] = new PilotInfo(i + 1, pilot);
     }
-
+            
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("TITLE", "Drone Racing System"));
     String pilot_infos = "";
