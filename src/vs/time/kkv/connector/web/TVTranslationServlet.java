@@ -49,6 +49,18 @@ public class TVTranslationServlet extends HttpServlet {
   String templ_button = null;
   MainForm mainForm = null;
 
+  public String CUSTOM_PATH = "web" + File.separator + "customs";
+
+  public boolean fileNotExist(String fileName) {
+    try {
+      if (new File(fileName).isFile()) {
+        return false;
+      }
+    } catch (Exception e) {
+    }
+    return true;
+  }
+
   public static final boolean SHOW_SPEED = true;
 
   public class PilotInfo {
@@ -152,13 +164,17 @@ public class TVTranslationServlet extends HttpServlet {
       if (pilotTemplate != null) {
         if (pilot != null) {
           try {
-            String html = Tools.getTextFromFile("web" + File.separator + pilotTemplate);
+            String path = CUSTOM_PATH;
+            if (fileNotExist(path + File.separator + pilotTemplate)) {
+              path = "web";
+            }
+            String html = Tools.getTextFromFile(path + File.separator + pilotTemplate);
             IVar varsPool1 = new VarPool();
             varsPool1.addChild(new StringVar("PILOT_PHOTO", webPhoto));
             varsPool1.addChild(new StringVar("PILOT_NAME", webName));
             varsPool1.addChild(new StringVar("CH", webChannel));
             varsPool1.addChild(new StringVar("COLOR", webColor));
-            varsPool1.addChild(new StringVar("W3-COLOR", webColorW3));          
+            varsPool1.addChild(new StringVar("W3-COLOR", webColorW3));
             varsPool1.addChild(new StringVar("INFO", webInfo));
             varsPool1.addChild(new StringVar("FIO", lFIO));
             varsPool1.addChild(new StringVar("OSD", lOSD));
@@ -177,7 +193,7 @@ public class TVTranslationServlet extends HttpServlet {
       varsPool.addChild(new StringVar("PILOT" + index + "_NAME", webName));
       varsPool.addChild(new StringVar("CH" + index, webChannel));
       varsPool.addChild(new StringVar("COLOR" + index, webColor));
-      varsPool.addChild(new StringVar("W3-COLOR"+ index, webColorW3));  
+      varsPool.addChild(new StringVar("W3-COLOR" + index, webColorW3));
       varsPool.addChild(new StringVar("INFO" + index, webInfo));
       varsPool.addChild(new StringVar("FIO" + index, lFIO));
       varsPool.addChild(new StringVar("OSD" + index, lOSD));
@@ -200,7 +216,11 @@ public class TVTranslationServlet extends HttpServlet {
     String html = "";
     //if (isRace) html = Tools.getTextFromFile("web"+File.separator+"tv.template.race.htm");
     //else 
-    html = Tools.getTextFromFile("web" + File.separator + "tv.template.htm");
+    String path = CUSTOM_PATH;
+    if (fileNotExist(path + File.separator + "tv.template.htm")) {
+      path = "web";
+    }
+    html = Tools.getTextFromFile(path + File.separator + "tv.template.htm");
 
     String channels_st = "";
     if (group != null) {
@@ -246,10 +266,18 @@ public class TVTranslationServlet extends HttpServlet {
     //if (isRace) html = Tools.getTextFromFile("web"+File.separator+"tv.template.race.htm");
     //else 
     html = "";
-    if (lite){
-      html = Tools.getTextFromFile("web" + File.separator + "group-result-lite-templ.ajax.html");
-    }else{
-      html = Tools.getTextFromFile("web" + File.separator + "group-result-templ.ajax.html");
+    if (lite) {
+      String path = CUSTOM_PATH;
+      if (fileNotExist(path + File.separator + "group-result-lite-templ.ajax.html")) {
+        path = "web";
+      }
+      html = Tools.getTextFromFile(path + File.separator + "group-result-lite-templ.ajax.html");
+    } else {
+      String path = CUSTOM_PATH;
+      if (fileNotExist(path + File.separator + "group-result-templ.ajax.html")) {
+        path = "web";
+      }
+      html = Tools.getTextFromFile(path + File.separator + "group-result-templ.ajax.html");
     }
 
     String channels_st = "";
@@ -318,7 +346,13 @@ public class TVTranslationServlet extends HttpServlet {
   }
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
-    String html = Tools.getTextFromFile("web" + File.separator + "tv.template.blank.htm");
+
+    String path = CUSTOM_PATH;
+    if (fileNotExist(path + File.separator + "tv.template.blank.htm")) {
+      path = "web";
+    }
+
+    String html = Tools.getTextFromFile(path + File.separator + "tv.template.blank.htm");
     String CONTENT = "";
 
     boolean showGroupNumber = false;
@@ -529,13 +563,21 @@ public class TVTranslationServlet extends HttpServlet {
       if (stage == null) {
         throw new UserException("", "");
       }
-
+      
       String html = "";
       if (!shortVersion) {
-        html = Tools.getTextFromFile("web" + File.separator + "lb16.table.htm");
-      }else{
-        html = Tools.getTextFromFile("web" + File.separator + "lb16.table.s.htm");
-      }  
+        String path = CUSTOM_PATH;
+        if (fileNotExist(path + File.separator + "lb16.table.htm")) {
+          path = "web";
+        }
+        html = Tools.getTextFromFile(path + File.separator + "lb16.table.htm");
+      } else {
+        String path = CUSTOM_PATH;
+        if (fileNotExist(path + File.separator + "lb16.table.s.htm")) {
+          path = "web";
+        }
+        html = Tools.getTextFromFile(path + File.separator + "lb16.table.s.htm");
+      }
       String CONTENT = "";
 
       List<VS_STAGE_GROUPS> all_users = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=?", stage.ID);
@@ -618,10 +660,18 @@ public class TVTranslationServlet extends HttpServlet {
       for (VS_STAGE_GROUPS usr : users) {
         String html_row = "";
         if (!shortVersion) {
-          html_row = Tools.getTextFromFile("web" + File.separator + "lb16.table.row.htm");
-        }else{
-          html_row = Tools.getTextFromFile("web" + File.separator + "lb16.table.row.s.htm");
-        }         
+          String path = CUSTOM_PATH;
+          if (fileNotExist(path + File.separator + "lb16.table.row.htm")) {
+            path = "web";
+          }
+          html_row = Tools.getTextFromFile(path + File.separator + "lb16.table.row.htm");
+        } else {
+          String path = CUSTOM_PATH;
+          if (fileNotExist(path + File.separator + "lb16.table.row.s.htm")) {
+            path = "web";
+          }
+          html_row = Tools.getTextFromFile(path + File.separator + "lb16.table.row.s.htm");
+        }
         CONTENT += "<tr>";
         CONTENT += "<td>" + pos + "</td>";
         CONTENT += "<td>" + usr.PILOT + "</td>";
@@ -634,21 +684,21 @@ public class TVTranslationServlet extends HttpServlet {
           CONTENT += "<td><center>" + usr.info + "</center></td>";
         }
         CONTENT += "</tr>";
-        
+
         IVar varsPool1 = new VarPool();
-        varsPool1.addChild(new StringVar("POS", ""+pos));
+        varsPool1.addChild(new StringVar("POS", "" + pos));
         varsPool1.addChild(new StringVar("PILOT", usr.PILOT));
-        varsPool1.addChild(new StringVar("SCORE", ""+usr.SCORE));
-        varsPool1.addChild(new StringVar("RACES", ""+usr.NUM_IN_GROUP));
-        varsPool1.addChild(new StringVar("ALL_RACES", ""+usr.GROUP_NUM));
-        varsPool1.addChild(new StringVar("LAPS", ""+usr.LAPS));
+        varsPool1.addChild(new StringVar("SCORE", "" + usr.SCORE));
+        varsPool1.addChild(new StringVar("RACES", "" + usr.NUM_IN_GROUP));
+        varsPool1.addChild(new StringVar("ALL_RACES", "" + usr.GROUP_NUM));
+        varsPool1.addChild(new StringVar("LAPS", "" + usr.LAPS));
         varsPool1.addChild(new StringVar("RACE_TIME", StageTab.getTimeIntervel(usr.RACE_TIME)));
         varsPool1.addChild(new StringVar("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP)));
-        varsPool1.addChild(new StringVar("info", usr.info));        
-        
+        varsPool1.addChild(new StringVar("info", usr.info));
+
         ROWS += varsPool1.applyValues(html_row);
-        
-        pos++;                        
+
+        pos++;
       }
 
       CONTENT += "</table></p>";
@@ -658,6 +708,15 @@ public class TVTranslationServlet extends HttpServlet {
       varsPool.addChild(new StringVar("CONTENT", CONTENT));
       varsPool.addChild(new StringVar("ROWS", ROWS));
       varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
+      
+      varsPool.addChild(new StringVar("Caption_Pos",  mainForm.getLocaleString("Pos")));      
+      varsPool.addChild(new StringVar("Caption_Pilot",  mainForm.getLocaleString("Pilot")));
+      varsPool.addChild(new StringVar("Caption_Score",  mainForm.getLocaleString("Score")));
+      varsPool.addChild(new StringVar("Caption_Flights",  mainForm.getLocaleString("Flights")));
+      varsPool.addChild(new StringVar("Caption_Laps",  mainForm.getLocaleString("Laps")));
+      varsPool.addChild(new StringVar("Caption_RaceTime",  mainForm.getLocaleString("Race Time")));
+      varsPool.addChild(new StringVar("Caption_BestLap",  mainForm.getLocaleString("Best Lap")));
+               
       String outHtml = varsPool.applyValues(html);
       resp.getWriter().println(outHtml);
     } catch (Exception e) {
@@ -667,7 +726,11 @@ public class TVTranslationServlet extends HttpServlet {
   }
 
   public void generateBlank(HttpServletResponse resp) throws IOException {
-    String html = Tools.getTextFromFile("web" + File.separator + "tv.template.blank.htm");
+    String path = CUSTOM_PATH;
+    if (fileNotExist(path + File.separator + "tv.template.blank.htm")) {
+      path = "web";
+    }
+    String html = Tools.getTextFromFile(path + File.separator + "tv.template.blank.htm");
     String CONTENT = "";
     IVar varsPool = new VarPool();
     varsPool.addChild(new StringVar("CONTENT", CONTENT));
@@ -688,9 +751,9 @@ public class TVTranslationServlet extends HttpServlet {
         generateBlank(resp);
       }
     } else if (req.getServletPath().equalsIgnoreCase("/lb16.ajax")) {
-      if (req.getQueryString().indexOf("short")>=0){
-        showLB16(req, resp, true); 
-      }else{
+      if (req.getQueryString().indexOf("short") >= 0) {
+        showLB16(req, resp, true);
+      } else {
         showLB16(req, resp, false);
       }
     } else if (req.getServletPath().equalsIgnoreCase("/osd.ajax")) {
@@ -710,11 +773,11 @@ public class TVTranslationServlet extends HttpServlet {
         if (mainForm.lastRaceGroup != null) {
           boolean lite = false;
           String pilot_templ = "group-result-templ.pilot.html";
-          if (req.getQueryString().indexOf("lite")>=0){ 
-            lite = true; 
+          if (req.getQueryString().indexOf("lite") >= 0) {
+            lite = true;
             pilot_templ = "group-result-lite-templ.pilot.html";
           }
-          showResultGroup(req, resp, mainForm.lastRaceGroup, 3, pilot_templ,lite);
+          showResultGroup(req, resp, mainForm.lastRaceGroup, 3, pilot_templ, lite);
         } else {
           generateBlank(resp);
         }
