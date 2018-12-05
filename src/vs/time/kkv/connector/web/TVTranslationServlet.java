@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import javax.servlet.ServletException;
@@ -50,6 +51,49 @@ public class TVTranslationServlet extends HttpServlet {
   MainForm mainForm = null;
 
   public String CUSTOM_PATH = "web" + File.separator + "customs";
+  
+  public static Comparator GROUP_RACETIME_COMPARATOR = new Comparator<VS_STAGE_GROUPS>() {
+    @Override
+    public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
+      if (o1.GROUP_NUM < o2.GROUP_NUM) {
+        return 1;
+      }
+      if (o1.GROUP_NUM > o2.GROUP_NUM) {
+        return -1;
+      }
+      if (o1.LAPS < o2.LAPS) {
+        return 1;
+      }
+      if (o1.LAPS > o2.LAPS) {
+        return -1;
+      }      
+      if (o1.RACE_TIME > o2.RACE_TIME) {
+        return 1;
+      }
+      if (o1.RACE_TIME < o2.RACE_TIME) {
+        return -1;
+      }
+      if (o1.SCORE < o2.SCORE) {
+        return 1;
+      }
+      if (o1.SCORE > o2.SCORE) {
+        return -1;
+      }
+      if (o1.QUAL_TIME > o2.QUAL_TIME) {
+        return 1;
+      }
+      if (o1.QUAL_TIME < o2.QUAL_TIME) {
+        return -1;
+      }      
+      if (o1.BEST_LAP > o2.BEST_LAP) {
+        return 1;
+      }
+      if (o1.BEST_LAP < o2.BEST_LAP) {
+        return -1;
+      }
+      return 0;
+    }
+  };
 
   public boolean fileNotExist(String fileName) {
     try {
@@ -236,8 +280,11 @@ public class TVTranslationServlet extends HttpServlet {
         channel = channels[i];
       }
 
-      List<VS_STAGE_GROUPS> sorted_users = group.users;
-      Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
+      List<VS_STAGE_GROUPS> sorted_users = new ArrayList();
+      for (VS_STAGE_GROUPS usr : group.users){
+        sorted_users.add(usr);
+      }      
+      Collections.sort(sorted_users, GROUP_RACETIME_COMPARATOR);
 
       //if (group != null && group.users != null && group.users.size() > i) {
       for (VS_STAGE_GROUPS usr : sorted_users) {
@@ -285,10 +332,12 @@ public class TVTranslationServlet extends HttpServlet {
       channels_st = group.stage.CHANNELS;
     }
     String[] channels = channels_st.split(";");
-
    
-    List<VS_STAGE_GROUPS> sorted_users = group.users;
-    Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
+    List<VS_STAGE_GROUPS> sorted_users = new ArrayList();
+      for (VS_STAGE_GROUPS usr : group.users){
+        sorted_users.add(usr);
+    }    
+    Collections.sort(sorted_users, GROUP_RACETIME_COMPARATOR);
     
     PilotInfo[] pInfos = new PilotInfo[6];
     for (int i = 0; i < 6; i++) {
