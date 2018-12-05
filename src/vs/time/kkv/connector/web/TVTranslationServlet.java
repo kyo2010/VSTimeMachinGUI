@@ -303,6 +303,7 @@ public class TVTranslationServlet extends HttpServlet {
       pInfo.addPilotInfo(varsPool, isRace, pilotTemplate);
     }
     varsPool.addChild(new StringVar("ACTIVE_GROUP_NUMBER", "" + group.GROUP_NUM));
+    varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
 
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);

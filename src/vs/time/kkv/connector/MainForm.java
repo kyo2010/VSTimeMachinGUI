@@ -513,7 +513,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     TRANS_FOR_GATE_BLINK = VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false;
     TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
 
-    BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png");
+    BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png")+"?t="+Calendar.getInstance().getTimeInMillis();
 
     if (vsTimeConnector != null && vsTimeConnector.connected) {
       try {
