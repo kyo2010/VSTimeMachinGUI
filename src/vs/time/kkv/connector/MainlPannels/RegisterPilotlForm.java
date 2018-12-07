@@ -27,6 +27,7 @@ import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 import vs.time.kkv.models.VS_STAGE;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
 import vs.time.kkv.models.VS_USERS;
 
 /**
@@ -569,6 +570,7 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
 
         // PHOTO           
         if (PHOTO.isChaged) {
+          VS_STAGE_GROUPS.resetRefreshReg(usr.ID);
           if (!isNew && !usr.PHOTO.equalsIgnoreCase("") && !usr.PHOTO.equalsIgnoreCase(PHOTO.imgFileName)) {
             new File(usr.PHOTO).delete();
           }

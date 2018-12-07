@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 
 public class VS_STAGE_GROUPS implements Transferable {
@@ -151,7 +152,7 @@ public class VS_STAGE_GROUPS implements Transferable {
     new DBModelField("loses").setDbFieldName("\"LOSES\""),  
     new DBModelField("PILOT_TYPE").setDbFieldName("\"PILOT_TYPE\""),
   });
-
+  
   public VS_REGISTRATION getRegistration(Connection conn, long raceID) {
     loadRegistration(conn, raceID);
     return registration;
@@ -161,9 +162,15 @@ public class VS_STAGE_GROUPS implements Transferable {
     registration = null;
   }
 
-  ;
-  
+  static Vector<Long> pleaseRefreshRegs = new Vector();
+  public static void resetRefreshReg(Long REG_ID){
+    pleaseRefreshRegs.add(REG_ID);
+  }
   public void loadRegistration(Connection conn, long raceID) {
+    if (pleaseRefreshRegs.contains(REG_ID)){
+      registration = null;
+      pleaseRefreshRegs.remove(REG_ID);
+    }
     try {
       if (registration == null && REG_ID != 0) {
         registration = VS_REGISTRATION.dbControl.getItem(conn, "VS_RACE_ID=? and ID=?", raceID, REG_ID);

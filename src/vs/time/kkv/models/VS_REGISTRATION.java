@@ -100,6 +100,11 @@ public class VS_REGISTRATION {
   }
 
   public static VS_USERS updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr) {
+    
+    if (usr.VS_USER_NAME.equalsIgnoreCase("xfOL")){
+      int y = 0;
+    }
+    
     // Creating global user  
     VS_USERS global_user = null;
     try {
@@ -142,8 +147,11 @@ public class VS_REGISTRATION {
       }
       global_user.PHOTO = usr.PHOTO;
       String fileName = usr.PHOTO;
-      fileName = VS_REGISTRATION.PHOTO_PATH + "pilot_" + global_user.ID + "." + FilenameUtils.getExtension(usr.PHOTO);
+      fileName = VS_REGISTRATION.PHOTO_PATH + "pilot_" + usr.WEB_SYSTEM+"_" +global_user.ID + "." + FilenameUtils.getExtension(usr.PHOTO);
       new File(VS_REGISTRATION.PHOTO_PATH).mkdirs();
+      try{
+        new File(fileName).delete();
+      }catch(Exception e){}
       try {
         // FileUtils.copyFile(new File(usr.PHOTO), new File(fileName));
         ImageImplement.savePhotoAndResize(usr.PHOTO, fileName);
