@@ -90,6 +90,9 @@ public class RaceHttpServer  implements  Runnable {
       //resource_handler.setDirectoriesListed(true);
       resource_handler.setWelcomeFiles(new String[]{ "index.html" });
       resource_handler.setResourceBase("web");
+      ContextHandler pContextHandler= new ContextHandler("/web/pilots_photo/"); 
+      pContextHandler.setHandler(resource_handler);    
+      
       ContextHandler contextHandler= new ContextHandler("/"); 
       contextHandler.setHandler(resource_handler);      
          
@@ -97,9 +100,9 @@ public class RaceHttpServer  implements  Runnable {
       ResourceHandler resource_pilot_handler = new ResourceHandler();
       //resource_handler.setDirectoriesListed(true);
       resource_pilot_handler.setWelcomeFiles(new String[]{ "index.html" });
-      resource_pilot_handler.setResourceBase("web/pilots_photo");
-      ContextHandler pContextHandler= new ContextHandler("/web/pilots_photo/"); 
-      pContextHandler.setHandler(resource_handler);    
+      
+      //resource_pilot_handler.setResourceBase("web/pilots_photo");
+    
       
      // 
       //handler.addServlet(resource_handler,"/");

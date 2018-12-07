@@ -813,10 +813,10 @@ public class TVTranslationServlet extends HttpServlet {
     } else if (req.getServletPath().equalsIgnoreCase("/osd.ajax")) {
       if (mainForm.activeGroup != null) {
         showGroup(req, resp, mainForm.activeGroup, 1, null);
-      } else if (mainForm.invateGroup != null) {
-        showGroup(req, resp, mainForm.invateGroup, 0, null);
       } else if (mainForm.lastRaceGroup != null) {
         showGroup(req, resp, mainForm.lastRaceGroup, 1, null);
+      } else if (mainForm.invateGroup != null) {
+        showGroup(req, resp, mainForm.invateGroup, 0, null);        
       } else if (mainForm.lastInvateGroup != null) {
         showGroup(req, resp, mainForm.lastInvateGroup, 0, null);
       } else {
