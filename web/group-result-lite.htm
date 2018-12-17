@@ -131,53 +131,14 @@
 </head>
 <body background="images/chromokey.png">
   <p name="place" id="place" style="margin: 0px"></p>
-  <script type="text/javascript">
 
-   function loadHTML(url){
-     var req = null;
-     if(window.XMLHttpRequest){           
-       req = new XMLHttpRequest();
-       if (req.overrideMimeType) {
-         req.overrideMimeType('text/xml');
-       }
-       req.open("GET", url, false);
-       req.send(null);
-    }else if(window.ActiveXObject){
-      req = new ActiveXObject("Microsoft.XMLHTTP");
-      if(req){
-        req.open("GET", url, false);
-        req.send();
-      }
-    }
-    if (req != null && req.responseText != undefined){
-      return req.responseText;
-    }else{
-      return new String('');
-    } 
-  }
-  updateTable();
-  setInterval('updateTable()', 1000);
-  cashTime = Date.now();
-  function updateTable(){
-    try {
-      var place = document.getElementById("place");
-      //alert(place);
-      place.innerHTML = loadHTML("group_result.ajax?mode=lite&time"+Date.now());
-      cashTime = Date.now();
-      var arr = place.getElementsByTagName('script')
-      for (var n = 0; n < arr.length; n++){
-        eval(arr[n].innerHTML);//run script inside div
-      }
-    }catch(err){}
-  };
-  setInterval('checkCashe()', 1500);
-  function checkCashe(){
-    try {
-      if ((cashTime+3000)<Date.now()){
-        place.innerHTML = "";
-      }
-    }catch(err){}
-  };
-</script>
+  <script type="text/javascript" src="css/script.js"></script>
+  <script type="text/javascript">  
+    URL='group_result.ajax?mode=lite&';
+    updateTable();
+    setInterval('updateTable()', 1000);
+  </script>
+
+
 </body>
 </html>

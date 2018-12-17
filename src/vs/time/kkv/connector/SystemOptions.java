@@ -32,7 +32,7 @@ public class SystemOptions extends javax.swing.JFrame {
     }
     return pwd;
   }
-
+     
   /**
    * Creates new form WLANSetting
    */
@@ -77,7 +77,11 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.TRANS_FOR_GATE.setText(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE", "0"));
     singelton.TRANS_FOR_GATE_BLINK.setSelected(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false);
     singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));
-
+    
+    
+    singelton.USE_TRAFIC_LIGHT.setSelected(VS_SETTING.getParam(mainForm.con, "USE_TRAFIC_LIGHT", 0) == 1 ? true : false);
+    singelton.TRANS_TRAFIC_LIGHT.setText(VS_SETTING.getParam(mainForm.con, "TRANS_TRAFIC_LIGHT", ""));      
+    
     singelton.edWaitingTime.setText(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
     
     singelton.webAdminPassword.setText(getPasswordForAdminWeb());    
@@ -152,6 +156,9 @@ public class SystemOptions extends javax.swing.JFrame {
     jLabel5 = new javax.swing.JLabel();
     TRANS_FOR_GATE_COLOR = new javax.swing.JComboBox<>();
     TRANS_FOR_GATE_BLINK = new javax.swing.JCheckBox();
+    USE_TRAFIC_LIGHT = new javax.swing.JCheckBox();
+    jLabel14 = new javax.swing.JLabel();
+    TRANS_TRAFIC_LIGHT = new javax.swing.JTextField();
     jPanel5 = new javax.swing.JPanel();
     OBS_USE_WEB_SOCKET = new javax.swing.JCheckBox();
     jLabel8 = new javax.swing.JLabel();
@@ -361,6 +368,14 @@ public class SystemOptions extends javax.swing.JFrame {
 
     TRANS_FOR_GATE_BLINK.setText("Blink");
 
+    USE_TRAFIC_LIGHT.setText("Use traffic light");
+    USE_TRAFIC_LIGHT.setToolTipText("");
+    USE_TRAFIC_LIGHT.setFocusable(false);
+
+    jLabel14.setText("Transponder ID for traffic light");
+
+    TRANS_TRAFIC_LIGHT.setText("0");
+
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
     jPanel4.setLayout(jPanel4Layout);
     jPanel4Layout.setHorizontalGroup(
@@ -368,37 +383,54 @@ public class SystemOptions extends javax.swing.JFrame {
       .addGroup(jPanel4Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(USE_TRANS_FOR_GATE)
           .addGroup(jPanel4Layout.createSequentialGroup()
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel4)
-              .addComponent(jLabel5))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(TRANS_FOR_GATE_COLOR, 0, 160, Short.MAX_VALUE)
-              .addComponent(TRANS_FOR_GATE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(TRANS_FOR_GATE_BLINK)))
-        .addContainerGap(80, Short.MAX_VALUE))
+              .addComponent(USE_TRANS_FOR_GATE)
+              .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel4)
+                  .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                  .addComponent(TRANS_FOR_GATE_COLOR, 0, 160, Short.MAX_VALUE)
+                  .addComponent(TRANS_FOR_GATE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TRANS_FOR_GATE_BLINK))
+              .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TRANS_TRAFIC_LIGHT)))
+            .addContainerGap(80, Short.MAX_VALUE))
+          .addGroup(jPanel4Layout.createSequentialGroup()
+            .addComponent(USE_TRAFIC_LIGHT)
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
     );
     jPanel4Layout.setVerticalGroup(
       jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel4Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(USE_TRANS_FOR_GATE)
-        .addGap(18, 18, 18)
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel4)
-          .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(TRANS_FOR_GATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel4))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(TRANS_FOR_GATE_BLINK)
           .addComponent(jLabel5)
-          .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(TRANS_FOR_GATE_BLINK))
-        .addContainerGap(169, Short.MAX_VALUE))
+          .addComponent(TRANS_FOR_GATE_COLOR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(15, 15, 15)
+        .addComponent(USE_TRAFIC_LIGHT)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(TRANS_TRAFIC_LIGHT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel14))
+        .addContainerGap(107, Short.MAX_VALUE))
     );
 
-    jTabbedPane1.addTab("Gate", jPanel4);
+    jLabel14.getAccessibleContext().setAccessibleName("Transonder ID for Traffic light");
+
+    jTabbedPane1.addTab("VS Transpnder", jPanel4);
 
     OBS_USE_WEB_SOCKET.setText("Use OBS Web Socket");
     OBS_USE_WEB_SOCKET.setToolTipText("");
@@ -540,6 +572,9 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "" + TRANS_FOR_GATE_COLOR.getSelectedItem());
     VS_SETTING.setParam(mainForm.con, "TRANS_FOR_GATE_BLINK", "" + (TRANS_FOR_GATE_BLINK.isSelected() ? 1 : 0));
 
+    VS_SETTING.setParam(mainForm.con, "USE_TRAFIC_LIGHT", "" + (USE_TRAFIC_LIGHT.isSelected() ? 1 : 0));    
+    VS_SETTING.setParam(mainForm.con, "TRANS_TRAFIC_LIGHT", "" + TRANS_TRAFIC_LIGHT.getText());    
+    
     VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", "" + backgroundImagesForTv.getSelectedItem());
     Tools.setPreference("webAdminPassword", webAdminPassword.getText());
 
@@ -600,6 +635,8 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JTextField TRANS_FOR_GATE;
   private javax.swing.JCheckBox TRANS_FOR_GATE_BLINK;
   private javax.swing.JComboBox<String> TRANS_FOR_GATE_COLOR;
+  private javax.swing.JTextField TRANS_TRAFIC_LIGHT;
+  private javax.swing.JCheckBox USE_TRAFIC_LIGHT;
   private javax.swing.JCheckBox USE_TRANS_FOR_GATE;
   private javax.swing.JTextField WEB_PORT;
   private javax.swing.JCheckBox WebServiceStartOnRun;
@@ -614,6 +651,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel13;
+  private javax.swing.JLabel jLabel14;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

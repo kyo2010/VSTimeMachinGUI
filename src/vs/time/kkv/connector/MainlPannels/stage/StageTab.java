@@ -109,7 +109,7 @@ public class StageTab extends javax.swing.JPanel {
   public VS_STAGE stage = null;
   StageTreeModel treeModel = null;
   public JPopupMenu popupMenuJTree = null;
-  public StageTableAdapter stageTableAdapter = null;  
+  public StageTableAdapter stageTableAdapter = null;
   public boolean FIRST_RACER_IS_FINISHED = false;
 
   public boolean pleasuUpdateTree = false;
@@ -214,7 +214,7 @@ public class StageTab extends javax.swing.JPanel {
         mainForm.vsTimeConnector.checkConnection();
       }
       Timer timer = (Timer) e.getSource();
-      if (checkerCycle == 0){
+      if (checkerCycle == 0) {
         new InfoForm(mainForm, "Check", 100);
       }
 
@@ -446,10 +446,10 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
     popupMenuJTree = new JPopupMenu();
-    
+
     JMenuItem miCopyResultToBuffer = new JMenuItem("Copy Result to buffer");
     popupMenuJTree.add(miCopyResultToBuffer);
-    
+
     JMenuItem miExport = new JMenuItem("Export");
     popupMenuJTree.add(miExport);
 
@@ -477,19 +477,19 @@ public class StageTab extends javax.swing.JPanel {
         addUserToTreeTree();
       }
     });
-    
+
     miCopyResultToBuffer.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-Object obj = null;
+        Object obj = null;
         if (jTree.getSelectionPath() != null && jTree.getSelectionPath().getLastPathComponent() != null) {
           obj = jTree.getSelectionPath().getLastPathComponent();
-        }        
+        }
         if (obj != null && obj instanceof VS_STAGE_GROUP) {
           VS_STAGE_GROUP group = (VS_STAGE_GROUP) obj;
           copyResultToClipBoard(group);
-        }        
-        
+        }
+
       }
     });
     miDelete.addActionListener(new ActionListener() {
@@ -618,8 +618,8 @@ Object obj = null;
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
-    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION);
-    
+    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);
+
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true);
@@ -1218,13 +1218,12 @@ Object obj = null;
     }
 
     jTable.setRowHeight(30);
-     
+
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);
-   
+
     //System.out.println("Table UI:"+jTable.getUI().getClass().toString());
-    
     jTable.setDefaultEditor(JButton.class, new ButtonEditor(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -1242,41 +1241,41 @@ Object obj = null;
             /*if (!source.isRowSelected(row)) {
               source.changeSelection(row, column, false, false);
             }*/
-              StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
-              if (td == null || !td.isGrpup) {
+            StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+            if (td == null || !td.isGrpup) {
+              return;
+            }
+            //INAVITATION          
+            if (column == 3 && td != null && td.isGrpup) {  // Press invate
+              invateAction(td.group.GROUP_NUM, true);
+            }
+
+            if (column == 2 && td != null && td.isGrpup) { // Seach and Check and Ligting
+              if (checkerTimer.isRunning()) {
+                //checkerTimer.stop();
+                stopSearch();
+                refreshTable();
                 return;
               }
-              //INAVITATION          
-              if (column == 3 && td != null && td.isGrpup) {  // Press invate
-                invateAction(td.group.GROUP_NUM, true);
-              }
-
-              if (column == 2 && td != null && td.isGrpup) { // Seach and Check and Ligting
-                if (checkerTimer.isRunning()) {
-                  //checkerTimer.stop();
-                  stopSearch();
-                  refreshTable();
-                  return;
-                }
-                startSearchAction(td.group.GROUP_NUM, true);
-              }
-              if (column == 1 && td != null && td.isGrpup) { // Start Race
-                if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
-                  if (Math.abs(Calendar.getInstance().getTimeInMillis() - mainForm.raceTime)<5000){
-                    int res = JOptionPane.showConfirmDialog(StageTab.this,  "Do you want to stop the Race ?", "Information", JOptionPane.YES_NO_OPTION);
-                    if (res == JOptionPane.YES_OPTION) {
-                      stopRace(false);
-                      refreshTable();  
-                    }
-                  }else{  
+              startSearchAction(td.group.GROUP_NUM, true);
+            }
+            if (column == 1 && td != null && td.isGrpup) { // Start Race
+              if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
+                if (Math.abs(Calendar.getInstance().getTimeInMillis() - mainForm.raceTime) < 5000) {
+                  int res = JOptionPane.showConfirmDialog(StageTab.this, "Do you want to stop the Race ?", "Information", JOptionPane.YES_NO_OPTION);
+                  if (res == JOptionPane.YES_OPTION) {
                     stopRace(false);
                     refreshTable();
-                  }  
-                  //timerCaption.setVisible(false);              
+                  }
                 } else {
-                  startRaceAction(td.group.GROUP_NUM, true);
+                  stopRace(false);
+                  refreshTable();
                 }
-              }           
+                //timerCaption.setVisible(false);              
+              } else {
+                startRaceAction(td.group.GROUP_NUM, true);
+              }
+            }
           }
         } catch (Exception ein) {
         }
@@ -1464,8 +1463,8 @@ Object obj = null;
 
   }//GEN-LAST:event_butCopyToClipboardActionPerformed
 
-  public void copyResultToClipBoard(VS_STAGE_GROUP st_gr){
-  boolean useBold = true;
+  public void copyResultToClipBoard(VS_STAGE_GROUP st_gr) {
+    boolean useBold = true;
 
     int len = getMaxPilotName();
     String sep = " | ";
@@ -1473,29 +1472,35 @@ Object obj = null;
 
     //text.append(mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "\n");
     int laps = stage.LAPS;
-    if (laps>=20) laps=999;
-    text.append(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION +" "+ mainForm.getLocaleString("Group")+st_gr.GROUP_NUM+ "\n");
-      for (VS_STAGE_GROUPS usr : st_gr.users) {
-        if (useBold) text.append("**");
-        text.append( usr.getFI());
-        if (useBold) text.append("**");
-        text.append("\n");                          
-        text.append("— "+mainForm.getLocaleString("Laps") +" : "+usr.LAPS+ " "+mainForm.getLocaleString("of")+" "+laps + "\n");
-        text.append("  "+mainForm.getLocaleString("Best Lap") +": "+ getTimeIntervel(usr.BEST_LAP) + "\n");
-        if (laps<999){
-          text.append("  "+mainForm.getLocaleString("Race Time") +": "+ getTimeIntervel(usr.RACE_TIME) + "\n");       
-        }
+    if (laps >= 20) {
+      laps = 999;
+    }
+    text.append(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " " + mainForm.getLocaleString("Group") + st_gr.GROUP_NUM + "\n");
+    for (VS_STAGE_GROUPS usr : st_gr.users) {
+      if (useBold) {
+        text.append("**");
       }
-    
+      text.append(usr.getFI());
+      if (useBold) {
+        text.append("**");
+      }
+      text.append("\n");
+      text.append("— " + mainForm.getLocaleString("Laps") + " : " + usr.LAPS + " " + mainForm.getLocaleString("of") + " " + laps + "\n");
+      text.append("  " + mainForm.getLocaleString("Best Lap") + ": " + getTimeIntervel(usr.BEST_LAP) + "\n");
+      if (laps < 999) {
+        text.append("  " + mainForm.getLocaleString("Race Time") + ": " + getTimeIntervel(usr.RACE_TIME) + "\n");
+      }
+    }
+
     StringSelection data = new StringSelection(text.toString());
     Clipboard cb = Toolkit.getDefaultToolkit()
             .getSystemClipboard();
     cb.setContents(data, data);
   }
-  
+
   private void butCopyGropusToClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butCopyGropusToClipboardActionPerformed
     // TODO add your handling code here:
-    
+
     boolean useBold = true;
 
     int len = getMaxPilotName();
@@ -1505,13 +1510,17 @@ Object obj = null;
     text.append(mainForm.getLocaleString("Race") + " : " + mainForm.activeRace.RACE_NAME + "\n");
     text.append(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + "\n");
     for (Integer grup_index : stage.groups.keySet()) {
-      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);      
-      if (useBold) text.append("**");
+      VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
+      if (useBold) {
+        text.append("**");
+      }
       text.append(mainForm.getLocaleString("Group") + st_gr.GROUP_NUM);
-      if (useBold) text.append("**");
-      text.append("\n");      
+      if (useBold) {
+        text.append("**");
+      }
+      text.append("\n");
       for (VS_STAGE_GROUPS usr : st_gr.users) {
-        text.append(usr.NUM_IN_GROUP+". ("+usr.CHANNEL+") " +usr.getFI() + "\n");
+        text.append(usr.NUM_IN_GROUP + ". (" + usr.CHANNEL + ") " + usr.getFI() + "\n");
       }
     }
 
@@ -1661,7 +1670,7 @@ Object obj = null;
     mainForm.lap_log.writeFile("---==  Stop Search  ==---");
     checkerTimer.stop();
     mainForm.checkingGrpup = null;
-    
+
     InfoForm.closeLastInfoFrom();
     if (mainForm.vsTimeConnector != null) {
       preapreTimeMachineToRace();
@@ -1669,7 +1678,7 @@ Object obj = null;
         Thread.currentThread().sleep(300);
       } catch (Exception ein) {
       }
-      preapreTimeMachineToRace();     
+      preapreTimeMachineToRace();
     }
     this.bStopChecking.setVisible(false);
   }
@@ -1725,14 +1734,14 @@ Object obj = null;
             qualification = VS_STAGE_GROUPS.dbControl.getMap(mainForm.con, "PILOT", "STAGE_ID=?", stages.get(0).ID);
           }
         }
-        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);                
+        VS_STAGE_GROUPS.dbControl.delete(mainForm.con, "STAGE_ID=?", stage.ID);
         String PILOT_TYPE_WHERE_FOR_USERS = "";
-        if (stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
-          PILOT_TYPE_WHERE_FOR_USERS =" AND PILOT_TYPE="+stage.PILOT_TYPE+" ";
+        if (stage.PILOT_TYPE != MainForm.PILOT_TYPE_NONE_INDEX) {
+          PILOT_TYPE_WHERE_FOR_USERS = " AND PILOT_TYPE=" + stage.PILOT_TYPE + " ";
         }
 
         if (parent_stage != null) {
-          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by GID", parent_stage.ID);
+          List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by GID", parent_stage.ID);
           // Copy grups to new Stage
           Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps = VS_RACE_LAP.dbControl.getMap3(mainForm.con, "GROUP_NUM", "TRANSPONDER_ID", "LAP", "RACE_ID=? and STAGE_ID=? order by GROUP_NUM", stage.RACE_ID, parent_stage.ID);
           if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
@@ -2090,7 +2099,7 @@ Object obj = null;
               }
             } else {
               // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
               //checkGroupConstrain();
               //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
@@ -2205,14 +2214,14 @@ Object obj = null;
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, usr);
               }
             }
-          }else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
-              try {
-                GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
-              } catch (UserException ue) {
-                JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
-              }
+          } else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
+            try {
+              GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+            } catch (UserException ue) {
+              JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
+            }
           } else { // Create pilot list as parent_id - only copy                       
-            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" order by GID", parent_stage.ID);
+            groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by GID", parent_stage.ID);
             // usual copy
             for (VS_STAGE_GROUPS usr : groups) {
               usr.GID = -1;
@@ -2235,13 +2244,13 @@ Object obj = null;
             }
           }
         } else if (GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE) != null) {
-              try {
-                GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
-              } catch (UserException ue) {
-                JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
-              }
-        }  else { // Parent Stage = null
-          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 "+PILOT_TYPE_WHERE_FOR_USERS+" ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
+          try {
+            GroupFactory.getRaceCreatorByCode(stage.STAGE_TYPE, stage.RACE_TYPE).createGroup(stage, parent_stage, mainForm.con);
+          } catch (UserException ue) {
+            JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
+          }
+        } else { // Parent Stage = null
+          List<VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getList(mainForm.con, "VS_RACE_ID=? and IS_ACTIVE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
           int count_man_in_group = 0;
           int GRUP_NUM = 1;
           String[] channels = stage.CHANNELS.split(";");
@@ -2540,6 +2549,14 @@ Object obj = null;
     }
     preapreTimeMachineToRace();
     mainForm.setColorForGate();
+
+    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+      try {
+        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW.getVSColor());
+      } catch (Exception e) {
+      }
+    }
+
     if (td != null && td.isGrpup == true) {
       if (stage.IS_LOCK == 1) {
         return "";
@@ -2564,11 +2581,11 @@ Object obj = null;
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
-      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION+ " - "+mainForm.getLocaleString("Group")+td.group.GROUP_NUM);
-      mainForm.activeGroup = td.group;        
-      refreshTable();       
+      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " - " + mainForm.getLocaleString("Group") + td.group.GROUP_NUM);
+      mainForm.activeGroup = td.group;
+      refreshTable();
       mainForm.lastRaceGroup = mainForm.activeGroup;
-                
+
       if (race != null && race.RANDOM_BEEP != 1) {
         new InfoForm(mainForm, "3");
         //if (useSpeach) mainForm.speaker.speak("Three!");                
@@ -2593,8 +2610,17 @@ Object obj = null;
                     } catch (Exception rt_e) {
                       MainForm._toLog(rt_e);
                     }
+                    
+                    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+                      try {
+                        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+                      } catch (Exception ein) {
+                      }
+                    }
+                    
                     new InfoForm(mainForm, "Go!");
-                    mainForm.beep.paly("beep");
+                    mainForm.beep.paly("beep");                    
+
                     //if (useSpeach) mainForm.speaker.speak("Go!");
                     mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
                     preapreTimeMachineToRace();
@@ -2623,7 +2649,7 @@ Object obj = null;
         t1.start();
       } else {
         new InfoForm(mainForm, "!!!");
-        mainForm.beep.palyAndWait("attention");        
+        mainForm.beep.palyAndWait("attention");
         int rnd = (int) (Math.random() * 3000);
         Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
           public void actionPerformed(ActionEvent e) {
@@ -2634,8 +2660,17 @@ Object obj = null;
             } catch (Exception rt_e) {
               MainForm._toLog(rt_e);
             }
+            
+            if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+              try {
+                mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+              } catch (Exception ein) {
+              }
+            }
+            
             new InfoForm(mainForm, "Go!");
-            mainForm.beep.paly("beep");
+            mainForm.beep.paly("beep");            
+
             //if (useSpeach) mainForm.speaker.speak("Go!");
             mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
             preapreTimeMachineToRace();
@@ -2720,9 +2755,17 @@ Object obj = null;
       }
       return message;
     }
+
+    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+      try {
+        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED.getVSColor());
+      } catch (Exception e) {
+      }
+    }
+
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
-      mainForm.obsConfig.changeSceneForInvate(mainForm.getLocaleString("Stage")+" : "+stage.CAPTION);
+      mainForm.obsConfig.changeSceneForInvate(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);
       mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {

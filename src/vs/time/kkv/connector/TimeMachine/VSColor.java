@@ -22,6 +22,7 @@ public class VSColor {
   public static VSColor GREEN = new VSColor("GREEN",BYTE_0, BYTE_1, BYTE_0, Color.GREEN);
   public static VSColor BLUE = new VSColor("BLUE",BYTE_1, BYTE_0, BYTE_0, Color.BLUE);
   public static VSColor WHITE = new VSColor("WHITE",BYTE_1, BYTE_1, BYTE_1, Color.WHITE);
+  public static VSColor YELLOW = new VSColor("YELLOW",BYTE_0, BYTE_1, BYTE_1, Color.YELLOW);
   public static VSColor AQUA = new VSColor("AQUA",BYTE_1, BYTE_1, BYTE_0, new Color(140, 255, 255));
   
   public static VSColor[] CHANNEL_COLORS_FIXED = new VSColor[]{

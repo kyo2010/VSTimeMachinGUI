@@ -134,6 +134,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
   public OBSConfig obsConfig = null;
+  
+  public boolean USE_TRAFIC_LIGHT = false;
+  public int TRANS_TRAFIC_LIGHT = 0;
 
   public String BACKGROUND_FOR_TV = "";
 
@@ -507,11 +510,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this);
     STAGE_COLUMN.changeLocale(RegistrationModelTable.STAGE_COLUMNS_STAGE, this);
 
-    USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0) == 1 ? true : false;
-    TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);
-
-    TRANS_FOR_GATE_BLINK = VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false;
-    TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
+    try{
+      USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0) == 1 ? true : false;
+      TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);
+      TRANS_FOR_GATE_BLINK = VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false;
+      TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
+    }catch(Exception e){}
+    
+    try{
+      USE_TRAFIC_LIGHT = VS_SETTING.getParam(con, "USE_TRAFIC_LIGHT", 0)==1 ? true : false;
+      TRANS_TRAFIC_LIGHT = VS_SETTING.getParam(con, "TRANS_TRAFIC_LIGHT", 0);      
+    }catch(Exception e){}
+    
 
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png")+"?t="+Calendar.getInstance().getTimeInMillis();
 
