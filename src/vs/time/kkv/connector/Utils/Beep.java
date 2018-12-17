@@ -18,6 +18,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import marytts.util.io.FileUtils;
 import vs.time.kkv.connector.MainForm;
 
@@ -107,6 +108,7 @@ public class Beep {
           clip = (Clip) AudioSystem
                   .getLine(dataLineInfo);
           clip.open(audioInputStream);
+
           //clip.start();
           isLoaded = true;
         }
@@ -116,7 +118,18 @@ public class Beep {
       }
     }
 
+    public void setVolume(float volume) {
+     // if (volume < 0f || volume > 1f)
+     //   throw new IllegalArgumentException("Volume not valid: " + volume);
+      try {
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(volume));
+      } catch (Exception e) {
+      }
+    }
+
     public void play() {
+      setVolume(1f);
       clip.setMicrosecondPosition(0);
       if (clip != null) {
         clip.start();
