@@ -54,6 +54,7 @@ public class VS_SETTING {
     try{
       VS_SETTING v1 = VS_SETTING.dbControl.getItem(conn, "PARAM_NAME=?", paramName);
       if (v1!=null){
+        if (v1.PARAM_VALUE!=null && v1.PARAM_VALUE.equalsIgnoreCase("")) return 0;
         return Integer.parseInt(v1.PARAM_VALUE);
       }  
     }catch(Exception e){

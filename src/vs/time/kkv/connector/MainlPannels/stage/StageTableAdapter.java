@@ -325,12 +325,18 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           if (parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             // Собирать все Raсe у которых PARENT_STAGE_ID 
             union_stage_id = parent_stage.PARENT_STAGE_ID;
+            //if (union_stage_id==-1) union_stage_id = tab.stage.PARENT_STAGE_ID;
           }
         } catch (Exception e) {
         }
 
         // get all results        
-        List<VS_STAGE_GROUPS> all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=? and stage.RACE_ID=?) ", MainForm.STAGE_RACE, union_stage_id, tab.stage.RACE_ID);
+        List<VS_STAGE_GROUPS> all_groups = null;
+        if (union_stage_id==-1){
+          all_groups= VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.ID=? and stage.RACE_ID=?)", /*MainForm.STAGE_RACE,*/  tab.stage.PARENT_STAGE_ID, tab.stage.RACE_ID);         
+        }else{
+          all_groups= VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=? and stage.RACE_ID=?) ", MainForm.STAGE_RACE, union_stage_id, tab.stage.RACE_ID);
+        }
         List<VS_STAGE_GROUPS> results = new ArrayList<VS_STAGE_GROUPS>();
         HashMap<String, VS_STAGE_GROUPS> pilots = new HashMap<String, VS_STAGE_GROUPS>();
         Map<String, VS_REGISTRATION> regs = VS_REGISTRATION.dbControl.getMap(tab.mainForm.con, "VS_TRANS1", "VS_RACE_ID=?", tab.stage.RACE_ID);
@@ -502,8 +508,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           List<VS_STAGE_GROUPS> groups = null;
           if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
             groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stage.ID);
-          } else {
+          } else {                        
             groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, LAPS desc, RACE_TIME", stage.ID);
+            ISort sc = SortFactory.getSortComparatorByID(tab.stage.SORT_TYPE);
+            if (sc != null) {
+              Collections.sort(groups, sc);
+            }
           }
 
           for (VS_STAGE_GROUPS usr : groups) {
