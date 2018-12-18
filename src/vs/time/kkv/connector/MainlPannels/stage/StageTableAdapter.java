@@ -485,9 +485,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             int count = 0;
             // First Race = Race Result
             for (VS_STAGE race : races) {
-              if (count < 1) {
+              //if (count < 1) {
                 stages.add(count, race);
-              }
+              //}
               count++;
             }
           }
