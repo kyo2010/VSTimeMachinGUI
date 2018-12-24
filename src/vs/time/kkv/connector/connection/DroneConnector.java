@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.connection;
 
 import KKV.Utils.Tools;
+import KKV.Utils.UserException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -46,14 +47,13 @@ import vs.time.kkv.models.VS_SETTING;
  *
  * @author kyo
  */
-public class VSTimeConnector {
+public class DroneConnector {
 
   public String comPort;
   int portForListing;
   int portForSending;
   public String network_sid;
   public String staticIP = null;
-  VSTimeMachineReciver reciver;
   public boolean connected = false;
   public String baseStationID = null;
   public int sensitivityIndex = 0;
@@ -66,13 +66,13 @@ public class VSTimeConnector {
   public Integer lastFlashTransponderID = null;
   public Map<Integer, String> flashResponse = new HashMap<Integer, String>();
   public boolean waitFirstPing = false;
-  public Connection connForParams = null;
+  //public Connection connForParams = null;
 
   public VSSendListener getSendListener() {
     return sendListener;
   }
 
-  public VSTimeConnector setSendListener(VSSendListener sendListener) {
+  public DroneConnector setSendListener(VSSendListener sendListener) {
     this.sendListener = sendListener;
     return this;
   }
@@ -95,12 +95,12 @@ public class VSTimeConnector {
     }
     return false;
   }
-  
-  public void rfidLock(int key) throws SerialPortException{
+
+  public void rfidLock(int key) throws SerialPortException {
     sentMessage("rfidlock:" + key + "\r\n");
   }
-  
-  public void rfidUnlock() throws SerialPortException{
+
+  public void rfidUnlock() throws SerialPortException {
     sentMessage("rfidunlock\r\n");
   }
 
@@ -121,31 +121,29 @@ public class VSTimeConnector {
     }
   }
 
-  public VSTimeConnector(VSTimeMachineReciver reciver, String port, String network_sid, String staticIP, int portForListing, int portForSending, Connection connForParams) {
-    comPort = port;
-    lastPingTime = Calendar.getInstance().getTimeInMillis();
-    this.portForListing = portForListing;
-    this.portForSending = portForSending;
-    this.reciver = reciver;
-    this.network_sid = network_sid;
-    this.staticIP = staticIP;
-    this.connForParams = connForParams;
-    //connect();
+  public DroneConnector(ConnectionVSTimeMachine transport ) {  
+    this.transport = transport;
+    transport.setVSTimeConnector(this);
+    try{
+      transport.connect();
+    }catch(Exception e){}
   }
 
   public void disconnect() {
     connected = false;
     if (transport != null) {
-      transport.disconnect();
+      try{
+        transport.disconnect();
+      }catch(Exception e){}
     }
     blinkingTimer.stop();
   }
 
   public class AfterConnectionCommsnds extends Thread {
 
-    VSTimeConnector conector = null;
+    DroneConnector conector = null;
 
-    public AfterConnectionCommsnds(VSTimeConnector conector) {
+    public AfterConnectionCommsnds(DroneConnector conector) {
       this.conector = conector;
       start();
     }
@@ -172,15 +170,14 @@ public class VSTimeConnector {
         //conector.hello();
         // for whoop
         // conector.setSensitivityMax();
-        if (connForParams==null){
+       /* if (connForParams == null) {
           //conector.setSensitivityMax();
-        }else{
+        } else {
           //int sens = VS_SETTING.getParam(connForParams, "VS_BASE_SENS", 8);
           //if (sens>8) sens = 8;
           //conector.setSensitivity(sens);
-        }  
-        
-        
+        }*/
+
         /*try {
           sleep(200);
         } catch (Exception e) {
@@ -202,8 +199,8 @@ public class VSTimeConnector {
 
   }
 
-  public void connect() throws InterruptedException, SerialPortException, IOException {
-    if (comPort.equalsIgnoreCase("WLAN")) {
+  public void connect() throws InterruptedException, SerialPortException, IOException, UserException {
+    /*if (comPort.equalsIgnoreCase("WLAN")) {
       transport = new ConnectionSocket(this, reciver, network_sid, staticIP, portForListing, portForSending);
       connected = true;
       WIFI = true;
@@ -211,7 +208,9 @@ public class VSTimeConnector {
       transport = new ConnectionCOMPort(this, reciver, comPort);
       connected = true;
       WIFI = false;
-    }
+    }*/
+    if (transport!=null) transport.connect();
+    
     lastPingTime = Calendar.getInstance().getTimeInMillis();
     new AfterConnectionCommsnds(this);
     blinkingTimer.start();
@@ -229,10 +228,9 @@ public class VSTimeConnector {
     sentMessage("sendpwr:" + powerIndex + "\r\n");
   }
 
- /* public void setPowerMax() throws SerialPortException {
+  /* public void setPowerMax() throws SerialPortException {
     setPower(11);
   }*/
-
   public void getPower() throws SerialPortException {
     sentMessage("rcvpwr\r\n");
   }
@@ -248,7 +246,6 @@ public class VSTimeConnector {
   /*public void setSensitivityMax() throws SerialPortException {
     setSensitivity(12);
   }*/
-
   public void setColor(int transponderID, int color) throws SerialPortException {
     //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");
     sentMessage("sendcolor:" + color + "," + transponderID + "\r\n");
@@ -309,24 +306,24 @@ public class VSTimeConnector {
   public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) {
     this.gateColor = gateColor;
     gateTransId = transID;
-    if (transID!=-1){    
+    if (transID != -1) {
       blinkigQuee.add(new BlinkigQuee(transID, color, gateColor, isBlink));
-    }  
+    }
     System.out.println("fire gate");
     blinkingTimer.setDelay(1);
     blinkingTimer.restart();
   }
-  
+
   VSColor gateColor = null;
   int gateTransId = -1;
-  int gateChecker= 0 ;
+  int gateChecker = 0;
   public Timer blinkingTimer = new Timer(100, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (connected && blinkigQuee.size() > 0) {
         blinkingTimer.setDelay(500);
         BlinkigQuee blink = blinkigQuee.get(0);
-        gateChecker=0;
+        gateChecker = 0;
         if (blink.state == 0) {
           try {
             if (blink.isBlink) {
@@ -370,19 +367,20 @@ public class VSTimeConnector {
               setColor(blink.transID, blink.gateColor.vscolor);
             }
           } catch (Exception ein) {
-          }          
-        }
-      }else{
-        gateChecker++;
-        if (gateChecker<=5){
-          //gateChecker=0;
-          if (gateColor!=null){
-            try{
-              setColor(gateTransId, gateColor.vscolor);
-            }catch(Exception ein){}              
           }
-        }        
-        
+        }
+      } else {
+        gateChecker++;
+        if (gateChecker <= 5) {
+          //gateChecker=0;
+          if (gateColor != null) {
+            try {
+              setColor(gateTransId, gateColor.vscolor);
+            } catch (Exception ein) {
+            }
+          }
+        }
+
       }
     }
   });
@@ -435,14 +433,17 @@ public class VSTimeConnector {
    */
   public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException, SerialPortException {
     //������� � ����������� ��� �����    
-    VSTimeConnector connector = new VSTimeConnector(new VSTimeMachineReciver() {
-      public void receiveDataForLog(String data){}
-      @Override
-      public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
-        //if (data.indexOf("ping")!=0)
-        System.out.print("receive:" + data);
-      }
-    }, "WLAN", "", null, 0, 0,null);
+    DroneConnector connector = new DroneConnector(
+     new ConnectionCOMPort(
+      new VSTimeMachineReciver() {
+          public void receiveDataForLog(String data) {
+          };
+        @Override
+        public void receiveData(String data, String[] commands, String[] params, VSTM_LapInfo lap) {
+          //if (data.indexOf("ping")!=0)
+          System.out.print("receive:" + data);
+        };
+       }, "COM5"));
     try {
       connector.connect();
     } catch (Exception e) {
@@ -525,19 +526,27 @@ public class VSTimeConnector {
       } else if (commands[0].equalsIgnoreCase("lap")) {
         try {
           VSTM_LapInfo lap = new VSTM_LapInfo();
-          lap.numberOfPacket = Integer.parseInt(params[0]);
-          lap.baseStationID = Integer.parseInt(params[1]);
-          lap.transponderID = Integer.parseInt(params[2]);
-          lap.time = Long.parseLong(params[3]);
-          lap.transpnderCounter = Integer.parseInt(params[4]);
-          long crc8_f = Long.parseLong(params[5]);
-          if (crc8 != crc8_f) {
-            last_error = "lap receive is error. crc8 is error " + crc8_f + "<>" + crc8;
-            System.out.print(last_error);
-            return null;
+                    
+          if (params[0] != null &&  params[0].indexOf("pilot")== 0) {
+             lap.isPilotNumber = true;
+             String num = params[0].substring(5);
+             lap.pilotNumber = Integer.parseInt(num);
+             return lap;
           } else {
-            sentMessage("lapreceived:" + lap.numberOfPacket + "," + lap.baseStationID + "\r\n");
-            return lap;
+            lap.numberOfPacket = Integer.parseInt(params[0]);
+            lap.baseStationID = Integer.parseInt(params[1]);
+            lap.transponderID = Integer.parseInt(params[2]);
+            lap.time = Long.parseLong(params[3]);
+            lap.transpnderCounter = Integer.parseInt(params[4]);
+            long crc8_f = Long.parseLong(params[5]);
+            if (crc8 != crc8_f) {
+              last_error = "lap receive is error. crc8 is error " + crc8_f + "<>" + crc8;
+              System.out.print(last_error);
+              return null;
+            } else {
+              sentMessage("lapreceived:" + lap.numberOfPacket + "," + lap.baseStationID + "\r\n");
+              return lap;
+            }
           }
           //int pos1
 

@@ -6,7 +6,7 @@
 package vs.time.kkv.connector;
 
 import vs.time.kkv.connector.web.RaceHttpServer;
-import vs.time.kkv.connector.connection.VSTimeConnector;
+import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageNewForm;
 import vs.time.kkv.connector.MainlPannels.*;
@@ -84,6 +84,8 @@ import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import static vs.time.kkv.connector.WLANSetting.singelton;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
+import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.models.DataBaseStructure;
 import vs.time.kkv.models.VS_BANDS;
 import vs.time.kkv.models.VS_STAGE;
@@ -99,7 +101,7 @@ import vs.time.kkv.models.VS_USERS;
  *
  * @author kyo
  */
-public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, VSTimeConnector.VSSendListener {
+public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, DroneConnector.VSSendListener {
 
   public boolean SAY_SECONDS_FOR_LAP = false;
 
@@ -183,7 +185,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     log.writeFile(st);
   }
 
-  public VSTimeConnector vsTimeConnector = null;
+  public DroneConnector vsTimeConnector = null;
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
   public TempFileWrite error_log = new TempFileWrite("error.log");
   public TempFileWrite lap_log = new TempFileWrite("lap.log");
@@ -1036,9 +1038,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
       };
 
-      vsTimeConnector = new VSTimeConnector(this, port,
-              VS_SETTING.getParam(con, "WAN_CONNECTION", ""), staticIP,
-              WLANSetting.init(this).PORT_LISTING_INT, WLANSetting.init(this).PORT_SENDING_INT, con);
+      if (port.equalsIgnoreCase("WLAN")){
+         vsTimeConnector = new DroneConnector(
+             new ConnectionSocket(this, 
+              VS_SETTING.getParam(con, "WAN_CONNECTION", ""), 
+              staticIP,
+              WLANSetting.init(this).PORT_LISTING_INT, 
+              WLANSetting.init(this).PORT_SENDING_INT));      
+      }else{
+        vsTimeConnector = new DroneConnector(new ConnectionCOMPort(this, port));
+      }          
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();

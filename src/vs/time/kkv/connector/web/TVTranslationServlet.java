@@ -684,10 +684,10 @@ public class TVTranslationServlet extends HttpServlet {
             return 1;
           }
           if (o1.RACE_TIME > o2.RACE_TIME) {
-            return -1;
+            return 1;
           }
           if (o1.RACE_TIME < o2.RACE_TIME) {
-            return 1;
+            return -1;
           }
           return 0;
         }
@@ -824,7 +824,23 @@ public class TVTranslationServlet extends HttpServlet {
       }
     } else if (req.getServletPath().equalsIgnoreCase("/group_result.ajax")) {
       try {
-        if (mainForm.lastRaceGroup != null) {
+         if (mainForm.activeGroup != null) {
+           boolean lite = false;
+          String pilot_templ = "group-result-templ.pilot.html";
+          if (req.getQueryString().indexOf("lite") >= 0) {
+            lite = true;
+            pilot_templ = "group-result-lite-templ.pilot.html";
+          }
+          showResultGroup(req, resp, mainForm.activeGroup, 3, pilot_templ, lite); 
+        }else if (mainForm.invateGroup != null) {
+           boolean lite = false;
+          String pilot_templ = "group-result-templ.pilot.html";
+          if (req.getQueryString().indexOf("lite") >= 0) {
+            lite = true;
+            pilot_templ = "group-result-lite-templ.pilot.html";
+          }
+          showResultGroup(req, resp, mainForm.invateGroup, 3, pilot_templ, lite); 
+        }else if (mainForm.lastRaceGroup != null) {
           boolean lite = false;
           String pilot_templ = "group-result-templ.pilot.html";
           if (req.getQueryString().indexOf("lite") >= 0) {

@@ -5,12 +5,16 @@
  */
 package vs.time.kkv.connector.connection;
 
+import KKV.Utils.UserException;
+
 /**
  *
  * @author kyo
  */
 public interface ConnectionVSTimeMachine {
   public void sendData(String data);
-  public void disconnect();
+  public void disconnect() throws UserException;
+  public void connect() throws UserException;
   public int getTimeOutForReconnect();
+  public void setVSTimeConnector (DroneConnector timeConnector);
 }

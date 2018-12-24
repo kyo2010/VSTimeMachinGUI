@@ -5,6 +5,7 @@
  */
 package vs.time.kkv.connector.connection.wan;
 
+import KKV.Utils.UserException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +22,11 @@ import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jssc.SerialPort;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.connection.ConnectionVSTimeMachine;
-import vs.time.kkv.connector.connection.VSTimeConnector;
+import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 
 /**
@@ -36,17 +38,39 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   //public DatagramSocket socketOut = null;
   public boolean finish = false;
   VSTimeMachineReciver receiver = null;
-  public VSTimeConnector timeConnector = null;
+  public DroneConnector timeConnector = null;
   public String network_sid = "";
   public boolean getIPAdressfromPackage = false;
+  String host = "localhost";
 
   public int port_for_listining = 8888;
   public int port_for_sending = 8889;
   InetAddress ipAddress = null;
   public String staticIP = null;
-  //InetAddress host = InetAddress.getAllByName(null);
 
-  public ConnectionSocket(VSTimeConnector timeConnector, VSTimeMachineReciver receiver, String network_sid, String staticIP, int portForListing, int portForSending) throws IOException {
+  public void setVSTimeConnector(DroneConnector timeConnector) {
+    this.timeConnector = timeConnector;
+  }
+
+  public void connect() throws UserException {
+    try {
+      if (staticIP == null) {
+        KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
+        if (ka != null) {
+          host = ka.multiHostAddress;
+        }
+        ipAddress = InetAddress.getByName(host);
+      } else {
+        ipAddress = InetAddress.getByName(staticIP);
+      }
+      finish = false;
+      start();
+    } catch (Exception e) {
+      throw new UserException("Connection is error", e.toString());
+    }
+  }
+  
+  public ConnectionSocket(VSTimeMachineReciver receiver, String network_sid, String staticIP, int portForListing, int portForSending) {
     super();
     if (portForListing != 0) {
       this.port_for_listining = portForListing;
@@ -56,24 +80,11 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
     this.staticIP = staticIP;
 
     this.receiver = receiver;
-    this.timeConnector = timeConnector;
+    //this.timeConnector = timeConnector;
 
-    String host = "localhost";
     //String host = "255.255.255.255";
     //String host = "192.168.197.255";
-    //String host = "192.168.197.100";
-
-    if (staticIP == null) {
-      KKVNetworkAdapter ka = KKVNetworkAdapter.getAddress(network_sid);
-      if (ka != null) {
-        host = ka.multiHostAddress;
-      }
-      ipAddress = InetAddress.getByName(host);
-    } else {
-      ipAddress = InetAddress.getByName(staticIP);
-    }
-
-    start();
+    //String host = "192.168.197.100";       
   }
 
   DatagramSocket sock = null;
@@ -106,7 +117,9 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
 
           String data = new String(data_b, 0, packet.getLength());
           data = data.trim();
-          if (receiver!=null) receiver.receiveDataForLog(data);
+          if (receiver != null) {
+            receiver.receiveDataForLog(data);
+          }
 
           // try{
           /*int len = data == null ? 0 : data.length();
@@ -123,7 +136,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
             int lpos = data.lastIndexOf(",");
             if (lpos > 0) {
               String nd = data.substring(0, lpos);
-              crc8 = VSTimeConnector.crc8(nd.getBytes());
+              crc8 = DroneConnector.crc8(nd.getBytes());
             }
             VSTM_LapInfo lap = null;
             if (commands.length >= 2) {
@@ -216,6 +229,7 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
       if (sock != null) {
         sock.close();
       }
+      stop();
     } catch (Exception e) {
     }
   }

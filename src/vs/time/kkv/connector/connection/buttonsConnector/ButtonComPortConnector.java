@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vs.time.kkv.connector.connection.com;
+package vs.time.kkv.connector.connection.buttonsConnector;
 
 import KKV.Utils.UserException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -21,18 +19,18 @@ import vs.time.kkv.connector.connection.VSTimeMachineReciver;
  *
  * @author kyo
  */
-public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVSTimeMachine {
-
+public class ButtonComPortConnector implements SerialPortEventListener, ConnectionVSTimeMachine {
+  
   public DroneConnector timeConnector = null;
   VSTimeMachineReciver receiver = null;
   public SerialPort serialPort = null;
-  public String comPort = "";
+  String comPort; int portSpeed;
   
   public void setVSTimeConnector (DroneConnector timeConnector){
     this.timeConnector = timeConnector;
   }
   
-  public void connect() throws UserException {
+   public void connect() throws UserException {
     try{
     serialPort = new SerialPort(comPort);
     serialPort.openPort();
@@ -46,10 +44,12 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       throw new UserException("Connection is error",e.toString());
     }
   };
-
-  public ConnectionCOMPort(VSTimeMachineReciver receiver, String comPort) {
+  
+  // SerialPort.BAUDRATE_115200
+   public ButtonComPortConnector(VSTimeMachineReciver receiver, String comPort, int portSpeed) {
     this.receiver = receiver;
-    this.comPort = comPort;        
+    this.comPort = comPort;
+    this.portSpeed = portSpeed;        
   }
 
   @Override
@@ -84,18 +84,12 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       } catch (SerialPortException ex) {
         ex.printStackTrace();
       }      
-    }
+    }    
   }
 
   @Override
   public void sendData(String data) {
-    if (serialPort != null) {
-      try {
-        serialPort.writeString(data);
-      } catch (SerialPortException ex) {
-        Logger.getLogger(ConnectionCOMPort.class.getName()).log(Level.SEVERE, null, ex);
-      }
-    }
+    
   }
 
   @Override
@@ -106,12 +100,12 @@ public class ConnectionCOMPort implements SerialPortEventListener, ConnectionVST
       } catch (SerialPortException ex) {
         //Logger.getLogger(ConnectionCOMPort.class.getName()).log(Level.SEVERE, null, ex);
       }
-    }
+    }    
+  }
+
+  @Override
+  public int getTimeOutForReconnect() {
+    return 5;
   }
   
-  @Override
-  public int getTimeOutForReconnect(){
-    return 5;
-  };
-
 }

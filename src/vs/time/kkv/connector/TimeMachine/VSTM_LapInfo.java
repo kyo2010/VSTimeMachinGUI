@@ -16,4 +16,8 @@ public class VSTM_LapInfo {
   public int transponderID;
   public long time;
   public int transpnderCounter;  
+  
+  // lap for Pilot number.. start from 1 to N
+  public boolean isPilotNumber = false;
+  public int pilotNumber = -1;
 }
