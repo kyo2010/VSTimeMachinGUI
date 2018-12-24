@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_ESPInfo;
+import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -22,6 +23,7 @@ public class VSTMParams extends javax.swing.JFrame {
 
   MainForm mainForm = null;
   VSTM_ESPInfo esp_info = null;
+   DroneConnector vsTimeConnector = null;
   
   /**
    * Creates new form VSTMParams
@@ -42,16 +44,25 @@ public class VSTMParams extends javax.swing.JFrame {
   public static VSTMParams getInstanse(MainForm mainForm) throws SerialPortException{
     if (instance==null) instance = new VSTMParams(mainForm);
         
+    VSTM_ESPInfo esp_info = null;
+        
     try{
       mainForm.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));  
-    VSTM_ESPInfo esp_info = mainForm.vsTimeConnector.getVSTMParams( mainForm.vsTimeConnector.baseStationID );
-    instance.esp_info = esp_info;
-    
+      
+      for (DroneConnector vsTimeConnector1 : mainForm.droneConnectors) {                
+        if (vsTimeConnector1.transport.supportVSTimeMachineExtendMenu()){
+         instance.vsTimeConnector = vsTimeConnector1;
+         break;
+        }
+      }      
+   
+    esp_info = instance.vsTimeConnector.getVSTMParams( instance.vsTimeConnector.baseStationID );           
     if (esp_info==null) throw new Exception("Reading errr. VT Time machine has not been available now");
-    
-    instance.VSTMID.setText(mainForm.vsTimeConnector.baseStationID);
+    instance.esp_info = esp_info;
+             
+    instance.VSTMID.setText( instance.vsTimeConnector.baseStationID);
     try{
-      instance.Sensitivity.setSelectedIndex(mainForm.vsTimeConnector.sensitivityIndex);
+      instance.Sensitivity.setSelectedIndex( instance.vsTimeConnector.sensitivityIndex);
     }catch(Exception e){
       try{
         instance.Sensitivity.setSelectedIndex(0);
@@ -72,7 +83,7 @@ public class VSTMParams extends javax.swing.JFrame {
       instance.panelRouter.setVisible(true);
     }*/
       
-    instance.setTitle("Time machine "+mainForm.vsTimeConnector.baseStationID+" ["+mainForm.vsTimeConnector.firmWareVersion+"]");    
+    instance.setTitle("Time machine "+ instance.vsTimeConnector.baseStationID+" ["+ instance.vsTimeConnector.firmWareVersion+"]");    
     instance.setVisible(true);
     }catch(Exception e){
       //e.printStackTrace();
@@ -455,8 +466,9 @@ public class VSTMParams extends javax.swing.JFrame {
     esp_info.ip3 = IP3.getText();
     esp_info.port_receiver = PORT_RECEIVE.getText();
     esp_info.port_send  = PORT_SEND.getText();
+            
     try{
-      mainForm.vsTimeConnector.setVSTMParams(esp_info.SSID, esp_info);
+      vsTimeConnector.setVSTMParams(esp_info.SSID, esp_info);
     }catch(Exception e){
       JOptionPane.showMessageDialog(this, "Could not set params."+e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }   
@@ -466,7 +478,7 @@ public class VSTMParams extends javax.swing.JFrame {
 
   private void bTronspnderPower1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTronspnderPower1ActionPerformed
     try {
-      mainForm.vsTimeConnector.setPower(0);
+      vsTimeConnector.setPower(0);
     } catch (SerialPortException ex) {
      JOptionPane.showMessageDialog(this, "Could not set params."+ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);    
     }
@@ -474,7 +486,7 @@ public class VSTMParams extends javax.swing.JFrame {
 
   private void bTronspnderPower2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTronspnderPower2ActionPerformed
     try {
-      mainForm.vsTimeConnector.setPower(1);
+      vsTimeConnector.setPower(1);
     } catch (SerialPortException ex) {
      JOptionPane.showMessageDialog(this, "Could not set params."+ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);    
     }
@@ -482,7 +494,7 @@ public class VSTMParams extends javax.swing.JFrame {
 
   private void bTronspnderPower3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTronspnderPower3ActionPerformed
     try {
-      mainForm.vsTimeConnector.setPower(2);
+      vsTimeConnector.setPower(2);
     } catch (SerialPortException ex) {
      JOptionPane.showMessageDialog(this, "Could not set params."+ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);    
     }

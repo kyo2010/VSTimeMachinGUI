@@ -218,7 +218,7 @@ public class WLANSetting extends javax.swing.JFrame {
     
     VS_SETTING.setParam(mainForm.con, "STATIC_IP",jtStaticIP.getText());
     
-    if (mainForm.vsTimeConnector!=null){
+    if (mainForm.droneConnectors.size()>0){
       mainForm.disconnect();
       mainForm.connect();
     }

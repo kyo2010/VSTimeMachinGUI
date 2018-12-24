@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.Timer; 
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.connection.DroneConnector;
 
 /**
  *
@@ -57,7 +58,11 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (mainForm.unRaceTime==0) return;
-      if (mainForm.vsTimeConnector!=null) mainForm.vsTimeConnector.checkConnection();
+      
+      for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {  
+        if (vsTimeConnector!=null) vsTimeConnector.checkConnection();
+      }
+      
       if (mainForm.activeGroup!=null){
         infoLabel.setText("");
         return;

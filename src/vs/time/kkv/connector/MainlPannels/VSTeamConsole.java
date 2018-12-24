@@ -31,6 +31,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.TimeMachine.VSFlash;
 import vs.time.kkv.connector.TimeMachine.VSFlashControl;
+import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.models.VS_SETTING;
 
 /**
@@ -81,7 +82,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   public void setVisible(boolean b) {
     super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
     isOpened = b;
-  }
+  }  
 
   /**
    * This method is called from within the constructor to initialize the form.
@@ -345,9 +346,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   private void butSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSendActionPerformed
     // TODO add your handling code here:    
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.getMainDroneConnector() != null) {
       try {
-        mainForm.vsTimeConnector.sentMessage(jtCommand.getText() + "\r\n");
+        mainForm.getMainDroneConnector().sentMessage(jtCommand.getText() + "\r\n");
         if (jcbAutoClear.isSelected()) {
           jtCommand.setText("");
         }
@@ -368,9 +369,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.getMainDroneConnector() != null) {
       try {
-        mainForm.vsTimeConnector.setColor(0, VSColor.RED.getVSColor());
+        mainForm.getMainDroneConnector().setColor(0, VSColor.RED.getVSColor());
       } catch (Exception e) {
         addText(e.toString(), false, true);
       }
@@ -379,9 +380,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.getMainDroneConnector() != null) {
       try {
-        mainForm.vsTimeConnector.setColor(0, VSColor.GREEN.getVSColor());
+        mainForm.getMainDroneConnector().setColor(0, VSColor.GREEN.getVSColor());
       } catch (Exception e) {
         addText(e.toString(), false, true);
       }
@@ -390,9 +391,9 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
   private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
     // TODO add your handling code here:
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.getMainDroneConnector() != null) {
       try {
-        mainForm.vsTimeConnector.setColor(0, VSColor.OFF.getVSColor());
+        mainForm.getMainDroneConnector().setColor(0, VSColor.OFF.getVSColor());
       } catch (Exception e) {
         addText(e.toString(), false, true);
       }
@@ -494,8 +495,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
       super(20, null);
       this.transponderID = transponderID;
       setRepeats(true);
-      mainForm.vsTimeConnector.lastFlashTransponderID = null;
-      mainForm.vsTimeConnector.flashResponse.put(transponderID, null);
+      mainForm.getMainDroneConnector().lastFlashTransponderID = null;
+      mainForm.getMainDroneConnector().flashResponse.put(transponderID, null);
       jpFlash.setVisible(true);
       jpFlash.setMaximum(flash.data.length());
       jpFlash.setValue(0);
@@ -512,7 +513,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
             if ((indexData + LAST_SKIP_INDEX) < flash.data.length()) {
               if (sended == false || waitResponse > 15) {
                 waitResponse = 0;
-                mainForm.vsTimeConnector.sendflash(FlashTimer.this.transponderID, flash.data.getString(indexData));
+                mainForm.getMainDroneConnector().sendflash(FlashTimer.this.transponderID, flash.data.getString(indexData));
 
                 String ff = "11";
                 try {
@@ -528,14 +529,16 @@ public class VSTeamConsole extends javax.swing.JFrame {
 
               }
             }
+            
+            DroneConnector dc = mainForm.getMainDroneConnector();
 
-            if (FlashTimer.this.transponderID == universalTransFlasher && mainForm.vsTimeConnector.lastFlashTransponderID != null) {
-              FlashTimer.this.transponderID = mainForm.vsTimeConnector.lastFlashTransponderID;
-              jTransFlash.setText("" + mainForm.vsTimeConnector.lastFlashTransponderID);
+            if (FlashTimer.this.transponderID == universalTransFlasher && dc.lastFlashTransponderID != null) {
+              FlashTimer.this.transponderID =dc.lastFlashTransponderID;
+              jTransFlash.setText("" + mainForm.getMainDroneConnector().lastFlashTransponderID);
               isUniversalFlash = true;
             }
 
-            if (sended && mainForm.vsTimeConnector.flashResponse.get(FlashTimer.this.transponderID) != null) {
+            if (sended && dc.flashResponse.get(FlashTimer.this.transponderID) != null) {
               sended = false;
               waitResponse = 0;
               indexData++;
@@ -577,7 +580,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   private void bFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFlashActionPerformed
     // TODO add your handling code here:        
     if (flashTimer == null) {
-      if (mainForm.vsTimeConnector == null) {
+      if (mainForm.getMainDroneConnector() == null) {
         JOptionPane.showMessageDialog(this, "Please connect a device", "Information", JOptionPane.INFORMATION_MESSAGE);
         return;
       }
@@ -605,8 +608,8 @@ public class VSTeamConsole extends javax.swing.JFrame {
   private void bHelloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHelloActionPerformed
     // TODO add your handling code here:
     try {
-      mainForm.vsTimeConnector.hello();
-      mainForm.vsTimeConnector.setTime();
+      mainForm.getMainDroneConnector().hello();
+      mainForm.getMainDroneConnector().setTime();
     } catch (Exception e) {
       mainForm._toLog(e);
       addText(e.toString(), false, true);

@@ -40,25 +40,20 @@ import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
 import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
-import vs.time.kkv.connector.connection.ConnectionVSTimeMachine;
 import vs.time.kkv.models.VS_SETTING;
+import vs.time.kkv.connector.connection.DroneConection;
 
 /**
  *
  * @author kyo
  */
 public class DroneConnector {
-
-  public String comPort;
-  int portForListing;
-  int portForSending;
-  public String network_sid;
-  public String staticIP = null;
+  
   public boolean connected = false;
   public String baseStationID = null;
   public int sensitivityIndex = 0;
   public String firmWareVersion = "";
-  public ConnectionVSTimeMachine transport = null;
+  public DroneConection transport = null;
   public int lastTransponderID = -1;
   public boolean WIFI = false;
   public String last_error = "";
@@ -121,12 +116,12 @@ public class DroneConnector {
     }
   }
 
-  public DroneConnector(ConnectionVSTimeMachine transport ) {  
+  public DroneConnector(DroneConection transport ) {  
     this.transport = transport;
     transport.setVSTimeConnector(this);
-    try{
+    /*try{
       transport.connect();
-    }catch(Exception e){}
+    }catch(Exception e){}*/
   }
 
   public void disconnect() {
@@ -150,21 +145,9 @@ public class DroneConnector {
 
     @Override
     public void run() {
-      if (comPort.equalsIgnoreCase("WLAN")) {
-        long time = Calendar.getInstance().getTimeInMillis();
-        System.out.println("waiting first ping...");
-        waitFirstPing = true;
-        int countRepeats = 0;
-        while (waitFirstPing && countRepeats < 100) {
-          countRepeats++;
-          try {
-            sleep(100);
-          } catch (Exception e) {
-          }
-        }
-        long time2 = Calendar.getInstance().getTimeInMillis();
-        System.out.println("first ping is " + (waitFirstPing == false ? "ok" : "not found.") + " Waiting time is " + ((time2 - time) / 1000) + " sec.");
-      }
+      if (transport!=null) {
+        transport.preStart();
+      } 
 
       try {
         //conector.hello();
@@ -199,21 +182,21 @@ public class DroneConnector {
 
   }
 
-  public void connect() throws InterruptedException, SerialPortException, IOException, UserException {
-    /*if (comPort.equalsIgnoreCase("WLAN")) {
-      transport = new ConnectionSocket(this, reciver, network_sid, staticIP, portForListing, portForSending);
-      connected = true;
-      WIFI = true;
-    } else {
-      transport = new ConnectionCOMPort(this, reciver, comPort);
-      connected = true;
-      WIFI = false;
-    }*/
-    if (transport!=null) transport.connect();
+  public void connect() throws InterruptedException, SerialPortException, IOException, UserException {       
+    try{
+      if (connected)disconnect();        
+    }catch(Exception e){}
     
-    lastPingTime = Calendar.getInstance().getTimeInMillis();
-    new AfterConnectionCommsnds(this);
-    blinkingTimer.start();
+    try{
+      if (transport!=null) transport.connect();    
+      lastPingTime = Calendar.getInstance().getTimeInMillis();
+      new AfterConnectionCommsnds(this);
+      blinkingTimer.start();    
+      connected = true;
+    }catch(Exception e){
+      connected = false;      
+      disconnect();        
+    }
   }
 
   /**

@@ -136,7 +136,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
   public OBSConfig obsConfig = null;
-  
+
   public boolean USE_TRAFIC_LIGHT = false;
   public int TRANS_TRAFIC_LIGHT = 0;
 
@@ -185,7 +185,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     log.writeFile(st);
   }
 
-  public DroneConnector vsTimeConnector = null;
+  //public List<DroneConnector> vsTimeConnector = null;
+  public List<DroneConnector> droneConnectors = new ArrayList<DroneConnector>();
+
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
   public TempFileWrite error_log = new TempFileWrite("error.log");
   public TempFileWrite lap_log = new TempFileWrite("lap.log");
@@ -360,10 +362,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         int res = JOptionPane.showConfirmDialog(MainForm.this, "Do you want to close?", "Exit ?", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
           PLEASE_CLOSE_ALL_THREAD = true;
-          if (vsTimeConnector != null) {
+          /*if (vsTimeConnector != null) {
             vsTimeConnector.disconnect();
           }
-          vsTimeConnector = null;
+          vsTimeConnector = null;*/
+
+          for (DroneConnector dc : droneConnectors) {
+            dc.disconnect();
+          }
+          droneConnectors.clear();
+
           MainForm.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           //setVisible(false);
           //e.getWindow().dispose();          
@@ -512,39 +520,44 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     STAGE_COLUMN.changeLocale(StageTableAdapter.STAGE_COLUMNS_RACE_RESULT, this);
     STAGE_COLUMN.changeLocale(RegistrationModelTable.STAGE_COLUMNS_STAGE, this);
 
-    try{
+    try {
       USE_TRANS_FOR_GATE = VS_SETTING.getParam(con, "USE_TRANS_FOR_GATE", 0) == 1 ? true : false;
       TRANS_FOR_GATE = VS_SETTING.getParam(con, "TRANS_FOR_GATE", 0);
       TRANS_FOR_GATE_BLINK = VS_SETTING.getParam(con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false;
       TRANS_FOR_GATE_COLOR = VSColor.getColor(VS_SETTING.getParam(con, "TRANS_FOR_GATE_COLOR", "RED"));
-    }catch(Exception e){}
-    
-    try{
-      USE_TRAFIC_LIGHT = VS_SETTING.getParam(con, "USE_TRAFIC_LIGHT", 0)==1 ? true : false;
-      TRANS_TRAFIC_LIGHT = VS_SETTING.getParam(con, "TRANS_TRAFIC_LIGHT", 0);      
-    }catch(Exception e){}
-    
+    } catch (Exception e) {
+    }
 
-    BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png")+"?t="+Calendar.getInstance().getTimeInMillis();
+    try {
+      USE_TRAFIC_LIGHT = VS_SETTING.getParam(con, "USE_TRAFIC_LIGHT", 0) == 1 ? true : false;
+      TRANS_TRAFIC_LIGHT = VS_SETTING.getParam(con, "TRANS_TRAFIC_LIGHT", 0);
+    } catch (Exception e) {
+    }
 
-    if (vsTimeConnector != null && vsTimeConnector.connected) {
-      try {
-        if (USE_TRANS_FOR_GATE) {
-          vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
-        } else {
-          // public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) 
-          vsTimeConnector.addBlinkTransponder(-1, 0, null, false);
+    BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png") + "?t=" + Calendar.getInstance().getTimeInMillis();
+
+    for (DroneConnector vsTimeConnector : droneConnectors) {
+      if (vsTimeConnector != null && vsTimeConnector.connected) {
+        try {
+          if (USE_TRANS_FOR_GATE) {
+            vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+          } else {
+            // public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) 
+            vsTimeConnector.addBlinkTransponder(-1, 0, null, false);
+          }
+        } catch (Exception e) {
         }
-      } catch (Exception e) {
       }
     }
   }
 
   public void setColorForGate() {
-    if (USE_TRANS_FOR_GATE && vsTimeConnector != null && vsTimeConnector.connected) {
-      try {
-        vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
-      } catch (Exception e) {
+    for (DroneConnector vsTimeConnector : droneConnectors) {
+      if (USE_TRANS_FOR_GATE && vsTimeConnector != null && vsTimeConnector.connected) {
+        try {
+          vsTimeConnector.setColor(TRANS_FOR_GATE, TRANS_FOR_GATE_COLOR.vscolor);
+        } catch (Exception e) {
+        }
       }
     }
   }
@@ -567,9 +580,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     menuParameters.setEnabled(isConnected);
     menuConnect.setEnabled(!isConnected);
     jPanel1.setVisible(!isConnected);
+    menuParameters.setEnabled(false);
     if (isConnected) {
-      if (vsTimeConnector.WIFI) {
-        menuParameters.setEnabled(false);
+
+      for (DroneConnector vsTimeConnector : droneConnectors) {
+        if (vsTimeConnector.transport != null && vsTimeConnector.transport.supportVSTimeMachineExtendMenu()) {
+          menuParameters.setEnabled(true);
+        }
       }
     }
   }
@@ -1003,10 +1020,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }// </editor-fold>//GEN-END:initComponents
 
   private void menuParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuParametersActionPerformed
-    if (vsTimeConnector != null && vsTimeConnector.connected) {
-      try {
-        VSTMParams form = VSTMParams.getInstanse(this);
-      } catch (Exception e) {
+    for (DroneConnector vsTimeConnector : droneConnectors) {
+      if (vsTimeConnector != null && vsTimeConnector.connected) {
+        try {
+          VSTMParams form = VSTMParams.getInstanse(this);
+        } catch (Exception e) {
+        }
       }
     }
   }//GEN-LAST:event_menuParametersActionPerformed
@@ -1025,10 +1044,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
     // TODO add your handling code here:
-    if (vsTimeConnector != null) {
-      vsTimeConnector.disconnect();
-      vsTimeConnector = null;
+    for (DroneConnector vsTimeConnector : droneConnectors) {
+      if (vsTimeConnector != null) {
+        vsTimeConnector.disconnect();
+        vsTimeConnector = null;
+      }
     }
+    droneConnectors.clear();
+
+    DroneConnector vsTimeConnector = null;
     String port = ports.getSelectedItem().toString();
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
@@ -1037,17 +1061,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
         staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
       };
-
-      if (port.equalsIgnoreCase("WLAN")){
-         vsTimeConnector = new DroneConnector(
-             new ConnectionSocket(this, 
-              VS_SETTING.getParam(con, "WAN_CONNECTION", ""), 
-              staticIP,
-              WLANSetting.init(this).PORT_LISTING_INT, 
-              WLANSetting.init(this).PORT_SENDING_INT));      
-      }else{
+      if (port.equalsIgnoreCase("WLAN")) {
+        vsTimeConnector = new DroneConnector(
+                new ConnectionSocket(this,
+                        VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
+                        staticIP,
+                        WLANSetting.init(this).PORT_LISTING_INT,
+                        WLANSetting.init(this).PORT_SENDING_INT));
+      } else {
         vsTimeConnector = new DroneConnector(new ConnectionCOMPort(this, port));
-      }          
+      }
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();
@@ -1058,6 +1081,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         vsTimeConnector = null;
       }
       //speaker.speak(speaker.getSpeachMessages().connected());
+      droneConnectors.add(vsTimeConnector);
     }
   }//GEN-LAST:event_connectButtonActionPerformed
 
@@ -1066,10 +1090,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   private void menuDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDisconnectActionPerformed
-    if (vsTimeConnector != null) {
-      vsTimeConnector.disconnect();
+    for (DroneConnector vsTimeConnector : droneConnectors) {
+      if (vsTimeConnector != null) {
+        vsTimeConnector.disconnect();
+      }
+      vsTimeConnector = null;
     }
-    vsTimeConnector = null;
+    droneConnectors.clear();
     setStateMenu(false);
     jLabel3.setText("disconnected");
     //speaker.speak(speaker.getSpeachMessages().disconnected());
@@ -1136,7 +1163,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }//GEN-LAST:event_mSystemOptionsActionPerformed
 
   private void mSystemMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSystemMonitorActionPerformed
-    openUrl("index.htm");         
+    openUrl("index.htm");
   }//GEN-LAST:event_mSystemMonitorActionPerformed
 
   private void mConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mConsoleActionPerformed
@@ -1161,13 +1188,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //ports.addItem("WLAN");
   }//GEN-LAST:event_bRefreshActionPerformed
 
-  public void openUrl(String url){
-  // TODO add your handling code here:
+  public void openUrl(String url) {
+    // TODO add your handling code here:
     if (httpServer == null) {
       SystemOptions.runWebServer(this, true);
     }
 
-    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80) + "/"+url;
+    String uri = "http://" + LOCAL_HOST + ":" + VS_SETTING.getParam(this.con, "WEB_PORT", 80) + "/" + url;
     System.out.println("open url:" + uri);
 
     //WebPannel.getInstance("http://localhost:"+VS_SETTING.getParam(this.con, "WEB_PORT", 80)).setVisible(true);
@@ -1187,7 +1214,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     }
   }
-  
+
   private void jMenuItemTVMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTVMonitorActionPerformed
     openUrl("tv.htm");
   }//GEN-LAST:event_jMenuItemTVMonitorActionPerformed
@@ -1202,42 +1229,42 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void jMenuIWebAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuIWebAdminActionPerformed
     // TODO add your handling code here:
-    openUrl("index.htm?mode=admin");            
+    openUrl("index.htm?mode=admin");
   }//GEN-LAST:event_jMenuIWebAdminActionPerformed
 
   private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
     // TODO add your handling code here:
-    openUrl("group-result.htm");    
+    openUrl("group-result.htm");
   }//GEN-LAST:event_jMenuItem1ActionPerformed
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     // TODO add your handling code here:
-    openUrl("osd.htm");   
+    openUrl("osd.htm");
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
     // TODO add your handling code here:
-    openUrl("stage.htm");   
+    openUrl("stage.htm");
   }//GEN-LAST:event_jMenuItem4ActionPerformed
 
   private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
     // TODO add your handling code here:
-    openUrl("lb16.htm");   
+    openUrl("lb16.htm");
   }//GEN-LAST:event_jMenuItem5ActionPerformed
 
   private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
     // TODO add your handling code here:
-    openUrl("lb16l.htm");   
+    openUrl("lb16l.htm");
   }//GEN-LAST:event_jMenuItem6ActionPerformed
 
   private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
     // TODO add your handling code here:
-    openUrl("group-result-lite.htm");   
+    openUrl("group-result-lite.htm");
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
   private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
     // TODO add your handling code here:
-    openUrl("start.htm");   
+    openUrl("start.htm");
   }//GEN-LAST:event_jMenuItem8ActionPerformed
 
   public static ImageIcon windowsIcon = null;
@@ -1419,7 +1446,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       isPingCommand = true;
     }
 
-    jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
+    for (DroneConnector vsTimeConnector : droneConnectors) {      
+      jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
+      break;
+    }
     if (!isPingCommand) {
       System.out.println(data);
       log.writeFile(data, true);
@@ -1473,7 +1503,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE != 0) {
-          vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+          
+          for (DroneConnector vsTimeConnector : droneConnectors) {                
+            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+          }  
           //vsTimeConnector.blinkingTimer.restart();
         }
 
@@ -1630,11 +1663,20 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             if (user.color == null) {
               user.color = VSColor.getColorForChannel(user.CHANNEL, activeGroup.stage.CHANNELS, activeGroup.stage.COLORS);
             }
-            vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+            for (DroneConnector vsTimeConnector : droneConnectors) {                
+              vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
+            }
           }
         }
       }
     }
+  }
+  
+  public DroneConnector getMainDroneConnector(){
+    for (DroneConnector vsTimeConnector : droneConnectors) {  
+      return vsTimeConnector;
+    }
+    return null;
   }
 
   @Override

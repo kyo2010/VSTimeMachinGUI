@@ -98,6 +98,7 @@ import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.Utils.FrozenTablePane;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TableToXLS;
+import vs.time.kkv.connector.connection.DroneConnector;
 
 /**
  *
@@ -141,8 +142,10 @@ public class StageTab extends javax.swing.JPanel {
   Timer raceTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (mainForm.vsTimeConnector != null) {
-        mainForm.vsTimeConnector.checkConnection();
+      for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+        if (vsTimeConnector != null) {
+          vsTimeConnector.checkConnection();
+        }
       }
       long current_time = Calendar.getInstance().getTimeInMillis();
       long raceTime = current_time - mainForm.raceTime;
@@ -210,8 +213,10 @@ public class StageTab extends javax.swing.JPanel {
   public Timer checkerTimer = new Timer(500, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (mainForm.vsTimeConnector != null) {
-        mainForm.vsTimeConnector.checkConnection();
+      for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+        if (vsTimeConnector != null) {
+          vsTimeConnector.checkConnection();
+        }
       }
       Timer timer = (Timer) e.getSource();
       if (checkerCycle == 0) {
@@ -219,7 +224,11 @@ public class StageTab extends javax.swing.JPanel {
       }
 
       try {
-        mainForm.vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
+        for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+          if (vsTimeConnector.transport.supportRFIDMode()) {
+            vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
+          }
+        }
         try {
           //Thread.sleep(500);
           Thread.currentThread().sleep(50);
@@ -276,7 +285,16 @@ public class StageTab extends javax.swing.JPanel {
               if (race.HYBRID_MODE != 1) {
                 vs_color_to_send |= (1 << 7);
               }
-              mainForm.vsTimeConnector.seachTransponder(transID, vs_color_to_send);
+
+              for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+                if (vsTimeConnector.transport.supportRFIDMode()) {
+                  vsTimeConnector.rfidLock(mainForm.RFIDLockPassword);
+                }
+                if (vsTimeConnector.transport.supportSearch()) {
+                  vsTimeConnector.seachTransponder(transID, vs_color_to_send);
+                }
+              }
+
               //   mainForm.vsTimeConnector.setColor(transID, vs_color.getVSColor());
               try {
                 //Thread.sleep(150);
@@ -304,17 +322,22 @@ public class StageTab extends javax.swing.JPanel {
           Collection<Integer> userTrans = user.getUserTransponders(mainForm.con, stage.RACE_ID, stage);
           for (Integer transID : userTrans) {
             if (user.getRegistration(mainForm.con, stage.RACE_ID) != null) {
-              if (mainForm.vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
-                user.CHECK_FOR_RACE = 1;
-                try {
-                  //System.out.println("VS_STAGE_GROUPS - check timer");
-                  VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
-                } catch (Exception ein) {
+
+              for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+                if (vsTimeConnector.transport.supportSearch()) {
+                  if (vsTimeConnector.isTransponderSeached(transID) && user.CHECK_FOR_RACE != 1) {
+                    user.CHECK_FOR_RACE = 1;
+                    try {
+                      //System.out.println("VS_STAGE_GROUPS - check timer");
+                      VS_STAGE_GROUPS.dbControl.update(mainForm.con, user);
+                    } catch (Exception ein) {
+                    }
+                    user.VS_PRIMARY_TRANS = transID;
+                    //pleasuUpdateTable = true;
+                    refreshTable();
+                    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
+                  }
                 }
-                user.VS_PRIMARY_TRANS = transID;
-                //pleasuUpdateTable = true;
-                refreshTable();
-                mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().pilotIsChecked(user.PILOT));
               }
             }
           }
@@ -1672,7 +1695,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.checkingGrpup = null;
 
     InfoForm.closeLastInfoFrom();
-    if (mainForm.vsTimeConnector != null) {
+    if (mainForm.droneConnectors.size() > 0) {
       preapreTimeMachineToRace();
       try {
         Thread.currentThread().sleep(300);
@@ -2401,10 +2424,11 @@ public class StageTab extends javax.swing.JPanel {
 
   public void preapreTimeMachineToRace() {
     try {
-      if (mainForm.vsTimeConnector != null) {
-        mainForm.vsTimeConnector.rfidUnlock();
+      DroneConnector dc = mainForm.getMainDroneConnector();
+      if (dc != null) {
+        dc.rfidUnlock();
         Thread.currentThread().sleep(200);
-        mainForm.vsTimeConnector.setTime();
+        dc.setTime();
         Thread.currentThread().sleep(200);
         //mainForm.vsTimeConnector.rfidUnlock();
         //Thread.currentThread().sleep(200);
@@ -2485,8 +2509,11 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.speaker.clearVoiceStack();
     raceTimerIsOver = false;
     String message = "";
-    if (mainForm.vsTimeConnector != null && showDialog) {
-      long sec = (Calendar.getInstance().getTimeInMillis() - mainForm.vsTimeConnector.lastPingTime) / 1000;
+
+    final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
+
+    if (vsTimeConnector != null && showDialog) {
+      long sec = (Calendar.getInstance().getTimeInMillis() - vsTimeConnector.lastPingTime) / 1000;
       if (sec >= 5) {
         message = "The VS Time Machine has not response for " + sec + " seconds.";
         if (showDialog) {
@@ -2535,7 +2562,7 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     }
-    if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+    if (vsTimeConnector == null || !vsTimeConnector.connected) {
       message = "Transponder hub device is not connected.";
       if (showDialog) {
         int res = JOptionPane.showConfirmDialog(StageTab.this, message + "\nDo you like to start?", "Information", JOptionPane.YES_NO_OPTION);
@@ -2552,7 +2579,7 @@ public class StageTab extends javax.swing.JPanel {
 
     if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
       try {
-        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW.getVSColor());
+        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW.getVSColor());
       } catch (Exception e) {
       }
     }
@@ -2610,16 +2637,16 @@ public class StageTab extends javax.swing.JPanel {
                     } catch (Exception rt_e) {
                       MainForm._toLog(rt_e);
                     }
-                    
+
                     if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
                       try {
-                        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+                        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
                       } catch (Exception ein) {
                       }
                     }
-                    
+
                     new InfoForm(mainForm, "Go!");
-                    mainForm.beep.paly("beep");                    
+                    mainForm.beep.paly("beep");
 
                     //if (useSpeach) mainForm.speaker.speak("Go!");
                     mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
@@ -2660,16 +2687,16 @@ public class StageTab extends javax.swing.JPanel {
             } catch (Exception rt_e) {
               MainForm._toLog(rt_e);
             }
-            
+
             if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
               try {
-                mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+                vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
               } catch (Exception ein) {
               }
             }
-            
+
             new InfoForm(mainForm, "Go!");
-            mainForm.beep.paly("beep");            
+            mainForm.beep.paly("beep");
 
             //if (useSpeach) mainForm.speaker.speak("Go!");
             mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
@@ -2696,7 +2723,10 @@ public class StageTab extends javax.swing.JPanel {
 
   public String startSearchAction(long GROUP_NUM, boolean showDialog) {
     String message = "";
-    if (mainForm.vsTimeConnector == null || !mainForm.vsTimeConnector.connected) {
+
+    final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
+
+    if (vsTimeConnector == null || !vsTimeConnector.connected) {
       message = "Transponder hub device is not connected.\nThis function is not been activated.";
       if (showDialog) {
         JOptionPane.showMessageDialog(StageTab.this, message, "Information", JOptionPane.INFORMATION_MESSAGE);
@@ -2718,7 +2748,7 @@ public class StageTab extends javax.swing.JPanel {
     }
     mainForm.lap_log.writeFile("---==  Start Search  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
     mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().findTransponders(td.group.GROUP_NUM));
-    mainForm.vsTimeConnector.clearTransponderSearchQueue();
+    vsTimeConnector.clearTransponderSearchQueue();
     mainForm.checkingGrpup = td.group;
     mainForm.checkingGrpup.stageTab = this;
     mainForm.lastCheckingGrpup = mainForm.checkingGrpup;
@@ -2742,6 +2772,7 @@ public class StageTab extends javax.swing.JPanel {
   }
 
   public String invateAction(long GROUP_NUM, boolean showDialog) {
+    //final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
     String message = "";
     StageTableData td = getGroupByNum(GROUP_NUM);
     if (td == null) {
@@ -2758,7 +2789,8 @@ public class StageTab extends javax.swing.JPanel {
 
     if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
       try {
-        mainForm.vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED.getVSColor());
+        final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
+        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED.getVSColor());
       } catch (Exception e) {
       }
     }
@@ -2784,8 +2816,10 @@ public class StageTab extends javax.swing.JPanel {
       mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
     }
     try {
-      if (mainForm.vsTimeConnector != null && mainForm.vsTimeConnector.connected) {
-        mainForm.vsTimeConnector.setTime();
+      for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
+        if (vsTimeConnector != null && vsTimeConnector.connected) {
+          vsTimeConnector.setTime();
+        }
       }
     } catch (Exception ein) {
     }

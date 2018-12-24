@@ -11,15 +11,15 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
-import vs.time.kkv.connector.connection.ConnectionVSTimeMachine;
 import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.connector.connection.DroneConection;
 
 /**
  *
  * @author kyo
  */
-public class ButtonComPortConnector implements SerialPortEventListener, ConnectionVSTimeMachine {
+public class ButtonComPortConnector implements SerialPortEventListener, DroneConection {
   
   public DroneConnector timeConnector = null;
   VSTimeMachineReciver receiver = null;
@@ -42,8 +42,14 @@ public class ButtonComPortConnector implements SerialPortEventListener, Connecti
     serialPort.addEventListener(this);
     }catch(Exception e){
       throw new UserException("Connection is error",e.toString());
-    }
+    } 
   };
+   
+   public boolean supportVSTimeMachineExtendMenu(){ return false; }
+   public boolean supportSearch(){ return false; };
+   public boolean supportRFIDMode(){ return false; };
+   
+   public void preStart(){};
   
   // SerialPort.BAUDRATE_115200
    public ButtonComPortConnector(VSTimeMachineReciver receiver, String comPort, int portSpeed) {

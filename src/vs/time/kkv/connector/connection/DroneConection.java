@@ -10,11 +10,15 @@ import KKV.Utils.UserException;
 /**
  *
  * @author kyo
- */
-public interface ConnectionVSTimeMachine {
+ */ 
+public interface DroneConection {
   public void sendData(String data);
   public void disconnect() throws UserException;
   public void connect() throws UserException;
   public int getTimeOutForReconnect();
+  public void preStart();
   public void setVSTimeConnector (DroneConnector timeConnector);
+  public boolean supportVSTimeMachineExtendMenu();
+  public boolean supportSearch();
+  public boolean supportRFIDMode();
 }

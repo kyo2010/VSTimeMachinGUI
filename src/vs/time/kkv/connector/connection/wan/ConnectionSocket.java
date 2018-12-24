@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import static java.lang.Thread.sleep;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -18,6 +19,7 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -25,15 +27,15 @@ import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
-import vs.time.kkv.connector.connection.ConnectionVSTimeMachine;
 import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.connector.connection.DroneConection;
 
 /**
  *
  * @author kyo
  */
-public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine {
+public class ConnectionSocket extends Thread implements DroneConection {
 
   //public DatagramSocket socketOut = null;
   public boolean finish = false;
@@ -51,6 +53,27 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
   public void setVSTimeConnector(DroneConnector timeConnector) {
     this.timeConnector = timeConnector;
   }
+  
+  public boolean supportVSTimeMachineExtendMenu(){ return false; }
+  public boolean supportSearch(){ return true; };
+  public boolean supportRFIDMode(){ return true; };
+
+  // waiting first ping
+  public void preStart() {
+    long time = Calendar.getInstance().getTimeInMillis();
+    System.out.println("waiting first ping...");
+    timeConnector.waitFirstPing = true;
+    int countRepeats = 0;
+    while (timeConnector.waitFirstPing && countRepeats < 100) {
+      countRepeats++;
+      try {
+        sleep(100);
+      } catch (Exception e) {
+      }
+    }
+    long time2 = Calendar.getInstance().getTimeInMillis();
+    System.out.println("first ping is " + (timeConnector.waitFirstPing == false ? "ok" : "not found.") + " Waiting time is " + ((time2 - time) / 1000) + " sec.");
+  }
 
   public void connect() throws UserException {
     try {
@@ -64,12 +87,12 @@ public class ConnectionSocket extends Thread implements ConnectionVSTimeMachine 
         ipAddress = InetAddress.getByName(staticIP);
       }
       finish = false;
-      start();
+      start(); 
     } catch (Exception e) {
       throw new UserException("Connection is error", e.toString());
     }
   }
-  
+
   public ConnectionSocket(VSTimeMachineReciver receiver, String network_sid, String staticIP, int portForListing, int portForSending) {
     super();
     if (portForListing != 0) {
