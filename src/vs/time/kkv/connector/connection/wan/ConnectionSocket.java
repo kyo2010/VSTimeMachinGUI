@@ -57,6 +57,7 @@ public class ConnectionSocket extends Thread implements DroneConection {
   public boolean supportVSTimeMachineExtendMenu(){ return false; }
   public boolean supportSearch(){ return true; };
   public boolean supportRFIDMode(){ return true; };
+  public boolean supportSetTime(){ return true; };
 
   // waiting first ping
   public void preStart() {

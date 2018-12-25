@@ -1500,6 +1500,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     }
     if (lap != null) {
+            
+      if (lap.isPilotNumber){
+        lap.transponderID = lap.pilotNumber;
+        lap.baseStationID = 0;
+        lap.time = Calendar.getInstance().getTimeInMillis();
+        if (activeGroup!=null){
+          lap.transponderID = 0;
+          if (activeGroup.users.size()>=lap.pilotNumber && lap.pilotNumber>0){         
+            lap.transponderID = activeGroup.users.get(lap.pilotNumber-1).VS_PRIMARY_TRANS;
+          }        
+        }
+      }
 
       if (lap.transponderID == TRANS_FOR_GATE) {
         if (regForm != null && regForm.unRaceLapSound.isSelected()) {
@@ -1511,7 +1523,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       this.lastTranponderID = lap.transponderID;
       long timeS = Calendar.getInstance().getTimeInMillis();
       long time = lap.time;
-      lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
+      if (lap.isPilotNumber){
+        lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";pilot" + lap.pilotNumber);
+      }else{
+        lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);     
+      }  
       if (Math.abs(time - timeS) > 1000 * 60 * 60) {
         System.out.println("Big gap between Time : " + Math.abs(time - timeS) + " trans time:" + time + " system time:" + timeS);
         time = timeS;//lap.time;
@@ -1523,7 +1539,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
 
       VS_REGISTRATION usr_reg = null;
-      if (activeRace != null) {
+      if (activeRace != null && !lap.isPilotNumber) {
         try {
           usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and (VS_TRANSPONDER=? OR VS_TRANS2=? OR VS_TRANS3=?)",
                   activeRace.RACE_ID, lap.transponderID, lap.transponderID, lap.transponderID);
@@ -1534,13 +1550,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         transponderListener.newTransponder(lap.transponderID, usr_reg);
       }
 
-      if (activeGroup == null) {
+      if (activeGroup == null && !lap.isPilotNumber) {
         if (usr_reg != null) {
           if (regForm != null && regForm.unRaceLapSound.isSelected()) {
             speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
           }
         } else {
-          if (regForm != null && regForm.unRaceLapSound.isSelected()) {
+          if (regForm != null && regForm.unRaceLapSound.isSelected() && lap.transponderID!=0) {
             speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
           }
         }
@@ -1569,8 +1585,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
 
-      if (activeRace != null && activeGroup != null) {
+      if (activeRace != null && activeGroup != null) {                        
         VS_STAGE_GROUPS user = null;
+        
+        if (lap.isPilotNumber){          
+          if (activeGroup.users.size()>=lap.pilotNumber && lap.pilotNumber>0){         
+            user = activeGroup.users.get(lap.pilotNumber-1);
+          }  
+        }else{
+        }
+        
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
           if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
             user = usr;

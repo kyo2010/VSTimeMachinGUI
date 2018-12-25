@@ -52,6 +52,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, DroneConectio
   public boolean supportVSTimeMachineExtendMenu(){ return true; }
   public boolean supportSearch(){ return true; };
   public boolean supportRFIDMode(){ return true; };
+  public boolean supportSetTime(){ return true; };
 
   public ConnectionCOMPort(VSTimeMachineReciver receiver, String comPort) {
     this.receiver = receiver;

@@ -369,7 +369,9 @@ public class DroneConnector {
   });
 
   public void setTime() throws SerialPortException, InterruptedException {
-    sentMessage("settime:" + Calendar.getInstance().getTime().getTime() + "\r\n");
+    if (transport!=null && transport.supportSetTime()){
+      sentMessage("settime:" + Calendar.getInstance().getTime().getTime() + "\r\n");
+    }
   }
 
   /*public void setTimeWithDeklay() throws SerialPortException, InterruptedException {
@@ -390,7 +392,7 @@ public class DroneConnector {
   }
 
   public void getInfo(String baseID) throws SerialPortException {
-    sentMessage("getinfo:" + baseID + "\r\n");
+    sentMessage("getinfo:" + baseID + "\r\n");    
   }
 
   public void sendflash(int TransID, String data) throws SerialPortException {
@@ -416,6 +418,12 @@ public class DroneConnector {
    */
   public static void main(String[] args) throws InterruptedException, UnsupportedEncodingException, SerialPortException {
     //������� � ����������� ��� �����    
+    String param = "pilot5";
+    String num = param.substring(5);
+    System.out.println("pilot num :"+num);
+    
+    if (1==1) return;
+    
     DroneConnector connector = new DroneConnector(
      new ConnectionCOMPort(
       new VSTimeMachineReciver() {
@@ -508,12 +516,14 @@ public class DroneConnector {
         //};
       } else if (commands[0].equalsIgnoreCase("lap")) {
         try {
-          VSTM_LapInfo lap = new VSTM_LapInfo();
-                    
+          VSTM_LapInfo lap = new VSTM_LapInfo();                    
           if (params[0] != null &&  params[0].indexOf("pilot")== 0) {
              lap.isPilotNumber = true;
+             lap.baseStationID = 0;
              String num = params[0].substring(5);
              lap.pilotNumber = Integer.parseInt(num);
+             //System.out.print("Arduino push pilot numner : "+num);
+             sentMessage("lapreceived:pilot" + num +"\r\n");
              return lap;
           } else {
             lap.numberOfPacket = Integer.parseInt(params[0]);

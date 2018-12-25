@@ -21,4 +21,5 @@ public interface DroneConection {
   public boolean supportVSTimeMachineExtendMenu();
   public boolean supportSearch();
   public boolean supportRFIDMode();
+  public boolean supportSetTime();
 }

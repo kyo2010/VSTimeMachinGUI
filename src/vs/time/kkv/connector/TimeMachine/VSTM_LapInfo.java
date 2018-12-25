@@ -19,5 +19,5 @@ public class VSTM_LapInfo {
   
   // lap for Pilot number.. start from 1 to N
   public boolean isPilotNumber = false;
-  public int pilotNumber = -1;
+  public int pilotNumber = 0;
 }
