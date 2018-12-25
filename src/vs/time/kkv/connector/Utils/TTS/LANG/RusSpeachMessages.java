@@ -53,12 +53,22 @@ public class RusSpeachMessages extends ISpeachMessages{
     return new SpeekText(id);      
   }
   
-   public SpeekText lapTime(String pilot, int lap, int countLaps) {
+   public SpeekText lapTime(String pilot, int lap, int countLaps, int HALF_LAPS_CALCL) {
     String krug = "";
-    if (lap == countLaps) {
+    
+    int lap_real = lap;
+    if (HALF_LAPS_CALCL==1) lap_real = Math.round(lap/2);
+        
+    if (lap_real == countLaps) {
       krug = " финиш";
-    } else {
-      krug =  " круг "+lap;
+    } else {            
+      String addon = "";
+      if (lap_real==lap/2) addon = " с половиной";
+      if (lap_real==0){
+        krug =  " полкруга";
+      }else{
+        krug =  " круг "+lap_real+addon;
+      }        
     }
     /*return new SpeekText(pilot +" "+krug);*/
     if (lap==0) return new SpeekText(pilot + " старт",1000);
@@ -66,35 +76,49 @@ public class RusSpeachMessages extends ISpeachMessages{
     return new SpeekText(pilot +krug);
   }
   
-  public String krugNumber(int lap) {
+  public String krugNumber(int lap_db, int half_lap) {
+    int lap = lap_db;
+    if (half_lap==1){
+      lap = Math.round(lap_db/2);
+    }
+    
+    String addon = "";
+    if (lap!=lap_db/2){
+      addon = " c половиной";
+    }
+    
+    if (lap == 0) {
+      return "половина";
+    }
+    
     if (lap == 1) {
-      return "первый";
+      return "первый"+addon;
     }
     if (lap == 2) {
-      return "второй";
+      return "второй"+addon;
     }
     if (lap == 3) {
-      return "третий";
+      return "третий"+addon;
     }
     if (lap == 4) {
-      return "четвертый";
+      return "четвертый"+addon;
     }
     if (lap == 5) {
-      return "пятый";
+      return "пятый"+addon;
     }
     if (lap == 6) {
-      return "шестой";
+      return "шестой"+addon;
     }
     if (lap == 7) {
-      return "седьмой";
+      return "седьмой"+addon;
     }
     if (lap == 8) {
-      return "восьмой";
+      return "восьмой"+addon;
     }
     if (lap == 9) {
-      return "девятый";
+      return "девятый"+addon;
     }
-    return "" + lap;
+    return "" + lap+addon;
   }
   
   public SpeekText raceWillBeStarted(long miliseconds) {    

@@ -36,6 +36,7 @@ public class VS_RACE {
   public int LAP_DISTANCE = 0;
   public int ALLOW_TO_FINISH_LAP = 0;
   public String WEB_UID = "";
+  public int CLAC_HALF_LAP = 0;
   
   public List<VS_REGISTRATION> users = new ArrayList<>();
   
@@ -73,6 +74,9 @@ public class VS_RACE {
     
     new DBModelField("LAP_DISTANCE").setDbFieldName("\"LAP_DISTANCE\""),     
     new DBModelField("ALLOW_TO_FINISH_LAP").setDbFieldName("\"ALLOW_TO_FINISH_LAP\""),     
+    
+    new DBModelField("CLAC_HALF_LAP").setDbFieldName("\"CLAC_HALF_LAP\""),     
+    
     
   });
   

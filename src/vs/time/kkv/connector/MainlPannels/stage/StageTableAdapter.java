@@ -665,6 +665,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   @Override
   public int getColumnCount() {
     int laps = tab.stage.LAPS;
+    if (tab.mainForm.activeRace.CLAC_HALF_LAP==1) laps = laps*2;
     if (show_laps) {
       for (StageTableData row : rows) {
         if (!row.isGrpup) {
@@ -683,9 +684,19 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     if (columnIndex < getColumns().size()) {
       return getColumns().get(columnIndex).caption;
     }
-    return tab.mainForm.getLocaleString("Lap") + " " + (columnIndex - getColumns().size() + 1);
+    /*if (tab.mainForm.activeRace.CLAC_HALF_LAP==1){
+      int lap = ((columnIndex - getColumns().size() + 1)*10)/2;
+      return tab.mainForm.getLocaleString("Lap") + " " +  ((double)lap/10);
+    }else{    
+      return tab.mainForm.getLocaleString("Lap") + " " + (columnIndex - getColumns().size() + 1);
+    }*/
+    double lap = StageTab.getRealLaps(columnIndex - getColumns().size() + 1);
+    if ( Math.round(lap)==lap ) 
+      return tab.mainForm.getLocaleString("Lap") + " " + Math.round(lap);
+    else      
+      return tab.mainForm.getLocaleString("Lap") + " " + lap;
   }
-
+  
   public String getColumnLocaleName(int columnIndex) {
     if (columnIndex < getColumns().size()) {
       return getColumns().get(columnIndex).captionOriginal;
@@ -1336,7 +1347,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
         } else {
           //if (tab.stage.CAPTION.equalsIgnoreCase("Qualification5"))
-          if (show_laps && !td.isGrpup && column >= (getColumns().size() + tab.stage.LAPS)) {
+          int laps = (getColumns().size() + tab.stage.LAPS);
+          if (tab.mainForm.activeRace.CLAC_HALF_LAP==1) laps = (getColumns().size() + tab.stage.LAPS*2);
+          if (show_laps && !td.isGrpup && column >= laps) {
             label.setBackground(Color.LIGHT_GRAY);
           } else {
             if (this.tab.stage.ID == 245) {

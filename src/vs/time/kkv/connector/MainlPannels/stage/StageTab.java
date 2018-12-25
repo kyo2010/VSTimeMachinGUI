@@ -374,6 +374,14 @@ public class StageTab extends javax.swing.JPanel {
   public static String getTimeIntervel(long time) {
     return getTimeIntervel(time, ":");
   }
+  
+  public static double getRealLaps(int lap){        
+    int lap_10 = (lap*10);
+    if (MainForm._mainForm!=null && MainForm._mainForm.activeRace!=null && MainForm._mainForm.activeRace.CLAC_HALF_LAP==1){
+      lap_10 = lap_10/2;
+    }
+    return ((double)lap_10/10);
+  }
 
   public static String getTimeIntervel(long time, String timeSep) {
     long min = time / 1000 / 60;

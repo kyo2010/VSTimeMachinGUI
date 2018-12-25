@@ -132,7 +132,9 @@ public class DataBaseStructure {
     
     new DBAddonStructure(5.1, "ALTER TABLE VS_REGISTRATION ADD E_MAIL TEXT NOT NULL DEFAULT '';"),     
     
-    new DBAddonStructure(5.2, "ALTER TABLE VS_STAGE_GROUPS ADD PILOT_TYPE INTEGER NOT NULL DEFAULT 0;"),    
+    new DBAddonStructure(5.2, "ALTER TABLE VS_STAGE_GROUPS ADD PILOT_TYPE INTEGER NOT NULL DEFAULT 0;"),   
+    
+    new DBAddonStructure(5.3, "ALTER TABLE VS_RACE ADD CLAC_HALF_LAP INTEGER NOT NULL DEFAULT 0;"),         
   };
 
   public static class DBAddonStructure {

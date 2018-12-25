@@ -17,7 +17,7 @@ public class ScoreCalulationFactory {
   static{
     SCORES_CALCULATION.add(new ClassicScoreCalculation()); // default Score Calculation for new stage
     SCORES_CALCULATION.add(new ArmyScoreCalculation());
-    SCORES_CALCULATION.add(new BasarinScoreCalculation());    
+    //SCORES_CALCULATION.add(new BasarinScoreCalculation());    
   }
   
   public static IScoreCalculation getScoreCalulation(String SCORE_CALCULATION_CODE){

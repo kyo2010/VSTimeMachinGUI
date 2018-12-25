@@ -91,12 +91,22 @@ public class ISpeachMessages {
     return new SpeekText(""+seconds, 1000);
   }
 
-  public SpeekText lapTime(String pilot, int lap, int countLaps) {
-    String krug = "";
-    if (lap == countLaps) {
+  public SpeekText lapTime(String pilot, int lap, int countLaps, int HALF_LAPS_CALCL) {
+    String krug = "";        
+    
+    int lap_real = lap;
+    if (HALF_LAPS_CALCL==1) lap_real = Math.round(lap/2);
+    
+    if (lap_real == countLaps) {
       krug = " finish";
-    } else {
-      krug =  " lap "+lap;
+    } else {      
+      String addon = "";
+      if (lap_real==lap/2) addon = " and half";
+      if (lap_real==0){
+        krug =  " half lap";
+      }else{
+        krug =  " lap "+lap_real+addon;
+      }  
     }
     /*return new SpeekText(pilot +" "+krug);*/
     if (lap==0) return new SpeekText("");
@@ -104,35 +114,46 @@ public class ISpeachMessages {
     return new SpeekText(pilot +krug);
   }
 
-  public String krugNumber(int lap) {
+  public String krugNumber(int lap_db, int half_lap) {
+    int lap = lap_db;
+    if (half_lap==1){
+      lap = Math.round(lap_db/2);
+    }    
+    String addon = "";
+    if (lap!=lap_db/2){
+      addon = " and half";
+    }    
+    if (lap == 0) {
+      return "half";
+    }            
     if (lap == 1) {
-      return "first";
+      return "first"+addon;
     }
     if (lap == 2) {
-      return "second";
+      return "second"+addon;
     }
     if (lap == 3) {
-      return "third";
+      return "third"+addon;
     }
     if (lap == 4) {
-      return "fourth";
+      return "fourth"+addon;
     }
     if (lap == 5) {
-      return "fifth";
+      return "fifth"+addon;
     }
     if (lap == 6) {
-      return "sixth";
+      return "sixth"+addon;
     }
     if (lap == 7) {
-      return "seventh";
+      return "seventh"+addon;
     }
     if (lap == 8) {
-      return "eighth";
+      return "eighth"+addon;
     }
     if (lap == 9) {
-      return "ninth";
+      return "ninth"+addon;
     }
-    return "" + lap;
+    return "" + lap+addon;
   }
   
   public SpeekText invatieGroup(long num, List<String> pilots){
