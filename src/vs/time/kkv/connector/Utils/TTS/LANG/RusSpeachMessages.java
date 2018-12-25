@@ -63,7 +63,7 @@ public class RusSpeachMessages extends ISpeachMessages{
       krug = " финиш";
     } else {            
       String addon = "";
-      if (lap_real==lap/2) addon = " с половиной";
+      if (lap_real!=lap/2 && HALF_LAPS_CALCL==1) addon = " с половиной";
       if (lap_real==0){
         krug =  " полкруга";
       }else{

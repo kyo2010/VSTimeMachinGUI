@@ -101,7 +101,7 @@ public class ISpeachMessages {
       krug = " finish";
     } else {      
       String addon = "";
-      if (lap_real==lap/2) addon = " and half";
+      if (lap_real!=lap/2 && HALF_LAPS_CALCL==1) addon = " and half";
       if (lap_real==0){
         krug =  " half lap";
       }else{
