@@ -67,6 +67,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jssc.SerialNativeInterface;
+import jssc.SerialPort;
 import jssc.SerialPortList;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImportForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
@@ -84,6 +85,7 @@ import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import static vs.time.kkv.connector.WLANSetting.singelton;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
+import vs.time.kkv.connector.connection.buttonsConnector.ButtonComPortConnector;
 import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
 import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.models.DataBaseStructure;
@@ -112,6 +114,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_RACE_RESULT = 4;
   public static final int STAGE_RACE_REPORT = 5;
 
+  public final static String DEVICE_VS_TIME_MACHINE = "VS Time Machine";
+  public final static String DEVICE_ARDUINO_CONTROL = "Manual checker";
+
+  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL};
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -454,6 +460,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       lap_log.writeFile("---==  Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
     TimerForm.init(this).setVisible(true);
+    
+    
+    String dev = VS_SETTING.getParam(con, "DEVICE","");
+    String port = VS_SETTING.getParam(con, "PORT", "");
+    
+    if (!dev.equals("")){
+      FORM_DEVICE.setSelectedItem(dev);
+    }
+    if (!port.equals("")){
+      ports.setSelectedItem(port);
+    }    
   }
 
   public AtomicBoolean treadIsRunning = new AtomicBoolean(false);
@@ -607,6 +624,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     connectButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
     bRefresh = new javax.swing.JButton();
+    jLabel4 = new javax.swing.JLabel();
+    FORM_DEVICE = new javax.swing.JComboBox<>();
     jPanel2 = new javax.swing.JPanel();
     ping = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
@@ -693,12 +712,20 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
 
+    jLabel4.setText("Device");
+
+    FORM_DEVICE.setModel(new javax.swing.DefaultComboBoxModel(DEVICE_LIST));
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
+        .addGap(5, 5, 5)
+        .addComponent(jLabel4)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(FORM_DEVICE, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
         .addComponent(jLabel1)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -710,11 +737,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(connectButton)
-        .addComponent(jLabel1)
-        .addComponent(bRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+      .addComponent(connectButton)
+      .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        .addComponent(bRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(ports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel1)
+          .addComponent(jLabel4)
+          .addComponent(FORM_DEVICE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
     );
 
     ports.getAccessibleContext().setAccessibleName("portsBox");
@@ -1006,7 +1036,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         .addGap(4, 4, 4)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+        .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -1044,6 +1074,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
     // TODO add your handling code here:
+    
+    String port = ports.getSelectedItem().toString();
+    
+    VS_SETTING.setParam(con, "DEVICE", FORM_DEVICE.getSelectedItem().toString());
+    VS_SETTING.setParam(con, "PORT", port);
+    
     for (DroneConnector vsTimeConnector : droneConnectors) {
       if (vsTimeConnector != null) {
         vsTimeConnector.disconnect();
@@ -1052,25 +1088,29 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     droneConnectors.clear();
 
-    DroneConnector vsTimeConnector = null;
-    String port = ports.getSelectedItem().toString();
+    DroneConnector vsTimeConnector = null;    
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
 
-      String staticIP = null;
-      if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
-        staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
-      };
-      if (port.equalsIgnoreCase("WLAN")) {
-        vsTimeConnector = new DroneConnector(
-                new ConnectionSocket(this,
-                        VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
-                        staticIP,
-                        WLANSetting.init(this).PORT_LISTING_INT,
-                        WLANSetting.init(this).PORT_SENDING_INT));
+      if (FORM_DEVICE.getSelectedItem().equals(DEVICE_ARDUINO_CONTROL)) {
+        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600));       
       } else {
-        vsTimeConnector = new DroneConnector(new ConnectionCOMPort(this, port));
+        String staticIP = null;
+        if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
+          staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
+        };
+        if (port.equalsIgnoreCase("WLAN")) {
+          vsTimeConnector = new DroneConnector(
+                  new ConnectionSocket(this,
+                          VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
+                          staticIP,
+                          WLANSetting.init(this).PORT_LISTING_INT,
+                          WLANSetting.init(this).PORT_SENDING_INT));
+        } else {
+          vsTimeConnector = new DroneConnector(new ConnectionCOMPort(this, port));
+        }
       }
+
       vsTimeConnector.setSendListener(this);
       try {
         vsTimeConnector.connect();
@@ -1368,11 +1408,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JComboBox<String> FORM_DEVICE;
   private javax.swing.JButton bRefresh;
   private javax.swing.JButton connectButton;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
@@ -1446,7 +1488,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       isPingCommand = true;
     }
 
-    for (DroneConnector vsTimeConnector : droneConnectors) {      
+    for (DroneConnector vsTimeConnector : droneConnectors) {
       jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
       break;
     }
@@ -1503,10 +1545,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           }
         }
         if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE != 0) {
-          
-          for (DroneConnector vsTimeConnector : droneConnectors) {                
+
+          for (DroneConnector vsTimeConnector : droneConnectors) {
             vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, VSColor.AQUA.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
-          }  
+          }
           //vsTimeConnector.blinkingTimer.restart();
         }
 
@@ -1663,7 +1705,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             if (user.color == null) {
               user.color = VSColor.getColorForChannel(user.CHANNEL, activeGroup.stage.CHANNELS, activeGroup.stage.COLORS);
             }
-            for (DroneConnector vsTimeConnector : droneConnectors) {                
+            for (DroneConnector vsTimeConnector : droneConnectors) {
               vsTimeConnector.addBlinkTransponder(TRANS_FOR_GATE, user.color.vscolor, TRANS_FOR_GATE_COLOR, TRANS_FOR_GATE_BLINK);
             }
           }
@@ -1671,9 +1713,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     }
   }
-  
-  public DroneConnector getMainDroneConnector(){
-    for (DroneConnector vsTimeConnector : droneConnectors) {  
+
+  public DroneConnector getMainDroneConnector() {
+    for (DroneConnector vsTimeConnector : droneConnectors) {
       return vsTimeConnector;
     }
     return null;

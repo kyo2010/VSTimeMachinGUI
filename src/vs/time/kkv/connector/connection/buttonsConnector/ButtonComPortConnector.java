@@ -35,7 +35,7 @@ public class ButtonComPortConnector implements SerialPortEventListener, DroneCon
     serialPort = new SerialPort(comPort);
     serialPort.openPort();
 
-    serialPort.setParams(SerialPort.BAUDRATE_115200,
+    serialPort.setParams(portSpeed,
               SerialPort.DATABITS_8,
               SerialPort.STOPBITS_1,
               SerialPort.PARITY_NONE);

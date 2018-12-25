@@ -1241,10 +1241,21 @@ public class StageTab extends javax.swing.JPanel {
     }
 
     jTable.setRowHeight(30);
+    
+    try{
+      stageTableAdapter.SHOW_CHECK_RACE_BUTTON = false;
+      DroneConnector dc = mainForm.getMainDroneConnector();
+      if (dc!=null && dc.transport!=null){
+        if (dc.transport.supportSearch()){
+          stageTableAdapter.SHOW_CHECK_RACE_BUTTON = true;
+        }
+      }
+    }catch(Exception e){}
 
     stageTableAdapter = new StageTableAdapter(this);
     jTable.setModel(stageTableAdapter);
-    jTable.setDefaultRenderer(Object.class, stageTableAdapter);
+    jTable.setDefaultRenderer(Object.class, stageTableAdapter);   
+    
 
     //System.out.println("Table UI:"+jTable.getUI().getClass().toString());
     jTable.setDefaultEditor(JButton.class, new ButtonEditor(new ActionListener() {
