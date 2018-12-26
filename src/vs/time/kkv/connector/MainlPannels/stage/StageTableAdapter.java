@@ -641,7 +641,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       for (Integer groupId : tab.stage.groups.keySet()) {
         VS_STAGE_GROUP group = tab.stage.groups.get(groupId);
         for (VS_STAGE_GROUPS pilot : group.users) {
-          pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, false);
+          pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, false, tab.mainForm.activeRace);
         }
       }
     }
@@ -811,7 +811,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           return "";
         }
 
-        long cols = td.pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, false);
+        long cols = td.pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, false, tab.mainForm.activeRace);
         if (cols > laps_count) {
           tab.fireStructChange();
         }

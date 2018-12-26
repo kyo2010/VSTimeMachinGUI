@@ -193,7 +193,7 @@ public class StageNewForm extends javax.swing.JFrame {
       parentStage.setSelectedItem(last_stage);
       jPilotType.setSelectedIndex(MainForm.PILOT_TYPE_NONE_INDEX);
       butRecrateGropus.setVisible(false);
-      String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R2;R5;R7");
+      String st_channels = VS_SETTING.getParam(mainForm.con, "CHANNELS", "R1;R2;R5;R7");
       String st_colors = VS_SETTING.getParam(mainForm.con, "COLORS", "RED;BLUE;GREEN");
       String st_trans = VS_SETTING.getParam(mainForm.con, "GUEST_TRANS", "");
       String[] channels = st_channels.split(";");

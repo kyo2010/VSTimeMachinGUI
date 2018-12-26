@@ -375,7 +375,9 @@ public class VS_STAGE {
         long s = lap.TRANSPONDER_TIME/1000;
         if (mainForm.SAY_SECONDS_FOR_LAP) sec= " "+s;
         mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().lapTime(usr.PILOT+sec, lap_for_sound.LAP, usr.parent.stage.LAPS,mainForm.activeRace.CLAC_HALF_LAP));
-        if (lap_for_sound.LAP==usr.parent.stage.LAPS){
+        int lap2 = lap_for_sound.LAP;
+        if (mainForm.activeRace.CLAC_HALF_LAP==1) lap2 = Math.round(lap2/2);
+        if (lap2==usr.parent.stage.LAPS){
           if (tab!=null && !tab.FIRST_RACER_IS_FINISHED ) {
             tab.FIRST_RACER_IS_FINISHED = true;
             tab.runFinishCommand();

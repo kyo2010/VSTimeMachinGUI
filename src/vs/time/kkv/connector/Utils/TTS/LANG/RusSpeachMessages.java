@@ -57,22 +57,22 @@ public class RusSpeachMessages extends ISpeachMessages{
     String krug = "";
     
     int lap_real = lap;
-    if (HALF_LAPS_CALCL==1) lap_real = Math.round(lap/2);
+    if (HALF_LAPS_CALCL==1) lap_real = lap/2;
         
-    if (lap_real == countLaps) {
+     if (lap_real == countLaps) {
       krug = " финиш";
     } else {            
       String addon = "";
-      if (lap_real!=lap/2 && HALF_LAPS_CALCL==1) addon = " с половиной";
+      if (lap%2==1 && HALF_LAPS_CALCL==1) addon = " с половиной";
       if (lap_real==0){
-        krug =  " полкруга";
+        krug =  " пол-круга";
       }else{
         krug =  " круг "+lap_real+addon;
       }        
     }
     /*return new SpeekText(pilot +" "+krug);*/
     if (lap==0) return new SpeekText(pilot + " старт",1000);
-    if (lap>countLaps) return new SpeekText(pilot);
+    if (lap_real>countLaps || (HALF_LAPS_CALCL==1 && lap%2==1 && lap_real==countLaps)) return new SpeekText(pilot);
     return new SpeekText(pilot +krug);
   }
   

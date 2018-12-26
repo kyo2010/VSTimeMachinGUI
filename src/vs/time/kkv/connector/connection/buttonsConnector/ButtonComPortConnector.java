@@ -28,6 +28,7 @@ public class ButtonComPortConnector implements SerialPortEventListener, DroneCon
   public SerialPort serialPort = null;
   String comPort;
   int portSpeed;
+  String channels;
 
   public void setVSTimeConnector(DroneConnector timeConnector) {
     this.timeConnector = timeConnector;
@@ -63,16 +64,19 @@ public class ButtonComPortConnector implements SerialPortEventListener, DroneCon
     return false;
   }
  
-   public void preStart() {
-  }
+   public void preStart() {     
+     sendData("init:"+channels);
+   }
   
    public SerialCasheControl casheData = new SerialCasheControl();
 
   // SerialPort.BAUDRATE_115200
-  public ButtonComPortConnector(VSTimeMachineReciver receiver, String comPort, int portSpeed) {
+  public ButtonComPortConnector(VSTimeMachineReciver receiver, String comPort, int portSpeed, String channels) {
     this.receiver = receiver;
     this.comPort = comPort;
     this.portSpeed = portSpeed;
+    this.channels = channels;
+    //System.err.println("channels:"+channels);
   }
 
   public static class SerialCasheControl {

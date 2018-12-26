@@ -653,7 +653,7 @@ public class StageTab extends javax.swing.JPanel {
 
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
-      user.recalculateLapTimes(mainForm.con, stage, true);
+      user.recalculateLapTimes(mainForm.con, stage, true, mainForm.activeRace);
     }
     long group_num = mainForm.activeGroup.GROUP_NUM;
     mainForm.activeGroup.recalculateScores(mainForm);

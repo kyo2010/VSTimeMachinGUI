@@ -95,13 +95,13 @@ public class ISpeachMessages {
     String krug = "";        
     
     int lap_real = lap;
-    if (HALF_LAPS_CALCL==1) lap_real = Math.round(lap/2);
+    if (HALF_LAPS_CALCL==1) lap_real = lap/2;
     
-    if (lap_real == countLaps) {
+     if (lap_real == countLaps) {
       krug = " finish";
     } else {      
       String addon = "";
-      if (lap_real!=lap/2 && HALF_LAPS_CALCL==1) addon = " and half";
+      if (lap%2==1 && HALF_LAPS_CALCL==1) addon = " and half";
       if (lap_real==0){
         krug =  " half lap";
       }else{
@@ -110,7 +110,7 @@ public class ISpeachMessages {
     }
     /*return new SpeekText(pilot +" "+krug);*/
     if (lap==0) return new SpeekText("");
-    if (lap>countLaps) return new SpeekText(pilot);
+    if (lap_real>countLaps || (HALF_LAPS_CALCL==1 && lap%2==1 && lap_real==countLaps)) return new SpeekText(pilot);
     return new SpeekText(pilot +krug);
   }
 

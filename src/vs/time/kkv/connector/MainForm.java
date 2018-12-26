@@ -1093,7 +1093,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       jLabel3.setText("connecting to port " + port);
 
       if (FORM_DEVICE.getSelectedItem().equals(DEVICE_ARDUINO_CONTROL)) {
-        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600));       
+        
+        String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
+        /*String[] ch_mas = new String[]{activeRace.CHANNEL1,activeRace.CHANNEL2,activeRace.CHANNEL3,activeRace.CHANNEL4};
+        for (String ch : ch_mas){
+          channels+=ch+";";
+        }*/
+        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600,channels));       
       } else {
         String staticIP = null;
         if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {

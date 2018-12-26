@@ -293,7 +293,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   /**
    * return maximum laps
    */
-  public long recalculateLapTimes(Connection conn, VS_STAGE stage, boolean please_recalculate) {
+  public long recalculateLapTimes(Connection conn, VS_STAGE stage, boolean please_recalculate, VS_RACE race) {
     long result = 0;
     try {
       if (IS_RECALULATED == 1 && please_recalculate != true) {
@@ -333,9 +333,11 @@ public class VS_STAGE_GROUPS implements Transferable {
               }
               LAPS++;
               _RACE_TIME += lap.TRANSPONDER_TIME;
-              if (lap_num == stage.LAPS && !hasSkip) {
+              if (lap_num == stage.LAPS && !hasSkip && race.CLAC_HALF_LAP==0) {
                 all_laps_is_exist = true;
-
+              }
+              if (lap_num/2 == stage.LAPS && !hasSkip && race.CLAC_HALF_LAP==1) {
+                all_laps_is_exist = true;
               }
               last_time_lap = lap.TRANSPONDER_TIME;
             } else {
