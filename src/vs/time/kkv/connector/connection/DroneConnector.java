@@ -525,6 +525,14 @@ public class DroneConnector {
              //System.out.print("Arduino push pilot numner : "+num);
              sentMessage("lapreceived:pilot" + num +"\r\n");
              return lap;
+          } else if (params[0] != null &&  params[0].indexOf("channel")== 0) {
+             lap.isPilotNumber = true;
+             lap.isPilotChannel = true;
+             lap.baseStationID = 0;
+             lap.pilotChannel = params[0].substring(7);
+             //System.out.print("Arduino push pilot numner : "+num);
+             sentMessage("lapreceived:channel" + lap.pilotChannel +"\r\n");
+             return lap;
           } else {
             lap.numberOfPacket = Integer.parseInt(params[0]);
             lap.baseStationID = Integer.parseInt(params[1]);

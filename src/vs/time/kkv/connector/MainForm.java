@@ -460,17 +460,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       lap_log.writeFile("---==  Active Race  ==---  ;" + activeRace.RACE_NAME + " [" + activeRace.RACE_ID + "]");
     }
     TimerForm.init(this).setVisible(true);
-    
-    
-    String dev = VS_SETTING.getParam(con, "DEVICE","");
+
+    String dev = VS_SETTING.getParam(con, "DEVICE", "");
     String port = VS_SETTING.getParam(con, "PORT", "");
-    
-    if (!dev.equals("")){
+
+    if (!dev.equals("")) {
       FORM_DEVICE.setSelectedItem(dev);
     }
-    if (!port.equals("")){
+    if (!port.equals("")) {
       ports.setSelectedItem(port);
-    }    
+    }
   }
 
   public AtomicBoolean treadIsRunning = new AtomicBoolean(false);
@@ -1074,12 +1073,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
     // TODO add your handling code here:
-    
+
     String port = ports.getSelectedItem().toString();
-    
+
     VS_SETTING.setParam(con, "DEVICE", FORM_DEVICE.getSelectedItem().toString());
     VS_SETTING.setParam(con, "PORT", port);
-    
+
     for (DroneConnector vsTimeConnector : droneConnectors) {
       if (vsTimeConnector != null) {
         vsTimeConnector.disconnect();
@@ -1088,18 +1087,18 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
     droneConnectors.clear();
 
-    DroneConnector vsTimeConnector = null;    
+    DroneConnector vsTimeConnector = null;
     if (!port.equalsIgnoreCase("")) {
       jLabel3.setText("connecting to port " + port);
 
       if (FORM_DEVICE.getSelectedItem().equals(DEVICE_ARDUINO_CONTROL)) {
-        
+
         String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
         /*String[] ch_mas = new String[]{activeRace.CHANNEL1,activeRace.CHANNEL2,activeRace.CHANNEL3,activeRace.CHANNEL4};
         for (String ch : ch_mas){
           channels+=ch+";";
         }*/
-        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600,channels));       
+        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600, channels));
       } else {
         String staticIP = null;
         if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
@@ -1506,16 +1505,26 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     }
     if (lap != null) {
-            
-      if (lap.isPilotNumber){
+
+      if (lap.isPilotNumber) {
         lap.transponderID = lap.pilotNumber;
         lap.baseStationID = 0;
         lap.time = Calendar.getInstance().getTimeInMillis();
-        if (activeGroup!=null){
+        if (activeGroup != null) {
           lap.transponderID = 0;
-          if (activeGroup.users.size()>=lap.pilotNumber && lap.pilotNumber>0){         
-            lap.transponderID = activeGroup.users.get(lap.pilotNumber-1).VS_PRIMARY_TRANS;
-          }        
+
+          if (lap.isPilotChannel) {
+            for (VS_STAGE_GROUPS usr : activeGroup.users) {
+              if (usr.CHANNEL.equalsIgnoreCase(lap.pilotChannel)) {
+                lap.transponderID = usr.VS_PRIMARY_TRANS;
+                break;
+              }
+            }
+          } else {
+            if (activeGroup.users.size() >= lap.pilotNumber && lap.pilotNumber > 0) {
+              lap.transponderID = activeGroup.users.get(lap.pilotNumber - 1).VS_PRIMARY_TRANS;
+            }
+          }
         }
       }
 
@@ -1529,11 +1538,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       this.lastTranponderID = lap.transponderID;
       long timeS = Calendar.getInstance().getTimeInMillis();
       long time = lap.time;
-      if (lap.isPilotNumber){
+      if (lap.isPilotNumber) {
         lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";pilot" + lap.pilotNumber);
-      }else{
-        lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);     
-      }  
+      } else {
+        lap_log.writeFile("LAP;" + new JDEDate(time).getDateAsYYYYMMDD_andTime("-", ":") + ";" + lap.transponderID + ";" + lap.baseStationID + ";" + lap.numberOfPacket + ";" + lap.transpnderCounter);
+      }
       if (Math.abs(time - timeS) > 1000 * 60 * 60) {
         System.out.println("Big gap between Time : " + Math.abs(time - timeS) + " trans time:" + time + " system time:" + timeS);
         time = timeS;//lap.time;
@@ -1562,7 +1571,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
           }
         } else {
-          if (regForm != null && regForm.unRaceLapSound.isSelected() && lap.transponderID!=0) {
+          if (regForm != null && regForm.unRaceLapSound.isSelected() && lap.transponderID != 0) {
             speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
           }
         }
@@ -1591,16 +1600,25 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
 
-      if (activeRace != null && activeGroup != null) {                        
+      if (activeRace != null && activeGroup != null) {
         VS_STAGE_GROUPS user = null;
-        
-        if (lap.isPilotNumber){          
-          if (activeGroup.users.size()>=lap.pilotNumber && lap.pilotNumber>0){         
-            user = activeGroup.users.get(lap.pilotNumber-1);
-          }  
-        }else{
+
+        if (lap.isPilotNumber) {
+          if (lap.isPilotChannel) {
+            for (VS_STAGE_GROUPS usr : activeGroup.users) {
+              if (usr.CHANNEL.equalsIgnoreCase(lap.pilotChannel)) {
+                user = usr;
+                break;
+              }
+            }
+          }else {
+            if (activeGroup.users.size() >= lap.pilotNumber && lap.pilotNumber > 0) {
+              user = activeGroup.users.get(lap.pilotNumber - 1);
+            }
+          }
+        } else {
         }
-        
+
         for (VS_STAGE_GROUPS usr : activeGroup.users) {
           if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
             user = usr;
