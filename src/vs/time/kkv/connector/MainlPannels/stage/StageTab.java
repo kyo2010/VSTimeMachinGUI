@@ -2669,7 +2669,7 @@ public class StageTab extends javax.swing.JPanel {
 
                     //if (useSpeach) mainForm.speaker.speak("Go!");
                     mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-                    preapreTimeMachineToRace();
+                    //preapreTimeMachineToRace();
                     raceTimer.start();
                     FIRST_RACER_IS_FINISHED = false;
                     jTree.updateUI();
@@ -2719,7 +2719,7 @@ public class StageTab extends javax.swing.JPanel {
 
             //if (useSpeach) mainForm.speaker.speak("Go!");
             mainForm.raceTime = Calendar.getInstance().getTimeInMillis();
-            preapreTimeMachineToRace();
+            //preapreTimeMachineToRace();
             raceTimer.start();
             FIRST_RACER_IS_FINISHED = false;
             jTree.updateUI();
