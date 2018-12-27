@@ -12,6 +12,7 @@ import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
@@ -66,6 +67,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, DroneConectio
       try {
         data = serialPort.readString(event.getEventValue());
         data = data.trim();
+        MainForm.toRealLog("RCV->"+data);
         if (receiver!=null) receiver.receiveDataForLog(data);
         if (data.indexOf("ping")==-1){
           int y = 0;
@@ -96,6 +98,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, DroneConectio
 
   @Override
   public void sendData(String data) {
+    MainForm.toRealLog("SND<-"+data);
     if (serialPort != null) {
       try {
         serialPort.writeString(data);

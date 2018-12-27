@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.connection.DroneConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
@@ -141,6 +142,7 @@ public class ConnectionSocket extends Thread implements DroneConection {
 
           String data = new String(data_b, 0, packet.getLength());
           data = data.trim();
+          MainForm.toRealLog("RCV->"+data);
           if (receiver != null) {
             receiver.receiveDataForLog(data);
           }
@@ -207,7 +209,7 @@ public class ConnectionSocket extends Thread implements DroneConection {
 
   @Override
   public void sendData(String data) {
-
+    MainForm.toRealLog("SND<-"+data);
     if (!getIPAdressfromPackage) {
       if (prev_data != null && prev_data.equalsIgnoreCase(data)) {
         try {

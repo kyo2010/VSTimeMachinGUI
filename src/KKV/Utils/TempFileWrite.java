@@ -81,8 +81,8 @@ public class TempFileWrite {
   }
   
   public String getTime(){
-    Date dt = Calendar.getInstance().getTime();
-    String res = (dt.getYear()+1900)+"-"+Tools.padl(""+(dt.getMonth()+1),2,"0")+"-"+dt.getDate()+" "+Tools.padl(""+dt.getHours(),2,"0")+":"+Tools.padl(""+dt.getMinutes(),2,"0")+":"+Tools.padl(""+dt.getSeconds(),2,"0");
+    Calendar dt = Calendar.getInstance();
+    String res = (dt.get(Calendar.YEAR)+1900)+"-"+Tools.padl(""+(dt.get(Calendar.MONTH)+1),2,"0")+"-"+dt.get(Calendar.DAY_OF_MONTH)+" "+Tools.padl(""+dt.get(Calendar.HOUR_OF_DAY),2,"0")+":"+Tools.padl(""+dt.get(Calendar.MINUTE),2,"0")+":"+Tools.padl(""+dt.get(Calendar.SECOND),2,"0")+" "+Tools.padl(""+dt.get(Calendar.MILLISECOND),3,"0");
     return res;
   };
 

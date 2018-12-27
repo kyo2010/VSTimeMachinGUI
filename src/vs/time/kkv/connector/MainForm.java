@@ -194,9 +194,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   //public List<DroneConnector> vsTimeConnector = null;
   public List<DroneConnector> droneConnectors = new ArrayList<DroneConnector>();
 
+  public static void toRealLog(String st){
+    real_log.writeFile(st, true);
+  }
+  
+  
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
   public TempFileWrite error_log = new TempFileWrite("error.log");
   public TempFileWrite lap_log = new TempFileWrite("lap.log");
+  public static TempFileWrite real_log = new TempFileWrite("real.log");
   public TempFileWrite race_log = new TempFileWrite("race.csv");
   public Connection con = null;
   public SpeekUtil speaker = null;
