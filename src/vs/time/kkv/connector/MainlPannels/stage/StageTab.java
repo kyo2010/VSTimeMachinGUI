@@ -2593,15 +2593,16 @@ public class StageTab extends javax.swing.JPanel {
         return message;
       }
     }
-    preapreTimeMachineToRace();
-    mainForm.setColorForGate();
-
-    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+    
+    if (mainForm.USE_TRAFIC_LIGHT) {
       try {
-        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW.getVSColor());
+        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW);
       } catch (Exception e) {
       }
     }
+    
+    preapreTimeMachineToRace();
+    mainForm.setColorForGate();    
 
     if (td != null && td.isGrpup == true) {
       if (stage.IS_LOCK == 1) {
@@ -2657,9 +2658,9 @@ public class StageTab extends javax.swing.JPanel {
                       MainForm._toLog(rt_e);
                     }
 
-                    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+                    if (mainForm.USE_TRAFIC_LIGHT) {
                       try {
-                        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+                        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN);
                       } catch (Exception ein) {
                       }
                     }
@@ -2707,9 +2708,9 @@ public class StageTab extends javax.swing.JPanel {
               MainForm._toLog(rt_e);
             }
 
-            if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+            if (mainForm.USE_TRAFIC_LIGHT) {
               try {
-                vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN.getVSColor());
+                vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN);
               } catch (Exception ein) {
               }
             }
@@ -2806,10 +2807,10 @@ public class StageTab extends javax.swing.JPanel {
       return message;
     }
 
-    if (mainForm.USE_TRAFIC_LIGHT && mainForm.TRANS_TRAFIC_LIGHT != 0) {
+    if (mainForm.USE_TRAFIC_LIGHT) {
       try {
         final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
-        vsTimeConnector.setColor(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED.getVSColor());
+        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED);
       } catch (Exception e) {
       }
     }

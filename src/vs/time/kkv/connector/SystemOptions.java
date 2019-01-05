@@ -116,7 +116,9 @@ public class SystemOptions extends javax.swing.JFrame {
      OBS_PORT.setText(mainForm.obsConfig.OBS_PORT);
      OBS_SCENE_RACE.setText(mainForm.obsConfig.OBS_SCENE_RACE);
      OBS_SCENE_FINISH.setText(mainForm.obsConfig.OBS_SCENE_FINISH);
-     OBS_SCENE_INVATE.setText(mainForm.obsConfig.OBS_SCENE_INVATE);          
+     
+     OBS_GATE_TIMOUT.setText(""+mainForm.obsConfig.OBS_GATE_TIMOUT);        
+     OBS_GATE_ENABLED.setSelected(mainForm.obsConfig.OBS_GATE_ENABLED);
   }
 
   /**
@@ -171,7 +173,10 @@ public class SystemOptions extends javax.swing.JFrame {
     jLabel11 = new javax.swing.JLabel();
     OBS_SCENE_FINISH = new javax.swing.JTextField();
     jLabel12 = new javax.swing.JLabel();
-    OBS_SCENE_INVATE = new javax.swing.JTextField();
+    OBS_GATE_TIMOUT = new javax.swing.JTextField();
+    OBS_GATE_ENABLED = new javax.swing.JCheckBox();
+    jLabel15 = new javax.swing.JLabel();
+    OBS_SCENE_INVATE1 = new javax.swing.JTextField();
 
     setTitle("System Settings");
     setIconImage(MainForm.getWindowsIcon().getImage());
@@ -272,7 +277,7 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel7)
           .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(162, Short.MAX_VALUE))
+        .addContainerGap(180, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("General", jPanel2);
@@ -350,7 +355,7 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel13)
           .addComponent(webAdminPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(138, Short.MAX_VALUE))
+        .addContainerGap(156, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("HTTP", jPanel3);
@@ -375,6 +380,7 @@ public class SystemOptions extends javax.swing.JFrame {
     jLabel14.setText("Transponder ID for traffic light");
 
     TRANS_TRAFIC_LIGHT.setText("0");
+    TRANS_TRAFIC_LIGHT.setToolTipText("Please use 0 - for Start Gate");
 
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
     jPanel4.setLayout(jPanel4Layout);
@@ -425,7 +431,7 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(TRANS_TRAFIC_LIGHT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel14))
-        .addContainerGap(107, Short.MAX_VALUE))
+        .addContainerGap(125, Short.MAX_VALUE))
     );
 
     jLabel14.getAccessibleContext().setAccessibleName("Transonder ID for Traffic light");
@@ -459,7 +465,15 @@ public class SystemOptions extends javax.swing.JFrame {
 
     jLabel12.setText("OBS Scene for Finish");
 
-    OBS_SCENE_INVATE.setText("OBS_SCENE_INVTATION");
+    OBS_GATE_TIMOUT.setText("OBS_SCENE_INVTATION");
+
+    OBS_GATE_ENABLED.setText("Switch to Gate, Scene name is \"gate_<gate N>\"");
+    OBS_GATE_ENABLED.setToolTipText("");
+    OBS_GATE_ENABLED.setActionCommand("");
+
+    jLabel15.setText("Minimum switching timeout");
+
+    OBS_SCENE_INVATE1.setText("OBS_SCENE_INVTATION");
 
     javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
     jPanel5.setLayout(jPanel5Layout);
@@ -484,44 +498,56 @@ public class SystemOptions extends javax.swing.JFrame {
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addGroup(jPanel5Layout.createSequentialGroup()
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel10)
-              .addComponent(jLabel12)
-              .addComponent(jLabel11))
-            .addGap(32, 32, 32)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(OBS_SCENE_INVATE, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(OBS_GATE_ENABLED)
+              .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                  .addComponent(jLabel15)
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                  .addComponent(OBS_GATE_TIMOUT, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                  .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel11))
+                  .addGap(32, 32, 32)
+                  .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(OBS_SCENE_INVATE1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))))
             .addGap(0, 0, Short.MAX_VALUE))))
     );
     jPanel5Layout.setVerticalGroup(
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel5Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel12))
-          .addGroup(jPanel5Layout.createSequentialGroup()
-            .addComponent(OBS_USE_WEB_SOCKET)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel8)
-              .addComponent(jLabel9)
-              .addComponent(OBS_HOST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(OBS_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
-            .addComponent(OBS_AUTO_RECORDING)
-            .addGap(21, 21, 21)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(jLabel10))
-            .addGap(40, 40, 40)))
+        .addComponent(OBS_USE_WEB_SOCKET)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel8)
+          .addComponent(jLabel9)
+          .addComponent(OBS_HOST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(OBS_PORT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGap(18, 18, 18)
+        .addComponent(OBS_AUTO_RECORDING)
+        .addGap(21, 21, 21)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(OBS_SCENE_RACE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel10))
+        .addGap(6, 6, 6)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(OBS_SCENE_FINISH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel12))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel11)
-          .addComponent(OBS_SCENE_INVATE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(50, Short.MAX_VALUE))
+          .addComponent(OBS_SCENE_INVATE1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(OBS_GATE_ENABLED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel15)
+          .addComponent(OBS_GATE_TIMOUT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap())
     );
 
     jTabbedPane1.addTab("OBS", jPanel5);
@@ -536,8 +562,8 @@ public class SystemOptions extends javax.swing.JFrame {
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(0, 0, Short.MAX_VALUE)
+        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -585,7 +611,12 @@ public class SystemOptions extends javax.swing.JFrame {
     mainForm.obsConfig.OBS_PORT = OBS_PORT.getText();
     mainForm.obsConfig.OBS_SCENE_RACE = OBS_SCENE_RACE.getText();
     mainForm.obsConfig.OBS_SCENE_FINISH = OBS_SCENE_FINISH.getText();
-    mainForm.obsConfig.OBS_SCENE_INVATE = OBS_SCENE_INVATE.getText();
+    mainForm.obsConfig.OBS_SCENE_INVATE = OBS_GATE_TIMOUT.getText();
+    
+    mainForm.obsConfig.OBS_GATE_ENABLED = OBS_GATE_ENABLED.isSelected();
+    try{
+      mainForm.obsConfig.OBS_GATE_TIMOUT = Integer.parseInt(OBS_GATE_TIMOUT.getText());
+    }catch(Exception e){}
 
     mainForm.applayLanguage();
     mainForm.speaker.reset();
@@ -627,10 +658,12 @@ public class SystemOptions extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JCheckBox OBS_AUTO_RECORDING;
+  private javax.swing.JCheckBox OBS_GATE_ENABLED;
+  private javax.swing.JTextField OBS_GATE_TIMOUT;
   private javax.swing.JTextField OBS_HOST;
   private javax.swing.JTextField OBS_PORT;
   private javax.swing.JTextField OBS_SCENE_FINISH;
-  private javax.swing.JTextField OBS_SCENE_INVATE;
+  private javax.swing.JTextField OBS_SCENE_INVATE1;
   private javax.swing.JTextField OBS_SCENE_RACE;
   private javax.swing.JCheckBox OBS_USE_WEB_SOCKET;
   private javax.swing.JTextField TRANS_FOR_GATE;
@@ -653,6 +686,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel13;
   private javax.swing.JLabel jLabel14;
+  private javax.swing.JLabel jLabel15;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

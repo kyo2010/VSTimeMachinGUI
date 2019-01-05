@@ -232,7 +232,25 @@ public class DroneConnector {
   public void setColor(int transponderID, int color) throws SerialPortException {
     //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");
     sentMessage("sendcolor:" + color + "," + transponderID + "\r\n");
-
+  }
+  
+  public void setColorForTraficLight(int transponderID, VSColor color) throws SerialPortException {
+    //sentMessage("sendcolor:" + transponderID + "," + color + "\r\n");
+    for (int i=0; i<3; i++){
+      try{
+      Thread.currentThread().sleep(50);
+      }catch(Exception e){}
+      
+    if (transponderID==0){
+      //sendgatecolor:<color>,<gate>\r\n
+      
+      sentMessage("sendgatecolor:" + color.getOnlyColor() + "," + transponderID + "\r\n");    
+      ///sentMessage("sendcolor:" + color + "," + transponderID + "\r\n");    
+    }else{
+      sentMessage("sendcolor:" + color.vscolor + "," + transponderID + "\r\n");
+    }
+    }
+    
   }
 
   Boolean waitingVSTMParams = false;

@@ -194,11 +194,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   //public List<DroneConnector> vsTimeConnector = null;
   public List<DroneConnector> droneConnectors = new ArrayList<DroneConnector>();
 
-  public static void toRealLog(String st){
+  public static void toRealLog(String st) {
     real_log.writeFile(st, true);
   }
-  
-  
+
   public TempFileWrite log = new TempFileWrite("VSTimeMachine.log");
   public TempFileWrite error_log = new TempFileWrite("error.log");
   public TempFileWrite lap_log = new TempFileWrite("lap.log");
@@ -1499,6 +1498,29 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       isPingCommand = true;
     }
 
+    // gate:<GATE ID>, <COLOR>, <TRANSPONDER ID>, <TIME>,<CRC>\r\n
+    if (commands[0].equalsIgnoreCase("gate")) {
+      String gateID = params[0];
+      VS_REGISTRATION usr_reg = null;
+      if (activeRace != null && !lap.isPilotNumber) {
+        try {
+          int transponderID = Integer.parseInt(params[1]);
+          usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and (VS_TRANSPONDER=? OR VS_TRANS2=? OR VS_TRANS3=?)",
+                  activeRace.RACE_ID, transponderID, transponderID, transponderID);          
+          String info = "";
+          if (activeStage!=null){
+            info = getLocaleString("Stage") + " : " + activeStage;
+          }
+          if (activeGroup!=null){
+            info += " - " + getLocaleString("Group") + activeGroup.GROUP_NUM;
+          
+          }      
+          obsConfig.changeSceneForGate(info, gateID, usr_reg);
+        } catch (Exception ein) {
+        }
+      }
+    }
+
     for (DroneConnector vsTimeConnector : droneConnectors) {
       jLabel3.setText(data + "   " + (vsTimeConnector != null ? vsTimeConnector.last_error : ""));
       break;
@@ -1617,7 +1639,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
                 break;
               }
             }
-          }else {
+          } else {
             if (activeGroup.users.size() >= lap.pilotNumber && lap.pilotNumber > 0) {
               user = activeGroup.users.get(lap.pilotNumber - 1);
             }

@@ -91,6 +91,18 @@ public class VSColor {
     vscolor |= (1 << 4); // fast blink
     return vscolor;
   }
+  
+  // LockChangeColor = gateColor & (1 << 4);
+  // isSendGate = gateColor & (1 << 5);
+  // mainGateColor = gateColor & (1 << 6); 
+  // lockColor = gateColor & (1 << 7);
+  
+  /*
+  lockChangeColor: это зафиксировать цвет тоесть пролетающие дроны не смогут его менять.
+  isSendGate: переключить в режим обмена с базовой станцией
+  mainGateColor: Установить этот цвет как основной
+  lockColor: Блокирует смену цвета в цвет по умолчанию(через 1 сек после пролета)
+  */
 
   /***
     6 bit - blinking in the gate
@@ -116,6 +128,15 @@ public class VSColor {
     vscolor |= (1 << 5);
     vscolor |= (1 << 6);
     this.color = color;
+  }
+  
+  public int getOnlyColor(){
+    int c = vscolor;
+    c &= ~(1<<4);
+    c &= ~(1<<5);
+    c &= ~(1<<6);
+    c &= ~(1<<7);
+    return c;
   }
 
   public int getVSColor() {
