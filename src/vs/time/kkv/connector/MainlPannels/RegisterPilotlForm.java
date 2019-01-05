@@ -445,8 +445,8 @@ public class RegisterPilotlForm extends javax.swing.JFrame {
       usr.FIRST_NAME = edFirstName.getText();
       usr.SECOND_NAME = edSecondName.getText();
       usr.VS_SOUND_EFFECT = chEnabledSound.isSelected() ? 1 : 0;
-      usr.PHOTO = "";
-      usr.PICTURE_FILENAME = "";
+      //usr.PHOTO = "";
+      //usr.PICTURE_FILENAME = "";
       usr.PILOT_TYPE = jcbPilotType.getSelectedIndex();
       usr.REGION = edRegion.getText();
       boolean isNew = false;

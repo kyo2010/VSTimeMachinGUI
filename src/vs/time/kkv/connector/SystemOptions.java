@@ -77,8 +77,7 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.TRANS_FOR_GATE.setText(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE", "0"));
     singelton.TRANS_FOR_GATE_BLINK.setSelected(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_BLINK", 0) == 1 ? true : false);
     singelton.TRANS_FOR_GATE_COLOR.setSelectedItem(VS_SETTING.getParam(mainForm.con, "TRANS_FOR_GATE_COLOR", "RED"));
-    
-    
+        
     singelton.USE_TRAFIC_LIGHT.setSelected(VS_SETTING.getParam(mainForm.con, "USE_TRAFIC_LIGHT", 0) == 1 ? true : false);
     singelton.TRANS_TRAFIC_LIGHT.setText(VS_SETTING.getParam(mainForm.con, "TRANS_TRAFIC_LIGHT", ""));      
     
