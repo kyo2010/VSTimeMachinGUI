@@ -81,6 +81,9 @@ public class VS_STAGE_GROUPS implements Transferable {
   public String info = "";
 
   public VS_STAGE_GROUP parent = null;
+  
+  /** Templary variable for qualification resuls */
+  public List<Long> ALL_QAULA_LAPS = null;
 
   /**
    * Constructor

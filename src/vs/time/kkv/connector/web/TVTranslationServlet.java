@@ -792,6 +792,22 @@ public class TVTranslationServlet extends HttpServlet {
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
   }
+  
+  public void showPilot(HttpServletResponse resp, VS_STAGE_GROUPS user) throws IOException {
+    String path = CUSTOM_PATH;
+    if (fileNotExist(path + File.separator + "tv.pilot.ajax.htm")) {
+      path = "web";
+    }
+    String html = Tools.getTextFromFile(path + File.separator + "tv.pilot.ajax.htm");    
+    IVar varsPool = new VarPool();
+    String name = "";
+    if (user!=null){
+      name = user.getFI();
+    }
+    varsPool.addChild(new StringVar("PILOT", name));   
+    String outHtml = varsPool.applyValues(html);
+    resp.getWriter().println(outHtml);
+  };
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -822,6 +838,19 @@ public class TVTranslationServlet extends HttpServlet {
       } else {
         generateBlank(resp);
       }
+    } else if (req.getServletPath().equalsIgnoreCase("/pilot.ajax")) {
+      VS_STAGE_GROUPS user = null;
+      String num_st = req.getParameter("n");
+      int num = 0;
+      try{
+        num = Integer.parseInt(num_st);
+      }catch(Exception e){}
+      if (mainForm.activeGroup != null && mainForm.activeGroup.users.size()>=num && num>0) {
+        user =  mainForm.activeGroup.users.get(num-1);
+      } else if (mainForm.invateGroup != null  && mainForm.invateGroup.users.size()>=num && num>0) {
+        user =  mainForm.invateGroup.users.get(num-1);     
+      }       
+      showPilot(resp,user);
     } else if (req.getServletPath().equalsIgnoreCase("/group_result.ajax")) {
       try {
          if (mainForm.activeGroup != null) {

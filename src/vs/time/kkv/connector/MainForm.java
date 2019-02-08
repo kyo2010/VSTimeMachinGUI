@@ -648,6 +648,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuItem4 = new javax.swing.JMenuItem();
     jMenuItem5 = new javax.swing.JMenuItem();
     jMenuItem6 = new javax.swing.JMenuItem();
+    jMenuItem9 = new javax.swing.JMenuItem();
     updater = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem(){
       @Override
@@ -892,6 +893,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(jMenuItem6);
 
+    jMenuItem9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem9.setText("TV Pilot1");
+    jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem9ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem9);
+
     updater.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     updater.setText("Check update");
     updater.addActionListener(new java.awt.event.ActionListener() {
@@ -1133,6 +1143,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       //speaker.speak(speaker.getSpeachMessages().connected());
       droneConnectors.add(vsTimeConnector);
     }
+    
+    // repaint table for buttons find...
+    if (activeStageTab!=null){
+      activeStageTab.refreshButton();
+    }
   }//GEN-LAST:event_connectButtonActionPerformed
 
   public void disconnect() {
@@ -1317,6 +1332,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     openUrl("start.htm");
   }//GEN-LAST:event_jMenuItem8ActionPerformed
 
+  private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+    // TODO add your handling code here:
+    openUrl("tv.pilot1.htm");
+  }//GEN-LAST:event_jMenuItem9ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1438,6 +1458,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenuItem jMenuItem6;
   private javax.swing.JMenuItem jMenuItem7;
   private javax.swing.JMenuItem jMenuItem8;
+  private javax.swing.JMenuItem jMenuItem9;
   private javax.swing.JMenuItem jMenuItemTVMonitor;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;

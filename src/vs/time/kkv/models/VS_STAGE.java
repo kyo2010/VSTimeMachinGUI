@@ -48,6 +48,7 @@ public class VS_STAGE {
   public String TRANSS = "";
   public String SCORE_CALCULATION = "";
   public IGroupCreater groupCreater = null;  
+  public int COUNT_BEST_LAPS = 0;
 
   //public VS_RACE race = null;
 
@@ -86,6 +87,7 @@ public class VS_STAGE {
     new DBModelField("REP_COLS").setDbFieldName("\"REP_COLS\""),
     new DBModelField("USE_REG_ID_FOR_LAP").setDbFieldName("\"USE_REG_ID_FOR_LAP\""),
     new DBModelField("SCORE_CALCULATION").setDbFieldName("\"SCORE_CALCULATION\""),      
+    new DBModelField("COUNT_BEST_LAPS").setDbFieldName("\"COUNT_BEST_LAPS\""),      
   });
 
   public static void resetSelectedTab(Connection conn, long raceID) {

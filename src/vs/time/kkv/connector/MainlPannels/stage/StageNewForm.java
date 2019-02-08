@@ -184,6 +184,7 @@ public class StageNewForm extends javax.swing.JFrame {
       jPilotType.setSelectedIndex(stage.PILOT_TYPE);
       jOrderBy.setSelectedIndex(stage.SORT_TYPE);
       PilotsForNextRound.setText("" + stage.PILOTS_FOR_NEXT_ROUND);
+      COUNT_BEST_LAPS.setSelectedItem(""+stage.COUNT_BEST_LAPS);
     } else {
       VS_RACE race = mainForm.activeRace;
       //jtLapsCount.setText("" + 3);
@@ -219,6 +220,7 @@ public class StageNewForm extends javax.swing.JFrame {
         index++;
       }
       jtCountOfPilots.setSelectedIndex(channels.length - 1);      
+      COUNT_BEST_LAPS.setSelectedIndex(0);
     }
     
     jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes( jcbStageType.getSelectedIndex() )));
@@ -229,7 +231,8 @@ public class StageNewForm extends javax.swing.JFrame {
     if (stage==null){
       jtCountOfPilotsPropertyChange(null);
       jcbStageTypeActionPerformed(null);    
-    }      
+    }  
+      
   }
 
   /**
@@ -306,6 +309,8 @@ public class StageNewForm extends javax.swing.JFrame {
     jOrderBy = new javax.swing.JComboBox<>();
     jLabel7 = new javax.swing.JLabel();
     PilotsForNextRound = new javax.swing.JTextField();
+    jLabel13 = new javax.swing.JLabel();
+    COUNT_BEST_LAPS = new javax.swing.JComboBox<>();
     tabRaceReport = new javax.swing.JPanel();
     jLabel9 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
@@ -650,6 +655,11 @@ public class StageNewForm extends javax.swing.JFrame {
 
     PilotsForNextRound.setText("4");
 
+    jLabel13.setText("Count only best races");
+    jLabel13.setToolTipText("0 - calculate all results");
+
+    COUNT_BEST_LAPS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "2", "3" }));
+
     javax.swing.GroupLayout panelQualificationResult2Layout = new javax.swing.GroupLayout(panelQualificationResult2);
     panelQualificationResult2.setLayout(panelQualificationResult2Layout);
     panelQualificationResult2Layout.setHorizontalGroup(
@@ -666,10 +676,16 @@ public class StageNewForm extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(53, 53, 53)
-        .addComponent(jLabel6)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
+            .addComponent(jLabel6)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
+            .addComponent(jLabel13)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(COUNT_BEST_LAPS, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        .addContainerGap(274, Short.MAX_VALUE))
     );
     panelQualificationResult2Layout.setVerticalGroup(
       panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -683,7 +699,9 @@ public class StageNewForm extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel7)
-          .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel13)
+          .addComponent(COUNT_BEST_LAPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -793,7 +811,7 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
-    butRecrateGropus.setText("Save & Recreate Groups");
+    butRecrateGropus.setText("Save & Recreate Group");
     butRecrateGropus.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butRecrateGropusActionPerformed(evt);
@@ -807,8 +825,8 @@ public class StageNewForm extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addGap(27, 27, 27)
         .addComponent(bSave)
-        .addGap(73, 73, 73)
-        .addComponent(butRecrateGropus)
+        .addGap(75, 75, 75)
+        .addComponent(butRecrateGropus, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(bCancel)
         .addGap(31, 31, 31))
@@ -882,7 +900,10 @@ public class StageNewForm extends javax.swing.JFrame {
       stage.SORT_TYPE = jOrderBy.getSelectedIndex();
       stage.CAPTION = jtCaption.getText();
       
-      
+      try {
+        stage.COUNT_BEST_LAPS = Integer.parseInt(COUNT_BEST_LAPS.getSelectedItem().toString());
+      } catch (Exception e) {
+      }      
       
       stage.FLAG_BY_PYLOT_TYPE = jchGroupByPilotType.isSelected() ? 1 : 0;
       stage.SCORE_CALCULATION = ScoreCalulationFactory.getScoreCalulationIndex(SCORE_CALCULATION.getSelectedIndex()).getScoresCode();
@@ -1090,6 +1111,11 @@ public class StageNewForm extends javax.swing.JFrame {
 
   private void butRecrateGropusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRecrateGropusActionPerformed
     // TODO add your handling code here:    
+    int res = JOptionPane.showConfirmDialog(this, "All Results will be removed.\nDo you shure?", "Please confirm", JOptionPane.YES_NO_OPTION);
+    if (res != JOptionPane.YES_OPTION) {    
+      return;
+    }   
+    
     try {
       if (stage != null && stage.ID != -1) {
         stage.IS_GROUP_CREATED = 0;
@@ -1198,6 +1224,7 @@ public class StageNewForm extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JComboBox<String> COUNT_BEST_LAPS;
   private javax.swing.JLabel Caption;
   private javax.swing.JLabel LapsCaption;
   private javax.swing.JTextField PilotsForNextRound;
@@ -1210,6 +1237,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
+  private javax.swing.JLabel jLabel13;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

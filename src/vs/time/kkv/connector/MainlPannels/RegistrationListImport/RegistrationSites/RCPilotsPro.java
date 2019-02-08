@@ -261,6 +261,8 @@ public class RCPilotsPro extends IRegSite {
       List<VS_STAGE_GROUPS> sorted_users = new ArrayList<VS_STAGE_GROUPS>();
       for (VS_STAGE_GROUPS user : users) {
         sorted_users.add(user);
+        if (user.BEST_LAP==0) user.BEST_LAP=VS_STAGE_GROUPS.MAX_TIME;
+        if (user.RACE_TIME==0) user.RACE_TIME=VS_STAGE_GROUPS.MAX_TIME;
       }
       //Collections.sort(sorted_users, GROUP_TIME_COMPARATOR);
       Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);

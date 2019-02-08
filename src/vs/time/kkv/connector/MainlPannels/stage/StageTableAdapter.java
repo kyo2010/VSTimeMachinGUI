@@ -40,6 +40,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -277,6 +278,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               pilot.GID = -1;
               pilot.STAGE_ID = tab.stage.ID;
               pilots.put(pilot.PILOT, pilot);
+              pilot.ALL_QAULA_LAPS = new ArrayList();
+              pilot.ALL_QAULA_LAPS.add(pilot.LAPS);
             } else {
               VS_STAGE_GROUPS pilot1 = pilots.get(pilot.PILOT);
               if (pilot.BEST_LAP != 0 && pilot.BEST_LAP < pilot1.BEST_LAP) {
@@ -284,6 +287,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               }
               pilot1.LAPS += pilot.LAPS;
               pilot1.SCORE += pilot.SCORE;
+              pilot1.ALL_QAULA_LAPS.add(pilot.LAPS);
             }
           }
         }
@@ -291,6 +295,34 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         for (VS_STAGE_GROUPS pilot : pilots.values()) {
           result.add(pilot);
         }
+
+        if (tab.stage.COUNT_BEST_LAPS != 0) {
+          Comparator<Long> longComarator = new Comparator<Long>() {
+            @Override
+            public int compare(Long o1, Long o2) {
+              if (o1 < o2) {
+                return 1;
+              }
+              if (o1 > o2) {
+                return -1;
+              }
+              return 0;
+            }
+          };
+
+          for (VS_STAGE_GROUPS pilot : result) {
+            pilot.LAPS = 0;
+            if (pilot.ALL_QAULA_LAPS != null) {
+              pilot.ALL_QAULA_LAPS.sort(longComarator);
+              for (int i = 0; i < tab.stage.COUNT_BEST_LAPS; i++) {
+                if (pilot.ALL_QAULA_LAPS.size()>i){
+                  pilot.LAPS += pilot.ALL_QAULA_LAPS.get(i);
+                }
+              }
+            }
+          }
+        }
+
         //result = 
         ISort sc = SortFactory.getSortComparatorByID(tab.stage.SORT_TYPE);
         if (sc != null) {
@@ -332,10 +364,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
         // get all results        
         List<VS_STAGE_GROUPS> all_groups = null;
-        if (union_stage_id==-1){
-          all_groups= VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.ID=? and stage.RACE_ID=?)", /*MainForm.STAGE_RACE,*/  tab.stage.PARENT_STAGE_ID, tab.stage.RACE_ID);         
-        }else{
-          all_groups= VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=? and stage.RACE_ID=?) ", MainForm.STAGE_RACE, union_stage_id, tab.stage.RACE_ID);
+        if (union_stage_id == -1) {
+          all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.ID=? and stage.RACE_ID=?)", /*MainForm.STAGE_RACE,*/ tab.stage.PARENT_STAGE_ID, tab.stage.RACE_ID);
+        } else {
+          all_groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID IN (SELECT stage.id from VS_STAGE as stage where stage.STAGE_TYPE=? and stage.PARENT_STAGE_ID=? and stage.RACE_ID=?) ", MainForm.STAGE_RACE, union_stage_id, tab.stage.RACE_ID);
         }
         List<VS_STAGE_GROUPS> results = new ArrayList<VS_STAGE_GROUPS>();
         HashMap<String, VS_STAGE_GROUPS> pilots = new HashMap<String, VS_STAGE_GROUPS>();
@@ -439,19 +471,18 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     } else if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
       try {
         int NUM_IN_GROUP = 1;
-        
+
         String PILOT_TYPE_WHERE_FOR_STAGE = "";
-        if (tab.stage.PILOT_TYPE!=MainForm.PILOT_TYPE_NONE_INDEX){
-          PILOT_TYPE_WHERE_FOR_STAGE =" AND PILOT_TYPE="+tab.stage.PILOT_TYPE+" ";
+        if (tab.stage.PILOT_TYPE != MainForm.PILOT_TYPE_NONE_INDEX) {
+          PILOT_TYPE_WHERE_FOR_STAGE = " AND PILOT_TYPE=" + tab.stage.PILOT_TYPE + " ";
         }
-        
+
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
-        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT + ") "+PILOT_TYPE_WHERE_FOR_STAGE+" order by ID desc", tab.stage.RACE_ID);
+        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT + ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
         long stage_id_final = 0;
         if (stages.size() == 2) {
           // If Olimpic System, one Qulification and One Race Result, then read all groups
-          
-          
+
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stages.get(1).ID);
           if (groups.size() >= 16) { // if count pilots>16
             List<VS_STAGE> races = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_RACE + ") order by ID desc", tab.stage.RACE_ID);
@@ -486,7 +517,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             // First Race = Race Result
             for (VS_STAGE race : races) {
               //if (count < 1) {
-                stages.add(count, race);
+              stages.add(count, race);
               //}
               count++;
             }
@@ -508,7 +539,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           List<VS_STAGE_GROUPS> groups = null;
           if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
             groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stage.ID);
-          } else {                        
+          } else {
             groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, LAPS desc, RACE_TIME", stage.ID);
             ISort sc = SortFactory.getSortComparatorByID(tab.stage.SORT_TYPE);
             if (sc != null) {
@@ -665,7 +696,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   @Override
   public int getColumnCount() {
     int laps = tab.stage.LAPS;
-    if (tab.mainForm.activeRace.CLAC_HALF_LAP==1) laps = laps*2;
+    if (tab.mainForm.activeRace.CLAC_HALF_LAP == 1) {
+      laps = laps * 2;
+    }
     if (show_laps) {
       for (StageTableData row : rows) {
         if (!row.isGrpup) {
@@ -691,12 +724,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       return tab.mainForm.getLocaleString("Lap") + " " + (columnIndex - getColumns().size() + 1);
     }*/
     double lap = StageTab.getRealLaps(columnIndex - getColumns().size() + 1);
-    if ( Math.round(lap)==lap ) 
+    if (Math.round(lap) == lap) {
       return tab.mainForm.getLocaleString("Lap") + " " + Math.round(lap);
-    else      
+    } else {
       return tab.mainForm.getLocaleString("Lap") + " " + lap;
+    }
   }
-  
+
   public String getColumnLocaleName(int columnIndex) {
     if (columnIndex < getColumns().size()) {
       return getColumns().get(columnIndex).captionOriginal;
@@ -706,8 +740,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
-    if (columnIndex==1 || columnIndex==2 || columnIndex==3)
+    if (columnIndex == 1 || columnIndex == 2 || columnIndex == 3) {
       return JButton.class;
+    }
     return String.class;
 
   }
@@ -950,7 +985,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     StageTableData td = rows.get(row);
     if (td.isGrpup) {
       //if (col==1) return true;
-      if (col==1 || col==2 || col==3) return true;
+      if (col == 1 || col == 2 || col == 3) {
+        return true;
+      }
       return false;
     }
     STAGE_COLUMN sc = null;
@@ -1219,6 +1256,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             VS_RACE_LAP.dbControl.putObjToMap(tab.stage.laps_check_reg_id, "" + td.pilot.GROUP_NUM, "" + td.pilot.VS_PRIMARY_TRANS, "" + (i + 1), lap);
           }
         }
+        td.pilot.LAPS = needed_laps;
+        td.pilot.IS_RECALULATED = 1;
+        td.pilot.BEST_LAP = 0;
+        td.pilot.IS_FINISHED = 0;
+        VS_STAGE_GROUPS.dbControl.update(tab.mainForm.con, td.pilot);
+        td.pilot.recalculateLapTimes(tab.mainForm.con, tab.stage, true,tab.mainForm.activeRace);
       } catch (Exception e) {
       }
       tab.refreshTable();
@@ -1244,10 +1287,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     //JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);        
     if (td.isGrpup) {
       //JButton label = (JButton) value;       
-      JButton label =null;
-      
-      if (column==0){
-        JLabel cap = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);            
+      JButton label = null;
+
+      if (column == 0) {
+        JLabel cap = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         cap.setFont(cap.getFont().deriveFont(Font.BOLD)); //  Font.PLAIN     
         cap.setBackground(Color.GREEN);
         //label.setBackground(DEFAULT_BACKGROUD_COLOR);
@@ -1256,21 +1299,21 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       }
 
       if (column == 1) {
-         
+
         if (tab.mainForm.activeGroup != null && tab.mainForm.activeGroup == td.group) {
           String caption = tab.mainForm.getLocaleString("Stop");
           td.buttonCaptions.put(column, caption);
-          label = new JButton(caption);       
+          label = new JButton(caption);
           //label.setText(tab.mainForm.getLocaleString("Stop"));
           label.setFont(label.getFont().deriveFont(Font.BOLD));
           label.setForeground(Color.RED);
           //value = caption;
         } else {
-       //   label.setText(tab.mainForm.getLocaleString("Start!"));
-           String caption = tab.mainForm.getLocaleString("Start!");
-           td.buttonCaptions.put(column, caption);
-           label = new JButton(caption);    
-           //value = caption;
+          //   label.setText(tab.mainForm.getLocaleString("Start!"));
+          String caption = tab.mainForm.getLocaleString("Start!");
+          td.buttonCaptions.put(column, caption);
+          label = new JButton(caption);
+          //value = caption;
         }
       }
 
@@ -1320,7 +1363,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       }*/
     } else {
       //JLabel label = null;
-      JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);            
+      JLabel label = (JLabel) defaultTableCellRendererCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       /*try{
         label = (JLabel) value;
       }catch(Exception e){}*/
@@ -1348,7 +1391,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         } else {
           //if (tab.stage.CAPTION.equalsIgnoreCase("Qualification5"))
           int laps = (getColumns().size() + tab.stage.LAPS);
-          if (tab.mainForm.activeRace.CLAC_HALF_LAP==1) laps = (getColumns().size() + tab.stage.LAPS*2);
+          if (tab.mainForm.activeRace.CLAC_HALF_LAP == 1) {
+            laps = (getColumns().size() + tab.stage.LAPS * 2);
+          }
           if (show_laps && !td.isGrpup && column >= laps) {
             label.setBackground(Color.LIGHT_GRAY);
           } else {
@@ -1405,9 +1450,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           }
         }
         return label;
-      }else{
+      } else {
         return null;
-      }      
+      }
     }
     //return value;
   }

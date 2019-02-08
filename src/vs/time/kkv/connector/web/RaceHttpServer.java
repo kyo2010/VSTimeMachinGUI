@@ -124,8 +124,10 @@ public class RaceHttpServer  implements  Runnable {
       handler.addServlet(TVTranslationServlet.class, "/lb16.ajax");
       handler.addServlet(TVTranslationServlet.class, "/stage.ajax");
       handler.addServlet(TVTranslationServlet.class, "/group_result.ajax");
-      handler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");    
+      handler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");
       
+      handler.addServlet(TVTranslationServlet.class, "/pilot.ajax");     
+       
       //hello maloii 3
       //server.setHandler(handler);                       
        HandlerList handlers = new HandlerList( );

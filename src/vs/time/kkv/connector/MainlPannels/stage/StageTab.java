@@ -2160,6 +2160,11 @@ public class StageTab extends javax.swing.JPanel {
                   if (reg.IS_ACTIVE == 0 || usr.isError == 2) {
                     inactives.add(usr);
                   }
+                  if (stage.RACE_TYPE==MainForm.RACE_TYPE_SINGLE && parent_stage!=null && parent_stage.STAGE_TYPE==MainForm.STAGE_RACE){
+                    if (usr.LOSE==1){
+                      inactives.add(usr);
+                    }
+                  }
                 }
               }
               for (VS_STAGE_GROUPS del : inactives) {
