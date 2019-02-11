@@ -804,7 +804,8 @@ public class TVTranslationServlet extends HttpServlet {
     if (user!=null){
       name = user.getFI();
     }
-    varsPool.addChild(new StringVar("PILOT", name));   
+    varsPool.addChild(new StringVar("PILOT", name)); 
+    varsPool.addChild(new StringVar("BACKGROUND", mainForm.BACKGROUND_FOR_TV));
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
   };
