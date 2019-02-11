@@ -439,12 +439,15 @@ public class RCPilotsPro extends IRegSite {
       //out.write(finishBoundaryBytes);
     }*/
 
-    http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    //http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+   // http.
+    
     http.connect();
     try (OutputStream os = http.getOutputStream()) {
-      os.write(jsonContent.getBytes());
+      os.write(jsonContent.getBytes("UTF-8"));
     }
-
+    
     String response = "";
     int responseCode = http.getResponseCode();
 
