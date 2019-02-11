@@ -186,10 +186,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButOk" min="-2" pref="90" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="174" max="-2" attributes="0"/>
-                  <Component id="butLink" pref="227" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="181" max="-2" attributes="0"/>
+                  <Component id="jButOk" min="-2" pref="143" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
+                  <Component id="butLink" min="-2" pref="131" max="-2" attributes="0"/>
+                  <EmptySpace pref="236" max="32767" attributes="0"/>
                   <Component id="jButCancel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -212,7 +212,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="jButOk">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ok"/>
+            <Property name="text" type="java.lang.String" value="Save and load"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButOkActionPerformed"/>
@@ -220,7 +220,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="butLink">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Create link to Web Race"/>
+            <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butLinkActionPerformed"/>

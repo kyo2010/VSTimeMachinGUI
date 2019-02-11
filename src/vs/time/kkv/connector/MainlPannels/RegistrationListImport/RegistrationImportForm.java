@@ -178,14 +178,14 @@ public class RegistrationImportForm extends javax.swing.JFrame {
     automaticUpload.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
     automaticUpload.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-    jButOk.setText("Ok");
+    jButOk.setText("Save and load");
     jButOk.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         jButOkActionPerformed(evt);
       }
     });
 
-    butLink.setText("Create link to Web Race");
+    butLink.setText("Save");
     butLink.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         butLinkActionPerformed(evt);
@@ -205,10 +205,10 @@ public class RegistrationImportForm extends javax.swing.JFrame {
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(174, 174, 174)
-        .addComponent(butLink, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-        .addGap(181, 181, 181)
+        .addComponent(jButOk, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(162, 162, 162)
+        .addComponent(butLink, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
         .addComponent(jButCancel)
         .addContainerGap())
     );
