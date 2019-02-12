@@ -350,7 +350,11 @@ public class RCPilotsPro extends IRegSite {
     json.put("PILOTS", users_array);
 
     String authCode = Tools.getPreference("AUTORIZE_CODE_" + REG_SITE_NAME);
-    String hash = MD5(salt_vals + authCode);
+    
+    //JOptionPane.showMessageDialog(null, "мы солим : '" + salt_vals + authCode+"'");
+    System.out.println("salt+auth : '" + salt_vals + authCode + "'");
+    String hash = MD5((salt_vals + authCode));
+    System.out.println("md5 : '" + hash + "'");
     json.put("HASH", hash);
 
     message = json.toString();
