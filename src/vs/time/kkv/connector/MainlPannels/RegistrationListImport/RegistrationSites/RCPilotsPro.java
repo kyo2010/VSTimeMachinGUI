@@ -353,7 +353,7 @@ public class RCPilotsPro extends IRegSite {
     
     //JOptionPane.showMessageDialog(null, "мы солим : '" + salt_vals + authCode+"'");
     System.out.println("salt+auth : '" + salt_vals + authCode + "'");
-    String hash = MD5((salt_vals + authCode));
+    String hash = MD5((salt_vals /*+ authCode*/));
     System.out.println("md5 : '" + hash + "'");
     json.put("HASH", hash);
 
