@@ -122,6 +122,7 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbStageTypeActionPerformed"/>
             <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jcbStageTypePropertyChange"/>
+            <EventHandler event="vetoableChange" listener="java.beans.VetoableChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jcbStageTypeVetoableChange"/>
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="racePanel">
@@ -311,7 +312,9 @@
                     <Property name="selectedIndex" type="int" value="2"/>
                   </Properties>
                   <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtCountOfPilotsActionPerformed"/>
                     <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jtCountOfPilotsPropertyChange"/>
+                    <EventHandler event="vetoableChange" listener="java.beans.VetoableChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jtCountOfPilotsVetoableChange"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jtMinLapTime">
@@ -335,7 +338,7 @@
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jcbChannel3" alignment="0" pref="44" max="32767" attributes="0"/>
+                                      <Component id="jcbChannel3" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jcbChannel4" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jcbChannel1" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jcbChannel2" alignment="0" max="32767" attributes="0"/>
@@ -738,7 +741,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="panelQualificationResult2" min="-2" pref="85" max="-2" attributes="0"/>
+                          <Component id="panelQualificationResult2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="235" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -798,7 +801,7 @@
                                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="COUNT_BEST_LAPS" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="18" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
