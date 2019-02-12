@@ -84,6 +84,7 @@ import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import static vs.time.kkv.connector.WLANSetting.singelton;
+import vs.time.kkv.connector.connection.VSTimeConnection.VSTimeConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.connector.connection.buttonsConnector.ButtonComPortConnector;
 import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
@@ -1113,21 +1114,21 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         for (String ch : ch_mas){
           channels+=ch+";";
         }*/
-        vsTimeConnector = new DroneConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600, channels));
+        vsTimeConnector = new VSTimeConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600, channels));
       } else {
         String staticIP = null;
         if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
           staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
         };
         if (port.equalsIgnoreCase("WLAN")) {
-          vsTimeConnector = new DroneConnector(
+          vsTimeConnector = new VSTimeConnector(
                   new ConnectionSocket(this,
                           VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
                           staticIP,
                           WLANSetting.init(this).PORT_LISTING_INT,
                           WLANSetting.init(this).PORT_SENDING_INT));
         } else {
-          vsTimeConnector = new DroneConnector(new ConnectionCOMPort(this, port));
+          vsTimeConnector = new VSTimeConnector(new ConnectionCOMPort(this, port));
         }
       }
 
