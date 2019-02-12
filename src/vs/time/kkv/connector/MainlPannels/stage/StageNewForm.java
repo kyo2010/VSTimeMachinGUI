@@ -122,9 +122,7 @@ public class StageNewForm extends javax.swing.JFrame {
   }
   List<ChannelControl> channelControls = new ArrayList<ChannelControl>();
 
-  public void prepareForm() {
-
-    
+  public void prepareForm() {   
     
     jPilotType.setModel(new javax.swing.DefaultComboBoxModel(MainForm.PILOT_TYPES_NONE));
     List<VS_STAGE> stages = null;
@@ -228,10 +226,10 @@ public class StageNewForm extends javax.swing.JFrame {
       jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode(jcbStageType.getSelectedIndex(), stage.RACE_TYPE)  );
     }
 
-    if (stage==null){
+    //if (stage==null){
       jtCountOfPilotsPropertyChange(null);
-      jcbStageTypeActionPerformed(null);    
-    }  
+      jcbStageTypeActionPerformed(null);          
+    //}  
       
   }
 
