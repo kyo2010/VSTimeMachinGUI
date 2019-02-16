@@ -495,9 +495,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               count++;
             }
           }
-        }
-
-        if (stages.size() == 1 && stages.get(0).STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+        }else if (stages.size() == 1 && stages.get(0).STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
           // If Olimpic System, one Qulification and One Race Result, then read all groups
           List<VS_STAGE_GROUPS> groups = null;
           groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stages.get(0).ID);
@@ -522,7 +520,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               count++;
             }
           }
+        }else{
+         stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT+"," +MainForm.STAGE_RACE+ ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
+        
         }
+        
+        
+        
         if (stages.size() > 0) {
           stage_id_final = stages.get(0).ID;
         }
@@ -627,7 +631,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         MainForm._toLog(ein);
       }
     } else {
-
       Map<String, VS_STAGE_GROUPS> qualification = null;
       if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE) {
         try {
