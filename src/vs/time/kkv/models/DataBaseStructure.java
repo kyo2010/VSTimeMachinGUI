@@ -129,7 +129,9 @@ public class DataBaseStructure {
     new DBAddonStructure(5.2, "ALTER TABLE VS_STAGE_GROUPS ADD PILOT_TYPE INTEGER NOT NULL DEFAULT 0;"),       
     new DBAddonStructure(5.3, "ALTER TABLE VS_RACE ADD CLAC_HALF_LAP INTEGER NOT NULL DEFAULT 0;"),     
     
-    new DBAddonStructure(5.4, "ALTER TABLE VS_STAGE ADD COUNT_BEST_LAPS INTEGER NOT NULL DEFAULT 0;"),     
+    new DBAddonStructure(5.4, "ALTER TABLE VS_STAGE ADD COUNT_BEST_LAPS INTEGER NOT NULL DEFAULT 0;"),           
+    new DBAddonStructure(5.5,"ALTER TABLE VS_STAGE ADD IS_LB INTEGER NOT NULL DEFAULT 0;"),       
+    
   };
 
   public static class DBAddonStructure {

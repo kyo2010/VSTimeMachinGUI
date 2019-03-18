@@ -23,6 +23,7 @@ import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSFlashControl;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
 
@@ -189,14 +190,21 @@ public abstract class IRegSite {
   public static String MD5(String md5) {
    try {
         java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-        byte[] array = md.digest(md5.getBytes("UTF-8"));
+        byte[] array = null;
+        //if (OSDetector.isMac()){
+        //  array = md.digest(md5.getBytes());
+        //}else{
+          array = md.digest(md5.getBytes("UTF-8"));       
+        //}  
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < array.length; ++i) {
           sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
        }
         return sb.toString();
-    }catch(  UnsupportedEncodingException ue ){    
     } catch (java.security.NoSuchAlgorithmException e) {
+      MainForm._toLog(e);
+    } catch(  Exception ue ){    
+      MainForm._toLog(ue);
     }
     return null;
 }

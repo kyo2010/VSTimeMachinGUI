@@ -615,6 +615,10 @@ public class TVTranslationServlet extends HttpServlet {
     try {
       VS_STAGE stage = VS_STAGE.dbControl.getItem(mainForm.con, "RACE_ID=? and RACE_TYPE=?", mainForm.activeRace.RACE_ID, MainForm.RACE_TYPE_EVERYONE_WITH_EACH_16);
       if (stage == null) {
+        //throw new UserException("", "");
+        stage = VS_STAGE.dbControl.getItem(mainForm.con, "RACE_ID=? and IS_LB=1", mainForm.activeRace.RACE_ID);      
+      }
+      if (stage == null) {
         throw new UserException("", "");
       }
       

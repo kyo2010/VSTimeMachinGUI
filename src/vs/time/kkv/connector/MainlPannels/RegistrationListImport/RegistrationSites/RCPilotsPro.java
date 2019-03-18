@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.RegistrationTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_RACE_LAP;
 import vs.time.kkv.models.VS_REGISTRATION;
@@ -218,7 +219,8 @@ public class RCPilotsPro extends IRegSite {
       return true;
     }
     if (tab.stage.STAGE_TYPE == MainForm.STAGE_PRACTICA || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION
-            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE  || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE  || tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT
+            || tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) {
       // it's ok
     } else {
       return true;
@@ -229,7 +231,6 @@ public class RCPilotsPro extends IRegSite {
     //json.put("RACE_ID", regTab.mainForm.activeRace.RACE_ID);
     json.put("RACE_UNIC", tab.mainForm.activeRace.WEB_UID);
     json.put("RACE_NAME", tab.mainForm.activeRace.RACE_NAME);
-
 
     /*json.put("RACE_ID", tab.mainForm.activeRace.RACE_ID);
       json.put("WEB_RACE_ID", tab.mainForm.activeRace.WEB_RACE_ID);
@@ -265,7 +266,11 @@ public class RCPilotsPro extends IRegSite {
         if (user.RACE_TIME==0) user.RACE_TIME=VS_STAGE_GROUPS.MAX_TIME;
       }
       //Collections.sort(sorted_users, GROUP_TIME_COMPARATOR);
-      Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
+      if (tab.stage.STAGE_TYPE != MainForm.STAGE_RACE_REPORT){
+        Collections.sort(sorted_users, GROUP_SCORES_COMPARATOR_2);
+      }else{
+        sorted_users = users;
+      }
 
       if (users != null) {
         int POS = 1;
@@ -352,8 +357,8 @@ public class RCPilotsPro extends IRegSite {
     String authCode = Tools.getPreference("AUTORIZE_CODE_" + REG_SITE_NAME);
     
     //JOptionPane.showMessageDialog(null, "мы солим : '" + salt_vals + authCode+"'");
-    System.out.println("salt+auth : '" + salt_vals + authCode + "'");
-    String hash = MD5((salt_vals /*+ authCode*/));
+    System.out.println("salt+auth : '" + salt_vals + "'");
+    String hash = MD5((salt_vals + authCode));
     System.out.println("md5 : '" + hash + "'");
     json.put("HASH", hash);
 
@@ -443,13 +448,20 @@ public class RCPilotsPro extends IRegSite {
       //out.write(finishBoundaryBytes);
     }*/
 
-    //http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-    http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+    //if (OSDetector.isMac()){
+     // http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    //}else{    
+      http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+    //}  
    // http.
     
     http.connect();
     try (OutputStream os = http.getOutputStream()) {
-      os.write(jsonContent.getBytes("UTF-8"));
+       //if (OSDetector.isMac()){
+       //  os.write(jsonContent.getBytes());
+       //}else{
+         os.write(jsonContent.getBytes("UTF-8"));       
+       //}       
     }
     
     String response = "";

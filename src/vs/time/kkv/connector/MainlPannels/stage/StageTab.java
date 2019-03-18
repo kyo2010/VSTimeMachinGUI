@@ -2031,11 +2031,23 @@ public class StageTab extends javax.swing.JPanel {
                     }
                   }
                 }
-                int count_pilot = 0;
-                int addon_group = 0;
-                for (VS_STAGE_GROUPS usr : groups_losers_new) {
-                  usr.GROUP_NUM = max_real_groups2 + usr.GROUP_NUM + addon_group;
-                  usr.IS_FINISHED = 0;
+                long count_pilot = 0;
+                long addon_group = 1;
+                long POS = 1;
+                for (VS_STAGE_GROUPS usr : groups_losers_new) {          
+                  usr.GROUP_NUM = -1;
+                }
+                for (VS_STAGE_GROUPS usr : groups_losers_new) {         
+                  if (getCountPilotsInGroup(groups_losers_new,max_real_groups2 + addon_group)>=stage.COUNT_PILOTS_IN_GROUP){
+                    addon_group++;
+                    POS = 1;
+                  }else{
+                    POS++;
+                  }
+                  usr.GROUP_NUM = max_real_groups2 + addon_group;
+                  usr.IS_FINISHED = 0;  
+                  usr.NUM_IN_GROUP = POS;
+                  
                   /*count_pilot++;
                   if (count_pilot>stage.COUNT_PILOTS_IN_GROUP){
                     count_pilot = 0;
@@ -2849,6 +2861,14 @@ public class StageTab extends javax.swing.JPanel {
     } catch (Exception ein) {
     }
     return message;
+  }
+  
+  public int getCountPilotsInGroup(List<VS_STAGE_GROUPS> usrs, long GROUP_NUM){
+    int counts_pilots = 0;
+    for (VS_STAGE_GROUPS usr : usrs){
+      if (usr.GROUP_NUM==GROUP_NUM) counts_pilots++;
+    }
+    return counts_pilots;
   }
 
   public static int[] createGroupsAlg(int count_groups) {
