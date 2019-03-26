@@ -105,6 +105,10 @@ import vs.time.kkv.connector.connection.DroneConnector;
  * @author kyo
  */
 public class StageTab extends javax.swing.JPanel {
+  
+  public VSColor SVETOFOR_ATTENTION = VSColor.RED;
+  public VSColor SVETOFOR_START = VSColor.GREEN;
+  public VSColor SVETOFOR_STOP = VSColor.RED;  
 
   public MainForm mainForm;
   public VS_STAGE stage = null;
@@ -632,6 +636,14 @@ public class StageTab extends javax.swing.JPanel {
   }*/
   public void stopRace(boolean byTimer) {
 
+    if (mainForm.USE_TRAFIC_LIGHT) {
+      try {
+        final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
+        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, SVETOFOR_STOP);
+      } catch (Exception e) {
+      }
+    }
+    
     if (byTimer && mainForm.activeRace.ALLOW_TO_FINISH_LAP == 1) {
       raceTimerIsOver = true;
       if (mainForm.activeGroup != null) {
@@ -641,7 +653,7 @@ public class StageTab extends javax.swing.JPanel {
       }
       mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceTimeIsOver());
       return;
-    }
+    }        
 
     // To show Table result for TV
     mainForm.lap_log.writeFile("---==  Stop Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + mainForm.activeGroup.GROUP_NUM);
@@ -2613,7 +2625,7 @@ public class StageTab extends javax.swing.JPanel {
     
     if (mainForm.USE_TRAFIC_LIGHT) {
       try {
-        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.YELLOW);
+        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT,SVETOFOR_ATTENTION);
       } catch (Exception e) {
       }
     }
@@ -2665,7 +2677,7 @@ public class StageTab extends javax.swing.JPanel {
                 //if (useSpeach) mainForm.speaker.speak("One!");                        
                 mainForm.beep.paly("one");
                 //int rnd = (int) (Math.random() * 3000);
-                Timer t3 = new Timer(1000, new ActionListener() {      // Timer 4 seconds
+                Timer t3 = new Timer(1750, new ActionListener() {      // Timer 4 seconds
                   public void actionPerformed(ActionEvent e) {
                     Runtime runtime = Runtime.getRuntime();
                     try {
@@ -2677,7 +2689,7 @@ public class StageTab extends javax.swing.JPanel {
 
                     if (mainForm.USE_TRAFIC_LIGHT) {
                       try {
-                        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN);
+                        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, SVETOFOR_START);
                       } catch (Exception ein) {
                       }
                     }
@@ -2727,7 +2739,7 @@ public class StageTab extends javax.swing.JPanel {
 
             if (mainForm.USE_TRAFIC_LIGHT) {
               try {
-                vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.GREEN);
+                vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, SVETOFOR_START);
               } catch (Exception ein) {
               }
             }
@@ -2827,7 +2839,7 @@ public class StageTab extends javax.swing.JPanel {
     if (mainForm.USE_TRAFIC_LIGHT) {
       try {
         final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
-        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, VSColor.RED);
+        vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, SVETOFOR_STOP);
       } catch (Exception e) {
       }
     }

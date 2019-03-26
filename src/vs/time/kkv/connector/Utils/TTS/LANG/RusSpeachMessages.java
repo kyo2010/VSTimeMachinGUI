@@ -46,9 +46,9 @@ public class RusSpeachMessages extends ISpeachMessages{
   }
   
   public SpeekText startMessage(String id){
-    if (id.equalsIgnoreCase("one")) return new SpeekText("Один",350);
-    if (id.equalsIgnoreCase("two")) return new SpeekText("Два",350);
-    if (id.equalsIgnoreCase("three")) return new SpeekText("Три",350);
+    if (id.equalsIgnoreCase("one")) return new SpeekText("Один",450);
+    if (id.equalsIgnoreCase("two")) return new SpeekText("Два",450);
+    if (id.equalsIgnoreCase("three")) return new SpeekText("Три",450);
     if (id.equalsIgnoreCase("attention")) return new SpeekText("внимание, старт после звукового сигнала",5000,5000);
     return new SpeekText(id);      
   }

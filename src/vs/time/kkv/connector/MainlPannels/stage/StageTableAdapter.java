@@ -285,6 +285,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               if (pilot.BEST_LAP != 0 && pilot.BEST_LAP < pilot1.BEST_LAP) {
                 pilot1.BEST_LAP = pilot.BEST_LAP;
               }
+               if (pilot.RACE_TIME != 0 && pilot.RACE_TIME < pilot1.RACE_TIME) {
+                pilot1.RACE_TIME = pilot.RACE_TIME;
+              }
               pilot1.LAPS += pilot.LAPS;
               pilot1.SCORE += pilot.SCORE;
               pilot1.ALL_QAULA_LAPS.add(pilot.LAPS);

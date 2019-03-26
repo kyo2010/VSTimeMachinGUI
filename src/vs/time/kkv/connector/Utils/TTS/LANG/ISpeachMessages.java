@@ -73,13 +73,13 @@ public class ISpeachMessages {
 
   public SpeekText startMessage(String id) {
     if (id.equalsIgnoreCase("one")) {
-      return new SpeekText("One", 400);
+      return new SpeekText("One", 450);
     }
     if (id.equalsIgnoreCase("two")) {
-      return new SpeekText("two", 400);
+      return new SpeekText("two", 450);
     }
     if (id.equalsIgnoreCase("three")) {
-      return new SpeekText("three", 400);
+      return new SpeekText("three", 450);
     }
     if (id.equalsIgnoreCase("attention")) {
       return new SpeekText("attention", 1000,1000);
