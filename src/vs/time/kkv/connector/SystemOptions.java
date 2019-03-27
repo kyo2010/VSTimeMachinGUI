@@ -114,6 +114,7 @@ public class SystemOptions extends javax.swing.JFrame {
      
      OBS_PORT.setText(mainForm.obsConfig.OBS_PORT);
      OBS_SCENE_RACE.setText(mainForm.obsConfig.OBS_SCENE_RACE);
+     OBS_SCENE_INVATE1.setText(mainForm.obsConfig.OBS_SCENE_INVATE);
      OBS_SCENE_FINISH.setText(mainForm.obsConfig.OBS_SCENE_FINISH);
      
      OBS_GATE_TIMOUT.setText(""+mainForm.obsConfig.OBS_GATE_TIMOUT);        
@@ -610,7 +611,7 @@ public class SystemOptions extends javax.swing.JFrame {
     mainForm.obsConfig.OBS_PORT = OBS_PORT.getText();
     mainForm.obsConfig.OBS_SCENE_RACE = OBS_SCENE_RACE.getText();
     mainForm.obsConfig.OBS_SCENE_FINISH = OBS_SCENE_FINISH.getText();
-    mainForm.obsConfig.OBS_SCENE_INVATE = OBS_GATE_TIMOUT.getText();
+    mainForm.obsConfig.OBS_SCENE_INVATE = OBS_SCENE_INVATE1.getText();
     
     mainForm.obsConfig.OBS_GATE_ENABLED = OBS_GATE_ENABLED.isSelected();
     try{
