@@ -39,7 +39,7 @@
             //alert("Message is received..."+received_msg);
             if (received_msg.indexOf("background:")==0){                
               background = received_msg.substring("background:".length);
-              alert("bg:"+background);
+              //alert("bg:"+background);
               var body = document.getElementsByTagName('body')[0];              
               body.style.backgroundImage = 'url("images/'+background+'")';
             }else{                

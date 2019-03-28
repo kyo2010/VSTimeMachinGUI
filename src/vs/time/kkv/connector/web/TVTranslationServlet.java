@@ -151,7 +151,7 @@ public class TVTranslationServlet extends HttpServlet {
           if (isRace == 3) {
             pWidth = 50;
           }
-          if (reg != null && !reg.PHOTO.equalsIgnoreCase("")) {
+          if (reg != null && !reg.PHOTO.equalsIgnoreCase("") && new File(reg.PHOTO).exists() ) {
             webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
           } else {
 

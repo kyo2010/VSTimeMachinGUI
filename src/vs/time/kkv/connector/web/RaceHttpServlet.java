@@ -239,6 +239,7 @@ public class RaceHttpServlet extends HttpServlet {
       } else {
       }
 
+      String error = null;
       String mode = req.getParameter("mode");
       if (mode != null && mode.equalsIgnoreCase("admin")) {
         REFRESH_META = "";
@@ -256,12 +257,18 @@ public class RaceHttpServlet extends HttpServlet {
             PAGE_CONTENT += "<p><a href='index.htm' class='w3-teal w3-button'>Control</a></p>\n";
             PAGE_CONTENT += "</div><p></p>\n";
             show_login_form = false;
+          }else{
+            error = "Login or Password is incorrect.";
           }
         }
 
         STAGE_CAPTION = "Admin menu";
         if (show_login_form) {
-          PAGE_CONTENT = "<form class='w3-container w3-card-4' action='index.htm' method='POST'>\n";
+          PAGE_CONTENT = "";
+          if (error!=null) {
+            PAGE_CONTENT += "<div class='w3-container w3-red w3-card-4'>\n<p>"+error+"</p></div>\n";
+          }
+          PAGE_CONTENT += "<form class='w3-container w3-card-4' action='index.htm' method='POST'>\n";
           PAGE_CONTENT += "<input type='hidden' name='mode' value='admin' />\n";
           PAGE_CONTENT += "<p><label>user : </label><input type='edit' name='usr' /></p>\n";
           PAGE_CONTENT += "<p><label>password : </label><input type='password' name='pwd'  /></p>\n";

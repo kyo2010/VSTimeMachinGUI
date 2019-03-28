@@ -15,6 +15,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.login.Configuration;
+import org.apache.jasper.servlet.JspServlet;
+import org.eclipse.jetty.jsp.JettyJspServlet;
 
 //import org.apache.tomcat.util.scan.StandardJarScanner;
 import org.eclipse.jetty.server.Handler;
@@ -31,34 +34,35 @@ import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import vs.time.kkv.connector.MainForm;
 //import org.eclipse.jetty.webapp.Configuration;
 
-
 /**
  *
  * @author kyo
  */
-public class RaceHttpServer  implements  Runnable {
+public class RaceHttpServer implements Runnable {
 
   public boolean connected = false;
   Server server = null;
   Thread thread = null;
   int port;
   MainForm mainForm;
-  
+
+  private static final String WEBROOT_INDEX = "web";
+
   public void disconnect() {
     if (server != null) {
       server.getServer().setStopAtShutdown(true);
-      try{
+      try {
         Thread.sleep(1000);
-      }catch(Exception e){}
-      try{
+      } catch (Exception e) {
+      }
+      try {
         server.stop();
-      }catch(Exception e){}  
+      } catch (Exception e) {
+      }
     }
     connected = false;
     System.out.println("Web has been stopped");
   }
-  
-  
 
   public RaceHttpServer(MainForm mainForm, int port) {
     this.port = port;
@@ -66,86 +70,103 @@ public class RaceHttpServer  implements  Runnable {
     thread = new Thread(this);
     thread.start();
     connected = true;
-  } 
-  
+  }
+
   @Override
   public void run() {
-    try {      
-      server = new Server(port); 
-      ServletContextHandler handler = new ServletContextHandler(server, "/");   
-      handler.setSessionHandler(new SessionHandler());
-      
-      /*ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
-      context.setClassLoader(jspClassLoader);*/
-      
-      //ServletHolder holderDefault = new ServletHolder("default",DefaultServlet.class);
-      //holderDefault.setInitParameter("resourceBase",new File("web").getAbsolutePath());
-      //holderDefault.setInitParameter("dirAllowed","true");      
-      
-     
-      
-      ResourceHandler resource_handler = new ResourceHandler();
-      //resource_handler.setDirectoriesListed(true);
-      resource_handler.setWelcomeFiles(new String[]{ "index.html" });
-      resource_handler.setResourceBase("web");
-      ContextHandler pContextHandler= new ContextHandler("/web/pilots_photo/"); 
-      pContextHandler.setHandler(resource_handler);    
-      
-      ContextHandler contextHandler= new ContextHandler("/"); 
-      contextHandler.setHandler(resource_handler);      
-         
+    try {
+      server = new Server();
 
-      ResourceHandler resource_pilot_handler = new ResourceHandler();
-      //resource_handler.setDirectoriesListed(true);
-      resource_pilot_handler.setWelcomeFiles(new String[]{ "index.html" });
+      ServerConnector connector = new ServerConnector(server);
+      connector.setPort(port);
+      server.addConnector(connector);
+
+      // Create Servlet context
+      ServletContextHandler servletContextHandler = new ServletContextHandler();
+      servletContextHandler.setContextPath("/");      
+      servletContextHandler.setResourceBase(WEBROOT_INDEX);
+      servletContextHandler.setSessionHandler(new SessionHandler());
+      servletContextHandler.setWelcomeFiles(new String[]{ "index.html","index.jsp" });
+
+      // Since this is a ServletContextHandler we must manually configure JSP support.
+      enableEmbeddedJspSupport(servletContextHandler);
+
+      servletContextHandler.addServlet(RaceHttpServlet.class, "/index.htm");
+      servletContextHandler.addServlet(StartHttpServlet.class, "/start.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/tv.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/osd.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/lb16.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/stage.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/group_result.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");
+      servletContextHandler.addServlet(TVTranslationServlet.class, "/pilot.ajax");
+
+      //  pContextHandler.addServlet(SocketHandler.class, "/ws");           
+      // Default Servlet (always last, always named "default")
+      ServletHolder holderDefault = new ServletHolder("default", DefaultServlet.class);
+      holderDefault.setInitParameter("resourceBase", WEBROOT_INDEX);
+      holderDefault.setInitParameter("dirAllowed", "true");
+      servletContextHandler.addServlet(holderDefault, "/");
       
-      //resource_pilot_handler.setResourceBase("web/pilots_photo");
-    
+      HandlerList handlers = new HandlerList();
+      handlers.setHandlers(new Handler[]{
+        new SocketHandler(),
+        servletContextHandler,});
+      server.setHandler(handlers);
+      server.start();     
       
-     // 
-      //handler.addServlet(resource_handler,"/");
-      //server.setHandler(resource_handler);
-      
-      //JspServlet servlet =new 
-      ///handler.addServlet(RaceHttpServlet.class, "/index.html"); 
-      //handler.
-      
-      //HandlerList handlers = new HandlerList( );
-      //handlers.setHandlers( new Handler[] { ServletHolder } );
-      //server.setHandler( handlers );
-                             
-      handler.setWelcomeFiles(new String[]{ "index.htm" });
-      handler.addServlet(RaceHttpServlet.class, "/index.htm");      
-      handler.addServlet(StartHttpServlet.class, "/start.ajax");      
-      handler.addServlet(TVTranslationServlet.class, "/tv.ajax");
-      handler.addServlet(TVTranslationServlet.class, "/osd.ajax");
-      handler.addServlet(TVTranslationServlet.class, "/lb16.ajax");
-      handler.addServlet(TVTranslationServlet.class, "/stage.ajax");
-      handler.addServlet(TVTranslationServlet.class, "/group_result.ajax");
-      handler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");
-      
-      handler.addServlet(TVTranslationServlet.class, "/pilot.ajax");  
-      
-      //handler.addServlet(SocketHandler.class, "/ws");
-       
-      //hello maloii 3
-      //server.setHandler(handler);                       
-       HandlerList handlers = new HandlerList( );
-       handlers.setHandlers( new Handler[] {                  
-         new SocketHandler(),
-         pContextHandler,
-         contextHandler,         
-         handler, 
-         //new SocketHandler(),
-       } );
-       
-      server.setHandler( handlers );                  
-      server.start();
-    } catch (Exception e) {     
-      System.out.println(e.toString()+" "+Tools.traceError(e));
+    } catch (Exception e) {
+      System.out.println(e.toString() + " " + Tools.traceError(e));
       mainForm.toLog(e);
     }
     System.out.println("Web has been started");
   }
 
+  private void enableEmbeddedJspSupport(ServletContextHandler servletContextHandler) throws IOException {
+    // Establish Scratch directory for the servlet context (used by JSP compilation)
+    File tempDir = new File("web.tmpdir");
+    tempDir.mkdirs();
+    File scratchDir = new File("web.tmpdir/web.jsp");
+    scratchDir.mkdirs();
+
+    if (!scratchDir.exists()) {
+      if (!scratchDir.mkdirs()) {
+        throw new IOException("Unable to create scratch directory: " + scratchDir);
+      }
+    }
+    servletContextHandler.setAttribute("javax.servlet.context.tempdir", scratchDir);
+
+    // Set Classloader of Context to be sane (needed for JSTL)
+    // JSP requires a non-System classloader, this simply wraps the
+    // embedded System classloader in a way that makes it suitable
+    // for JSP to use
+    ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
+    servletContextHandler.setClassLoader(jspClassLoader);
+
+    // Manually call JettyJasperInitializer on context startup
+    servletContextHandler.addBean(new JspStarter(servletContextHandler));
+
+    // Create / Register JSP Servlet (must be named "jsp" per spec)
+    ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
+    holderJsp.setInitOrder(0);
+    holderJsp.setInitParameter("logVerbosityLevel", "DEBUG");
+    holderJsp.setInitParameter("fork", "false");
+    holderJsp.setInitParameter("xpoweredBy", "false");
+    holderJsp.setInitParameter("compilerTargetVM", "1.8");
+    holderJsp.setInitParameter("compilerSourceVM", "1.8");
+    holderJsp.setInitParameter("keepgenerated", "true");
+    servletContextHandler.addServlet(holderJsp, "*.jsp");
+  }
+
+  /*private static final String WEBROOT_INDEX = "web";
+   private URI getWebRootResourceUri() throws FileNotFoundException, URISyntaxException
+    {
+        URL indexUri = this.getClass().getResource(WEBROOT_INDEX);
+        if (indexUri == null)
+        {
+            throw new FileNotFoundException("Unable to find resource " + WEBROOT_INDEX);
+        }
+        // Points to wherever /webroot/ (the resource) is
+        return indexUri.toURI();
+    }*/
 }
