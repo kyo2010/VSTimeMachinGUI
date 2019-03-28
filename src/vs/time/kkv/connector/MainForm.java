@@ -140,6 +140,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public boolean USE_TRANS_FOR_GATE = false;
   public int TRANS_FOR_GATE = 0;
+  public int USE_START_WAVE = 0;
   public VSColor TRANS_FOR_GATE_COLOR = null;
   public boolean TRANS_FOR_GATE_BLINK = false;
   public OBSConfig obsConfig = null;
@@ -556,6 +557,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     } catch (Exception e) {
     }
 
+    USE_START_WAVE = VS_SETTING.getParam(con, "USE_START_WAVE", 0);
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png") + "?t=" + Calendar.getInstance().getTimeInMillis();
 
     for (DroneConnector vsTimeConnector : droneConnectors) {

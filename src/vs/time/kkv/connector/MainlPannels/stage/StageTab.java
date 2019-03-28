@@ -94,6 +94,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import vs.time.kkv.connector.MainlPannels.RegisterPilotlForm;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.Utils.FrozenTablePane;
 import vs.time.kkv.connector.Utils.OSDetector;
@@ -661,8 +662,8 @@ public class StageTab extends javax.swing.JPanel {
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
-    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);
-
+    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);       
+    
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
       user.recalculateLapTimes(mainForm.con, stage, true, mainForm.activeRace);
@@ -670,11 +671,16 @@ public class StageTab extends javax.swing.JPanel {
     long group_num = mainForm.activeGroup.GROUP_NUM;
     mainForm.activeGroup.recalculateScores(mainForm);
     mainForm.activeGroup = null;
+    runFinishRaceCommand();
     jTree.updateUI();
     mainForm.raceTime = 0;
     refreshTable();
     //mainForm.speaker.speak("The Stage finshed");
-    mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().groupFinished(group_num));
+    if (mainForm.USE_START_WAVE==1){
+      mainForm.beep.paly(Beep.SOUND_ID_FINISH);
+    }else{    
+      mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().groupFinished(group_num));      
+    }
   }
 
   // expandAllNodes(tree, 0, tree.getRowCount());
@@ -1276,6 +1282,37 @@ public class StageTab extends javax.swing.JPanel {
     jTable.setModel(stageTableAdapter);
     jTable.setDefaultRenderer(Object.class, stageTableAdapter);   
     
+   jTable.addMouseListener(new MouseAdapter() {
+      @Override
+      public synchronized void mouseClicked(MouseEvent e) {
+        if (isOneTable) {
+          return;
+        }
+        if (stage.IS_LOCK == 1) {
+          return;
+        }
+        if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+          JTable source = (JTable) e.getSource();
+          int row = source.rowAtPoint(e.getPoint());
+          int column = source.columnAtPoint(e.getPoint());
+          StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
+          if (td == null || !td.isGrpup) {
+              if (td.pilot!=null && td.pilot.REG_ID!=-1 && column<=3){
+                if (column==0){              
+                  RegisterPilotlForm.init(mainForm, td.pilot.REG_ID).setVisible(true);
+                }else{
+                  VS_STAGE_GROUPS user = td.pilot;
+                  //VS_STAGE_GROUP group = (VS_STAGE_GROUP) jTree.getSelectionPath().getParentPath().getLastPathComponent();
+                  StageTabTreeEditForm.init(mainForm, StageTab.this, user.parent, user).setVisible(true);
+                }
+             }
+          }          
+        }
+      }
+      public void mouseReleased(MouseEvent e) {
+      }
+
+    });
 
     //System.out.println("Table UI:"+jTable.getUI().getClass().toString());
     jTable.setDefaultEditor(JButton.class, new ButtonEditor(new ActionListener() {
@@ -1296,9 +1333,10 @@ public class StageTab extends javax.swing.JPanel {
               source.changeSelection(row, column, false, false);
             }*/
             StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
-            if (td == null || !td.isGrpup) {
+            if (td == null || !td.isGrpup) {              
               return;
-            }
+            }                        
+            
             //INAVITATION          
             if (column == 3 && td != null && td.isGrpup) {  // Press invate
               invateAction(td.group.GROUP_NUM, true);
@@ -2541,6 +2579,26 @@ public class StageTab extends javax.swing.JPanel {
     }
     return null;
   }
+  
+   public void runInvateCommand() {
+    Runtime runtime = Runtime.getRuntime();
+    try {
+      Process p = runtime.exec("raceEvents/invate.cmd");
+      int exitCode = p.waitFor();
+    } catch (Exception rt_e) {
+      MainForm._toLog(rt_e);
+    }
+  }
+  
+  public void runFinishRaceCommand() {
+    Runtime runtime = Runtime.getRuntime();
+    try {
+      Process p = runtime.exec("raceEvents/finishRace.cmd");
+      int exitCode = p.waitFor();
+    } catch (Exception rt_e) {
+      MainForm._toLog(rt_e);
+    }
+  }
 
   public void runFinishCommand() {
     Runtime runtime = Runtime.getRuntime();
@@ -2725,7 +2783,11 @@ public class StageTab extends javax.swing.JPanel {
         t1.start();
       } else {
         new InfoForm(mainForm, "!!!");
-        mainForm.beep.palyAndWait("attention");
+        if (mainForm.USE_START_WAVE==1){
+          mainForm.beep.paly(Beep.SOUND_ID_START);
+        }else{
+          mainForm.beep.palyAndWait("attention");
+        }  
         int rnd = (int) (Math.random() * 3000);
         Timer t3 = new Timer(3000 + rnd, new ActionListener() {      // Timer 3-6 seconds
           public void actionPerformed(ActionEvent e) {
@@ -2843,6 +2905,8 @@ public class StageTab extends javax.swing.JPanel {
       } catch (Exception e) {
       }
     }
+    
+    runInvateCommand();
 
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {

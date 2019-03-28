@@ -1,0 +1,61 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Result</title>
+  <link rel="stylesheet" href="css/broadcast.css">
+</head>
+<body>
+ 
+ <div id="message"></div>    
+    
+  <script src="css/react.production.min.js"></script>
+  <script src="css/react-dom.production.min.js"></script>
+  
+  <!--<button type="button" onclick="WebSocketTest()">Send</button> -->
+  <script type="text/javascript">
+    var ws;
+    var i = 1;
+    var background = "";
+    function OpenWebSocket(){
+        //alert("WebSocket is supported by your Browser!");
+        // Let us open a web socket
+        //var ws = new WebSocket("ws://10.102.146.112:8081/wstest");
+        ws = new WebSocket("ws://"+window.location.hostname+ (window.location.port ? ':' + window.location.port: '')+"/wstest");
+        document.querySelector('#message').innerHTML= "try to connect "+i;
+        i++;
+        ws.onopen = function()
+        {
+            ws.send("background");
+            //background = 
+            // Web Socket is connected, send data using send()
+            // ws.send("Message to send");       
+            document.querySelector('#message').innerHTML= "open web socket";
+            //alert("Message is sent...");
+        };
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            //document.querySelector('#message').innerHTML = "rcv:"+received_msg;
+            //alert("Message is received..."+received_msg);
+            if (received_msg.indexOf("background:")==0){                
+              background = received_msg.substring("background:".length);
+              alert("bg:"+background);
+              var body = document.getElementsByTagName('body')[0];              
+              body.style.backgroundImage = 'url("images/'+background+'")';
+            }else{                
+              document.querySelector('#message').innerHTML = "rcv:"+received_msg; 
+            }
+        };
+        ws.onclose = function()
+        {
+            // websocket is closed.
+            //alert("Connection is closed...");
+            //$("$message").value = "Connection is closed...";
+            document.querySelector('#message').innerHTML= "Connection is closed...";                        
+            setTimeout(OpenWebSocket,1000);            
+        };
+    }
+    OpenWebSocket();
+ </script>
+</body>  
+</html>

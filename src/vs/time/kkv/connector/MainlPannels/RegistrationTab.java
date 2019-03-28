@@ -41,12 +41,15 @@ import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationImp
 import vs.time.kkv.connector.MainlPannels.RegistrationListImport.RegistrationSites.IRegSite;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.MainlPannels.stage.StageTableData;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
 import vs.time.kkv.models.VS_REGISTRATION;
+import vs.time.kkv.models.VS_STAGE_GROUP;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
 import vs.time.kkv.models.VS_USERS;
 
 /**
@@ -83,6 +86,8 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     jtPilotRegistration.setRowHeight(ROW_HEIGHT);
 
     popup = new JPopupMenu();
+    JMenuItem miAddUserToLastStage = new JMenuItem("Add Pilot to the last stage!");
+    popup.add(miAddUserToLastStage);
     JMenuItem miGetTrans = new JMenuItem("Get Tranponder ID from previous Races");
     popup.add(miGetTrans);
     JMenuItem miEdit = new JMenuItem("Edit");
@@ -109,23 +114,27 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
                   + "                            (reg1.VS_TRANSPONDER<>0 or  reg1.VS_TRANS2<>0 or reg1.VS_TRANS3<>0)\n"
                   + "                       )\n"
                   + "order by VS_USER_NAME");
-          for (VS_REGISTRATION regInfo : regModelTable.rowsAll){
-            if (regInfo.transIsEmpty()){
-              for (String[] userInfo : res){
-                if (userInfo!=null && userInfo.length>=3){
-                  if (userInfo[0].equalsIgnoreCase(regInfo.VS_USER_NAME)){
-                    try{
+          for (VS_REGISTRATION regInfo : regModelTable.rowsAll) {
+            if (regInfo.transIsEmpty()) {
+              for (String[] userInfo : res) {
+                if (userInfo != null && userInfo.length >= 3) {
+                  if (userInfo[0].equalsIgnoreCase(regInfo.VS_USER_NAME)) {
+                    try {
                       regInfo.VS_TRANS1 = Integer.parseInt(userInfo[1]);
-                    }catch(Exception ein){}   
-                    try{
+                    } catch (Exception ein) {
+                    }
+                    try {
                       regInfo.VS_TRANS2 = Integer.parseInt(userInfo[2]);
-                    }catch(Exception ein){}   
-                    try{
+                    } catch (Exception ein) {
+                    }
+                    try {
                       regInfo.VS_TRANS3 = Integer.parseInt(userInfo[3]);
-                    }catch(Exception ein){}   
-                    try{
+                    } catch (Exception ein) {
+                    }
+                    try {
                       VS_REGISTRATION.dbControl.update(mainForm.con, regInfo);
-                    }catch(Exception ein){}
+                    } catch (Exception ein) {
+                    }
                   }
                 }
               }
@@ -134,6 +143,82 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
           RegistrationTab.this.refreshData();
         } catch (Exception ex) {
           mainForm.error_log.writeFile(ex);
+        }
+      }
+    });
+
+    miAddUserToLastStage.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        int row = jtPilotRegistration.getSelectedRow();
+        VS_REGISTRATION regInfo = regModelTable.getRegInfo(row);
+        if (regInfo != null) {
+          //RegisterPilotlForm.init(mainForm, regInfo.ID).setVisible(true);
+          StageTab tab = null;
+          for (int i = mainForm.stageTabs.size() - 1; i >= 0; i--) {
+            if (!mainForm.stageTabs.get(i).isOneTable) {
+              tab = mainForm.stageTabs.get(i);
+              break;
+            }
+          }
+          if (tab != null) {
+            VS_STAGE_GROUP group = null;
+            boolean pleaseAddNewGroup = false;
+            for (StageTableData td : tab.stageTableAdapter.rows) {
+              if (td.isGrpup) {
+                group = td.group;
+              }
+            }
+            if (tab.stage.COUNT_PILOTS_IN_GROUP!=0 && group.users.size()>=tab.stage.COUNT_PILOTS_IN_GROUP){
+              pleaseAddNewGroup = true; 
+            }
+            if (group ==null) return;
+            if (!pleaseAddNewGroup){
+              for (VS_STAGE_GROUPS user : group.users){
+                if (user.REG_ID==regInfo.ID){
+                   JOptionPane.showMessageDialog(mainForm, "Pilot '"+regInfo.getFullUserName()+"' was included into Group №"+group.GROUP_NUM, "Error!", JOptionPane.INFORMATION_MESSAGE);
+                   return;
+                }
+              }
+            }
+            
+            int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to add '" + regInfo.getFullUserName() + "' to '" + tab.stage.CAPTION + "' stage Group №"+(pleaseAddNewGroup?group.GROUP_NUM+1:group.GROUP_NUM)+" ?", "Please confirm", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+              VS_STAGE_GROUPS pilot = new VS_STAGE_GROUPS();
+              pilot.GROUP_NUM = (pleaseAddNewGroup?group.GROUP_NUM+1:group.GROUP_NUM);
+              pilot.NUM_IN_GROUP = 1;
+              String[] channels =  tab.stage.CHANNELS.split(";");
+              pilot.CHANNEL = (channels!=null && channels.length>0)?channels[0]:"";              
+              if (!pleaseAddNewGroup){
+                pilot.NUM_IN_GROUP = group.users.size();
+                if (channels!=null){
+                  for (String ch : channels){
+                    boolean isUsed = false;
+                    for (VS_STAGE_GROUPS p : group.users){
+                      if (p.CHANNEL.equalsIgnoreCase(ch)){
+                        isUsed = true;
+                        break;
+                      }
+                    }
+                    if (!isUsed){
+                      pilot.CHANNEL = ch;
+                      break;
+                    }
+                  } 
+                }
+              }
+              pilot.REG_ID = regInfo.ID;
+              pilot.PILOT = regInfo.getFullUserName();
+              pilot.VS_PRIMARY_TRANS = regInfo.VS_TRANS1;
+              pilot.STAGE_ID = tab.stage.ID;
+              try{
+                VS_STAGE_GROUPS.dbControl.insert(mainForm.con, pilot);
+                tab.refreshButton();
+              }catch(Exception ex){
+                mainForm.toLog(ex);
+              }  
+            }            
+          }
         }
       }
     });

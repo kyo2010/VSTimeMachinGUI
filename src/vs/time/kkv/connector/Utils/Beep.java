@@ -32,16 +32,21 @@ public class Beep {
 
   //SpeekUtil speaker = null;
   MainForm mainForm;
+  
+  public final static String SOUND_ID_START = "START";
+  public final static String SOUND_ID_FINISH = "FINISH";  
 
   public Beep(MainForm mainForm) {
     this.mainForm = mainForm;
 
-    sounds.put("notify", new PreLoadSound("notify.wav"));
-    sounds.put("beep", new PreLoadSound("beep.wav"));
+    sounds.put("notify", new PreLoadSound("notify.wav"));  //0
+    sounds.put("beep", new PreLoadSound("beep.wav"));   
     sounds.put("one", new PreLoadSound("_1.wav"));
     sounds.put("two", new PreLoadSound("_2.wav"));
     sounds.put("three", new PreLoadSound("_3.wav"));
-    sounds.put("attention", new PreLoadSound("_attention.wav"));
+    sounds.put("attention", new PreLoadSound("_attention.wav")); // 5
+    sounds.put(SOUND_ID_START, new PreLoadSound("start.wav"));          // 6
+    sounds.put(SOUND_ID_FINISH, new PreLoadSound("finish.wav"));        // 7
   }
 
   public void paly(String sound_id) {

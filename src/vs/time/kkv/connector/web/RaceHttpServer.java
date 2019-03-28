@@ -44,8 +44,6 @@ public class RaceHttpServer  implements  Runnable {
   int port;
   MainForm mainForm;
   
-  private static final String WEBROOT_INDEX = "/web1/";
-
   public void disconnect() {
     if (server != null) {
       server.getServer().setStopAtShutdown(true);
@@ -126,29 +124,22 @@ public class RaceHttpServer  implements  Runnable {
       handler.addServlet(TVTranslationServlet.class, "/group_result.ajax");
       handler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");
       
-      handler.addServlet(TVTranslationServlet.class, "/pilot.ajax");     
+      handler.addServlet(TVTranslationServlet.class, "/pilot.ajax");  
+      
+      //handler.addServlet(SocketHandler.class, "/ws");
        
       //hello maloii 3
       //server.setHandler(handler);                       
        HandlerList handlers = new HandlerList( );
        handlers.setHandlers( new Handler[] {                  
+         new SocketHandler(),
          pContextHandler,
          contextHandler,         
-         handler,         
+         handler, 
+         //new SocketHandler(),
        } );
-       server.setHandler( handlers );       
-      
-      
-      
-      //server.setHandler(resource_handler);
-      
-      
-      //WebAppContext ctx = new WebAppContext();      
-      //ctx.setResourceBase("web");  
-      //ctx.setContextPath("/"); 
-      //ctx.addServlet(RaceHttpServlet.class, "/");
-      //server.setHandler(ctx);
-      
+       
+      server.setHandler( handlers );                  
       server.start();
     } catch (Exception e) {     
       System.out.println(e.toString()+" "+Tools.traceError(e));

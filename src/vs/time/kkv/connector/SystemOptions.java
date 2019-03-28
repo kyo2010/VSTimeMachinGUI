@@ -82,6 +82,7 @@ public class SystemOptions extends javax.swing.JFrame {
     singelton.TRANS_TRAFIC_LIGHT.setText(VS_SETTING.getParam(mainForm.con, "TRANS_TRAFIC_LIGHT", ""));      
     
     singelton.edWaitingTime.setText(VS_SETTING.getParam(mainForm.con, "WAITING_TIME", "3"));
+    singelton.USE_START_WAVE.setSelected(VS_SETTING.getParam(mainForm.con, "USE_START_WAVE", 0) == 1 ? true : false);        
     
     singelton.webAdminPassword.setText(getPasswordForAdminWeb());    
 
@@ -142,6 +143,7 @@ public class SystemOptions extends javax.swing.JFrame {
     checkRaceGroup = new javax.swing.JCheckBox();
     jLabel7 = new javax.swing.JLabel();
     edWaitingTime = new javax.swing.JTextField();
+    USE_START_WAVE = new javax.swing.JCheckBox();
     jPanel3 = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
     WEB_PORT = new javax.swing.JTextField();
@@ -233,6 +235,9 @@ public class SystemOptions extends javax.swing.JFrame {
 
     edWaitingTime.setText("3");
 
+    USE_START_WAVE.setText("Use start.wav/finish.wav");
+    USE_START_WAVE.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -256,7 +261,8 @@ public class SystemOptions extends javax.swing.JFrame {
               .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel7)
                 .addGap(27, 27, 27)
-                .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(USE_START_WAVE))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
@@ -277,7 +283,9 @@ public class SystemOptions extends javax.swing.JFrame {
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel7)
           .addComponent(edWaitingTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(180, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(USE_START_WAVE)
+        .addContainerGap(147, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("General", jPanel2);
@@ -602,6 +610,8 @@ public class SystemOptions extends javax.swing.JFrame {
     VS_SETTING.setParam(mainForm.con, "USE_TRAFIC_LIGHT", "" + (USE_TRAFIC_LIGHT.isSelected() ? 1 : 0));    
     VS_SETTING.setParam(mainForm.con, "TRANS_TRAFIC_LIGHT", "" + TRANS_TRAFIC_LIGHT.getText());    
     
+    VS_SETTING.setParam(mainForm.con, "USE_START_WAVE", "" + (USE_START_WAVE.isSelected() ? 1 : 0));        
+    
     VS_SETTING.setParam(mainForm.con, "TV_BACKGROUND", "" + backgroundImagesForTv.getSelectedItem());
     Tools.setPreference("webAdminPassword", webAdminPassword.getText());
 
@@ -670,6 +680,7 @@ public class SystemOptions extends javax.swing.JFrame {
   private javax.swing.JCheckBox TRANS_FOR_GATE_BLINK;
   private javax.swing.JComboBox<String> TRANS_FOR_GATE_COLOR;
   private javax.swing.JTextField TRANS_TRAFIC_LIGHT;
+  private javax.swing.JCheckBox USE_START_WAVE;
   private javax.swing.JCheckBox USE_TRAFIC_LIGHT;
   private javax.swing.JCheckBox USE_TRANS_FOR_GATE;
   private javax.swing.JTextField WEB_PORT;
