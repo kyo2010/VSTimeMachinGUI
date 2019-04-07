@@ -118,9 +118,17 @@ public class Beep {
           isLoaded = true;
         }
       } catch (Exception e) {
-        //e.printStackTrace();
+        e.printStackTrace();
         Beep.this.mainForm.toLog("reading file is error:" + file);
       }
+      
+      try{
+        //Получаем контроллер громкости
+        FloatControl vc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        //Устанавливаем значение
+        //Оно должно быть в пределах от vc.getMinimum() до vc.getMaximum()
+        vc.setValue(5); //Громче обычного
+      }catch(Exception e){}
     }
 
     public void setVolume(float volume) {

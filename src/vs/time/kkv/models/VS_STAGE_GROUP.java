@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 //import javafx.collections.transformation.SortedList;
 import javax.swing.TransferHandler;
 import vs.time.kkv.connector.MainForm;
@@ -29,11 +30,12 @@ public class VS_STAGE_GROUP implements Transferable {
 
   public long GROUP_NUM = 0;   // 1..N     Index in DataBase
   public int GROUP_INDEX = 0; // 0..N-1   phisical index
-  public List<VS_STAGE_GROUPS> users = new ArrayList<VS_STAGE_GROUPS>();
+  public List<VS_STAGE_GROUPS> users = new CopyOnWriteArrayList<VS_STAGE_GROUPS>();
   public String useChannels = "";
   public boolean isActive = false;
   public VS_STAGE stage = null;
-  public StageTab stageTab = null; 
+  public StageTab stageTab = null;  
+  public boolean showGropuNumber = true;
 
   public VS_STAGE_GROUP(VS_STAGE stage) {
     this.stage = stage;

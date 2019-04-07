@@ -33,6 +33,8 @@ public class TextToSpeechCOM_EN implements IKKVSpeek{
     if (speak == null) {
       try {
         speak = new IDispatch(rm, "SPEECH.SpVoice");
+      } catch (RuntimeException rt){  
+      } catch (UnsupportedClassVersionError rt1){   
       } catch (Exception e) {
         e.printStackTrace();
       }

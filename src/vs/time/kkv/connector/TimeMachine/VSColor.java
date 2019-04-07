@@ -67,13 +67,19 @@ public class VSColor {
   public int vscolor = 0;
   public String colorname = "";
   public String w3css = "";
-
+  
   public VSColor setW3css(String w3css) {
     this.w3css = w3css;
     return this;
   }
   
+  public String getW3css() {
+    return w3css;
+  }
   
+  public String getHTMLColorString(){
+    return  getHTMLColorString(this.color);
+  }
 
   public static String getHTMLColorString(Color color) {
     String red = Integer.toHexString(color.getRed());

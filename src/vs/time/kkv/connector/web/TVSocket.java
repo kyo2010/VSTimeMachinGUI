@@ -6,6 +6,7 @@
 package vs.time.kkv.connector.web;
 
 import java.io.IOException;
+import java.util.Vector;
  
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -20,25 +21,29 @@ import vs.time.kkv.connector.MainForm;
  */
 @WebSocket
 public class TVSocket {
-  private Session session;
-     
+    public Session session = null;
+    
+    TVSocketHandler handler = null;
+    public TVSocket(TVSocketHandler handler){
+      this.handler = handler;
+    }
+    
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        System.out.println("Connect: " + session.getRemoteAddress().getAddress());
-        try {
-            this.session = session;
-            session.getRemote().sendString("Hello !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //System.out.println("Connect: " + session.getRemoteAddress().getAddress());
+        this.session = session;
+        handler.webSockets.add(this);
+        //session.getRemote().sendString("Hello !");       
     }
      
     @OnWebSocketMessage
     public void onText(String message) {
-        System.out.println("text: " + message);
+        //System.out.println("text: " + message);
         try {
-          if (message.equalsIgnoreCase("background")){
-            this.session.getRemote().sendString("background:"+MainForm._mainForm.BACKGROUND_FOR_TV);
+          //message = message.replaceAll("<", "<").replaceAll(">", ">");
+
+          if (message.equalsIgnoreCase("GetBackground")){
+            this.session.getRemote().sendString("SetBackground:"+MainForm._mainForm.BACKGROUND_FOR_TV);
           }
            // this.session.getRemote().sendString(message);
         } catch (Exception e) {
@@ -48,6 +53,7 @@ public class TVSocket {
      
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        System.out.println("Close: statusCode=" + statusCode + ", reason=" + reason);       
+      session = null;   
+      handler.webSockets.remove(this);
     }
 }

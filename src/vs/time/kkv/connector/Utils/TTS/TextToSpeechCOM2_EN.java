@@ -40,6 +40,8 @@ public class TextToSpeechCOM2_EN implements IKKVSpeek {
     try {
       // !!!!!! Please load audio forma notify.wav
       speak.invoke("Speak", new Variant[]{new Variant("   "+text),new Variant(1)});
+    } catch (RuntimeException rt){    
+    } catch (UnsupportedClassVersionError rt1){   
     } catch (Exception e) {
       e.printStackTrace();
     }

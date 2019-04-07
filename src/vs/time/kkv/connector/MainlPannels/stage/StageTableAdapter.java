@@ -98,10 +98,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
     new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80).hideOnWeb(),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_REG_ID, "Reg ID", 50), 
-    new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 90),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 90).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 100).setIsEditing(true).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
@@ -110,15 +110,15 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   public static STAGE_COLUMN[] STAGE_COLUMNS_STAGE_RACE = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_CHANNEL, "Channel", 80).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_COLOR, "Color", 80).hideOnWeb(),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_REG_ID, "Reg ID", 50),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_TRANS, "Trans", 50).hideOnWeb(),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_WINS, "Wins", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT").setIsEditing(true),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").setIsEditing(true),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").setIsEditing(true),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").setIsEditing(true).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").setIsEditing(true).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 100).setIsEditing(true).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_QUAL_TIME, "Qualification\ntime", 140).setCellID("TXT_RIGHT").setIsEditing(true),
@@ -134,13 +134,13 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 100).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SPEED, "Speed", 100).setCellID("TXT_RIGHT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_QUAL_STATUS, "Status", 150),};
+    new STAGE_COLUMN(STAGE_COLUMN.CID_QUAL_STATUS, "Status", 150).hideOnWeb(),};
 
   public static STAGE_COLUMN[] STAGE_COLUMNS_REPORT = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_NUM, "Place", 70).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_REGION, "Region", 200),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_FAI, "FAI", 100),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_REGION, "Region", 200).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_FAI, "FAI", 100).hideOnWeb(),
     //new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Best\nRace Time", 100).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
@@ -149,20 +149,20 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_RACE_TIME_QUART_FINAL, "Quarter-Finals\nrace time", 140).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_RACE_TIME_HALF_FINAL, "Semifinal\nrace time", 140).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_RACE_TIME_FINAL, "The final\nrace time", 140).setCellID("TXT_RIGHT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),};
+    new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT").hideOnWeb(),};
 
   public static STAGE_COLUMN[] STAGE_COLUMNS_RACE_RESULT = new STAGE_COLUMN[]{
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_NUM, "Num", 50).setCellID("INT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT, "Pilot", 220),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT"),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SPEED, "Speed", 100).setCellID("TXT_RIGHT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_RACE_STATUS, "Status", 150),};
+    new STAGE_COLUMN(STAGE_COLUMN.CID_RACE_STATUS, "Status", 150).hideOnWeb(),};
 
   public String getColumnCellID(int column) {
     String cellID = "TXT_RIGHT";
@@ -188,7 +188,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     }
     return pattern;
   }
-
   List<STAGE_COLUMN> tabColumns = null;
 
   public List<STAGE_COLUMN> getColumns() {
@@ -243,7 +242,6 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   }
 
   public void loadData() {
-
     //System.out.println("repaint table 2");
     rows = new ArrayList<StageTableData>();
     if (tab.stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
@@ -481,11 +479,14 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
 
         VS_STAGE_GROUPS.dbControl.delete(tab.mainForm.con, "STAGE_ID=?", tab.stage.ID);
-        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT + ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
+        List<VS_STAGE> stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" +MainForm.STAGE_RACE_RESULT + ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
+        List<VS_STAGE> quals = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
+        if (quals.size()>0){
+          stages.add(0, quals.get(0));
+        }
         long stage_id_final = 0;
         if (stages.size() == 2) {
           // If Olimpic System, one Qulification and One Race Result, then read all groups
-
           List<VS_STAGE_GROUPS> groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stages.get(1).ID);
           if (groups.size() >= 16) { // if count pilots>16
             List<VS_STAGE> races = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_RACE + ") order by ID desc", tab.stage.RACE_ID);
@@ -498,7 +499,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               count++;
             }
           }
-        }else if (stages.size() == 1 && stages.get(0).STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT) {
+        }else if (stages.size() == 1 && stages.get(0).STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT ) {
           // If Olimpic System, one Qulification and One Race Result, then read all groups
           List<VS_STAGE_GROUPS> groups = null;
           groups = VS_STAGE_GROUPS.dbControl.getList(tab.mainForm.con, "STAGE_ID=? order by STAGE_ID, GROUP_NUM, NUM_IN_GROUP", stages.get(0).ID);
@@ -513,7 +514,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               count++;
             }
           } else {
-            List<VS_STAGE> races = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_RACE + ") order by ID desc", tab.stage.RACE_ID);
+            List<VS_STAGE> races = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_RACE + ") "+PILOT_TYPE_WHERE_FOR_STAGE+" order by ID desc", tab.stage.RACE_ID);
             int count = 0;
             // First Race = Race Result
             for (VS_STAGE race : races) {
@@ -524,12 +525,9 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
             }
           }
         }else{
-         stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT+"," +MainForm.STAGE_RACE+ ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);
-        
+         stages = VS_STAGE.dbControl.getList(tab.mainForm.con, "RACE_ID=? and STAGE_TYPE in (" + MainForm.STAGE_QUALIFICATION_RESULT + "," + MainForm.STAGE_RACE_RESULT+"," +MainForm.STAGE_RACE+ ") " + PILOT_TYPE_WHERE_FOR_STAGE + " order by ID desc", tab.stage.RACE_ID);        
         }
-        
-        
-        
+                        
         if (stages.size() > 0) {
           stage_id_final = stages.get(0).ID;
         }

@@ -41,8 +41,8 @@ import vs.time.kkv.models.VS_USERS;
  */
 public class RegistrationModelTable extends AbstractTableModel  implements TableCellRenderer{
 
-  public List<VS_REGISTRATION> rows = new ArrayList<>();
-  public List<VS_REGISTRATION> rowsAll = new ArrayList<>();
+  public List<VS_REGISTRATION> rows = new ArrayList<VS_REGISTRATION>();
+  public List<VS_REGISTRATION> rowsAll = new ArrayList<VS_REGISTRATION>();
   public int activePilots = 0;
   private RegistrationTab regForm = null;  
   public String findString = "";

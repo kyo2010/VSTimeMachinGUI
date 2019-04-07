@@ -7,6 +7,7 @@ import KKV.DBControlSqlLite.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
@@ -72,7 +73,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public int GROUP_TYPE = 0;
   public int IS_PANDING = 0;
   public int MAIN_TIME_IS_OVER = 0;
-  public boolean hasBeenFlightLastLap = false;
+  public boolean hasBeenFlightLastLap = false;  
 
   public VS_REGISTRATION registration = null;   //  NOT_DETECTED
 
@@ -82,13 +83,25 @@ public class VS_STAGE_GROUPS implements Transferable {
 
   public VS_STAGE_GROUP parent = null;
   
-  /** Templary variable for qualification resuls */
+  /** Temp variable for qualification results */
   public List<Long> ALL_QAULA_LAPS = null;
 
   /**
    * Constructor
    */
   public VS_STAGE_GROUPS() {
+  }
+  
+  String pilotPhotoUrl = null;
+  public String gePhotoUrl(){
+    if (pilotPhotoUrl==null){
+      if (registration!=null && registration.PHOTO!=null && new File(registration.PHOTO).exists()){
+        pilotPhotoUrl = registration.PHOTO.replaceAll("web/", "");
+      }else{
+        pilotPhotoUrl = "";
+      }
+    }
+    return pilotPhotoUrl; 
   }
 
   public VS_STAGE_GROUPS(VS_REGISTRATION reg) {
@@ -159,6 +172,22 @@ public class VS_STAGE_GROUPS implements Transferable {
   public VS_REGISTRATION getRegistration(Connection conn, long raceID) {
     loadRegistration(conn, raceID);
     return registration;
+  }
+  
+  public String getWebColor(){
+    if (color != null) return color.getHTMLColorString();
+    return "";        
+  }          
+  
+  public String getFullUserName(){
+    if (registration!=null) return registration.getFullUserName();
+    return PILOT;
+  }
+  
+  public String getFIO(){
+    if (registration!=null) return registration.getFIO();
+    
+    return PILOT;
   }
 
   public void resetRegistration() {

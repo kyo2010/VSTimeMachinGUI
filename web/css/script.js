@@ -1,6 +1,10 @@
   var cashTime = Date.now();
   var URL = "";
   var requested = false;
+  var ws;
+  var i = 1;
+  var background = "";
+
 
   function updateTable(){
     if (requested==true) return;
@@ -49,3 +53,29 @@
       return new String('');
     } 
   };
+
+    function OpenWebSocket(){
+        //alert("WebSocket is supported by your Browser!");
+        // Let us open a web socket
+        //var ws = new WebSocket("ws://10.102.146.112:8081/wstest");
+        ws = new WebSocket("ws://"+window.location.hostname+ (window.location.port ? ':' + window.location.port: '')+"/wstest");
+        //document.querySelector('#message').innerHTML= "try to connect "+i;
+        i++;
+        ws.onopen = function(){
+          ws.send("GetBackground");
+        };
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg.indexOf("SetBackground:")==0){                
+              background = received_msg.substring("SetBackground:".length);
+              var body = document.getElementsByTagName('body')[0];              
+              body.style.backgroundImage = 'url("images/'+background+'")';
+            }else{                
+            }
+        };
+        ws.onclose = function()
+        {
+            setTimeout(OpenWebSocket,1000);            
+        };
+    };    

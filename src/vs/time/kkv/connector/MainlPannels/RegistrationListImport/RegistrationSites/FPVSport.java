@@ -496,7 +496,8 @@ public class FPVSport extends IRegSite {
 
     http.setChunkedStreamingMode(0);
 
-    try (OutputStream out = http.getOutputStream()) {
+    try {
+      OutputStream out = http.getOutputStream();
       out.write(boundaryBytes);
       sendField(out, "mode", "upload");
       out.write(boundaryBytes);
@@ -507,12 +508,17 @@ public class FPVSport extends IRegSite {
         out.write(boundaryBytes);
       }
       // Send our file
-      try (InputStream file = new FileInputStream(fileName)) {
+      try{
+        InputStream file = new FileInputStream(fileName);
         sendFile(out, "JSonFile", file, fileName);
+      }catch(Exception e1){
+        e1.printStackTrace();
       }
 
       // Finish the request
       out.write(finishBoundaryBytes);
+    }catch(Exception e){
+      e.printStackTrace();
     }
 
     String response = "";

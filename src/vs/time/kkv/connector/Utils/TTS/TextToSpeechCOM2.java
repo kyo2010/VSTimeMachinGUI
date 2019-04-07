@@ -28,9 +28,11 @@ public class TextToSpeechCOM2 implements IKKVSpeek {
       try {
         //speak = new ActiveXComponent("SPEECH.SpVoice");
         speak = new ActiveXComponent("SAPI.SpVoice");       
+      } catch (RuntimeException rt){
+      } catch (UnsupportedClassVersionError rt1){        
       } catch (Exception e) {
-        e.printStackTrace();
-      }
+        e.printStackTrace();      
+     }
     }
   }
 

@@ -45,6 +45,7 @@ import vs.time.kkv.connector.MainForm;
     public int ID;
     public boolean isEditing = false;
     public String cellID = "TXT";    
+    public boolean showOnWeb = true;
 
     public STAGE_COLUMN(int ID, String caption, int width) {
       this.ID = ID;
@@ -52,6 +53,11 @@ import vs.time.kkv.connector.MainForm;
       this.caption = caption;
       this.width = width;
     }
+
+    public STAGE_COLUMN hideOnWeb() {
+      this.showOnWeb = false;
+      return this;
+    }        
 
     public STAGE_COLUMN setIsEditing(boolean isEditing) {
       this.isEditing = isEditing;

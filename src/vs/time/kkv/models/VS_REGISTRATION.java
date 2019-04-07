@@ -96,7 +96,17 @@ public class VS_REGISTRATION {
   }
 
   public String getFullUserName() {
+    if (VS_USER_NAME.equalsIgnoreCase(FIRST_NAME)) return FIRST_NAME + " " + SECOND_NAME;
+    if (VS_USER_NAME.equalsIgnoreCase(SECOND_NAME)) return FIRST_NAME + " " + SECOND_NAME;
+    if (VS_USER_NAME.equalsIgnoreCase(FIRST_NAME + " " + SECOND_NAME)) return FIRST_NAME + " " + SECOND_NAME;
     return VS_USER_NAME + " / " + FIRST_NAME + " " + SECOND_NAME;
+  }
+  
+  public String getFIO() {
+    if (FIRST_NAME.equalsIgnoreCase("") && SECOND_NAME.equalsIgnoreCase("")) {
+      return VS_USER_NAME;
+    }
+    return FIRST_NAME + " " + SECOND_NAME;
   }
 
   public static VS_USERS updateGlobalUserPHOTO(Connection con, VS_REGISTRATION usr) {

@@ -456,13 +456,12 @@ public class RCPilotsPro extends IRegSite {
    // http.
     
     http.connect();
-    try (OutputStream os = http.getOutputStream()) {
-       //if (OSDetector.isMac()){
-       //  os.write(jsonContent.getBytes());
-       //}else{
+    try {
+      OutputStream os = http.getOutputStream();
          os.write(jsonContent.getBytes("UTF-8"));       
-       //}       
-    }
+     }catch(Exception e1){
+       e1.printStackTrace();
+     }
     
     String response = "";
     int responseCode = http.getResponseCode();

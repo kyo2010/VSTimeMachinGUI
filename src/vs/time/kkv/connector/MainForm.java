@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
@@ -105,6 +106,17 @@ import vs.time.kkv.models.VS_USERS;
  * @author kyo
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, DroneConnector.VSSendListener {
+  
+  public interface IMainFormListener{
+    public void backgroundIsCnanged();
+  }
+  public IMainFormListener mainFormListener = null;
+
+  public void setMainFormListener(IMainFormListener mainFormListener) {
+    this.mainFormListener = mainFormListener;
+  }
+  
+  
 
   public boolean SAY_SECONDS_FOR_LAP = false;
 
@@ -194,7 +206,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   }
 
   //public List<DroneConnector> vsTimeConnector = null;
-  public List<DroneConnector> droneConnectors = new ArrayList<DroneConnector>();
+  public List<DroneConnector> droneConnectors = new CopyOnWriteArrayList<DroneConnector>();
 
   public static void toRealLog(String st) {
     real_log.writeFile(st, true);
@@ -227,7 +239,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public String LOCAL_HOST = "localhost";
   public int AUTO_UPDATER_TIME = 30; // 30 sekund
 
-  public List<StageTab> stageTabs = new ArrayList<StageTab>();
+  public List<StageTab> stageTabs = new CopyOnWriteArrayList<StageTab>();
 
   public void setActiveRace(VS_RACE race, boolean pleaseRebuildTabs) {
 
@@ -560,6 +572,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     USE_START_WAVE = VS_SETTING.getParam(con, "USE_START_WAVE", 0);
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png") + "?t=" + Calendar.getInstance().getTimeInMillis();
 
+    if (mainFormListener!=null) mainFormListener.backgroundIsCnanged();
+    
     for (DroneConnector vsTimeConnector : droneConnectors) {
       if (vsTimeConnector != null && vsTimeConnector.connected) {
         try {
@@ -643,12 +657,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     mSystemOptions = new javax.swing.JMenuItem();
     jMenuIWebAdmin = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
+    jMenuItem3 = new javax.swing.JMenuItem();
+    jMenuItem4 = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
     jMenuItem1 = new javax.swing.JMenuItem();
     jMenuItem7 = new javax.swing.JMenuItem();
     jMenuItem8 = new javax.swing.JMenuItem();
-    jMenuItem3 = new javax.swing.JMenuItem();
-    jMenuItem4 = new javax.swing.JMenuItem();
     jMenuItem5 = new javax.swing.JMenuItem();
     jMenuItem6 = new javax.swing.JMenuItem();
     jMenuItem9 = new javax.swing.JMenuItem();
@@ -824,6 +838,24 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(mSystemMonitor);
 
+    jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem3.setText("TV OSD");
+    jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem3ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem3);
+
+    jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem4.setText("TV Stage result");
+    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem4ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem4);
+
     jMenuItemTVMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItemTVMonitor.setText("TV Monitor");
     jMenuItemTVMonitor.addActionListener(new java.awt.event.ActionListener() {
@@ -859,24 +891,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(jMenuItem8);
-
-    jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem3.setText("TV OSD");
-    jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem3ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem3);
-
-    jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem4.setText("TV Stage result");
-    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem4ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem4);
 
     jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem5.setText("TV Liderboard 16 ");
@@ -1307,12 +1321,14 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     // TODO add your handling code here:
-    openUrl("osd.htm");
+    //openUrl("osd.htm");
+    openUrl("osd.jsp");
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
     // TODO add your handling code here:
-    openUrl("stage.htm");
+    //openUrl("stage.htm");
+    openUrl("stage.jsp");
   }//GEN-LAST:event_jMenuItem4ActionPerformed
 
   private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed

@@ -169,17 +169,7 @@ public class TVTranslationServlet2 extends HttpServlet {
 
     String outHtml = varsPool.applyValues(html);
     resp.getWriter().println(outHtml);
-  }
-
-  public class DISPLAY {
-    boolean byGroup = false;    
-    public VS_STAGE_GROUP virtual_group = null;
-    public List<Integer> numGroups = new ArrayList();
-    public List<VS_STAGE_GROUPS> users = new ArrayList();
-    public DISPLAY( boolean byGroup){
-      this.byGroup = byGroup;
-    }
-  }
+  }  
 
   public void showStage(HttpServletRequest req, HttpServletResponse resp, VS_STAGE stage) throws ServletException, IOException {
     String html = Tools.getTextFromFile("web"+File.separator+"tv.template.blank.htm");
@@ -209,18 +199,18 @@ public class TVTranslationServlet2 extends HttpServlet {
     long best_lap = VS_STAGE_GROUPS.MAX_TIME;
     long best_time = VS_STAGE_GROUPS.MAX_TIME;
     int lines = 0;
-    List<DISPLAY> displays = new ArrayList<>();    
+    List<VirtualDisplay> displays = new ArrayList<>();    
 
     boolean show_by_group = false;
     if (stage.groups.size() == 1) {
       show_by_group = false;
       VS_STAGE_GROUP group = stage.groups.get(0);
-      displays.add(new DISPLAY(show_by_group));
+      displays.add(new VirtualDisplay(show_by_group));
       for (VS_STAGE_GROUPS user : group.users){
         if (lines + 1 <= MAX_TABLE_LINES) {
         } else {
           lines = 0;
-          displays.add(new DISPLAY(show_by_group));
+          displays.add(new VirtualDisplay(show_by_group));
         }
         lines++;
         displays.get(displays.size() - 1).users.add(user);
@@ -233,13 +223,13 @@ public class TVTranslationServlet2 extends HttpServlet {
       }       
     }else{
       show_by_group = true;
-      displays.add(new DISPLAY(show_by_group));
+      displays.add(new VirtualDisplay(show_by_group));
       for (int numGroup : stage.groups.keySet()) {
         VS_STAGE_GROUP group = stage.groups.get(numGroup);
         if (lines + group.users.size() <= MAX_TABLE_LINES) {
         } else {
           lines = 0;
-          displays.add(new DISPLAY(show_by_group));
+          displays.add(new VirtualDisplay(show_by_group));
         }
         displays.get(displays.size() - 1).numGroups.add(numGroup);
         lines = lines + group.users.size();
@@ -260,7 +250,7 @@ public class TVTranslationServlet2 extends HttpServlet {
       best_lap++;
     }
 
-    DISPLAY current_dispaly = null;
+    VirtualDisplay current_dispaly = null;
     if (displays.size() > 0) {
       long t = Calendar.getInstance().getTimeInMillis();
       long d = t - mainForm.unRaceTime;

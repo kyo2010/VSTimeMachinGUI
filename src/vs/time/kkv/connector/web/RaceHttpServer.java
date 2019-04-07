@@ -101,7 +101,7 @@ public class RaceHttpServer implements Runnable {
       servletContextHandler.addServlet(TVTranslationServlet2.class, "/tv2.ajax");
       servletContextHandler.addServlet(TVTranslationServlet.class, "/pilot.ajax");
 
-      //  pContextHandler.addServlet(SocketHandler.class, "/ws");           
+      //  pContextHandler.addServlet(TVSocketHandler.class, "/ws");           
       // Default Servlet (always last, always named "default")
       ServletHolder holderDefault = new ServletHolder("default", DefaultServlet.class);
       holderDefault.setInitParameter("resourceBase", WEBROOT_INDEX);
@@ -110,7 +110,7 @@ public class RaceHttpServer implements Runnable {
       
       HandlerList handlers = new HandlerList();
       handlers.setHandlers(new Handler[]{
-        new SocketHandler(),
+        new TVSocketHandler(mainForm),
         servletContextHandler,});
       server.setHandler(handlers);
       server.start();     

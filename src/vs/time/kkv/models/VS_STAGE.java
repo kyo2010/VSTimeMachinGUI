@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.IGroupCreater;
@@ -50,12 +53,13 @@ public class VS_STAGE {
   public IGroupCreater groupCreater = null;  
   public int COUNT_BEST_LAPS = 0;
   public int IS_LB = 0;
+  public int SHOW_FOR_TV = 1;  
 
   //public VS_RACE race = null;
 
   public Map<String, Map<String, Map<String, VS_RACE_LAP>>> laps_check_reg_id = null;
 
-  public Map<Integer, VS_STAGE_GROUP> groups = new HashMap<Integer, VS_STAGE_GROUP>();
+  public Map<Integer, VS_STAGE_GROUP> groups = new ConcurrentHashMap<Integer, VS_STAGE_GROUP>();
 
   /**
    * Constructor
@@ -90,6 +94,7 @@ public class VS_STAGE {
     new DBModelField("SCORE_CALCULATION").setDbFieldName("\"SCORE_CALCULATION\""),      
     new DBModelField("COUNT_BEST_LAPS").setDbFieldName("\"COUNT_BEST_LAPS\""),  
     new DBModelField("IS_LB").setDbFieldName("\"IS_LB\""),      
+    new DBModelField("SHOW_FOR_TV").setDbFieldName("\"SHOW_FOR_TV\""),      
   });
 
   public static void resetSelectedTab(Connection conn, long raceID) {

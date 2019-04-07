@@ -36,7 +36,7 @@ public class RegistrationImportForm extends javax.swing.JFrame {
 
   RegistrationTab regTab = null;
 
-  static List<IRegSite> sites = new ArrayList<>();
+  static List<IRegSite> sites = new ArrayList<IRegSite>();
 
   public static IRegSite getSite(String name) {
     for (IRegSite site : sites) {

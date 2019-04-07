@@ -108,7 +108,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
     bFlash = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jTransFlash = new javax.swing.JTextField();
-    jcFlashVersion = new javax.swing.JComboBox<>();
+    jcFlashVersion = new javax.swing.JComboBox();
     butLoadFlash = new javax.swing.JButton();
     bHello = new javax.swing.JButton();
     bChanggeTransID = new javax.swing.JButton();
@@ -240,7 +240,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
                 .addComponent(jcbAutoClear)
                 .addGap(8, 8, 8)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(butSend, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+              .addComponent(butSend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
               .addComponent(jtLastTransID)))
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -780,7 +780,7 @@ public class VSTeamConsole extends javax.swing.JFrame {
   private javax.swing.JTextPane jText;
   private javax.swing.JTextField jTransFlash;
   private javax.swing.JButton jbClear;
-  private javax.swing.JComboBox<String> jcFlashVersion;
+  private javax.swing.JComboBox jcFlashVersion;
   private javax.swing.JCheckBox jcbAutoClear;
   private javax.swing.JCheckBox jcbShowPing;
   private javax.swing.JProgressBar jpFlash;

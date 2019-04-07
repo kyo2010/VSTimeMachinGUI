@@ -8,16 +8,18 @@
   <!--<meta http-equiv="refresh" content="3"> -->
   <link rel="stylesheet" href="css/w3.css"/>
   <link rel="stylesheet" href="css/main.css"/>
-  <title>TV Monitor</title>  
+  <link rel="stylesheet" href="css/osd.css?8"/>
+  <title>OSD</title>  
 </head>
 <body background="images/transparent.png"> 
 <p name="place" id="place" style="margin: 0px"></p>
 
-  <script type="text/javascript" src="css/script.js"></script>
+  <script type="text/javascript" src="css/script.js?1"></script>
   <script type="text/javascript">  
-    URL='osd.ajax?';
+    URL='osd_ajax.jsp?';
     updateTable();
     setInterval('updateTable()', 1000);
+    OpenWebSocket();
   </script>
 
 </body>
