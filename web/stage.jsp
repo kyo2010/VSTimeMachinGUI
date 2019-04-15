@@ -8,7 +8,7 @@
   <!--<meta http-equiv="refresh" content="3"> -->
   <link rel="stylesheet" href="css/w3.css"/>
   <link rel="stylesheet" href="css/main.css"/>
-  <link rel="stylesheet" href="css/osd.css?10"/>
+  <link rel="stylesheet" href="css/osd.css?12"/>
   <title>Table Result</title>  
 </head>
 <body background="images/transparent.png"> 

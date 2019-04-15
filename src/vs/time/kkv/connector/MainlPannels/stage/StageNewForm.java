@@ -1164,7 +1164,13 @@ public class StageNewForm extends javax.swing.JFrame {
     
     try {
       if (stage != null && stage.ID != -1) {
-        stage.IS_GROUP_CREATED = 0;
+        if ( stage.STAGE_TYPE!=MainForm.STAGE_QUALIFICATION_RESULT && 
+             stage.STAGE_TYPE!=MainForm.STAGE_RACE_REPORT && 
+             stage.STAGE_TYPE!=MainForm.STAGE_RACE_RESULT )
+        {
+          stage.IS_GROUP_CREATED = 0;
+        }
+        stage.IS_CREATED = 0;
         bSaveActionPerformed(evt);
         VS_STAGE.dbControl.update(mainForm.con, stage);
         mainForm.setActiveRace(mainForm.activeRace,true);       

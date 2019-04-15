@@ -306,12 +306,12 @@ public class RCPilotsPro extends IRegSite {
           flight.put("PILOT_POSITION", /*usr.NUM_IN_GROUP*/ POS);
 
           flight.put("PILOT_LAP", usr.LAPS);
-          flight.put("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP, "."));
+          flight.put("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP, ".",true));
           flight.put("GROUP_NUM", usr.GROUP_NUM);
           flight.put("RACE_LAPS", tab.stage.LAPS);
           flight.put("RACE_DIST", tab.mainForm.activeRace.LAP_DISTANCE);
 
-          salt_vals += tab.stage.CAPTION + POS + StageTab.getTimeIntervel(usr.BEST_LAP, ".") + usr.GROUP_NUM;
+          salt_vals += tab.stage.CAPTION + POS + StageTab.getTimeIntervel(usr.BEST_LAP, ".",true) + usr.GROUP_NUM;
           // $flight['NAME'].$flight['PILOT_POSITION'].$flight['BEST_LAP'].$flight['GROUP_NUM'];
 
           POS++;

@@ -80,6 +80,19 @@ public class TempFileWrite {
     writeFile(writeStr, true);
   }
   
+  public void writeFile(String msg, Exception e) {
+    String writeStr = ""; 
+    if (e.getClass().equals(UserException.class)){
+      UserException ue = (UserException)e;
+      writeStr = ue.error+" "+ue.details;
+    }else{
+      writeStr = e.getMessage()+" "+Tools.traceError(e);
+    }
+    //System.out.println(writeStr);
+    writeFile(msg, true);
+    writeFile(writeStr, true);
+  }
+  
   public String getTime(){
     Calendar dt = Calendar.getInstance();
     String res = (dt.get(Calendar.YEAR)+1900)+"-"+Tools.padl(""+(dt.get(Calendar.MONTH)+1),2,"0")+"-"+dt.get(Calendar.DAY_OF_MONTH)+" "+Tools.padl(""+dt.get(Calendar.HOUR_OF_DAY),2,"0")+":"+Tools.padl(""+dt.get(Calendar.MINUTE),2,"0")+":"+Tools.padl(""+dt.get(Calendar.SECOND),2,"0")+" "+Tools.padl(""+dt.get(Calendar.MILLISECOND),3,"0");

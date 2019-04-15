@@ -196,8 +196,8 @@ public class RaceHttpServerOld implements HttpHandler, Runnable {
               bgcolor = VSColor.getHTMLColorString(color.color);
             }
             PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' bgcolor='" + bgcolor + "' class='ramka'>" + user.CHANNEL + "</td><td>"
-                    + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
-                    + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
+                    + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP,false)) + "</td>"
+                    + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME,false)) + "</td><td>"
                     + status + "</td>\n";
             PAGE_CONTENT += "</tr>\n";
           }

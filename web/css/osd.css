@@ -263,3 +263,34 @@ section {
   line-height: 1;
   font-weight: bold;
 }
+
+
+.pilot_row2 {
+    height: 3.5vh;
+    color: #fff;
+    font-size: 2vh;
+    line-height: 1;
+    font-style: italic;
+    text-align:center;
+}
+
+.group_row2 {
+    height: 5vh;
+    margin: 1.8vh 0vh 0vh 0vh;
+    color: #fff;
+    font-size: 2vh;
+    line-height: 1;
+    font-weight: bold;
+    text-align:center;
+}
+
+
+.cell2{
+  text-align:center;
+  justify-content: center;
+}
+
+.cellPilotName2{
+  text-align:left;
+
+}

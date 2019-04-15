@@ -100,10 +100,10 @@ public class TVTranslationServlet2 extends HttpServlet {
             String bestLap = "";
             String info = "";
             if (pilot.BEST_LAP != 0) {
-              bestLap = "&nbsp;&nbsp;&nbsp; Лучший круг : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
+              bestLap = "&nbsp;&nbsp;&nbsp; Лучший круг : " + StageTab.getTimeIntervel(pilot.BEST_LAP,false);
             }
             if (pilot.IS_FINISHED == 1) {
-              info = "&nbsp;&nbsp;&nbsp; Bремя :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
+              info = "&nbsp;&nbsp;&nbsp; Bремя :  " + StageTab.getTimeIntervel(pilot.RACE_TIME,false);
             }
             webInfo = "<div class='w3-container w3-white' style='padding:0.01em 8px'><p style='margin: 8px; font-size: 13px;'><b>Кругов : " + pilot.LAPS + " " + bestLap + info + "</b></p></div>";
           }
@@ -356,8 +356,8 @@ public class TVTranslationServlet2 extends HttpServlet {
                   + user.CHANNEL
                   + "&nbsp;</span>"
                   + "</th>";
-          CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
-          CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
+          CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME,false)) + "</th>";
+          CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP,false)) + "</th>";
           if (SHOW_SPEED) {
             String speed = StageTab.getFlightSpeed(mainForm.activeRace, user.BEST_LAP);
             if (!speed.equals("")) {

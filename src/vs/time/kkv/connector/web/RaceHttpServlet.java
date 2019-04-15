@@ -391,9 +391,9 @@ public class RaceHttpServlet extends HttpServlet {
               ///String bgcolor = "#ffffff";           
               PAGE_CONTENT += "  <td>" + user.NUM_IN_GROUP + "</td><td>" + user.PILOT + "</td><td align='center' ><b>" + user.CHANNEL + "</b></td>"
                       + "<td align='center'>" + user.LAPS + "</td>"
-                      + "<td>" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</td>"
-                      + "<td>" + (user.LAST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.LAST_LAP)) + "</td>"
-                      + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</td><td>"
+                      + "<td>" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP,false)) + "</td>"
+                      + "<td>" + (user.LAST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.LAST_LAP,false)) + "</td>"
+                      + "<td>" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME,false)) + "</td><td>"
                       + status + "</td>"
                       + "<td  align='center'>" + (pos == 0 ? "" : (user.RACE_TIME == VS_STAGE_GROUPS.MAX_TIME ? "DNF" : pos)) + "</td>\n";
               PAGE_CONTENT += "</tr>\n";

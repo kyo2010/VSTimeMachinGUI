@@ -200,6 +200,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public void toLog(Exception e) {
     log.writeFile(e);
   }
+  
+   public void toLog(String msg, Exception e) {
+    log.writeFile(msg, e);
+  }
 
   public void toLog(String st) {
     log.writeFile(st);
@@ -659,6 +663,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     mSystemMonitor = new javax.swing.JMenuItem();
     jMenuItem3 = new javax.swing.JMenuItem();
     jMenuItem4 = new javax.swing.JMenuItem();
+    jMenuItem10 = new javax.swing.JMenuItem();
     jMenuItemTVMonitor = new javax.swing.JMenuItem();
     jMenuItem1 = new javax.swing.JMenuItem();
     jMenuItem7 = new javax.swing.JMenuItem();
@@ -855,6 +860,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
     });
     jMenu3.add(jMenuItem4);
+
+    jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem10.setText("TV Stage result (old)");
+    jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem10ActionPerformed(evt);
+      }
+    });
+    jMenu3.add(jMenuItem10);
 
     jMenuItemTVMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItemTVMonitor.setText("TV Monitor");
@@ -1356,6 +1370,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     openUrl("tv.pilot1.htm");
   }//GEN-LAST:event_jMenuItem9ActionPerformed
 
+  private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+    // TODO add your handling code here:
+     openUrl("stage.htm");
+  }//GEN-LAST:event_jMenuItem10ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1470,6 +1489,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem1;
+  private javax.swing.JMenuItem jMenuItem10;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JMenuItem jMenuItem4;

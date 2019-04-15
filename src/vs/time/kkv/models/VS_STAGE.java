@@ -53,7 +53,8 @@ public class VS_STAGE {
   public IGroupCreater groupCreater = null;  
   public int COUNT_BEST_LAPS = 0;
   public int IS_LB = 0;
-  public int SHOW_FOR_TV = 1;  
+  public int SHOW_FOR_TV = 0;  
+  public int IS_CREATED = 0;  
 
   //public VS_RACE race = null;
 
@@ -94,7 +95,8 @@ public class VS_STAGE {
     new DBModelField("SCORE_CALCULATION").setDbFieldName("\"SCORE_CALCULATION\""),      
     new DBModelField("COUNT_BEST_LAPS").setDbFieldName("\"COUNT_BEST_LAPS\""),  
     new DBModelField("IS_LB").setDbFieldName("\"IS_LB\""),      
-    new DBModelField("SHOW_FOR_TV").setDbFieldName("\"SHOW_FOR_TV\""),      
+    new DBModelField("SHOW_FOR_TV").setDbFieldName("\"SHOW_FOR_TV\""),     
+    new DBModelField("IS_CREATED").setDbFieldName("\"IS_CREATED\""),     
   });
 
   public static void resetSelectedTab(Connection conn, long raceID) {
@@ -357,7 +359,7 @@ public class VS_STAGE {
         } else {
           if (lap_time >= MIN_LAP_TIME * 1000) {
             try {
-              mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.VS_PRIMARY_TRANS + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME) + ";");
+              mainForm.race_log.writeFile("\"" + usr.parent.stage.CAPTION + "\";" + "Group" + usr.parent.GROUP_NUM + ";" + usr.VS_PRIMARY_TRANS + ";\"" + usr.PILOT + "\";" + time + ";" + new JDEDate(time).getTimeString(":") + ";" + lap.LAP + ";" + StageTab.getTimeIntervel(lap.TRANSPONDER_TIME,false) + ";");
             } catch (Exception ein) {
             }
             VS_RACE_LAP.dbControl.insert(mainForm.con, lap);

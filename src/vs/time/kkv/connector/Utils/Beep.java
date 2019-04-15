@@ -13,6 +13,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import javax.sound.midi.Instrument;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -32,15 +36,15 @@ public class Beep {
 
   //SpeekUtil speaker = null;
   MainForm mainForm;
-  
+
   public final static String SOUND_ID_START = "START";
-  public final static String SOUND_ID_FINISH = "FINISH";  
+  public final static String SOUND_ID_FINISH = "FINISH";
 
   public Beep(MainForm mainForm) {
     this.mainForm = mainForm;
 
     sounds.put("notify", new PreLoadSound("notify.wav"));  //0
-    sounds.put("beep", new PreLoadSound("beep.wav"));   
+    sounds.put("beep", new PreLoadSound("beep.wav"));
     sounds.put("one", new PreLoadSound("_1.wav"));
     sounds.put("two", new PreLoadSound("_2.wav"));
     sounds.put("three", new PreLoadSound("_3.wav"));
@@ -57,8 +61,14 @@ public class Beep {
       } else {
         mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().startMessage(sound_id));
       }
-    } else {
+    } else {      
+      try{
+        sound.stop();
+        sound.interrupt();
+      }catch(Exception e){}  
+      sound.setVolume(1f);
       sound.play();
+      //sound.start();
     }
   }
 
@@ -121,19 +131,20 @@ public class Beep {
         e.printStackTrace();
         Beep.this.mainForm.toLog("reading file is error:" + file);
       }
-      
-      try{
+
+      try {
         //Получаем контроллер громкости
         FloatControl vc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         //Устанавливаем значение
         //Оно должно быть в пределах от vc.getMinimum() до vc.getMaximum()
         vc.setValue(5); //Громче обычного
-      }catch(Exception e){}
+      } catch (Exception e) {
+      }
     }
 
     public void setVolume(float volume) {
-     // if (volume < 0f || volume > 1f)
-     //   throw new IllegalArgumentException("Volume not valid: " + volume);
+      // if (volume < 0f || volume > 1f)
+      //   throw new IllegalArgumentException("Volume not valid: " + volume);
       try {
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(volume));
@@ -169,6 +180,49 @@ public class Beep {
         clip.start();
       }
     }
+  }
+
+  public static void beep(int notePitch, long duration, int velocity, int numInstr, int numChannel) {
+    Synthesizer mySynthesizer = null;
+    try {
+      mySynthesizer = MidiSystem.getSynthesizer();
+      if (mySynthesizer == null) {
+        System.out.println("getSynthesizer() failed!");
+        return;
+      }
+      mySynthesizer.open();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return;
+    }
+    Instrument[] instruments = mySynthesizer.getAvailableInstruments();
+    if (numInstr < 0) {
+      numInstr = 0;
+    } else if (numInstr >= instruments.length) {
+      numInstr = instruments.length - 1;
+    }
+    System.out.println(numInstr + ":" + instruments.length);
+    Instrument myInstrument = instruments[numInstr];
+    mySynthesizer.loadInstrument(myInstrument);
+    MidiChannel[] channels = mySynthesizer.getChannels();
+    if (numChannel < 0) {
+      numChannel = 0;
+    } else if (numChannel >= channels.length) {
+      numChannel = channels.length - 1;
+    }
+    MidiChannel channel = channels[numChannel];
+    int prog = myInstrument.getPatch().getProgram();
+    channel.programChange(prog);
+    channel.noteOn(notePitch, velocity);
+    try {
+      Thread.currentThread().sleep(duration);
+    } catch (InterruptedException ie) {
+    }
+    channel.allNotesOff();
+    if (mySynthesizer.isOpen()) {
+      mySynthesizer.close();
+    }
+    mySynthesizer = null;
   }
 
   public static void beep(double frequency, int duration) throws Exception {
@@ -210,9 +264,17 @@ public class Beep {
 
   public static void beep() {
     try {
+      //int frequency = 300; // hz     
+      //int duration = 1200;  // milliseconds    
+
       int frequency = 300; // hz     
       int duration = 1200;  // milliseconds    
+
       beep(frequency, duration);
+
+       //beep(notePitch duration velocity numInstr numChannel)
+       //beep (5,1000,100,i,128);
+       
     } catch (Exception e) {
       e.printStackTrace();
     }

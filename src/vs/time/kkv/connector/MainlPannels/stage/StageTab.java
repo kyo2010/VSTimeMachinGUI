@@ -100,6 +100,7 @@ import vs.time.kkv.connector.Utils.FrozenTablePane;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TableToXLS;
 import vs.time.kkv.connector.connection.DroneConnector;
+import vs.time.kkv.models.VS_USERS;
 
 /**
  *
@@ -376,8 +377,14 @@ public class StageTab extends javax.swing.JPanel {
     }
   });
 
-  public static String getTimeIntervel(long time) {
-    return getTimeIntervel(time, ":");
+  public String getTimeIntervel(long time) {
+    return getTimeIntervel(time, ":", stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT
+            || stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT
+            || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT);
+  }
+
+  public static String getTimeIntervel(long time, boolean forRaceReport) {
+    return getTimeIntervel(time, ":", forRaceReport);
   }
 
   public static double getRealLaps(int lap) {
@@ -388,12 +395,18 @@ public class StageTab extends javax.swing.JPanel {
     return ((double) lap_10 / 10);
   }
 
-  public static String getTimeIntervel(long time, String timeSep) {
+  public static String getTimeIntervel(long time, String timeSep, boolean forRaceReport) {
+    if (time == VS_STAGE_GROUPS.MAX_TIME && forRaceReport) {
+      return MainForm._mainForm.getLocaleString("99:99:99");
+    }
+    if (time == VS_STAGE_GROUPS.MAX_TIME && !forRaceReport) {
+      return MainForm._mainForm.getLocaleString("-");
+    }
     long min = time / 1000 / 60;
     long sec = time / 1000 - min * 60;
     long milisec = time - (sec + min * 60) * 1000;
     //milisec = Math.round(milisec / 10);
-    return Tools.padl("" + min, 2, "0") + timeSep + Tools.padl("" + sec, 2, "0") + timeSep + Tools.padl("" + milisec, 3, "0");
+    return ("" + min) + timeSep + Tools.padl("" + sec, 2, "0") + timeSep + Tools.padl("" + milisec, 3, "0");
   }
 
   public static String getTimeIntervelForTimer(long time) {
@@ -421,8 +434,8 @@ public class StageTab extends javax.swing.JPanel {
 
     bStopChecking.setVisible(false);
     //topPanel.setVisible(false);              
-    
-    jchTV.setSelected(stage.SHOW_FOR_TV==1);
+
+    jchTV.setSelected(stage.SHOW_FOR_TV == 1);
 
     timerCaption.setVisible(false);
 
@@ -1232,6 +1245,12 @@ public class StageTab extends javax.swing.JPanel {
       return;
     }
 
+    stage.IS_CREATED = 0;
+    try {
+      VS_STAGE.dbControl.update(mainForm.con, stage);
+    } catch (Exception e) {
+      mainForm.toLog("Save to database is error.", e);
+    }
     for (Integer grup_index : stage.groups.keySet()) {
       VS_STAGE_GROUP st_gr = stage.groups.get(grup_index);
       for (VS_STAGE_GROUPS usr : st_gr.users) {
@@ -1595,9 +1614,9 @@ public class StageTab extends javax.swing.JPanel {
       }
       text.append("\n");
       text.append("— " + mainForm.getLocaleString("Laps") + " : " + usr.LAPS + " " + mainForm.getLocaleString("of") + " " + laps + "\n");
-      text.append("  " + mainForm.getLocaleString("Best Lap") + ": " + getTimeIntervel(usr.BEST_LAP) + "\n");
+      text.append("  " + mainForm.getLocaleString("Best Lap") + ": " + getTimeIntervel(usr.BEST_LAP, false) + "\n");
       if (laps < 999) {
-        text.append("  " + mainForm.getLocaleString("Race Time") + ": " + getTimeIntervel(usr.RACE_TIME) + "\n");
+        text.append("  " + mainForm.getLocaleString("Race Time") + ": " + getTimeIntervel(usr.RACE_TIME, false) + "\n");
       }
     }
 
@@ -1821,6 +1840,12 @@ public class StageTab extends javax.swing.JPanel {
 
   public void createGroups() {
     try {
+      if (stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT
+              || stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT
+              || stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+        return;
+      }
+
       if (stage != null && stage.ID != -1) {
         VS_STAGE parent_stage = null;
         if (parent_stage == null) {
@@ -1860,6 +1885,7 @@ public class StageTab extends javax.swing.JPanel {
           if (parent_stage.STAGE_TYPE != MainForm.STAGE_QUALIFICATION_RESULT && parent_stage.STAGE_TYPE != MainForm.STAGE_RACE_RESULT) {
 
           }
+
           if (stage.STAGE_TYPE == MainForm.STAGE_RACE) {
             if ((stage.RACE_TYPE == MainForm.RACE_TYPE_OLYMPIC || stage.RACE_TYPE == MainForm.RACE_TYPE_DOUBLE) && parent_stage != null && parent_stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT && parent_stage.PARENT_STAGE_ID > 0) {
               try {
@@ -2223,8 +2249,13 @@ public class StageTab extends javax.swing.JPanel {
                 JOptionPane.showConfirmDialog(this, ue.details, ue.error, JOptionPane.YES_OPTION);
               }
             } else {
-              // based on best time
-              groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              // based on best time              
+              if (parent_stage.STAGE_TYPE == MainForm.STAGE_QUALIFICATION_RESULT || parent_stage.STAGE_TYPE == MainForm.STAGE_RACE_RESULT) {
+                groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by NUM_IN_GROUP", parent_stage.ID);
+              } else {
+                groups = VS_STAGE_GROUPS.dbControl.getList(mainForm.con, "STAGE_ID=? AND ACTIVE_FOR_NEXT_STAGE=1 " + PILOT_TYPE_WHERE_FOR_USERS + " order by RACE_TIME, BEST_LAP, NUM_IN_GROUP", parent_stage.ID);
+              }
+
               //checkGroupConstrain();
               //Map<String, VS_REGISTRATION> users = VS_REGISTRATION.dbControl.getMap(mainForm.con, "VS_TRANSPONDER", "VS_RACE_ID=? ORDER BY PILOT_TYPE,NUM", stage.RACE_ID);
               TreeSet<String> user_names = new TreeSet();
@@ -2905,6 +2936,8 @@ public class StageTab extends javax.swing.JPanel {
 
   public String invateAction(long GROUP_NUM, boolean showDialog) {
     //final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
+    mainForm.speaker.clearVoiceStack();
+    
     String message = "";
     StageTableData td = getGroupByNum(GROUP_NUM);
     if (td == null) {

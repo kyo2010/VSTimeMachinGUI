@@ -178,10 +178,10 @@ public class TVTranslationServlet extends HttpServlet {
             String bestLap = "";
             String info = "";
             if (pilot.BEST_LAP != 0) {
-              bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + mainForm.getLocaleString("Best Lap") + " : " + StageTab.getTimeIntervel(pilot.BEST_LAP);
+              bestLap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + mainForm.getLocaleString("Best Lap") + " : " + StageTab.getTimeIntervel(pilot.BEST_LAP,false);
             }
             if (pilot.IS_FINISHED == 1) {
-              info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + mainForm.getLocaleString("Race Time") + " :  " + StageTab.getTimeIntervel(pilot.RACE_TIME);
+              info = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + mainForm.getLocaleString("Race Time") + " :  " + StageTab.getTimeIntervel(pilot.RACE_TIME,false);
             }
             webInfo = "<div class='w3-container w3-white'><h3><b>" + mainForm.getLocaleString("Laps") + " : " + pilot.LAPS + " " + bestLap + info + "</b></h3></div>";
           }
@@ -194,12 +194,12 @@ public class TVTranslationServlet extends HttpServlet {
             lOSD = reg.VS_USER_NAME;
             lFIO = reg.FIRST_NAME + " " + reg.SECOND_NAME;
           }
-          lBestLap = StageTab.getTimeIntervel(pilot.BEST_LAP);
+          lBestLap = StageTab.getTimeIntervel(pilot.BEST_LAP,false);
           lLaps = "" + pilot.LAPS;
           lPlace = "" + /*pilot.NUM_IN_GROUP*/ index;
           lColor = "" + pilot.color.colorname;
           lCh = "" + pilot.CHANNEL;
-          lTimeRace = StageTab.getTimeIntervel(pilot.RACE_TIME);
+          lTimeRace = StageTab.getTimeIntervel(pilot.RACE_TIME,false);
         }
 
       } catch (Exception ein) {
@@ -570,8 +570,8 @@ public class TVTranslationServlet extends HttpServlet {
                   + user.CHANNEL
                   + "&nbsp;</span>"
                   + "</th>";
-          CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME)) + "</th>";
-          CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP)) + "</th>";
+          CONTENT += "<th " + (user.RACE_TIME == best_time ? "class='w3-red'" : "") + ">" + (user.RACE_TIME == 0 ? "" : StageTab.getTimeIntervel(user.RACE_TIME,false)) + "</th>";
+          CONTENT += "<th " + (user.BEST_LAP == best_lap ? "class='w3-red'" : "") + ">" + (user.BEST_LAP == 0 ? "" : StageTab.getTimeIntervel(user.BEST_LAP,false)) + "</th>";
           if (SHOW_SPEED) {
             String speed = StageTab.getFlightSpeed(mainForm.activeRace, user.BEST_LAP);
             if (!speed.equals("")) {
@@ -719,8 +719,8 @@ public class TVTranslationServlet extends HttpServlet {
         if (!shortVersion) {
           CONTENT += "<td><center>" + usr.NUM_IN_GROUP + "/" + usr.GROUP_NUM + "</center></td>";
           CONTENT += "<td><center>" + usr.LAPS + "</center></td>";
-          CONTENT += "<td><center>" + StageTab.getTimeIntervel(usr.RACE_TIME) + "</center></td>";
-          CONTENT += "<td><center>" + StageTab.getTimeIntervel(usr.BEST_LAP) + "</center></td>";
+          CONTENT += "<td><center>" + StageTab.getTimeIntervel(usr.RACE_TIME,false) + "</center></td>";
+          CONTENT += "<td><center>" + StageTab.getTimeIntervel(usr.BEST_LAP,false) + "</center></td>";
           CONTENT += "<td><center>" + usr.info + "</center></td>";
         }
         CONTENT += "</tr>";
@@ -732,8 +732,8 @@ public class TVTranslationServlet extends HttpServlet {
         varsPool1.addChild(new StringVar("RACES", "" + usr.NUM_IN_GROUP));
         varsPool1.addChild(new StringVar("ALL_RACES", "" + usr.GROUP_NUM));
         varsPool1.addChild(new StringVar("LAPS", "" + usr.LAPS));
-        varsPool1.addChild(new StringVar("RACE_TIME", StageTab.getTimeIntervel(usr.RACE_TIME)));
-        varsPool1.addChild(new StringVar("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP)));
+        varsPool1.addChild(new StringVar("RACE_TIME", StageTab.getTimeIntervel(usr.RACE_TIME,false)));
+        varsPool1.addChild(new StringVar("BEST_LAP", StageTab.getTimeIntervel(usr.BEST_LAP,false)));
         varsPool1.addChild(new StringVar("info", usr.info));
 
         ROWS += varsPool1.applyValues(html_row);

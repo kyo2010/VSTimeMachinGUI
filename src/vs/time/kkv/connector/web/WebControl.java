@@ -25,6 +25,7 @@ public class WebControl {
   MainForm mainForm = MainForm._mainForm;  
   public static int MAX_DISPLAYS_COLUMNS = 17;
   public int countRefresh = 0;
+  public StageTab tab = null;
   
   /** Return active group */
   public VS_STAGE_GROUP getActiveGroup(){
@@ -41,8 +42,8 @@ public class WebControl {
   }
   
   /** Return active group */
-  public List<VS_STAGE_GROUP> getGroups(){
-    StageTab tab = null;
+  public List<VS_STAGE_GROUP> getGroups(){    
+    
     for (int i = mainForm.stageTabs.size() - 1; i >= 0; i--) {
       if (!mainForm.stageTabs.get(i).isOneTable) {
         tab = mainForm.stageTabs.get(i);
@@ -127,7 +128,7 @@ public class WebControl {
   public String getTime(long time){
     if (time==0) return "";
     if (time==MAX_TIME) return "";
-    return StageTab.getTimeIntervel(time);
+    return StageTab.getTimeIntervel(time,false);
   }
   
   public String getRaceName(){

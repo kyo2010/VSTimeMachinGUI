@@ -85,6 +85,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   
   /** Temp variable for qualification results */
   public List<Long> ALL_QAULA_LAPS = null;
+  public List<Long> ALL_QAULA_TIMES = null;
 
   /**
    * Constructor
@@ -349,6 +350,7 @@ public class VS_STAGE_GROUPS implements Transferable {
             laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS);
           }
           LAPS_INTO_BD = stage.LAPS;
+          //LAPS_INTO_BD = 0;
           for (VS_RACE_LAP lap : laps.values()) {
             if (lap != null && LAPS_INTO_BD < lap.LAP) {
               LAPS_INTO_BD = lap.LAP;
