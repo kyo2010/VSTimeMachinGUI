@@ -35,8 +35,15 @@ public class TimerForm extends /*javax.swing.JFrame*/ JDialog {
     //com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);
     
     //setOpacity(0.75f);
-    setVisible(false);    
-    setOpacity(0.75f);
+    setVisible(false);            
+    
+    try{
+    //  setOpacity(0.75f);
+      com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
+      com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);    
+    }catch(UnsupportedOperationException ex){
+      System.out.println("Transperent windows is not supported");
+    }    
     
     setBounds(getGraphicsConfiguration().getBounds());
     //getGraphicsConfiguration().getDevice().setFullScreenWindow(this);

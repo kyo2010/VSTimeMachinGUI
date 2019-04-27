@@ -188,7 +188,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     }
     return pattern;
   }
-  List<STAGE_COLUMN> tabColumns = null;
+  List<STAGE_COLUMN> tabColumns = null;    
 
   public List<STAGE_COLUMN> getColumns() {
     if (tabColumns != null) {
@@ -743,7 +743,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
   int laps_count = 0;
 
   @Override
-  public int getColumnCount() {
+  public int getColumnCount() {        
     int laps = tab.stage.LAPS;
     if (tab.mainForm.activeRace.CLAC_HALF_LAP == 1) {
       laps = laps * 2;
@@ -752,9 +752,11 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     if (show_laps) {
       for (StageTableData row : rows) {
         if (!row.isGrpup) {
-          //max_setup_laps = (int)row.pilot.LAPS_INTO_BD;
-          if (max_setup_laps < row.pilot.LAPS) {
+          /*if (max_setup_laps < row.pilot.LAPS) {
             max_setup_laps = (int) row.pilot.LAPS;
+          }*/          
+          if (max_setup_laps < row.pilot.LAPS_INTO_BD) {
+            max_setup_laps = (int) row.pilot.LAPS_INTO_BD;
           }
           if (laps < row.pilot.LAPS_INTO_BD) {
             laps = (int) row.pilot.LAPS_INTO_BD;
@@ -762,9 +764,12 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         }
       }
     }
-    laps_count = laps;
+    //laps_count = laps;
+    laps_count = max_setup_laps;
     //return getColumns().size() + (show_laps ? laps : 0);
-    return getColumns().size() + (show_laps ? max_setup_laps : 0);
+    int resCols = getColumns().size() + (show_laps ? max_setup_laps : 0);    
+    //System.out.println("stage:"+tab.stage.CAPTION+" cols="+resCols);
+    return resCols;    
   }
 
   @Override
@@ -1107,6 +1112,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   @Override
   public void setValueAt(Object value, int row, int col) {
+    if (rows==null || rows.size()<=row || row<0) return;
     StageTableData td = rows.get(row);
     STAGE_COLUMN sc = null;
     if (col < getColumns().size()) {

@@ -224,6 +224,8 @@ public class StageNewForm extends javax.swing.JFrame {
       COUNT_BEST_LAPS.setSelectedIndex(0);
     }
     
+    COUNT_BEST_LAP_IN_ORDER.setSelectedItem(""+stage.COUNT_BEST_LAPS_IN_ORDER);
+    
     jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes( jcbStageType.getSelectedIndex() )));
     if (stage!=null){
       jRaceType.setSelectedItem( GroupFactory.getRaceNameByCode(jcbStageType.getSelectedIndex(), stage.RACE_TYPE)  );
@@ -315,6 +317,8 @@ public class StageNewForm extends javax.swing.JFrame {
     jLabel13 = new javax.swing.JLabel();
     COUNT_BEST_LAPS = new javax.swing.JComboBox<>();
     IS_LB = new javax.swing.JCheckBox();
+    jLabel14 = new javax.swing.JLabel();
+    COUNT_BEST_LAP_IN_ORDER = new javax.swing.JComboBox<>();
     tabRaceReport = new javax.swing.JPanel();
     jLabel9 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
@@ -633,7 +637,7 @@ public class StageNewForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SCORE_CALCULATION, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
               .addComponent(stagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(0, 57, Short.MAX_VALUE)))
+            .addGap(0, 132, Short.MAX_VALUE)))
         .addContainerGap())
     );
     tabRaceLayout.setVerticalGroup(
@@ -689,6 +693,11 @@ public class StageNewForm extends javax.swing.JFrame {
       }
     });
 
+    jLabel14.setText("Count only best laps by order");
+    jLabel14.setToolTipText("0 - calculate all results");
+
+    COUNT_BEST_LAP_IN_ORDER.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "2", "3" }));
+
     javax.swing.GroupLayout panelQualificationResult2Layout = new javax.swing.GroupLayout(panelQualificationResult2);
     panelQualificationResult2.setLayout(panelQualificationResult2Layout);
     panelQualificationResult2Layout.setHorizontalGroup(
@@ -706,19 +715,24 @@ public class StageNewForm extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(PilotsForNextRound, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(53, 53, 53)
-            .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addGroup(panelQualificationResult2Layout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-              .addGroup(panelQualificationResult2Layout.createSequentialGroup()
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(COUNT_BEST_LAPS, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGap(0, 262, Short.MAX_VALUE))
-          .addComponent(IS_LB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap())
+            .addGap(53, 53, 53))
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
+            .addComponent(IS_LB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
+            .addComponent(jLabel6)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(panelQualificationResult2Layout.createSequentialGroup()
+            .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel14)
+              .addComponent(jLabel13))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(COUNT_BEST_LAPS, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(COUNT_BEST_LAP_IN_ORDER, 0, 63, Short.MAX_VALUE))))
+        .addGap(274, 274, 274))
     );
     panelQualificationResult2Layout.setVerticalGroup(
       panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -736,8 +750,12 @@ public class StageNewForm extends javax.swing.JFrame {
           .addComponent(jLabel13)
           .addComponent(COUNT_BEST_LAPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(IS_LB)
-        .addContainerGap(56, Short.MAX_VALUE))
+        .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(IS_LB)
+          .addGroup(panelQualificationResult2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(jLabel14)
+            .addComponent(COUNT_BEST_LAP_IN_ORDER, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addContainerGap(53, Short.MAX_VALUE))
     );
 
     javax.swing.GroupLayout panelQualificationResultLayout = new javax.swing.GroupLayout(panelQualificationResult);
@@ -773,7 +791,7 @@ public class StageNewForm extends javax.swing.JFrame {
           .addGroup(tabRaceReportLayout.createSequentialGroup()
             .addComponent(jLabel9)
             .addGap(0, 0, Short.MAX_VALUE))
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE))
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE))
         .addContainerGap())
     );
     tabRaceReportLayout.setVerticalGroup(
@@ -938,7 +956,12 @@ public class StageNewForm extends javax.swing.JFrame {
       try {
         stage.COUNT_BEST_LAPS = Integer.parseInt(COUNT_BEST_LAPS.getSelectedItem().toString());
       } catch (Exception e) {
-      }      
+      }  
+      
+      try {
+        stage.COUNT_BEST_LAPS_IN_ORDER = Integer.parseInt(COUNT_BEST_LAP_IN_ORDER.getSelectedItem().toString());
+      } catch (Exception e) {
+      }  
       
       stage.FLAG_BY_PYLOT_TYPE = jchGroupByPilotType.isSelected() ? 1 : 0;
       stage.IS_LB = IS_LB.isSelected() ? 1 : 0;
@@ -1296,6 +1319,7 @@ public class StageNewForm extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JComboBox<String> COUNT_BEST_LAPS;
+  private javax.swing.JComboBox<String> COUNT_BEST_LAP_IN_ORDER;
   private javax.swing.JLabel Caption;
   private javax.swing.JCheckBox IS_LB;
   private javax.swing.JLabel LapsCaption;
@@ -1310,6 +1334,7 @@ public class StageNewForm extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel13;
+  private javax.swing.JLabel jLabel14;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

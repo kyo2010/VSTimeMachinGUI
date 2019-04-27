@@ -55,8 +55,16 @@ public class InfoForm extends /*javax.swing.JFrame*/ JDialog {
     this.caption = caption;    
     lastIfoFrom = this;
     if (mainForm != null) {
-      com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
-      com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f); 
+      //com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
+      //com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f); 
+      
+      try{
+        com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
+        com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75f);    
+      }catch(UnsupportedOperationException ex){
+        System.out.println("Transperent windows is not supported");
+      }
+      
       mainForm.setFormOnCenter(this);
     }else{
        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

@@ -122,13 +122,17 @@ public class StageTab extends javax.swing.JPanel {
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
   public boolean isOneTable = false;
+  
+  public int countOfColumns = -1;
+  public boolean newColumnHasBeenAdded = false;
 
   public void fireStructChange() {
     //System.out.println("fireStructChange");
     //jTable.setModel(stageTableAdapter);
     jTable.tableChanged(null);
     MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();
-    for (int i = 0; i < stageTableAdapter.getColumnCount(); i++) {
+    countOfColumns = stageTableAdapter.getColumnCount();
+    for (int i = 0; i < countOfColumns; i++) {
       jTable.getColumnModel().getColumn(i).setMinWidth(stageTableAdapter.getMinWidth(i));
       jTable.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
     }
@@ -137,8 +141,10 @@ public class StageTab extends javax.swing.JPanel {
   public void refreshTable() {
     try {
       jTable.setRowHeight(30);
-      //jTable.notifyAll();
-      //jTable.updateUI();
+      /*if (newColumnHasBeenAdded){
+        fireStructChange();
+        newColumnHasBeenAdded = false;
+      } */ 
     } catch (Exception e) {
     }
   }
@@ -1261,7 +1267,7 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     }
-
+    
     refreshDataActionPerformedWitoutRecalulation();
 
     /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){

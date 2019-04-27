@@ -133,7 +133,9 @@ public class DataBaseStructure {
     new DBAddonStructure(5.5,"ALTER TABLE VS_STAGE ADD IS_LB INTEGER NOT NULL DEFAULT 0;"), 
     
     new DBAddonStructure(5.6,"ALTER TABLE VS_STAGE ADD SHOW_FOR_TV INTEGER NOT NULL DEFAULT 1;"),             
-    new DBAddonStructure(5.7,"ALTER TABLE VS_STAGE ADD IS_CREATED INTEGER NOT NULL DEFAULT 0;"),             
+    new DBAddonStructure(5.7,"ALTER TABLE VS_STAGE ADD IS_CREATED INTEGER NOT NULL DEFAULT 0;"),     
+    
+    new DBAddonStructure(5.8,"ALTER TABLE VS_STAGE ADD COUNT_BEST_LAPS_IN_ORDER INTEGER NOT NULL DEFAULT 0;"),                     
   };
 
   public static class DBAddonStructure {

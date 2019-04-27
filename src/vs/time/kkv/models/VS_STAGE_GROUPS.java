@@ -349,15 +349,16 @@ public class VS_STAGE_GROUPS implements Transferable {
           } else {
             laps = stage.laps_check_reg_id.get("" + GROUP_NUM).get("" + VS_PRIMARY_TRANS);
           }
-          LAPS_INTO_BD = stage.LAPS;
-          //LAPS_INTO_BD = 0;
+          //LAPS_INTO_BD = stage.LAPS;
+          LAPS_INTO_BD =  0;
           for (VS_RACE_LAP lap : laps.values()) {
             if (lap != null && LAPS_INTO_BD < lap.LAP) {
               LAPS_INTO_BD = lap.LAP;
             }
-          }
+          }         
+          
           result = LAPS_INTO_BD;
-
+                    
           for (int lap_num = 1; lap_num <= stage.LAPS; lap_num++) {
             //int lap = Integer.parseInt(lap_st);
             VS_RACE_LAP lap = laps.get("" + lap_num);
@@ -378,6 +379,29 @@ public class VS_STAGE_GROUPS implements Transferable {
               hasSkip = true;
             }
           }
+          
+          if (stage.COUNT_BEST_LAPS_IN_ORDER>0){ 
+            
+            if (this.PILOT.equalsIgnoreCase("Zapsha")){
+              int y = 0;
+            }
+            
+            long best_laps_in_order_race_time = MAX_TIME;
+            for (int lap_num = 1; lap_num <= laps.size()-stage.COUNT_BEST_LAPS_IN_ORDER; lap_num++) {
+              try{
+                long tmp_max_laps_time = 0;
+                for (int i=0 ; i<stage.COUNT_BEST_LAPS_IN_ORDER; i++){
+                  VS_RACE_LAP lap = laps.get("" + (lap_num+i) );
+                  long lap_time = lap.TRANSPONDER_TIME;
+                  if (lap_time==0) lap_time=MAX_TIME;
+                  tmp_max_laps_time += lap_time;                  
+                }
+                if (tmp_max_laps_time<best_laps_in_order_race_time)  best_laps_in_order_race_time=tmp_max_laps_time; 
+              }catch(Exception e){}
+            } 
+            RACE_TIME = best_laps_in_order_race_time;
+            _RACE_TIME = best_laps_in_order_race_time; 
+           }
         } catch (Exception ein) {
         }
         if (LAPS > 0) {
@@ -395,9 +419,12 @@ public class VS_STAGE_GROUPS implements Transferable {
             BEST_LAP = MAX_TIME;
           }
           if (!all_laps_is_exist) {
-            RACE_TIME = MAX_TIME;
+            if (stage.COUNT_BEST_LAPS_IN_ORDER==0 || RACE_TIME==0){
+              RACE_TIME = MAX_TIME;
+            }  
           }
-        }
+        }                
+        
         IS_RECALULATED = 1;
         //System.out.println("VS_STAGE_GROUPS - recal lap");
         //System.out.println(GID+" "+PILOT+" "+stage.CAPTION+" "+RACE_TIME);
