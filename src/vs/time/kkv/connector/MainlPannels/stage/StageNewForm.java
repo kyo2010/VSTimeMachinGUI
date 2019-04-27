@@ -224,7 +224,8 @@ public class StageNewForm extends javax.swing.JFrame {
       COUNT_BEST_LAPS.setSelectedIndex(0);
     }
     
-    COUNT_BEST_LAP_IN_ORDER.setSelectedItem(""+stage.COUNT_BEST_LAPS_IN_ORDER);
+    COUNT_BEST_LAP_IN_ORDER.setSelectedItem(""+(stage==null?0:stage.COUNT_BEST_LAPS_IN_ORDER));
+    
     
     jRaceType.setModel(new javax.swing.DefaultComboBoxModel(GroupFactory.getAllRacesTypes( jcbStageType.getSelectedIndex() )));
     if (stage!=null){
