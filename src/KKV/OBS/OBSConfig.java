@@ -28,6 +28,19 @@ public class OBSConfig {
   public String OBS_SCENE_INVATE = "";
   public boolean useDisconnect = true;
   public boolean sendInfo = true;
+  
+  public static class StageInfo{
+    public String info = "";
+    public String stageName = "";
+    public String groupName = "";
+
+    public StageInfo(String info, String stageName, String groupName) {
+      this.info = info;
+      this.stageName = stageName;
+      this.groupName = groupName;
+    }
+        
+  };
 
   Connection con;
 
@@ -51,7 +64,7 @@ public class OBSConfig {
   public class Task extends Thread {
 
     int TASK_ID = 0;
-    String TASK_INFO = "";
+    StageInfo TASK_INFO = null;
     static final int TASK_FOR_RACE = 1;
     static final int TASK_FOR_FINISH = 2;
     static final int TASK_FOR_INVATE = 3;
@@ -59,15 +72,15 @@ public class OBSConfig {
     String gate = "";
     VS_REGISTRATION usr_reg = null;
 
-    public Task(int TASK_ID, String TASK_INFO) {
+    public Task(int TASK_ID, StageInfo info) {
       this.TASK_ID = TASK_ID;
-      this.TASK_INFO = TASK_INFO;
+      this.TASK_INFO = info;
       start();
     }
 
-    public Task(int TASK_ID, String TASK_INFO, String gate, VS_REGISTRATION usr_reg) {
+    public Task(int TASK_ID, StageInfo info, String gate, VS_REGISTRATION usr_reg) {
       this.TASK_ID = TASK_ID;
-      this.TASK_INFO = TASK_INFO;
+      this.TASK_INFO = info;
       this.gate = gate;
       this.usr_reg = usr_reg;
       start();
@@ -102,23 +115,23 @@ public class OBSConfig {
     VS_SETTING.setParam(con, "OBS_GATE_TIMOUT", "" + OBS_GATE_TIMOUT);
   }
 
-  public void changeSceneForRace(String info) {
+  public void changeSceneForRace(StageInfo info) {
     new Task(Task.TASK_FOR_RACE, info);
   }
 
-  public void changeSceneForFinish(String info) {
+  public void changeSceneForFinish(StageInfo info) {
     new Task(Task.TASK_FOR_FINISH, info);
   }
 
-  public void changeSceneForInvate(String info) {
+  public void changeSceneForInvate(StageInfo info) {
     new Task(Task.TASK_FOR_INVATE, info);
   }
 
-  public void changeSceneForGate(String info, String gate, VS_REGISTRATION usr_reg) {
+  public void changeSceneForGate(StageInfo info, String gate, VS_REGISTRATION usr_reg) {
     new Task(Task.TASK_FOR_GATE, info);
   }
 
-  public void __changeSceneForRace(String info) {
+  public void __changeSceneForRace(StageInfo info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -133,7 +146,9 @@ public class OBSConfig {
           obsSocket.api.StartRecording();
         }
         if (sendInfo) {
-          obsSocket.api.SetText("info", info, func);
+          obsSocket.api.SetText("info", info.info, func);
+          obsSocket.api.SetText("infoStage", info.stageName, func);
+          obsSocket.api.SetText("infoGroup", info.groupName, func);
         }
         if (useDisconnect) {
           obsSocket.disconnect();
@@ -143,7 +158,7 @@ public class OBSConfig {
     }
   }
 
-  public void __changeSceneForFinish(String info) {
+  public void __changeSceneForFinish(StageInfo info) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -158,7 +173,9 @@ public class OBSConfig {
           obsSocket.api.SetCurrentScene(OBS_SCENE_FINISH, null);
         }
         if (sendInfo) {
-          obsSocket.api.SetText("info", info, func);
+          obsSocket.api.SetText("info", info.info, func);
+          obsSocket.api.SetText("infoStage", info.stageName, func);
+          obsSocket.api.SetText("infoGroup", info.groupName, func);
         }
         if (useDisconnect) {
           obsSocket.disconnect();
@@ -168,7 +185,7 @@ public class OBSConfig {
     }
   }
 
-  public void __changeSceneForInvate(String info) {
+  public void __changeSceneForInvate(StageInfo info ) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -180,7 +197,9 @@ public class OBSConfig {
           obsSocket.api.SetCurrentScene(OBS_SCENE_INVATE, null);
         }
         if (sendInfo) {
-          obsSocket.api.SetText("info", info, func);
+          obsSocket.api.SetText("info", info.info, func);
+          obsSocket.api.SetText("infoStage", info.stageName, func);
+          obsSocket.api.SetText("infoGroup", info.groupName, func);
         }
         if (useDisconnect) {
           obsSocket.disconnect();
@@ -193,7 +212,7 @@ public class OBSConfig {
 
   long last_scene_time = 0;
 
-  public void __changeSceneForGate(String info, Task task) {
+  public void __changeSceneForGate(StageInfo info, Task task) {
     if (!OBS_USE_WEB_SOCKET) {
       return;
     }
@@ -217,7 +236,9 @@ public class OBSConfig {
         obsSocket.api.SetText("gate_info", gate_info, func);
       }
       if (sendInfo) {
-        obsSocket.api.SetText("info", info, func);
+        obsSocket.api.SetText("info", info.info, func);
+        obsSocket.api.SetText("infoStage", info.stageName, func);
+        obsSocket.api.SetText("infoGroup", info.groupName, func);
       }
       if (useDisconnect) {
         obsSocket.disconnect();

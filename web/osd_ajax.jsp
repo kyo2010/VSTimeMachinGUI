@@ -13,7 +13,7 @@
       <%-- Teamplate for PILOT OSD --%>
       
         <%=((index%2==0)?"<div class='row'>":" ") %> 
-        <div class="channel">
+        <div class="channel animated1 fadeInRightBig1">
             <% if (pilot!=null) { %>
             <div class="channel-number"><%=(pilot!=null?pilot.CHANNEL:"")%></div>
             <div class="channel-info">               
@@ -23,13 +23,13 @@
                        </div>
                     <% } %>                
                 <div class="channel-label" style="background-color: <%=(pilot!=null?pilot.getWebColor():"")%>;"></div>
-                <div class="channel-name"><%=(pilot!=null?pilot.getFullUserName():"")%></div>
+                <div class="channel-name"><%=(pilot!=null?pilot.getFIO():"")%></div>
                 <div class="channel-results">
                     <div class="table">
                         <div class="table-row">
                             <div class="table-cell table-header"><%=wc.L("Laps")%> </div>
-                            <div class="table-cell table-header"><%=wc.L("Best Lap")%> </div>
-                            <div class="table-cell table-header"><%=wc.L("Race Time")%> </div>
+                            <div class="table-cell table-header"><%=wc.L("Best")%> </div>
+                            <div class="table-cell table-header"><%=wc.L("Time")%> </div>
                         </div>
                         <div class="table-row">
                             <div class="table-cell"><%=pilot!=null?pilot.LAPS:0 %></div>

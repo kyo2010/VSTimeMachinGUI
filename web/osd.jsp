@@ -8,7 +8,8 @@
   <!--<meta http-equiv="refresh" content="3"> -->
   <link rel="stylesheet" href="css/w3.css"/>
   <link rel="stylesheet" href="css/main.css"/>
-  <link rel="stylesheet" href="css/osd.css?8"/>
+  <link rel="stylesheet" href="css/osd.css?9"/>
+  <link rel="stylesheet" type="text/css" href="css/animate.css">
   <title>OSD</title>  
 </head>
 <body background="images/transparent.png"> 

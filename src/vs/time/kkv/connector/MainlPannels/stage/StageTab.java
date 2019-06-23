@@ -7,6 +7,7 @@ package vs.time.kkv.connector.MainlPannels.stage;
 
 import KKV.Export2excel.OutReport;
 import KKV.Export2excel.XLSMaker;
+import KKV.OBS.OBSConfig;
 import KKV.Utils.JDEDate;
 import KKV.Utils.Tools;
 import KKV.Utils.UserException;
@@ -683,7 +684,9 @@ public class StageTab extends javax.swing.JPanel {
     iveSaid10seckudForRaceOver = false;
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
-    mainForm.obsConfig.changeSceneForFinish(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);
+    mainForm.obsConfig.changeSceneForFinish(
+        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION,stage.CAPTION, "" )
+    );
 
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
       user.IS_FINISHED = 1;
@@ -2773,7 +2776,10 @@ public class StageTab extends javax.swing.JPanel {
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
-      mainForm.obsConfig.changeSceneForRace(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " - " + mainForm.getLocaleString("Group") + td.group.GROUP_NUM);
+      mainForm.obsConfig.changeSceneForRace(              
+        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " - " + mainForm.getLocaleString("Group") + td.group.GROUP_NUM,
+           stage.CAPTION, mainForm.getLocaleString("Group") + td.group.GROUP_NUM )    
+      );
       mainForm.activeGroup = td.group;
       refreshTable();
       mainForm.lastRaceGroup = mainForm.activeGroup;
@@ -2970,7 +2976,11 @@ public class StageTab extends javax.swing.JPanel {
 
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
-      mainForm.obsConfig.changeSceneForInvate(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION);
+      mainForm.obsConfig.changeSceneForInvate(
+        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION,
+          stage.CAPTION,
+          mainForm.getLocaleString("Group") + GROUP_NUM                
+        ));
       mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {

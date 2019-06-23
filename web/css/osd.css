@@ -93,9 +93,9 @@ body {
 .channel-photo {
     position: absolute;
     left: 0vh;
-    top: -16vh;
-    width: 24vh;
-    height: 24vh;
+    top: -10vh;
+    width: 18vh;
+    height: 18vh;
     overflow: hidden;
     border-radius: 50%;
     border: 0.5vh solid #fff;
@@ -105,7 +105,7 @@ body {
     width: 8vh;
 }
 .channel-photo ~ .channel-name {
-    padding-left: 17vh;
+    padding-left: 12vh;
 }
 .channel-photo img {
     display: inline-block;
@@ -114,7 +114,7 @@ body {
 }
 .channel-name {
     color: #fff;
-    font-size: 2.6vh;
+    font-size: 2.5vh;
     line-height: 1;
     font-style: italic;
 }
@@ -293,4 +293,55 @@ section {
 .cellPilotName2{
   text-align:left;
 
+}
+
+
+.gr-title {
+    padding: 1vh 1vh 1vh 3vh;
+    color: #fff;
+    font-size: 7vh;
+}
+
+.gr-table {
+    color: #fff;
+    font-size: 4vh;
+}
+
+.gr-cell {
+    padding: 6px;
+
+}
+
+.gr-header{
+  line-height: 1;
+  font-weight: bold; 
+  text-align : center;
+  justify-content: center;  
+      padding: 6px;
+
+}
+
+.gr-cell-center{
+  line-height: 1;
+  text-align : center;
+  justify-content: center;  
+      padding: 6px;
+
+}
+
+.gr-cell-center-place{
+  font-size: 7vh;
+  text-align : center;
+  justify-content: center;  
+      padding: 6px;
+
+}
+
+.pilot-photo{
+    overflow: hidden;
+    border-radius: 50%;
+    border: 0.5vh solid #fff;
+    z-index: 10;
+    width: 15vh;
+    height: 15vh;    
 }

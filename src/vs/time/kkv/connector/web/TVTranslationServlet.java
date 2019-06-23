@@ -122,6 +122,7 @@ public class TVTranslationServlet extends HttpServlet {
       boolean res = true;
       String htmlContent = "";
       String webPhoto = "";
+      String webPhoto2 = "";
       String webName = "";
       String webChannel = "";
       String webColor = "";
@@ -153,6 +154,8 @@ public class TVTranslationServlet extends HttpServlet {
           }
           if (reg != null && !reg.PHOTO.equalsIgnoreCase("") && new File(reg.PHOTO).exists() ) {
             webPhoto = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' width='" + pWidth + "px' class='w3-circle'>";
+            webPhoto2 = "<img src='" + reg.PHOTO.replaceAll("web/", "") + "' class='pilot-photo'>";
+
           } else {
 
           }
@@ -215,6 +218,7 @@ public class TVTranslationServlet extends HttpServlet {
             String html = Tools.getTextFromFile(path + File.separator + pilotTemplate);
             IVar varsPool1 = new VarPool();
             varsPool1.addChild(new StringVar("PILOT_PHOTO", webPhoto));
+            varsPool1.addChild(new StringVar("PILOT_PHOTO2", webPhoto2));
             varsPool1.addChild(new StringVar("PILOT_NAME", webName));
             varsPool1.addChild(new StringVar("CH", webChannel));
             varsPool1.addChild(new StringVar("COLOR", webColor));

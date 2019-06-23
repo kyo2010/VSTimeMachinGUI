@@ -75,12 +75,14 @@ public abstract class IGroupCreater {
   }
   
   // Recalculate Channels, The algoritm try to keep previous pilot channel
-  public void recalulateChannels(List<VS_STAGE_GROUPS> users, String STAGE_CHANNELS) {
-    String[] channels = STAGE_CHANNELS.split(";");
+  public void recalulateChannels(List<VS_STAGE_GROUPS> users, String STAGE_CHANNELS) throws UserException {
+    String[] channels = STAGE_CHANNELS.split(";");   
+    if (channels.length<2) throw new UserException("Error","Please setup stage channels");
     HashMap<Long, HashMap<String, Integer>> usingChannels = new HashMap();
 
     for (VS_STAGE_GROUPS usr : users) {
       HashMap<String, Integer> groupChannels = usingChannels.get(usr.GROUP_NUM);
+      if (usr.CHANNEL==null) usr.CHANNEL = channels[0];
       if (groupChannels == null) {
         groupChannels = new HashMap<String, Integer>();
         usingChannels.put(usr.GROUP_NUM, groupChannels);

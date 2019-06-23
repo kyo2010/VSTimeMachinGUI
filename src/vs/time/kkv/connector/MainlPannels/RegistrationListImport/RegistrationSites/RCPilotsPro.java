@@ -258,7 +258,6 @@ public class RCPilotsPro extends IRegSite {
 
     for (Integer groupNum : tab.stage.groups.keySet()) {
       List<VS_STAGE_GROUPS> users = tab.stage.groups.get(groupNum).users;
-
       List<VS_STAGE_GROUPS> sorted_users = new ArrayList<VS_STAGE_GROUPS>();
       for (VS_STAGE_GROUPS user : users) {
         sorted_users.add(user);
@@ -272,6 +271,9 @@ public class RCPilotsPro extends IRegSite {
         sorted_users = users;
       }
 
+      String stageCaption = tab.stage.CAPTION;
+      //if (tab.stage.STAGE_TYPE == MainForm.STAGE_RACE_REPORT) stageCaption = "Результат гонки";
+      
       if (users != null) {
         int POS = 1;
         int LAST_GROUP = -1;
@@ -289,6 +291,8 @@ public class RCPilotsPro extends IRegSite {
           }
           //jsonObj.put("PILOT_ID", reg.WEB_SID);
           jsonObj.put("PILOT_NAME", reg.VS_USER_NAME);
+          jsonObj.put("STAGE_TYPE", tab.stage.STAGE_TYPE /*RACE_TYPE*/);
+          
           jsonObj.put("PILOT_EMAIL", reg.E_MAIL);
           salt_vals += reg.VS_USER_NAME;
           JSONArray FLIGHTS = new JSONArray();
@@ -302,7 +306,8 @@ public class RCPilotsPro extends IRegSite {
             System.out.println(usr.GROUP_NUM + ":" + reg.VS_USER_NAME + ":" + POS+" score:"+usr.SCORE);
           }*/
           JSONObject flight = new JSONObject();
-          flight.put("NAME", tab.stage.CAPTION);
+          
+          flight.put("NAME", stageCaption);
           flight.put("PILOT_POSITION", /*usr.NUM_IN_GROUP*/ POS);
 
           flight.put("PILOT_LAP", usr.LAPS);
@@ -311,7 +316,7 @@ public class RCPilotsPro extends IRegSite {
           flight.put("RACE_LAPS", tab.stage.LAPS);
           flight.put("RACE_DIST", tab.mainForm.activeRace.LAP_DISTANCE);
 
-          salt_vals += tab.stage.CAPTION + POS + StageTab.getTimeIntervel(usr.BEST_LAP, ".",true) + usr.GROUP_NUM;
+          salt_vals += stageCaption + POS + StageTab.getTimeIntervel(usr.BEST_LAP, ".",true) + usr.GROUP_NUM;
           // $flight['NAME'].$flight['PILOT_POSITION'].$flight['BEST_LAP'].$flight['GROUP_NUM'];
 
           POS++;

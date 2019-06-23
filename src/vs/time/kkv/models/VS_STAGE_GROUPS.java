@@ -183,7 +183,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public String getFullUserName(){
     if (registration!=null) return registration.getFullUserName();
     return PILOT;
-  }
+  }   
   
   public String getFIO(){
     if (registration!=null) return registration.getFIO();
@@ -387,7 +387,7 @@ public class VS_STAGE_GROUPS implements Transferable {
             }
             
             long best_laps_in_order_race_time = MAX_TIME;
-            for (int lap_num = 1; lap_num <= laps.size()-stage.COUNT_BEST_LAPS_IN_ORDER; lap_num++) {
+            for (int lap_num = 1; lap_num <= laps.size()-stage.COUNT_BEST_LAPS_IN_ORDER+1; lap_num++) {
               try{
                 long tmp_max_laps_time = 0;
                 for (int i=0 ; i<stage.COUNT_BEST_LAPS_IN_ORDER; i++){

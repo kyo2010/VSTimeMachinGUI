@@ -189,6 +189,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     if (_mainForm != null) {
       _mainForm.log.writeFile(e);
     }
+    e.printStackTrace();
   }
 
   public static void _toLog(String msg) {
@@ -1568,14 +1569,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and (VS_TRANSPONDER=? OR VS_TRANS2=? OR VS_TRANS3=?)",
                   activeRace.RACE_ID, transponderID, transponderID, transponderID);          
           String info = "";
+          String stage = "";
+          String group = "";
           if (activeStage!=null){
-            info = getLocaleString("Stage") + " : " + activeStage;
+            info = getLocaleString("Stage") + " : " + activeStage.CAPTION;
+            stage = activeStage.CAPTION;
           }
           if (activeGroup!=null){
             info += " - " + getLocaleString("Group") + activeGroup.GROUP_NUM;
-          
+            group = getLocaleString("Group") + activeGroup.GROUP_NUM;          
           }      
-          obsConfig.changeSceneForGate(info, gateID, usr_reg);
+          obsConfig.changeSceneForGate( new OBSConfig.StageInfo(info, stage, group), gateID, usr_reg);
         } catch (Exception ein) {
         }
       }
