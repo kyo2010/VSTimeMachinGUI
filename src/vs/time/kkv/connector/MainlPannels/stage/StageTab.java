@@ -123,7 +123,7 @@ public class StageTab extends javax.swing.JPanel {
   public boolean pleasuUpdateTree = false;
   public boolean pleasuUpdateTable = false;
   public boolean isOneTable = false;
-  
+
   public int countOfColumns = -1;
   public boolean newColumnHasBeenAdded = false;
 
@@ -145,7 +145,7 @@ public class StageTab extends javax.swing.JPanel {
       /*if (newColumnHasBeenAdded){
         fireStructChange();
         newColumnHasBeenAdded = false;
-      } */ 
+      } */
     } catch (Exception e) {
     }
   }
@@ -685,7 +685,7 @@ public class StageTab extends javax.swing.JPanel {
     mainForm.unRaceTime = Calendar.getInstance().getTimeInMillis();
     raceTimer.stop();
     mainForm.obsConfig.changeSceneForFinish(
-        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION,stage.CAPTION, "" )
+            new OBSConfig.StageInfo(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION, stage.CAPTION, "")
     );
 
     for (VS_STAGE_GROUPS user : mainForm.activeGroup.users) {
@@ -1270,7 +1270,7 @@ public class StageTab extends javax.swing.JPanel {
         }
       }
     }
-    
+
     refreshDataActionPerformedWitoutRecalulation();
 
     /*if (stage.STAGE_TYPE==MainForm.STAGE_RACE){
@@ -1675,7 +1675,9 @@ public class StageTab extends javax.swing.JPanel {
         return;
       }
       if (site.isSuportedToWebUpload()) {
+        try{
         site.uploadToWebSystem(null, this, false, true);
+        }catch(Exception e){}
       } else {
         JOptionPane.showMessageDialog(null, "Update race data is not supported for site :" + site.REG_SITE_NAME);
       }
@@ -2100,7 +2102,7 @@ public class StageTab extends javax.swing.JPanel {
                   }
                 }
               }
-              try {
+              /*try {
                 recalulateChannels(new_groups);
               } catch (Exception e) {
                 e.printStackTrace();
@@ -2116,7 +2118,7 @@ public class StageTab extends javax.swing.JPanel {
                 recalulateChannels(groups_losers_new);
               } catch (Exception e) {
                 e.printStackTrace();
-              }
+              }*/
 
               long max_real_groups = 0;
               for (VS_STAGE_GROUPS usr : new_groups) {
@@ -2205,6 +2207,24 @@ public class StageTab extends javax.swing.JPanel {
                   }
 
                 }
+              }
+
+              try {
+                recalulateChannels(new_groups);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
+              try {
+                recalulateChannels(groups_losers);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
+              try {
+                recalulateChannels(groups_losers_new);
+              } catch (Exception e) {
+                e.printStackTrace();
               }
 
               // Saving to database
@@ -2776,9 +2796,9 @@ public class StageTab extends javax.swing.JPanel {
       } catch (UserException ex) {
         Logger.getLogger(StageTab.class.getName()).log(Level.SEVERE, null, ex);
       }
-      mainForm.obsConfig.changeSceneForRace(              
-        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " - " + mainForm.getLocaleString("Group") + td.group.GROUP_NUM,
-           stage.CAPTION, mainForm.getLocaleString("Group") + td.group.GROUP_NUM )    
+      mainForm.obsConfig.changeSceneForRace(
+              new OBSConfig.StageInfo(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION + " - " + mainForm.getLocaleString("Group") + td.group.GROUP_NUM,
+                      stage.CAPTION, mainForm.getLocaleString("Group") + td.group.GROUP_NUM)
       );
       mainForm.activeGroup = td.group;
       refreshTable();
@@ -2949,7 +2969,7 @@ public class StageTab extends javax.swing.JPanel {
   public String invateAction(long GROUP_NUM, boolean showDialog) {
     //final DroneConnector vsTimeConnector = mainForm.getMainDroneConnector();
     mainForm.speaker.clearVoiceStack();
-    
+
     String message = "";
     StageTableData td = getGroupByNum(GROUP_NUM);
     if (td == null) {
@@ -2977,10 +2997,10 @@ public class StageTab extends javax.swing.JPanel {
     List<String> pilots = new ArrayList<String>();
     if (td != null && td.group != null && td.group.users != null) {
       mainForm.obsConfig.changeSceneForInvate(
-        new OBSConfig.StageInfo( mainForm.getLocaleString("Stage") + " : " + stage.CAPTION,
-          stage.CAPTION,
-          mainForm.getLocaleString("Group") + GROUP_NUM                
-        ));
+              new OBSConfig.StageInfo(mainForm.getLocaleString("Stage") + " : " + stage.CAPTION,
+                      stage.CAPTION,
+                      mainForm.getLocaleString("Group") + GROUP_NUM
+              ));
       mainForm.lap_log.writeFile("---==  Invate  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + td.group.GROUP_NUM);
       mainForm.lastInvateGroup = td.group;
       for (VS_STAGE_GROUPS user : td.group.users) {

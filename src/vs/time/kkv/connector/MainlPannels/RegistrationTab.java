@@ -169,55 +169,57 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
                 group = td.group;
               }
             }
-            if (tab.stage.COUNT_PILOTS_IN_GROUP!=0 && group.users.size()>=tab.stage.COUNT_PILOTS_IN_GROUP){
-              pleaseAddNewGroup = true; 
+            if (tab.stage.COUNT_PILOTS_IN_GROUP != 0 && group.users.size() >= tab.stage.COUNT_PILOTS_IN_GROUP) {
+              pleaseAddNewGroup = true;
             }
-            if (group ==null) return;
-            if (!pleaseAddNewGroup){
-              for (VS_STAGE_GROUPS user : group.users){
-                if (user.REG_ID==regInfo.ID){
-                   JOptionPane.showMessageDialog(mainForm, "Pilot '"+regInfo.getFullUserName()+"' was included into Group №"+group.GROUP_NUM, "Error!", JOptionPane.INFORMATION_MESSAGE);
-                   return;
+            if (group == null) {
+              return;
+            }
+            if (!pleaseAddNewGroup) {
+              for (VS_STAGE_GROUPS user : group.users) {
+                if (user.REG_ID == regInfo.ID) {
+                  JOptionPane.showMessageDialog(mainForm, "Pilot '" + regInfo.getFullUserName() + "' was included into Group №" + group.GROUP_NUM, "Error!", JOptionPane.INFORMATION_MESSAGE);
+                  return;
                 }
               }
             }
-            
-            int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to add '" + regInfo.getFullUserName() + "' to '" + tab.stage.CAPTION + "' stage Group №"+(pleaseAddNewGroup?group.GROUP_NUM+1:group.GROUP_NUM)+" ?", "Please confirm", JOptionPane.YES_NO_OPTION);
+
+            int res = JOptionPane.showConfirmDialog(RegistrationTab.this, "Do you want to add '" + regInfo.getFullUserName() + "' to '" + tab.stage.CAPTION + "' stage Group №" + (pleaseAddNewGroup ? group.GROUP_NUM + 1 : group.GROUP_NUM) + " ?", "Please confirm", JOptionPane.YES_NO_OPTION);
             if (res == JOptionPane.YES_OPTION) {
               VS_STAGE_GROUPS pilot = new VS_STAGE_GROUPS();
-              pilot.GROUP_NUM = (pleaseAddNewGroup?group.GROUP_NUM+1:group.GROUP_NUM);
+              pilot.GROUP_NUM = (pleaseAddNewGroup ? group.GROUP_NUM + 1 : group.GROUP_NUM);
               pilot.NUM_IN_GROUP = 1;
-              String[] channels =  tab.stage.CHANNELS.split(";");
-              pilot.CHANNEL = (channels!=null && channels.length>0)?channels[0]:"";              
-              if (!pleaseAddNewGroup){
+              String[] channels = tab.stage.CHANNELS.split(";");
+              pilot.CHANNEL = (channels != null && channels.length > 0) ? channels[0] : "";
+              if (!pleaseAddNewGroup) {
                 pilot.NUM_IN_GROUP = group.users.size();
-                if (channels!=null){
-                  for (String ch : channels){
+                if (channels != null) {
+                  for (String ch : channels) {
                     boolean isUsed = false;
-                    for (VS_STAGE_GROUPS p : group.users){
-                      if (p.CHANNEL.equalsIgnoreCase(ch)){
+                    for (VS_STAGE_GROUPS p : group.users) {
+                      if (p.CHANNEL.equalsIgnoreCase(ch)) {
                         isUsed = true;
                         break;
                       }
                     }
-                    if (!isUsed){
+                    if (!isUsed) {
                       pilot.CHANNEL = ch;
                       break;
                     }
-                  } 
+                  }
                 }
               }
               pilot.REG_ID = regInfo.ID;
               pilot.PILOT = regInfo.getFullUserName();
               pilot.VS_PRIMARY_TRANS = regInfo.VS_TRANS1;
               pilot.STAGE_ID = tab.stage.ID;
-              try{
+              try {
                 VS_STAGE_GROUPS.dbControl.insert(mainForm.con, pilot);
                 tab.refreshButton();
-              }catch(Exception ex){
+              } catch (Exception ex) {
                 mainForm.toLog(ex);
-              }  
-            }            
+              }
+            }
           }
         }
       }
@@ -679,9 +681,12 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
       return;
     }
 
-    site.uploadToWebSystem(this, null, true, true);
-    for (StageTab stageTab : mainForm.stageTabs) {
-      site.uploadToWebSystem(null, stageTab, false, true);
+    try {
+      site.uploadToWebSystem(this, null, true, true);
+      for (StageTab stageTab : mainForm.stageTabs) {
+        site.uploadToWebSystem(null, stageTab, false, true);
+      }
+    } catch (Exception e) {
     }
   }//GEN-LAST:event_butUploadToSiteActionPerformed
 

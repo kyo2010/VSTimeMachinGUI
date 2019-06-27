@@ -22,6 +22,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.IOUtils;
@@ -183,7 +185,7 @@ public class FPVSport extends IRegSite {
   }
 
   @Override
-  public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) {
+  public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) throws UserException{
 
     String jsonFileName = "";
 
@@ -451,8 +453,11 @@ public class FPVSport extends IRegSite {
         }
       } catch (Exception e) {
         if (showMessages) {
-          JOptionPane.showMessageDialog(null, "Transmission is error : " + e.getMessage());
+          JOptionPane.showMessageDialog(null, "Transmission is error : " + e.getMessage());          
         }
+       
+          throw new UserException("Error","Uploading error");
+       
       }
     }
     return false;

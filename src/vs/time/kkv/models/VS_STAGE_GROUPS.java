@@ -70,7 +70,7 @@ public class VS_STAGE_GROUPS implements Transferable {
   public long GROUP_FINAL = 0;
   public long GROUP_HALF_FINAL = 0;
   public long GROUP_QUART_FINAL = 0;
-  public int GROUP_TYPE = 0;
+  public int GROUP_TYPE = 0;  // Winner=0, Loser=1
   public int IS_PANDING = 0;
   public int MAIN_TIME_IS_OVER = 0;
   public boolean hasBeenFlightLastLap = false;  

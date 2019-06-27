@@ -54,7 +54,7 @@ public abstract class IRegSite {
     return false;
   }
 
-  public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) {
+  public boolean uploadToWebSystem(RegistrationTab regTab, StageTab tab, boolean removeAllStages, boolean showMessages) throws UserException {
     return false;
   }
 

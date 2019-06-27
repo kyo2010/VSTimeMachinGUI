@@ -118,6 +118,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").setIsEditing(true).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").setIsEditing(true).hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSER, "Loser", 50).setCellID("INT").setIsEditing(true).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 100).setIsEditing(true).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 100).setCellID("TXT_RIGHT"),
@@ -158,8 +159,8 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     new STAGE_COLUMN(STAGE_COLUMN.CID_PILOT_TYPE, "Type", 150).hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_LAPS, "Laps", 50).setCellID("INT").setIsEditing(true),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SCORE, "Score", 50).setCellID("INT"),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Win", 50).setCellID("INT").hideOnWeb(),
-    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Loss", 50).setCellID("INT").hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_WIN, "Wins", 50).setCellID("INT").hideOnWeb(),
+    new STAGE_COLUMN(STAGE_COLUMN.CID_LOSS, "Losses", 50).setCellID("INT").hideOnWeb(),
     new STAGE_COLUMN(STAGE_COLUMN.CID_TIME, "Race Time", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_BEST_LAP, "Best Lap", 90).setCellID("TXT_RIGHT"),
     new STAGE_COLUMN(STAGE_COLUMN.CID_SPEED, "Speed", 100).setCellID("TXT_RIGHT"),
@@ -925,6 +926,10 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
         if (sc != null && sc.ID == STAGE_COLUMN.CID_WINS) {
           return td.pilot.wins;
         }
+        
+        if (sc != null && sc.ID ==  STAGE_COLUMN.CID_LOSER) {
+          return td.pilot.GROUP_TYPE;
+        }               
 
         if (sc != null && sc.ID == STAGE_COLUMN.CID_REGION) {
           try {
@@ -1207,6 +1212,20 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       } catch (Exception e) {
       }
     }
+    
+    if (sc != null && sc.ID == STAGE_COLUMN.CID_LOSER && !td.isGrpup) {
+      try {
+        int res = 0;
+        try {
+          res = Integer.parseInt("" + value);
+        } catch (Exception e) {
+        }
+        td.pilot.GROUP_TYPE = res >= 1 ? 1 : 0;
+        VS_STAGE_GROUPS.dbControl.update(tab.mainForm.con, td.pilot);
+      } catch (Exception e) {
+      }
+    }
+    
     if (sc != null && sc.ID == STAGE_COLUMN.CID_LOSS && !td.isGrpup) {
       try {
         int res = 0;

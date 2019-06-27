@@ -668,13 +668,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     jMenuItem6 = new javax.swing.JMenuItem();
     jMenuItem9 = new javax.swing.JMenuItem();
     updater = new javax.swing.JMenuItem();
-    mConsole = new javax.swing.JMenuItem(){
-      @Override
-      public KeyStroke getAccelerator()
-      {
-        return KeyStroke.getKeyStroke(KeyEvent.VK_C, 0);
-      }
-    };
+    mConsole = new javax.swing.JMenuItem();
     jMenu1 = new javax.swing.JMenu();
     menuWLANSetting = new javax.swing.JMenuItem();
     menuConnect = new javax.swing.JMenuItem();
@@ -941,6 +935,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(updater);
 
+    mConsole.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
     mConsole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     mConsole.setText("VS Team Console");
     mConsole.addActionListener(new java.awt.event.ActionListener() {
@@ -1281,7 +1276,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void mConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mConsoleActionPerformed
     // TODO add your handling code here:
-    VSTeamConsole.init(this).setVisible(true);
+    //if (VSTeamConsole.isOpened){
+    //  VSTeamConsole.init(this).setVisible(false);
+    //}else{
+      VSTeamConsole.init(this).setVisible(true);
+    //}  
   }//GEN-LAST:event_mConsoleActionPerformed
 
   private void bRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshActionPerformed

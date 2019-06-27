@@ -37,7 +37,8 @@ import vs.time.kkv.connector.MainForm;
     public static final int CID_REG_ID = 200;   
     public static final int CID_TRANS  = 210;
     public static final int CID_SPEED =  220;
-    public static final int CID_WINS =  230;
+    public static final int CID_WINS  =  230;
+    public static final int CID_LOSER =  240;
     
     public String caption;
     public String captionOriginal;
