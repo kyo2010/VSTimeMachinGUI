@@ -91,6 +91,7 @@ import vs.time.kkv.connector.connection.buttonsConnector.ButtonComPortConnector;
 import vs.time.kkv.connector.connection.com.ConnectionCOMPort;
 import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.models.DataBaseStructure;
+import vs.time.kkv.models.TestCases;
 import vs.time.kkv.models.VS_BANDS;
 import vs.time.kkv.models.VS_STAGE;
 import vs.time.kkv.models.VS_RACE;
@@ -114,22 +115,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public void setMainFormListener(IMainFormListener mainFormListener) {
     this.mainFormListener = mainFormListener;
-  }
-  
-  
-
+  }    
   public boolean SAY_SECONDS_FOR_LAP = false;
-
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
   public static final int STAGE_QUALIFICATION_RESULT = 2;
   public static final int STAGE_RACE = 3;
   public static final int STAGE_RACE_RESULT = 4;
   public static final int STAGE_RACE_REPORT = 5;
-
   public final static String DEVICE_VS_TIME_MACHINE = "VS Time Machine";
   public final static String DEVICE_ARDUINO_CONTROL = "Manual checker";
-
   public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL};
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
@@ -414,7 +409,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //ports.addItem("WLAN");
     //new ArrayList<String>({ new String[]{"m1","m2"});
     try {
-      con = DBModelTest.getConnectionForTest();
+      con = DBModelTest.getConnection();
 
       // check for update
       double db_version = VS_SETTING.getParam(con, "DataBaseVersion", 1.0);
@@ -692,6 +687,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     miRaceList = new javax.swing.JMenuItem();
     miAddNewRace = new javax.swing.JMenuItem();
     jmAddStageToRace = new javax.swing.JMenuItem();
+    jMenu4 = new javax.swing.JMenu();
+    jMenuItem11 = new javax.swing.JMenuItem();
+    jMenuItem12 = new javax.swing.JMenuItem();
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -1063,6 +1061,24 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     jMenuBar1.add(menuRace);
 
+    jMenu4.setText("Tests");
+    jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+    jMenuItem11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem11.setText("Add Race to Test");
+    jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem11ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem11);
+
+    jMenuItem12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem12.setText("Run Tests");
+    jMenu4.add(jMenuItem12);
+
+    jMenuBar1.add(jMenu4);
+
     setJMenuBar(jMenuBar1);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1376,6 +1392,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
      openUrl("stage.htm");
   }//GEN-LAST:event_jMenuItem10ActionPerformed
 
+  private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+    // TODO add your handling code here:
+    new TestCases(this).addRaceToTest();
+  }//GEN-LAST:event_jMenuItem11ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1424,56 +1445,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         mainForm.setVisible(true);
         //SplashForm.closeLastInfoFrom();
       }
-    });
-
-    /*TreeSet<String> massiv = new TreeSet<>();
-    String word = "�����";
-
-    // 60
-    int all_count = 0;
-    int skip_count = 0;
-    //int count_laterr = 4;
-    for (int k1 = 0; k1 < word.length(); k1++) {
-      for (int k2 = 0; k2 < word.length(); k2++) {
-        for (int k3 = 0; k3 < word.length(); k3++) {
-         // for (int k4 = 0; k4 < word.length(); k4++) {
-            //for (int k5 = 0; k5 < word.length(); k5++) {
-              String word2 = "" + word.charAt(k1) + word.charAt(k2) + word.charAt(k3);// + word.charAt(k4);// + word.charAt(k5);
-              boolean skip2 = false;
-              // skips 
-              String last_word = word;
-              for (int i = 0; i < word2.length(); i++) {
-                int pos = last_word.indexOf(word2.charAt(i));
-                if (pos >= 0) {
-                  if (pos == 0) {
-                    last_word = last_word.substring(pos + 1);
-                  } else {
-                    last_word = last_word.substring(0, pos) + last_word.substring(pos + 1);
-                  }
-                } else {
-                  skip2 = true;
-                  break;
-                }
-              }
-
-              if (!skip2) {
-                all_count++;
-                if (massiv.contains(word2)) {
-                  skip_count++;
-                  System.out.println("skip:" + word2);
-                } else {
-                  massiv.add(word2);
-                }
-              }
-            //}
-          //}
-        }
-      }
-
-    }
-    System.out.println("All words : " + all_count);
-    System.out.println("skips : " + skip_count);
-    System.out.println("Right answer : " + massiv.size());*/
+    });   
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1487,10 +1459,13 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
+  private javax.swing.JMenu jMenu4;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem10;
+  private javax.swing.JMenuItem jMenuItem11;
+  private javax.swing.JMenuItem jMenuItem12;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JMenuItem jMenuItem4;

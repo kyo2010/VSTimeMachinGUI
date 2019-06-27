@@ -50,7 +50,7 @@ public class DBModelTest {
   public static void main(String[] args) {
     Connection con = null;
     try {
-      con = DBModelTest.getConnectionForTest();
+      con = DBModelTest.getConnection();
             
       generateClazz(con,"VS_USERS","VS_USERS","vs.time.kkv.models");
     } catch (UserException ue) {
@@ -64,7 +64,23 @@ public class DBModelTest {
     }
   }
   
-  public static Connection getConnectionForTest() throws UserException{
+  public static Connection getConnection() throws UserException{
+    try{
+  //    COM.ibm.db2.jdbc.app.DB2Driver DB2Driver = new COM.ibm.db2.jdbc.app.DB2Driver();
+  //    DriverManager.registerDriver(DB2Driver);
+      
+      DriverManager.registerDriver(new JDBC());
+      File f = new File("");
+      String jdbc_connect_st = "jdbc:sqlite:"+f.getAbsolutePath()+"/"+DATABASE;
+      
+      Connection con = DriverManager.getConnection(jdbc_connect_st);
+      return con;
+    }catch(Exception e){
+      throw new UserException(e.getMessage(),Tools.traceError(e));
+    }  
+  }
+  
+  public static Connection getConnection(String databaseFileName) throws UserException{
     try{
   //    COM.ibm.db2.jdbc.app.DB2Driver DB2Driver = new COM.ibm.db2.jdbc.app.DB2Driver();
   //    DriverManager.registerDriver(DB2Driver);

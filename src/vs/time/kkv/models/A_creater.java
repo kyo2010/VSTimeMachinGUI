@@ -18,7 +18,7 @@ public class A_creater {
   public static void main(String[] args){
     Connection con = null;
     try {
-      con = DBModelTest.getConnectionForTest();
+      con = DBModelTest.getConnection();
             
       //generateClazz(con,"VS_USERS","VS_USERS","vs.time.kkv.models");
       //generateClazz(con,"VS_RACE","VS_RACE","vs.time.kkv.models");
