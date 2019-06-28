@@ -461,7 +461,7 @@ public class RaceControlForm extends javax.swing.JFrame {
     // TODO add your handling code here:
     //mainForm.setActiveRace(race);
     setVisible(false);
-    RaceList.init(mainForm).selectRace();
+    RaceList.init(mainForm).selectRace(race);
   }//GEN-LAST:event_butSelectActionPerformed
 
   private void jcIgnoreFirstLapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcIgnoreFirstLapActionPerformed

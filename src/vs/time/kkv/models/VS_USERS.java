@@ -11,17 +11,17 @@ public class VS_USERS {
   
   public int ID = -1;
   //public int VSID;   //  NOT_DETECTED
-  public int VSID1;   //  NOT_DETECTED
-  public int VSID2;   //  NOT_DETECTED
-  public int VSID3;   //  NOT_DETECTED
+  public int VSID1  =0;   //  NOT_DETECTED
+  public int VSID2  =0;   //  NOT_DETECTED
+  public int VSID3  =0;   //  NOT_DETECTED
   public String VS_NAME;   //  NOT_DETECTED
   public String VS_NAME_UPPER;   //  NOT_DETECTED
   public int VS_SOUND_EFFECT = 1;   //  NOT_DETECTED
-  public String FIRST_NAME;   //  NOT_DETECTED
-  public String SECOND_NAME;   //  NOT_DETECTED
-  public String WEB_SYSTEM;
-  public String WEB_SID;  
-  public String PHOTO;
+  public String FIRST_NAME="";   //  NOT_DETECTED
+  public String SECOND_NAME="";   //  NOT_DETECTED
+  public String WEB_SYSTEM = "manual";
+  public String WEB_SID = "";  
+  public String PHOTO="";
   public String REGION = "";
   public String FAI = "";
   

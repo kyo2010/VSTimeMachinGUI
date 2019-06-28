@@ -37,17 +37,24 @@ public class RaceList extends javax.swing.JFrame {
   public RaceListModelTable raceModelTable = null;
   public JPopupMenu popup = null;
 
+  public void loadData() {
+    raceModelTable = new RaceListModelTable(mainForm);
+    jtUsers.setModel(raceModelTable);
+    jtUsers.setDefaultRenderer(Object.class, raceModelTable);
+    jtUsers.getColumnModel().getColumn(2).setMinWidth(300);
+
+  }
+
+  ;
+  
   /**
    * Creates new form UserList
    */
   public RaceList(MainForm _mainForm) {
     initComponents();
     this.mainForm = _mainForm;
-    raceModelTable = new RaceListModelTable(mainForm);
-    jtUsers.setModel(raceModelTable);
-    jtUsers.setDefaultRenderer(Object.class,raceModelTable);
 
-    jtUsers.getColumnModel().getColumn(2).setMinWidth(300);
+    loadData();
 
     popup = new JPopupMenu();
     JMenuItem miSelectRace = new JMenuItem("Select Race");
@@ -101,14 +108,14 @@ public class RaceList extends javax.swing.JFrame {
           } else {
             //popup.setVisible(false);   
           }
-          if (e.getClickCount() == 2) {    
+          if (e.getClickCount() == 2) {
             JTable source = (JTable) e.getSource();
             int row = source.rowAtPoint(e.getPoint());
             int column = source.columnAtPoint(e.getPoint());
-          
+
             source.changeSelection(row, column, false, false);
             raceModelTable.showEditDialog(row);
-            
+
             //raceModelTable.showEditDialog(row);          
             //JOptionPane.showMessageDialog(UserList.this, "Rows:"+jtUsers.getSelectedRow(), "Error", JOptionPane.ERROR_MESSAGE);
           }
@@ -138,6 +145,9 @@ public class RaceList extends javax.swing.JFrame {
 
   public void selectRace() {
     int row = jtUsers.getSelectedRow();
+    if (row == -1) {
+      return;
+    }
     VS_RACE race = raceModelTable.getRace(row);
     try {
       if (race != null) {
@@ -149,7 +159,23 @@ public class RaceList extends javax.swing.JFrame {
       mainForm.toLog(ex);
     }
     setVisible(false);
-    mainForm.setActiveRace(race,true);
+    mainForm.setActiveRace(race, true);
+  }
+
+  public void selectRace(VS_RACE race) {
+    if (race != null && race.RACE_ID != -1) {
+      try {
+        if (race != null) {
+          VS_RACE.dbControl.execSql(mainForm.con, "UPDATE " + VS_RACE.dbControl.getTableAlias() + " SET IS_ACTIVE=0");
+        }
+        race.IS_ACTIVE = 1;
+        VS_RACE.dbControl.update(mainForm.con, race);
+      } catch (Exception ex) {
+        mainForm.toLog(ex);
+      }
+      setVisible(false);
+      mainForm.setActiveRace(race, true);
+    }
   }
 
   public void refreshData() {
@@ -166,6 +192,7 @@ public class RaceList extends javax.swing.JFrame {
         mainForm.setFormOnCenter(form);
       }
     }
+    form.loadData();
     return form;
   }
 
@@ -299,7 +326,7 @@ public class RaceList extends javax.swing.JFrame {
   }//GEN-LAST:event_butCloseActionPerformed
 
   private void butAddNewRaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butAddNewRaceActionPerformed
-    RaceControlForm.init(mainForm, -1,true).setVisible(true);
+    RaceControlForm.init(mainForm, -1, true).setVisible(true);
   }//GEN-LAST:event_butAddNewRaceActionPerformed
 
   private void butRaceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRaceEditActionPerformed

@@ -87,7 +87,7 @@ public class DBModelTest {
       
       DriverManager.registerDriver(new JDBC());
       File f = new File("");
-      String jdbc_connect_st = "jdbc:sqlite:"+f.getAbsolutePath()+"/"+DATABASE;
+      String jdbc_connect_st = "jdbc:sqlite:"+f.getAbsolutePath()+"/"+databaseFileName;
       
       Connection con = DriverManager.getConnection(jdbc_connect_st);
       return con;

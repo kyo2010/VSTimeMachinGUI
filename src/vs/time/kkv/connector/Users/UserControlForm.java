@@ -364,11 +364,22 @@ public class UserControlForm extends javax.swing.JFrame {
   }//GEN-LAST:event_bCancelActionPerformed
 
   private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-    try {                        
-      usr.VSID1 = Integer.parseInt(edTransponder.getText());
-      usr.VSID2 = Integer.parseInt(edTransponder3.getText());
-      usr.VSID3= Integer.parseInt(edTransponder3.getText());
+    try {          
       
+      usr.VSID1 = 0;
+      usr.VSID2 = 0;
+      usr.VSID3 = 0;
+      
+      try{
+        usr.VSID1 = Integer.parseInt(edTransponder.getText());
+      }catch(Exception ein){}
+      try{
+        usr.VSID2 = Integer.parseInt(edTransponder3.getText());
+      }catch(Exception ein){}
+      try{
+        usr.VSID3= Integer.parseInt(edTransponder3.getText());
+      }catch(Exception ein){}
+            
       usr.FIRST_NAME = edUserFirstName.getText();
       usr.SECOND_NAME = edUserSecondName.getText();            
       

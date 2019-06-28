@@ -41,6 +41,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -56,6 +57,7 @@ import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -242,23 +244,24 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public List<StageTab> stageTabs = new CopyOnWriteArrayList<StageTab>();
 
   public void setActiveRace(VS_RACE race, boolean pleaseRebuildTabs) {
-
     if (activeGroup != null) {
       JOptionPane.showMessageDialog(this, "Please stop race. Group" + activeGroup.GROUP_NUM, "Information", JOptionPane.INFORMATION_MESSAGE);
       return;
     }
 
-    setTitle("Race - " + race.RACE_NAME);
+    setTitle( "Race - " + (race==null?"none":race.RACE_NAME) );
     // Open Tabs
 
     try {
       VS_RACE.dbControl.execSql(con, "UPDATE VS_RACE SET IS_ACTIVE=0 WHERE IS_ACTIVE<>0");
-      race.IS_ACTIVE = 1;
-      VS_RACE.dbControl.update(con, race);
+      if (race!=null){
+        race.IS_ACTIVE = 1;
+        VS_RACE.dbControl.update(con, race);
+      }  
     } catch (Exception e) {
     }
 
-    if (activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
+    if (race!=null && activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
       refreshTabbedCaptions();
       return;
     }
@@ -681,9 +684,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     miRaceList = new javax.swing.JMenuItem();
     miAddNewRace = new javax.swing.JMenuItem();
     jmAddStageToRace = new javax.swing.JMenuItem();
-    jMenu4 = new javax.swing.JMenu();
+    mTests = new javax.swing.JMenu();
     jMenuItem11 = new javax.swing.JMenuItem();
     jMenuItem12 = new javax.swing.JMenuItem();
+    mSwitchDBTest = new javax.swing.JMenuItem();
+    mSwitchDBTestPool = new javax.swing.JMenuItem();
+    mSwitchDBNormal = new javax.swing.JMenuItem();
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -1056,8 +1062,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
     jMenuBar1.add(menuRace);
 
-    jMenu4.setText("Tests");
-    jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    mTests.setText("Tests");
+    mTests.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
     jMenuItem11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem11.setText("Add Race to Test");
@@ -1066,13 +1072,45 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         jMenuItem11ActionPerformed(evt);
       }
     });
-    jMenu4.add(jMenuItem11);
+    mTests.add(jMenuItem11);
 
     jMenuItem12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem12.setText("Run Tests");
-    jMenu4.add(jMenuItem12);
+    jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem12ActionPerformed(evt);
+      }
+    });
+    mTests.add(jMenuItem12);
 
-    jMenuBar1.add(jMenu4);
+    mSwitchDBTest.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    mSwitchDBTest.setText("Switch Database to Test");
+    mSwitchDBTest.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mSwitchDBTestActionPerformed(evt);
+      }
+    });
+    mTests.add(mSwitchDBTest);
+
+    mSwitchDBTestPool.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    mSwitchDBTestPool.setText("Switch Database to Test  Pool");
+    mSwitchDBTestPool.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mSwitchDBTestPoolActionPerformed(evt);
+      }
+    });
+    mTests.add(mSwitchDBTestPool);
+
+    mSwitchDBNormal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    mSwitchDBNormal.setText("Switch Database to Normal");
+    mSwitchDBNormal.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mSwitchDBNormalActionPerformed(evt);
+      }
+    });
+    mTests.add(mSwitchDBNormal);
+
+    jMenuBar1.add(mTests);
 
     setJMenuBar(jMenuBar1);
 
@@ -1395,6 +1433,93 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     // TODO add your handling code here:
     new TestCases(this).addRaceToTest();
   }//GEN-LAST:event_jMenuItem11ActionPerformed
+  
+  
+  TestCases testCases = new TestCases(this);
+  
+  Timer testTimer = new Timer(1000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      
+    }
+  });
+  
+  private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+    try {
+      // TODO add your handling code here:
+      testCases.runTest();
+      testTimer.start();
+    } catch (UserException ex) {
+      Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }//GEN-LAST:event_jMenuItem12ActionPerformed
+
+  public void switchDataBase(Connection con){
+    try {
+      this.con = con;
+      //con = DBModelTest.getConnection();
+      // check for update
+      double db_version = VS_SETTING.getParam(con, "DataBaseVersion", 1.0);
+      double db_version_new = DataBaseStructure.executeAddons(db_version, con);
+      VS_SETTING.setParam(con, "DataBaseVersion", "" + db_version_new);
+
+    } catch (UserException ue) {
+      error_log.writeFile(ue);
+      JOptionPane.showMessageDialog(this, ue.details, ue.error, JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+      error_log.writeFile(e);
+      JOptionPane.showMessageDialog(this, "Database file is not found. " + DBModelTest.DATABASE, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    applayLanguage();
+    obsConfig = new OBSConfig(con);
+
+    jmAddStageToRace.setVisible(false);
+    try {
+      VS_RACE race = VS_RACE.dbControl.getItem(con, "IS_ACTIVE=1");
+      if (race != null) {
+        setActiveRace(race, true);
+      } else {
+        setActiveRace(null, true);        
+      }
+    } catch (Exception e) {
+    }
+  }
+  
+  private void mSwitchDBTestPoolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBTestPoolActionPerformed
+    // TODO add your handling code here:
+    try{
+      this.con.close();
+    }catch(Exception e){}
+    try{
+      switchDataBase(DBModelTest.getConnection(TestCases.DATABASE_TEST_POOL));            
+    }catch(Exception e){
+      toLog(e);
+    }  
+  }//GEN-LAST:event_mSwitchDBTestPoolActionPerformed
+
+  private void mSwitchDBNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBNormalActionPerformed
+    // TODO add your handling code here:
+    try{
+      this.con.close();
+    }catch(Exception e){}
+    try{
+      switchDataBase(DBModelTest.getConnection());            
+    }catch(Exception e){
+      toLog(e);
+    }  
+  }//GEN-LAST:event_mSwitchDBNormalActionPerformed
+
+  private void mSwitchDBTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBTestActionPerformed
+    // TODO add your handling code here:
+     try{
+      this.con.close();
+    }catch(Exception e){}
+    try{
+      switchDataBase(DBModelTest.getConnection(TestCases.DATABASE_TEST));
+    }catch(Exception e){
+      toLog(e);
+    }        
+  }//GEN-LAST:event_mSwitchDBTestActionPerformed
 
   public static ImageIcon windowsIcon = null;
 
@@ -1434,6 +1559,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }catch(Exception ein){}*/
         //new SplashForm(null);
         MainForm mainForm = new MainForm("VS Time Connector");
+        mainForm.mTests.setVisible(false);
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
 
@@ -1458,7 +1584,6 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
-  private javax.swing.JMenu jMenu4;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem1;
@@ -1480,8 +1605,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JTable jTable1;
   private javax.swing.JMenuItem jmAddStageToRace;
   private javax.swing.JMenuItem mConsole;
+  private javax.swing.JMenuItem mSwitchDBNormal;
+  private javax.swing.JMenuItem mSwitchDBTest;
+  private javax.swing.JMenuItem mSwitchDBTestPool;
   private javax.swing.JMenuItem mSystemMonitor;
   private javax.swing.JMenuItem mSystemOptions;
+  public javax.swing.JMenu mTests;
   private javax.swing.JMenuItem menuAddUser;
   private javax.swing.JMenuItem menuConnect;
   private javax.swing.JMenuItem menuDisconnect;

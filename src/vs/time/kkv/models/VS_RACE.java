@@ -1,17 +1,18 @@
-/*** KKV Class Generator V.0.1, This class is based on 'VS_RACE' table.
- *** The class was generated automatically.  ***/
-
+/** * KKV Class Generator V.0.1, This class is based on 'VS_RACE' table.
+ *** The class was generated automatically.  ** */
 package vs.time.kkv.models;
 
 import KKV.DBControlSqlLite.DBModelField;
 import KKV.DBControlSqlLite.DBModelControl;
 import KKV.Utils.JDEDate;
+import KKV.Utils.UserException;
+import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VS_RACE {
-  
+
   public int RACE_ID = -1;   //  NOT_DETECTED
   public String RACE_NAME = "Race";   //  NOT_DETECTED
   public JDEDate RACE_DATE = new JDEDate();   //  NOT_DETECTED
@@ -32,18 +33,20 @@ public class VS_RACE {
   public String JUDGE = "";
   public String SECRETARY = "";
   public int AUTO_WEB_UPDATE = 0;
-  public int POST_START = 0;        
+  public int POST_START = 0;
   public int LAP_DISTANCE = 0;
   public int ALLOW_TO_FINISH_LAP = 0;
   public String WEB_UID = "";
   public int CLAC_HALF_LAP = 0;
-  
+
   public List<VS_REGISTRATION> users = new ArrayList<>();
-  
-  
-  /** Constructor */ 
+
+  /**
+   * Constructor
+   */
   public VS_RACE() {
-  };
+  }
+  ;
   
   public static DBModelControl<VS_RACE> dbControl = new DBModelControl<VS_RACE>(VS_RACE.class, "VS_RACE", new DBModelField[]{
     new DBModelField("RACE_ID").setDbFieldName("\"RACE_ID\"").setAutoIncrement(),
@@ -60,24 +63,22 @@ public class VS_RACE {
     new DBModelField("HYBRID_MODE").setDbFieldName("\"HYBRID_MODE\""),
     new DBModelField("RANDOM_BEEP").setDbFieldName("\"RANDOM_BEEP\""),
     new DBModelField("MAX_RACE_TIME").setDbFieldName("\"MAX_RACE_TIME\""),
-
     new DBModelField("WEB_SYSTEM_SID").setDbFieldName("\"WEB_SYSTEM_SID\""),
-    new DBModelField("WEB_SYSTEM_CAPTION").setDbFieldName("\"WEB_SYSTEM_CAPTION\""),    
-    
-    new DBModelField("JUDGE").setDbFieldName("\"JUDGE\""),    
-    new DBModelField("SECRETARY").setDbFieldName("\"SECRETARY\""),    
-    
-    new DBModelField("WEB_RACE_ID").setDbFieldName("\"WEB_RACE_ID\""),    
-    new DBModelField("AUTO_WEB_UPDATE").setDbFieldName("\"AUTO_WEB_UPDATE\""), 
-    new DBModelField("POST_START").setDbFieldName("\"POST_START\""),     
-    new DBModelField("WEB_UID").setDbFieldName("\"WEB_UID\""),     
-    
-    new DBModelField("LAP_DISTANCE").setDbFieldName("\"LAP_DISTANCE\""),     
-    new DBModelField("ALLOW_TO_FINISH_LAP").setDbFieldName("\"ALLOW_TO_FINISH_LAP\""),     
-    
-    new DBModelField("CLAC_HALF_LAP").setDbFieldName("\"CLAC_HALF_LAP\""),     
-    
-    
-  });
-  
+    new DBModelField("WEB_SYSTEM_CAPTION").setDbFieldName("\"WEB_SYSTEM_CAPTION\""),
+    new DBModelField("JUDGE").setDbFieldName("\"JUDGE\""),
+    new DBModelField("SECRETARY").setDbFieldName("\"SECRETARY\""),
+    new DBModelField("WEB_RACE_ID").setDbFieldName("\"WEB_RACE_ID\""),
+    new DBModelField("AUTO_WEB_UPDATE").setDbFieldName("\"AUTO_WEB_UPDATE\""),
+    new DBModelField("POST_START").setDbFieldName("\"POST_START\""),
+    new DBModelField("WEB_UID").setDbFieldName("\"WEB_UID\""),
+    new DBModelField("LAP_DISTANCE").setDbFieldName("\"LAP_DISTANCE\""),
+    new DBModelField("ALLOW_TO_FINISH_LAP").setDbFieldName("\"ALLOW_TO_FINISH_LAP\""),
+    new DBModelField("CLAC_HALF_LAP").setDbFieldName("\"CLAC_HALF_LAP\""),});
+
+  public void setActive(Connection con) throws UserException {
+    VS_RACE.dbControl.execSql(con, "UPDATE VS_RACE SET IS_ACTIVE=0 WHERE IS_ACTIVE<>0");
+    IS_ACTIVE = 1;
+    VS_RACE.dbControl.update(con, this);
+  }
+
 }

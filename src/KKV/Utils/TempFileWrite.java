@@ -76,8 +76,9 @@ public class TempFileWrite {
     }else{
       writeStr = e.getMessage()+" "+Tools.traceError(e);
     }
-    //System.out.println(writeStr);
-    writeFile(writeStr, true);
+    System.out.println(writeStr);
+    writeFile(writeStr, true);   
+    //e.printStackTrace();
   }
   
   public void writeFile(String msg, Exception e) {
