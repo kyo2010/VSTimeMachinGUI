@@ -2667,7 +2667,7 @@ public class StageTab extends javax.swing.JPanel {
       Process p = runtime.exec("raceEvents/invate.cmd");
       int exitCode = p.waitFor();
     } catch (Exception rt_e) {
-      MainForm._toLog(rt_e);
+      //MainForm._toLog(rt_e);
     }
   }
 

@@ -110,6 +110,9 @@ public class ButtonComPortConnector implements SerialPortEventListener, DroneCon
 
         try {
           String datum = serialPort.readString(event.getEventValue());
+          
+          System.out.println("COM : "+datum);
+          
           casheData.addData(datum);
 
           for (String data : casheData.getDatum()) {

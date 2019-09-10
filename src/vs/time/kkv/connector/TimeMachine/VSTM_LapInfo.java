@@ -5,6 +5,8 @@
  */
 package vs.time.kkv.connector.TimeMachine;
 
+import vs.time.kkv.models.VS_STAGE_GROUPS;
+
 /**
  *
  * @author kyo
@@ -22,4 +24,6 @@ public class VSTM_LapInfo {
   public boolean isPilotChannel = false;
   public int pilotNumber = 0;
   public String pilotChannel = "";
+  
+  public VS_STAGE_GROUPS pilotObj = null; // Usinf fo PilotNumber 
 }

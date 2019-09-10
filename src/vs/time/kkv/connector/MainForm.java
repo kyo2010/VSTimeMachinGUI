@@ -29,6 +29,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import KKV.Utils.TempFileWrite;
+import KKV.Utils.Tools;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -109,15 +110,16 @@ import vs.time.kkv.models.VS_USERS;
  * @author kyo
  */
 public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver, DroneConnector.VSSendListener {
-  
-  public interface IMainFormListener{
+
+  public interface IMainFormListener {
+
     public void backgroundIsCnanged();
   }
   public IMainFormListener mainFormListener = null;
 
   public void setMainFormListener(IMainFormListener mainFormListener) {
     this.mainFormListener = mainFormListener;
-  }    
+  }
   public boolean SAY_SECONDS_FOR_LAP = false;
   public static final int STAGE_PRACTICA = 0;
   public static final int STAGE_QUALIFICATION = 1;
@@ -127,7 +129,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_RACE_REPORT = 5;
   public final static String DEVICE_VS_TIME_MACHINE = "VS Time Machine";
   public final static String DEVICE_ARDUINO_CONTROL = "Manual checker";
-  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL};
+  public final static String DEVICE_VS_TIME_MACHINE_AND_ARDUINO = "VS Time & M.Checker";
+  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL, DEVICE_VS_TIME_MACHINE_AND_ARDUINO};
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -198,8 +201,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public void toLog(Exception e) {
     log.writeFile(e);
   }
-  
-   public void toLog(String msg, Exception e) {
+
+  public void toLog(String msg, Exception e) {
     log.writeFile(msg, e);
   }
 
@@ -249,19 +252,19 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       return;
     }
 
-    setTitle( "Race - " + (race==null?"none":race.RACE_NAME) );
+    setTitle("Race - " + (race == null ? "none" : race.RACE_NAME));
     // Open Tabs
 
     try {
       VS_RACE.dbControl.execSql(con, "UPDATE VS_RACE SET IS_ACTIVE=0 WHERE IS_ACTIVE<>0");
-      if (race!=null){
+      if (race != null) {
         race.IS_ACTIVE = 1;
         VS_RACE.dbControl.update(con, race);
-      }  
+      }
     } catch (Exception e) {
     }
 
-    if (race!=null && activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
+    if (race != null && activeRace != null && activeRace.RACE_ID == race.RACE_ID && pleaseRebuildTabs == false) {
       refreshTabbedCaptions();
       return;
     }
@@ -391,9 +394,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         if (res == JOptionPane.YES_OPTION) {
           PLEASE_CLOSE_ALL_THREAD = true;
           /*if (vsTimeConnector != null) {
-            vsTimeConnector.disconnect();
-          }
-          vsTimeConnector = null;*/
+           vsTimeConnector.disconnect();
+           }
+           vsTimeConnector = null;*/
 
           for (DroneConnector dc : droneConnectors) {
             dc.disconnect();
@@ -575,8 +578,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     USE_START_WAVE = VS_SETTING.getParam(con, "USE_START_WAVE", 0);
     BACKGROUND_FOR_TV = VS_SETTING.getParam(con, "TV_BACKGROUND", "chromokey.png") + "?t=" + Calendar.getInstance().getTimeInMillis();
 
-    if (mainFormListener!=null) mainFormListener.backgroundIsCnanged();
-    
+    if (mainFormListener != null) {
+      mainFormListener.backgroundIsCnanged();
+    }
+
     for (DroneConnector vsTimeConnector : droneConnectors) {
       if (vsTimeConnector != null && vsTimeConnector.connected) {
         try {
@@ -1188,12 +1193,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       jLabel3.setText("connecting to port " + port);
 
       if (FORM_DEVICE.getSelectedItem().equals(DEVICE_ARDUINO_CONTROL)) {
-
         String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
-        /*String[] ch_mas = new String[]{activeRace.CHANNEL1,activeRace.CHANNEL2,activeRace.CHANNEL3,activeRace.CHANNEL4};
-        for (String ch : ch_mas){
-          channels+=ch+";";
-        }*/
+        Tools.setPreference("MANUAL_CHECKER", port);
         vsTimeConnector = new VSTimeConnector(new ButtonComPortConnector(this, port, SerialPort.BAUDRATE_9600, channels));
       } else {
         String staticIP = null;
@@ -1210,6 +1211,22 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         } else {
           vsTimeConnector = new VSTimeConnector(new ConnectionCOMPort(this, port));
         }
+
+        if (FORM_DEVICE.getSelectedItem().equals(DEVICE_VS_TIME_MACHINE_AND_ARDUINO)) {
+          String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
+          String arduino_port = Tools.getPreference("MANUAL_CHECKER");
+          if (arduino_port != null && !arduino_port.equalsIgnoreCase("")) {
+            DroneConnector vsTimeConnector2 = new VSTimeConnector(new ButtonComPortConnector(this, arduino_port, SerialPort.BAUDRATE_9600, channels));
+            vsTimeConnector2.setSendListener(this);
+            try {
+              vsTimeConnector2.connect();
+              droneConnectors.add(vsTimeConnector2);
+            } catch (Exception e) {
+              jLabel3.setText(e.toString());
+              System.out.println(e);
+            }
+          }
+        }
       }
 
       vsTimeConnector.setSendListener(this);
@@ -1224,9 +1241,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       //speaker.speak(speaker.getSpeachMessages().connected());
       droneConnectors.add(vsTimeConnector);
     }
-    
+
     // repaint table for buttons find...
-    if (activeStageTab!=null){
+    if (activeStageTab != null) {
       activeStageTab.refreshButton();
     }
   }//GEN-LAST:event_connectButtonActionPerformed
@@ -1296,10 +1313,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       StageTab tab = stageTabs.get(tabI - 1);
       tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
       /* Object tabObject = tabbedPanel.getTabComponentAt(tabI);           
-      if (tabObject != null && tabObject instanceof StageTab) {
-        StageTab tab = (StageTab) tabObject;
-        tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
-      }*/
+       if (tabObject != null && tabObject instanceof StageTab) {
+       StageTab tab = (StageTab) tabObject;
+       tabbedPanel.setTitleAt(tabI, tab.stage.CAPTION);
+       }*/
     }
   }
 
@@ -1317,7 +1334,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     //if (VSTeamConsole.isOpened){
     //  VSTeamConsole.init(this).setVisible(false);
     //}else{
-      VSTeamConsole.init(this).setVisible(true);
+    VSTeamConsole.init(this).setVisible(true);
     //}  
   }//GEN-LAST:event_mConsoleActionPerformed
 
@@ -1325,12 +1342,20 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     // TODO add your handling code here:    
     ports.removeAllItems();
     Pattern pattern = Pattern.compile("");
+    Pattern pattern2 = null;
     if (SerialNativeInterface.getOsType() == 3) {
       pattern = Pattern.compile("tty.*USB*");
+      pattern2 = Pattern.compile("cu.*serial*");
     }
     String portNames[] = SerialPortList.getPortNames(pattern);
     for (String portName : portNames) {
       ports.addItem(portName);
+    }
+    if (pattern2 != null) {
+      String portNames2[] = SerialPortList.getPortNames(pattern2);
+      for (String portName : portNames2) {
+        ports.addItem(portName);
+      }
     }
     ports.addItem("WLAN");
 
@@ -1426,35 +1451,42 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
     // TODO add your handling code here:
-     openUrl("stage.htm");
+    openUrl("stage.htm");
   }//GEN-LAST:event_jMenuItem10ActionPerformed
 
   private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
     // TODO add your handling code here:
     new TestCases(this).addRaceToTest();
   }//GEN-LAST:event_jMenuItem11ActionPerformed
-  
-  
+
   TestCases testCases = new TestCases(this);
-  
+
   Timer testTimer = new Timer(1000, new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      
+      if (testCases.TEST_IS_RUN) {
+        try {
+          testCases.continueTest();
+        } catch (UserException ex) {
+          Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      } else {
+        testTimer.stop();
+      }
     }
   });
-  
+
   private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
     try {
       // TODO add your handling code here:
-      testCases.runTest();
+      testCases.prepareTest();
       testTimer.start();
     } catch (UserException ex) {
       Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
     }
   }//GEN-LAST:event_jMenuItem12ActionPerformed
 
-  public void switchDataBase(Connection con){
+  public void switchDataBase(Connection con) {
     try {
       this.con = con;
       //con = DBModelTest.getConnection();
@@ -1479,46 +1511,49 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (race != null) {
         setActiveRace(race, true);
       } else {
-        setActiveRace(null, true);        
+        setActiveRace(null, true);
       }
     } catch (Exception e) {
     }
   }
-  
+
   private void mSwitchDBTestPoolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBTestPoolActionPerformed
     // TODO add your handling code here:
-    try{
+    try {
       this.con.close();
-    }catch(Exception e){}
-    try{
-      switchDataBase(DBModelTest.getConnection(TestCases.DATABASE_TEST_POOL));            
-    }catch(Exception e){
+    } catch (Exception e) {
+    }
+    try {
+      switchDataBase(DBModelTest.getConnection(TestCases.DATABASE_TEST_POOL));
+    } catch (Exception e) {
       toLog(e);
-    }  
+    }
   }//GEN-LAST:event_mSwitchDBTestPoolActionPerformed
 
   private void mSwitchDBNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBNormalActionPerformed
     // TODO add your handling code here:
-    try{
+    try {
       this.con.close();
-    }catch(Exception e){}
-    try{
-      switchDataBase(DBModelTest.getConnection());            
-    }catch(Exception e){
+    } catch (Exception e) {
+    }
+    try {
+      switchDataBase(DBModelTest.getConnection());
+    } catch (Exception e) {
       toLog(e);
-    }  
+    }
   }//GEN-LAST:event_mSwitchDBNormalActionPerformed
 
   private void mSwitchDBTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSwitchDBTestActionPerformed
     // TODO add your handling code here:
-     try{
+    try {
       this.con.close();
-    }catch(Exception e){}
-    try{
+    } catch (Exception e) {
+    }
+    try {
       switchDataBase(DBModelTest.getConnection(TestCases.DATABASE_TEST));
-    }catch(Exception e){
+    } catch (Exception e) {
       toLog(e);
-    }        
+    }
   }//GEN-LAST:event_mSwitchDBTestActionPerformed
 
   public static ImageIcon windowsIcon = null;
@@ -1541,25 +1576,29 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
         /*try{
           
-          for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
-            System.out.println(info.getClassName());
-            // javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          }
+         for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
+         System.out.println(info.getClassName());
+         // javax.swing.UIManager.setLookAndFeel(info.getClassName());
+         }
           
-          // javax.swing.plaf.metal.MetalLookAndFeel
-          // javax.swing.plaf.nimbus.NimbusLookAndFeel 
-          // com.sun.java.swing.plaf.motif.MotifLookAndFeel 
-          // com.sun.java.swing.plaf.windows.WindowsLookAndFeel 
-          // com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel
+         // javax.swing.plaf.metal.MetalLookAndFeel
+         // javax.swing.plaf.nimbus.NimbusLookAndFeel 
+         // com.sun.java.swing.plaf.motif.MotifLookAndFeel 
+         // com.sun.java.swing.plaf.windows.WindowsLookAndFeel 
+         // com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel
          
-          //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-          //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-          //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFee");
-          UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        }catch(Exception ein){}*/
+         //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+         //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+         //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFee");
+         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+         }catch(Exception ein){}*/
         //new SplashForm(null);
         MainForm mainForm = new MainForm("VS Time Connector");
         mainForm.mTests.setVisible(false);
+        String devFalg = Tools.getPreference("developer");
+        if (devFalg != null && devFalg.equalsIgnoreCase("true")) {
+          mainForm.mTests.setVisible(true);
+        }
         setWindowsIcon(getClass().getResource("/images/vs-logo.png"));
         mainForm.setIconImage(getWindowsIcon().getImage());
 
@@ -1570,7 +1609,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         mainForm.setVisible(true);
         //SplashForm.closeLastInfoFrom();
       }
-    });   
+    });
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1670,19 +1709,19 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         try {
           int transponderID = Integer.parseInt(params[1]);
           usr_reg = VS_REGISTRATION.dbControl.getItem(con, "VS_RACE_ID=? and (VS_TRANSPONDER=? OR VS_TRANS2=? OR VS_TRANS3=?)",
-                  activeRace.RACE_ID, transponderID, transponderID, transponderID);          
+                  activeRace.RACE_ID, transponderID, transponderID, transponderID);
           String info = "";
           String stage = "";
           String group = "";
-          if (activeStage!=null){
+          if (activeStage != null) {
             info = getLocaleString("Stage") + " : " + activeStage.CAPTION;
             stage = activeStage.CAPTION;
           }
-          if (activeGroup!=null){
+          if (activeGroup != null) {
             info += " - " + getLocaleString("Group") + activeGroup.GROUP_NUM;
-            group = getLocaleString("Group") + activeGroup.GROUP_NUM;          
-          }      
-          obsConfig.changeSceneForGate( new OBSConfig.StageInfo(info, stage, group), gateID, usr_reg);
+            group = getLocaleString("Group") + activeGroup.GROUP_NUM;
+          }
+          obsConfig.changeSceneForGate(new OBSConfig.StageInfo(info, stage, group), gateID, usr_reg);
         } catch (Exception ein) {
         }
       }
@@ -1698,7 +1737,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (lap == null) {
         lap_log.writeFile("RCV;" + data);
       }
-    }
+    }        
+    
     if (lap != null) {
 
       if (lap.isPilotNumber) {
@@ -1711,13 +1751,17 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           if (lap.isPilotChannel) {
             for (VS_STAGE_GROUPS usr : activeGroup.users) {
               if (usr.CHANNEL.equalsIgnoreCase(lap.pilotChannel)) {
-                lap.transponderID = usr.VS_PRIMARY_TRANS;
+                lap.transponderID = -1;//usr.VS_PRIMARY_TRANS; 
+                lap.pilotObj = usr;
+                //lap.transponderID = (int) lap.pilotObj.GID;
                 break;
               }
             }
           } else {
             if (activeGroup.users.size() >= lap.pilotNumber && lap.pilotNumber > 0) {
-              lap.transponderID = activeGroup.users.get(lap.pilotNumber - 1).VS_PRIMARY_TRANS;
+              lap.transponderID = -1;//activeGroup.users.get(lap.pilotNumber - 1).VS_PRIMARY_TRANS;             
+              lap.pilotObj = activeGroup.users.get(lap.pilotNumber - 1);
+              //lap.transponderID = (int) lap.pilotObj.GID;
             }
           }
         }
@@ -1758,6 +1802,10 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       }
       if (transponderListener != null) {
         transponderListener.newTransponder(lap.transponderID, usr_reg);
+      }
+      
+      if (activeRace != null && lap.isPilotNumber && lap.pilotObj!=null) {
+        usr_reg = lap.pilotObj.getRegistration(con, activeRace.RACE_ID);
       }
 
       if (activeGroup == null && !lap.isPilotNumber) {
@@ -1814,10 +1862,12 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         } else {
         }
 
-        for (VS_STAGE_GROUPS usr : activeGroup.users) {
-          if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
-            user = usr;
-            break;
+        if (user == null) {
+          for (VS_STAGE_GROUPS usr : activeGroup.users) {
+            if (usr.VS_PRIMARY_TRANS == lap.transponderID) {
+              user = usr;
+              break;
+            }
           }
         }
 
