@@ -87,6 +87,10 @@ public class StartHttpServlet extends HttpServlet {
     }
     varsPool.addChild(new StringVar("PILOT" + index + "_PHOTO", webPhoto));
     varsPool.addChild(new StringVar("PILOT" + index + "_NAME", webName));
+    varsPool.addChild(new StringVar("PILOT" + index + "_FIO", pilot==null?"":pilot.getFIO()));
+    varsPool.addChild(new StringVar("PILOT" + index + "_NIC", pilot==null?"":pilot.PILOT));
+    varsPool.addChild(new StringVar("PILOT" + index + "_OSD", pilot==null?"":pilot.PILOT));
+    //varsPool.addChild(new StringVar("PILOT" + index + "_OSD", pilot==null?"":pilot.registration.));    
     varsPool.addChild(new StringVar("CH" + index, webChannel));
     varsPool.addChild(new StringVar("COLOR" + index, webColor));
     varsPool.addChild(new StringVar("FIND_COLOR" + index, findColor));        
