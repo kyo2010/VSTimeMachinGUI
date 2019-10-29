@@ -37,7 +37,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jSplitPane1" max="32767" attributes="0"/>
-                  <Component id="jSplitPane2" pref="457" max="32767" attributes="0"/>
+                  <Component id="jSplitPane2" pref="454" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -56,8 +56,10 @@
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Component id="autoStrartRaceButton" min="-2" pref="55" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="timerCaption" min="-2" pref="180" max="-2" attributes="0"/>
-                  <EmptySpace pref="82" max="32767" attributes="0"/>
+                  <Component id="timerCaption" min="-2" pref="106" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="timerBackCaption" min="-2" pref="106" max="-2" attributes="0"/>
+                  <EmptySpace pref="41" max="32767" attributes="0"/>
                   <Component id="bStopChecking" min="-2" pref="61" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="butCopyToWeb" min="-2" pref="62" max="-2" attributes="0"/>
@@ -91,7 +93,7 @@
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="autoStrartRaceButton" max="32767" attributes="0"/>
-                      <Component id="butCopyToWeb" alignment="1" max="32767" attributes="0"/>
+                      <Component id="butCopyToWeb" alignment="1" pref="60" max="32767" attributes="0"/>
                       <Component id="butCopyGropusToClipboard" max="32767" attributes="0"/>
                       <Component id="butCopyToClipboard" max="32767" attributes="0"/>
                       <Component id="bRestartWebServer" max="32767" attributes="0"/>
@@ -101,13 +103,14 @@
                           <Component id="butRemoveSatge" alignment="3" max="32767" attributes="0"/>
                           <Component id="bNewStage" alignment="3" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
                       <Component id="refreshData" max="32767" attributes="0"/>
                       <Component id="butGroupExport" max="32767" attributes="0"/>
                       <Component id="jchTV" alignment="0" max="32767" attributes="0"/>
                       <Component id="bStopChecking" alignment="1" max="32767" attributes="0"/>
                   </Group>
               </Group>
+              <Component id="timerCaption" alignment="0" max="32767" attributes="0"/>
+              <Component id="timerBackCaption" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -143,7 +146,8 @@
               <Font name="Tahoma" size="24" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="00:00:00"/>
+            <Property name="text" type="java.lang.String" value="00:00"/>
+            <Property name="toolTipText" type="java.lang.String" value="Race Timer"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder thickness="5">
@@ -152,6 +156,9 @@
               </Border>
             </Property>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="00:00"/>
+          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JButton" name="pdfButton">
           <Properties>
@@ -298,6 +305,29 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoStrartRaceButtonActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JLabel" name="timerBackCaption">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="33" red="cc" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="24" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="00:00"/>
+            <Property name="toolTipText" type="java.lang.String" value="Countdown Race Timer"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder thickness="5">
+                  <Color PropertyName="color" blue="ff" green="33" red="99" type="rgb"/>
+                </LineBorder>
+              </Border>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+          </AuxValues>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JSplitPane" name="jSplitPane1">
@@ -335,6 +365,9 @@
                 </Property>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                   <Color id="Default Cursor"/>
+                </Property>
+                <Property name="selectionBackground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="33" red="99" type="rgb"/>
                 </Property>
               </Properties>
               <Events>

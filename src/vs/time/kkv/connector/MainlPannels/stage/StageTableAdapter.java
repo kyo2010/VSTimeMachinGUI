@@ -296,11 +296,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
               pilot.ALL_QAULA_TIMES = new ArrayList();
               pilot.ALL_QAULA_TIMES.add(pilot.RACE_TIME == 0 ? VS_STAGE_GROUPS.MAX_TIME : pilot.RACE_TIME);
             } else {
-              VS_STAGE_GROUPS pilot1 = pilots.get(pilot.PILOT);
-              if (pilot1.PILOT.equalsIgnoreCase("AH|NiFkaa")){
-                int y = 0;
-              }
-              
+              VS_STAGE_GROUPS pilot1 = pilots.get(pilot.PILOT);              
               if (pilot.BEST_LAP != 0 && (pilot.BEST_LAP < pilot1.BEST_LAP || pilot1.BEST_LAP==0)  ) {
                 pilot1.BEST_LAP = pilot.BEST_LAP;
               }
@@ -849,7 +845,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
-    if (columnIndex == 1 || columnIndex == 2 || columnIndex == 3) {
+    if (columnIndex == 1 || columnIndex == 2 || columnIndex == 3  || columnIndex == 4) {
       return JButton.class;
     }
     return String.class;
@@ -1099,7 +1095,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
     StageTableData td = rows.get(row);
     if (td.isGrpup) {
       //if (col==1) return true;
-      if (col == 1 || col == 2 || col == 3) {
+      if (col == 1 || col == 2 || col == 3 || col == 4) {
         return true;
       }
       return false;
@@ -1399,7 +1395,7 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
       } catch (Exception e) {
       }
       tab.refreshTable();
-    }
+    }    
   }
 
   public int getLapNumberFromCol(int col) {
@@ -1450,13 +1446,26 @@ public class StageTableAdapter extends AbstractTableModel implements TableCellRe
           //value = caption;
         }
       }
+      
+      if (column == 4) {
+        if (tab.mainForm.activeGroup != null && tab.mainForm.activeGroup == td.group && tab.timerBackCaption.isVisible()) {
+          String caption = tab.mainForm.getLocaleString("Pause");
+          if (tab.mainForm.pauseStart!=0){
+            caption = tab.mainForm.getLocaleString("Continue");
+          }
+          td.buttonCaptions.put(column, caption);
+          label = new JButton(caption);
+          label.setFont(label.getFont().deriveFont(Font.BOLD));
+          label.setForeground(Color.RED);          
+        } else {
+          
+        }
+      }
 
       if (column == 3) {
         String caption = tab.mainForm.getLocaleString("Invate");
         td.buttonCaptions.put(column, caption);
-        label = new JButton(caption);
-        //value = caption;
-        //label.setText(tab.mainForm.getLocaleString("Invate"));
+        label = new JButton(caption);        
       }
 
       if (column == 2 && SHOW_CHECK_RACE_BUTTON) {

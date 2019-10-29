@@ -6,6 +6,8 @@
 package vs.time.kkv.connector.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.STAGE_COLUMN;
@@ -22,7 +24,7 @@ import static vs.time.kkv.models.VS_STAGE_GROUPS.MAX_TIME;
  * @author kyo
  */
 public class WebControl {
-  MainForm mainForm = MainForm._mainForm;  
+  public MainForm mainForm = MainForm._mainForm;  
   public static int MAX_DISPLAYS_COLUMNS = 17;
   public int countRefresh = 0;
   public StageTab tab = null;
@@ -118,6 +120,31 @@ public class WebControl {
       }
     };
     return null;
+  }
+  
+  /*** Return User by channel Pos */
+  public List<VS_STAGE_GROUPS> getPilotsOrderByLaps(VS_STAGE stage){
+    List<VS_STAGE_GROUPS> pilots = new ArrayList<VS_STAGE_GROUPS>();
+    if (stage!=null){
+      for (Integer groupId : stage.groups.keySet()) {
+        VS_STAGE_GROUP group = stage.groups.get(groupId);          
+        for (VS_STAGE_GROUPS usr : group.users){
+          try{
+            if (usr.registration==null) usr.loadRegistration(mainForm.con,stage.RACE_ID);
+          }catch(Exception e){}
+          pilots.add(usr);
+        }
+      }
+      Collections.sort(pilots, new Comparator<VS_STAGE_GROUPS>(){
+        @Override
+        public int compare(VS_STAGE_GROUPS o1, VS_STAGE_GROUPS o2) {
+          if (o1.LAPS>o2.LAPS) return -1; 
+          if (o1.LAPS<o2.LAPS) return 1;
+          return 0;
+        }      
+      });
+    }    
+    return pilots;
   }
   
   /** get Caption for Locale*/

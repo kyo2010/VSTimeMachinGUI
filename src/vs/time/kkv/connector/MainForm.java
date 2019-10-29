@@ -238,6 +238,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public RegistrationTab regForm = null;
   public long raceTime = 0;
+  public long racePauseTime = 0;
+  public long pauseStart = 0;
+  public String countDownTimerText = "";
   public long unRaceTime = Calendar.getInstance().getTimeInMillis();
   public int lastTranponderID = -1;
   public RaceHttpServer httpServer = null;
@@ -665,16 +668,19 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     mSystemOptions = new javax.swing.JMenuItem();
     jMenuIWebAdmin = new javax.swing.JMenuItem();
     mSystemMonitor = new javax.swing.JMenuItem();
+    jMenu4 = new javax.swing.JMenu();
     jMenuItem3 = new javax.swing.JMenuItem();
-    jMenuItem4 = new javax.swing.JMenuItem();
-    jMenuItem10 = new javax.swing.JMenuItem();
-    jMenuItemTVMonitor = new javax.swing.JMenuItem();
-    jMenuItem1 = new javax.swing.JMenuItem();
-    jMenuItem7 = new javax.swing.JMenuItem();
     jMenuItem8 = new javax.swing.JMenuItem();
+    jMenuItem7 = new javax.swing.JMenuItem();
+    jMenuItem1 = new javax.swing.JMenuItem();
+    jMenuItemTVMonitor = new javax.swing.JMenuItem();
+    jMenuItem10 = new javax.swing.JMenuItem();
+    jMenuItem4 = new javax.swing.JMenuItem();
+    jMenuItem13 = new javax.swing.JMenuItem();
+    jMenuItem9 = new javax.swing.JMenuItem();
     jMenuItem5 = new javax.swing.JMenuItem();
     jMenuItem6 = new javax.swing.JMenuItem();
-    jMenuItem9 = new javax.swing.JMenuItem();
+    jMenuItem14 = new javax.swing.JMenuItem();
     updater = new javax.swing.JMenuItem();
     mConsole = new javax.swing.JMenuItem();
     jMenu1 = new javax.swing.JMenu();
@@ -847,6 +853,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     });
     jMenu3.add(mSystemMonitor);
 
+    jMenu4.setText("TV");
+    jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
     jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem3.setText("TV OSD");
     jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -854,52 +863,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         jMenuItem3ActionPerformed(evt);
       }
     });
-    jMenu3.add(jMenuItem3);
-
-    jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem4.setText("TV Stage result");
-    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem4ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem4);
-
-    jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem10.setText("TV Stage result (old)");
-    jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem10ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem10);
-
-    jMenuItemTVMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItemTVMonitor.setText("TV Monitor");
-    jMenuItemTVMonitor.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItemTVMonitorActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItemTVMonitor);
-
-    jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem1.setText("TV Last Group Result");
-    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem1ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem1);
-
-    jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem7.setText("TV Last Group Result Lite");
-    jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem7ActionPerformed(evt);
-      }
-    });
-    jMenu3.add(jMenuItem7);
+    jMenu4.add(jMenuItem3);
 
     jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem8.setText("TV Start Area");
@@ -908,25 +872,62 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         jMenuItem8ActionPerformed(evt);
       }
     });
-    jMenu3.add(jMenuItem8);
+    jMenu4.add(jMenuItem8);
 
-    jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem5.setText("TV Liderboard 16 ");
-    jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+    jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem7.setText("TV Last Group Result Lite");
+    jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem5ActionPerformed(evt);
+        jMenuItem7ActionPerformed(evt);
       }
     });
-    jMenu3.add(jMenuItem5);
+    jMenu4.add(jMenuItem7);
 
-    jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-    jMenuItem6.setText("TV Liderboard 16 lite");
-    jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+    jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem1.setText("TV Last Group Result");
+    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem6ActionPerformed(evt);
+        jMenuItem1ActionPerformed(evt);
       }
     });
-    jMenu3.add(jMenuItem6);
+    jMenu4.add(jMenuItem1);
+
+    jMenuItemTVMonitor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItemTVMonitor.setText("TV Monitor");
+    jMenuItemTVMonitor.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItemTVMonitorActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItemTVMonitor);
+
+    jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem10.setText("TV Stage result (old)");
+    jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem10ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem10);
+
+    jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem4.setText("TV Stage result");
+    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem4ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem4);
+
+    jMenuItem13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem13.setText("TV Stage result (laps)");
+    jMenuItem13.setActionCommand("TV Stage result (laps)");
+    jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem13ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem13);
 
     jMenuItem9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     jMenuItem9.setText("TV Pilot1");
@@ -935,7 +936,37 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         jMenuItem9ActionPerformed(evt);
       }
     });
-    jMenu3.add(jMenuItem9);
+    jMenu4.add(jMenuItem9);
+
+    jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem5.setText("TV Liderboard 16 ");
+    jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem5ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem5);
+
+    jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem6.setText("TV Liderboard 16 lite");
+    jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem6ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem6);
+
+    jMenuItem14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+    jMenuItem14.setText("TV Countdown Race Timer");
+    jMenuItem14.setToolTipText("");
+    jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem14ActionPerformed(evt);
+      }
+    });
+    jMenu4.add(jMenuItem14);
+
+    jMenu3.add(jMenu4);
 
     updater.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
     updater.setText("Check update");
@@ -1556,6 +1587,16 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     }
   }//GEN-LAST:event_mSwitchDBTestActionPerformed
 
+  private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+    // TODO add your handling code here:
+    openUrl("stage-lap.jsp");
+  }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+  private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+    // TODO add your handling code here:
+    openUrl("countdownTimer.jsp");
+  }//GEN-LAST:event_jMenuItem14ActionPerformed
+
   public static ImageIcon windowsIcon = null;
 
   public static ImageIcon getWindowsIcon() {
@@ -1623,12 +1664,15 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
+  private javax.swing.JMenu jMenu4;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuIWebAdmin;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem10;
   private javax.swing.JMenuItem jMenuItem11;
   private javax.swing.JMenuItem jMenuItem12;
+  private javax.swing.JMenuItem jMenuItem13;
+  private javax.swing.JMenuItem jMenuItem14;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JMenuItem jMenuItem4;
@@ -1986,7 +2030,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             _toLog(e);
           }
         }
-        if (user != null) {
+        if (user != null && pauseStart==0) {
           VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
           try {
             if (activeGroup.stageTab != null) {

@@ -2,9 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Configuration file for the System</comment>
-<entry key="AUTORIZE_CODE_RCPilots.pro">f2zF9pKFGMHW2JyXeSME</entry>
 <entry key="MANUAL_CHECKER">COM21</entry>
+<entry key="AUTORIZE_CODE_RCPilots.pro">f2zF9pKFGMHW2JyXeSME</entry>
 <entry key="webAdminPassword">admin</entry>
-<entry key="developer">true</entry>
 <entry key="AUTORIZE_CODE_FPVSport.ru">ud6fipEKq5dZLno</entry>
+<entry key="developer">true</entry>
 </properties>

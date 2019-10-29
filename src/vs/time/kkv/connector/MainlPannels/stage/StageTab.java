@@ -160,9 +160,23 @@ public class StageTab extends javax.swing.JPanel {
           vsTimeConnector.checkConnection();
         }
       }
-      long current_time = Calendar.getInstance().getTimeInMillis();
-      long raceTime = current_time - mainForm.raceTime;
+
+      long current_time = Calendar.getInstance().getTimeInMillis();      
+      long nowPauseTime = 0;
+      if (mainForm.pauseStart!=0){
+        nowPauseTime = current_time - mainForm.pauseStart;
+      } 
+      
+      long raceTime = current_time - mainForm.raceTime - mainForm.racePauseTime - nowPauseTime;
       timerCaption.setText(getTimeIntervelForTimer(raceTime));
+      
+      if (mainForm.activeRace.MAX_RACE_TIME>0){
+        long timeLeft = mainForm.activeRace.MAX_RACE_TIME*1000 -  raceTime/1000*1000;
+        mainForm.countDownTimerText = getTimeIntervelForTimer(timeLeft);
+        timerBackCaption.setText(mainForm.countDownTimerText);
+        //timerBackCaption.setVisible(true);
+      }
+      
       try {
         if (pleasuUpdateTree) {
           pleasuUpdateTree = false;
@@ -219,6 +233,19 @@ public class StageTab extends javax.swing.JPanel {
     } catch (Exception e) {
     }
     return res;
+  }
+  
+  public void actionPause(){
+    long current_time = Calendar.getInstance().getTimeInMillis();
+    mainForm.pauseStart = current_time;
+    refreshTable();
+  }
+  
+  public void actionContinue(){
+    long current_time = Calendar.getInstance().getTimeInMillis();
+    mainForm.racePauseTime = mainForm.racePauseTime + ( current_time - mainForm.pauseStart );
+    mainForm.pauseStart = 0;
+    refreshTable();
   }
 
   public int checkerCycle = 0;
@@ -422,7 +449,13 @@ public class StageTab extends javax.swing.JPanel {
     long milisec = time - (sec + min * 60) * 1000;
     milisec = Math.round(milisec / 10);
     return Tools.padl("" + min, 2, "0") + ":" + Tools.padl("" + sec, 2, "0");
-  }
+  }   
+  
+  public static long getRoundTime(long time) {
+    long min = time / 1000 / 60;
+    long sec = time / 1000 - min * 60;    
+    return (min*60+sec)*1000;
+  }   
 
   Color BUTTON_BACKGROUND;
   Border BUTTON_DEFAULT_BORDER;
@@ -586,60 +619,6 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
-    /* boolean infoWindowRunning = false;
-      Add to ButtonEdtor Listener
-      jTable.addMouseListener(new MouseAdapter() {
-      boolean infoWindowRunning = false;
-
-      @Override
-      public synchronized void mouseClicked(MouseEvent e) {
-        if (isOneTable) {
-          return;
-        }
-        if (stage.IS_LOCK == 1) {
-          return;
-        }
-        if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
-          JTable source = (JTable) e.getSource();
-          int row = source.rowAtPoint(e.getPoint());
-          int column = source.columnAtPoint(e.getPoint());
-          if (!source.isRowSelected(row)) {
-            source.changeSelection(row, column, false, false);
-          }
-          StageTableData td = StageTab.this.stageTableAdapter.getTableData(row);
-          if (td == null || !td.isGrpup) {
-            return;
-          }
-          //INAVITATION          
-          if (column == 3 && !infoWindowRunning && td != null && td.isGrpup) {  // Press invate
-            invateAction(td.group.GROUP_NUM, true);
-          }
-
-          if (column == 2 && !infoWindowRunning && td != null && td.isGrpup) { // Seach and Check and Ligting
-            if (checkerTimer.isRunning()) {
-              //checkerTimer.stop();
-              stopSearch();
-              refreshTable();
-              return;
-            }
-            startSearchAction(td.group.GROUP_NUM, true);
-          }
-          if (column == 1 && !infoWindowRunning && td != null && td.isGrpup) { // Start Race
-            if (mainForm.activeGroup != null && mainForm.activeGroup == td.group) {
-              stopRace(false);
-              refreshTable();
-              //timerCaption.setVisible(false);              
-            } else {
-              startRaceAction(td.group.GROUP_NUM, true);
-            }
-          }
-        }
-      }
-
-      public void mouseReleased(MouseEvent e) {
-      }
-
-    });*/
     if (isOneTable) {
       jSplitPane1.setVisible(false);
       jTree.setVisible(false);
@@ -653,6 +632,8 @@ public class StageTab extends javax.swing.JPanel {
       butCopyToWeb.setVisible(false);
     }
 
+    
+    timerBackCaption.setVisible(false);
   }
 
   /*public void checkGroupConstrain() {      
@@ -853,6 +834,7 @@ public class StageTab extends javax.swing.JPanel {
     butCopyToWeb = new javax.swing.JButton();
     bStopChecking = new javax.swing.JButton();
     autoStrartRaceButton = new javax.swing.JButton();
+    timerBackCaption = new javax.swing.JLabel();
     jSplitPane1 = new javax.swing.JSplitPane();
     jSplitPane2 = new javax.swing.JSplitPane();
     jScrollPane1 = new javax.swing.JScrollPane();
@@ -891,7 +873,8 @@ public class StageTab extends javax.swing.JPanel {
     timerCaption.setBackground(new java.awt.Color(0, 153, 51));
     timerCaption.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     timerCaption.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    timerCaption.setText("00:00:00");
+    timerCaption.setText("00:00");
+    timerCaption.setToolTipText("Race Timer");
     timerCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0), 5));
 
     pdfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/xls.png"))); // NOI18N
@@ -992,6 +975,13 @@ public class StageTab extends javax.swing.JPanel {
       }
     });
 
+    timerBackCaption.setBackground(new java.awt.Color(204, 51, 255));
+    timerBackCaption.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    timerBackCaption.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    timerBackCaption.setText("00:00");
+    timerBackCaption.setToolTipText("Countdown Race Timer");
+    timerBackCaption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 51, 255), 5));
+
     javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
     topPanel.setLayout(topPanelLayout);
     topPanelLayout.setHorizontalGroup(
@@ -1000,8 +990,10 @@ public class StageTab extends javax.swing.JPanel {
         .addGap(5, 5, 5)
         .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+        .addComponent(timerCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(timerBackCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
         .addComponent(bStopChecking, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(butCopyToWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1033,7 +1025,7 @@ public class StageTab extends javax.swing.JPanel {
         .addGap(5, 5, 5)
         .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(autoStrartRaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(butCopyToWeb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
           .addComponent(butCopyGropusToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butCopyToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bRestartWebServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1042,13 +1034,15 @@ public class StageTab extends javax.swing.JPanel {
           .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addComponent(butRemoveSatge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(bNewStage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(refreshData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(butGroupExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jchTV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(bStopChecking, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+      .addComponent(timerCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addComponent(timerBackCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
+    timerCaption.getAccessibleContext().setAccessibleName("00:00");
     butCopyToWeb.setVisible(false);
     autoStrartRaceButton.getAccessibleContext().setAccessibleDescription("Auto Start Race: Invitation, Start Search, wait 3minutes and Start Race...");
 
@@ -1066,6 +1060,7 @@ public class StageTab extends javax.swing.JPanel {
       }
     ));
     jTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    jTable.setSelectionBackground(new java.awt.Color(153, 51, 255));
     jTable.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
         jTableKeyPressed(evt);
@@ -1105,7 +1100,7 @@ public class StageTab extends javax.swing.JPanel {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jSplitPane1)
-          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)))
+          .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -1378,6 +1373,15 @@ public class StageTab extends javax.swing.JPanel {
             if (column == 3 && td != null && td.isGrpup) {  // Press invate
               invateAction(td.group.GROUP_NUM, true);
             }
+            
+             //Pause & Continuee
+            if (column == 4 && td != null && td.isGrpup && timerBackCaption.isVisible() && mainForm.raceTime>0) {  // Press pause
+              if (mainForm.pauseStart==0){
+                actionPause();
+              }else{
+                actionContinue();
+              }              
+            }
 
             if (column == 2 && td != null && td.isGrpup) { // Seach and Check and Ligting
               if (checkerTimer.isRunning()) {
@@ -1464,8 +1468,10 @@ public class StageTab extends javax.swing.JPanel {
             int user_index = evt.getKeyChar() - '0' - 1;
             long time = Calendar.getInstance().getTimeInMillis();
             VS_STAGE_GROUPS usr = mainForm.activeGroup.users.get(user_index);
-            stage.addLapFromKeyPress(mainForm, usr, time);
-            pleasuUpdateTable = true;
+            if (mainForm.pauseStart==0){
+              stage.addLapFromKeyPress(mainForm, usr, time);
+              pleasuUpdateTable = true;
+            }
           } catch (Exception e) {
           }
         }
@@ -1845,6 +1851,7 @@ public class StageTab extends javax.swing.JPanel {
   public javax.swing.JCheckBox jchTV;
   private javax.swing.JButton pdfButton;
   public javax.swing.JButton refreshData;
+  public javax.swing.JLabel timerBackCaption;
   private javax.swing.JLabel timerCaption;
   private javax.swing.JPanel topPanel;
   // End of variables declaration//GEN-END:variables
@@ -2693,6 +2700,7 @@ public class StageTab extends javax.swing.JPanel {
 
   public String startRaceAction(long GROUP_NUM, boolean showDialog) {
     FIRST_RACER_IS_FINISHED = true;
+    mainForm.countDownTimerText = "";
     mainForm.speaker.clearVoiceStack();
     raceTimerIsOver = false;
     String message = "";
@@ -2768,6 +2776,17 @@ public class StageTab extends javax.swing.JPanel {
       } catch (Exception e) {
       }
     }
+    
+    mainForm.racePauseTime = 0;
+    mainForm.pauseStart = 0;
+    if (mainForm.activeRace.MAX_RACE_TIME>0){
+      long timeLeft = mainForm.activeRace.MAX_RACE_TIME*1000;
+      timerBackCaption.setText(getTimeIntervelForTimer(timeLeft));
+      timerBackCaption.setVisible(true);
+    }else{
+      timerBackCaption.setVisible(false);
+    }
+      
 
     preapreTimeMachineToRace();
     mainForm.setColorForGate();
