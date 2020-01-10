@@ -15,11 +15,11 @@
      List<VS_STAGE_GROUPS> pilots = wc.getPilotsOrderByLaps(stage);   
       %>
         <div >
-            <div class="raceName"><%=wc.getRaceName()%> - <%=stage.CAPTION%></div>
+            <div class="raceName w3-xlarge"><%=wc.getRaceName()%> - <%=stage.CAPTION%></div>
         </div>
         <br/>
         <br/>
-        <table width="100%" class="w3-table w3-bordered">
+        <table width="100%" class="w3-table w3-bordered w3-xlarge">
             <tr>
                 <th><%=wc.L("Pilot")%></th>
                 <th><%=wc.L("Laps")%></th>

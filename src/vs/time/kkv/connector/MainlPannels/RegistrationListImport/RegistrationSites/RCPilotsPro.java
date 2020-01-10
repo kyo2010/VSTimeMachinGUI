@@ -102,9 +102,13 @@ public class RCPilotsPro extends IRegSite {
             //user.WEB_SID = json_pilot.getString("id");
             user.WEB_SID = json_pilot.getString("pilot_id");
             user.WEB_SYSTEM = getSystemName();
-            user.VS_USER_NAME = json_pilot.getString("osd_name").trim();
             user.FIRST_NAME = json_pilot.getString("fname");
-            user.SECOND_NAME = json_pilot.getString("lname");
+            user.SECOND_NAME = json_pilot.getString("lname");            
+            try{
+            user.VS_USER_NAME = json_pilot.getString("osd_name").trim();
+            }catch(Exception e){
+              MainForm._toLog("Error load OSD name as string for : "+user.FIRST_NAME + " "+user.SECOND_NAME);
+            }
             user.E_MAIL = "";//json_pilot.getString("email"ffff);
             if (user.VS_USER_NAME.equalsIgnoreCase("")) {
               String nik = "";

@@ -88,6 +88,8 @@ import vs.time.kkv.connector.Utils.Beep;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.connector.Utils.TTS.SpeekUtil;
 import static vs.time.kkv.connector.WLANSetting.singelton;
+import vs.time.kkv.connector.connection.TinyViewPlus.TiniViewConnector;
+import vs.time.kkv.connector.connection.TinyViewPlus.TiniViewSocketConnetion;
 import vs.time.kkv.connector.connection.VSTimeConnection.VSTimeConnector;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.connector.connection.buttonsConnector.ButtonComPortConnector;
@@ -129,8 +131,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public static final int STAGE_RACE_REPORT = 5;
   public final static String DEVICE_VS_TIME_MACHINE = "VS Time Machine";
   public final static String DEVICE_ARDUINO_CONTROL = "Manual checker";
+  public final static String DEVICE_TINI_VIEW_PLUS = "TiniView Plus";
   public final static String DEVICE_VS_TIME_MACHINE_AND_ARDUINO = "VS Time & M.Checker";
-  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL, DEVICE_VS_TIME_MACHINE_AND_ARDUINO};
+  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL, DEVICE_VS_TIME_MACHINE_AND_ARDUINO, DEVICE_TINI_VIEW_PLUS};
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -1243,6 +1246,23 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
           vsTimeConnector = new VSTimeConnector(new ConnectionCOMPort(this, port));
         }
 
+        if (FORM_DEVICE.getSelectedItem().equals(DEVICE_TINI_VIEW_PLUS)) {
+          String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
+    
+           staticIP = null;
+        if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
+          staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
+        };
+      vsTimeConnector = new TiniViewConnector(
+                  new TiniViewSocketConnetion(this,
+                          VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
+                          staticIP,
+                          TiniViewSocketConnetion.PORT_FOR_LISTINIG,
+                          TiniViewSocketConnetion.PORT_FOR_SENDING));
+       
+          
+        }
+
         if (FORM_DEVICE.getSelectedItem().equals(DEVICE_VS_TIME_MACHINE_AND_ARDUINO)) {
           String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
           String arduino_port = Tools.getPreference("MANUAL_CHECKER");
@@ -1781,8 +1801,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (lap == null) {
         lap_log.writeFile("RCV;" + data);
       }
-    }        
-    
+    }
+
     if (lap != null) {
 
       if (lap.isPilotNumber) {
@@ -1847,8 +1867,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       if (transponderListener != null) {
         transponderListener.newTransponder(lap.transponderID, usr_reg);
       }
-      
-      if (activeRace != null && lap.isPilotNumber && lap.pilotObj!=null) {
+
+      if (activeRace != null && lap.isPilotNumber && lap.pilotObj != null) {
         usr_reg = lap.pilotObj.getRegistration(con, activeRace.RACE_ID);
       }
 
@@ -2030,7 +2050,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
             _toLog(e);
           }
         }
-        if (user != null && pauseStart==0) {
+        if (user != null && pauseStart == 0) {
           VS_RACE_LAP lapNew = activeGroup.stage.addLapFromKeyPress(_mainForm, user, time);
           try {
             if (activeGroup.stageTab != null) {
