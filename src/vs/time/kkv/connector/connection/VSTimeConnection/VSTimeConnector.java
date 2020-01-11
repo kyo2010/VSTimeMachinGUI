@@ -76,14 +76,19 @@ public class VSTimeConnector extends DroneConnector {
       long time = Calendar.getInstance().getTimeInMillis();
       if ((lastPingTime + 1000 * transport.getTimeOutForReconnect()) <= time) {
         lastPingTime = Calendar.getInstance().getTimeInMillis();
-        try {
-          transport.disconnect();
-        } catch (Exception e) {
+        
+        
+        if (transport.needToAutoReconect()){
+          try {
+            transport.disconnect();
+          } catch (Exception e) {
+          }
+          try {
+            connect();
+          } catch (Exception e) {
+          }
         }
-        try {
-          connect();
-        } catch (Exception e) {
-        }
+        
       }
     }
   }

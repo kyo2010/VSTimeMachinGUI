@@ -307,4 +307,6 @@ public class ConnectionSocket extends Thread implements DroneConection {
   public int getTimeOutForReconnect() {
     return 20;
   }
+  
+  public boolean needToAutoReconect() { return false; };
 }

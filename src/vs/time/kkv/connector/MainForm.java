@@ -1831,7 +1831,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
 
-      if (lap.transponderID == TRANS_FOR_GATE) {
+      if (lap.transponderID == TRANS_FOR_GATE && !lap.isPilotChannel && !lap.isPilotNumber) {
         if (regForm != null && regForm.unRaceLapSound.isSelected()) {
           speaker.speak(speaker.getSpeachMessages().gate());
         }
@@ -1865,21 +1865,27 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
         }
       }
       if (transponderListener != null) {
-        transponderListener.newTransponder(lap.transponderID, usr_reg);
+        transponderListener.newTransponder(lap.transponderID, usr_reg ,lap );
       }
 
       if (activeRace != null && lap.isPilotNumber && lap.pilotObj != null) {
         usr_reg = lap.pilotObj.getRegistration(con, activeRace.RACE_ID);
       }
 
-      if (activeGroup == null && !lap.isPilotNumber) {
-        if (usr_reg != null) {
-          if (regForm != null && regForm.unRaceLapSound.isSelected()) {
-            speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
-          }
-        } else {
-          if (regForm != null && regForm.unRaceLapSound.isSelected() && lap.transponderID != 0) {
-            speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
+      if (activeGroup == null) {
+        if (lap.isPilotChannel){
+           speaker.speak(speaker.getSpeachMessages().msg(getLocaleString("Channel") +" "+ lap.pilotChannel));  
+        }else{  
+          if (!lap.isPilotNumber){  
+            if (usr_reg != null) {
+              if (regForm != null && regForm.unRaceLapSound.isSelected()) {
+                speaker.speak(speaker.getSpeachMessages().msg(usr_reg.VS_USER_NAME));
+              }
+            } else {
+              if (regForm != null && regForm.unRaceLapSound.isSelected() && lap.transponderID != 0) {
+                speaker.speak(speaker.getSpeachMessages().pilot("" + lap.transponderID));
+              }
+            }
           }
         }
         if (USE_TRANS_FOR_GATE && TRANS_FOR_GATE != 0) {
@@ -2088,7 +2094,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
   public interface LastTransponderListener {
 
-    public void newTransponder(long transponder, VS_REGISTRATION user);
+    public void newTransponder(long transponder, VS_REGISTRATION user, VSTM_LapInfo lap );
   }
 
   LastTransponderListener transponderListener = null;

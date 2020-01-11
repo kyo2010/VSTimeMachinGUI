@@ -194,5 +194,7 @@ public class ButtonComPortConnector implements SerialPortEventListener, DroneCon
     cc.addData("\r\n");        
     printMas("expected 'test5'",cc.getDatum());    
   }
+  
+  public boolean needToAutoReconect() { return true; };
 
 }

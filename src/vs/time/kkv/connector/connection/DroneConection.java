@@ -22,4 +22,5 @@ public interface DroneConection {
   public boolean supportSearch();
   public boolean supportRFIDMode();
   public boolean supportSetTime();
+  public boolean needToAutoReconect();
 }

@@ -47,8 +47,8 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
   public boolean getIPAdressfromPackage = false;
   String host = "localhost";
 
-  public static int PORT_FOR_LISTINIG =  55000;
-  public static int PORT_FOR_SENDING =   55001;
+  public static int PORT_FOR_LISTINIG =  53000;
+  public static int PORT_FOR_SENDING =   53005;
   
   public int port_for_listining = PORT_FOR_LISTINIG;
   public int port_for_sending =   PORT_FOR_SENDING;
@@ -96,6 +96,8 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
       finish = false;
       start(); 
     } catch (Exception e) {
+      System.out.println("error to connect : "+e.toString());
+      //e.printStackTrace();
       throw new UserException("Connection is error", e.toString());
     }
   }
@@ -118,29 +120,36 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
   }
 
   DatagramSocket sock = null;
-
+  
   @Override
   public void run() {
-
     try {
+      //System.out.println("Try to create socket"); 
+      
+      sendData("hello\r\n");
       sock = new DatagramSocket(port_for_listining);
 
       while (!finish) {
-        byte[] buffer = new byte[15000];
+          
+         byte[] buffer = new byte[15000];
         try {
           DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+          //System.out.println("receive data from socket"); 
           sock.receive(packet);
           byte[] data_b = packet.getData();
           try {
-            if (!getIPAdressfromPackage) {
-              InetAddress ipAddress1 = packet.getAddress();
+            if (!getIPAdressfromPackage) {  
+              InetAddress ipAddress1 = packet.getAddress();              
               String host = ipAddress1.getHostAddress();
-              int pos = host.lastIndexOf(".");
-              if (pos > 0) {
-                String broadCastHost = host.substring(0, pos) + ".255";
-                ipAddress = InetAddress.getByName(broadCastHost);
-                getIPAdressfromPackage = true;
+              if (host.indexOf("127.")!=0){
+                int pos = host.lastIndexOf(".");
+                if (pos > 0) {
+                  String broadCastHost = host.substring(0, pos) + ".255";
+                  ipAddress = InetAddress.getByName(broadCastHost);
+                  getIPAdressfromPackage = true;
+                }
               }
+              getIPAdressfromPackage = true;
             }
           } catch (Exception ein1) {
           }
@@ -177,7 +186,13 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
             if (receiver != null) {
               receiver.receiveData(data, commands, params, lap);
             }
-          }
+          }   
+        /*}catch(Exception e){  
+          System.out.println("Socket Thread error");  
+        }finally{
+          sock.close();
+          sock = null;
+        }*/
         } catch (SocketException se) {
           //se.printStackTrace();
           try {
@@ -206,7 +221,10 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
     }
     try {
       sock.close();
-    } catch (Exception e) {
+    } catch (Exception e) {      
+    }finally{
+      sock = null;
+      System.out.println("Thread ended");
     }
   }
 
@@ -260,6 +278,7 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
       if (sock != null) {
         sock.close();
       }
+      sock = null;
       stop();
     } catch (Exception e) {
     }
@@ -310,6 +329,8 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
   }
 
   public int getTimeOutForReconnect() {
-    return 20;
+    return 10;
   }
+  
+  public boolean needToAutoReconect(){ return false;};
 }

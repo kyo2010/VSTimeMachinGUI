@@ -59,13 +59,15 @@ public class TiniViewConnector extends DroneConnector {
       long time = Calendar.getInstance().getTimeInMillis();
       if ((lastPingTime + 1000 * transport.getTimeOutForReconnect()) <= time) {
         lastPingTime = Calendar.getInstance().getTimeInMillis();
-        try {
-          transport.disconnect();
-        } catch (Exception e) {
-        }
-        try {
-          connect();
-        } catch (Exception e) {
+        if (transport.needToAutoReconect()){
+          try {
+            transport.disconnect();
+          } catch (Exception e) {
+          }
+          try {
+            connect();
+          } catch (Exception e) {
+          }
         }
       }
     }
@@ -168,7 +170,13 @@ public class TiniViewConnector extends DroneConnector {
              lap.pilotChannel = params[0].substring(7);
              //System.out.print("Arduino push pilot numner : "+num);
              //sentMessage("lapreceived:channel" + lap.pilotChannel +"\r\n");
-             sentMessage("lapreceived:channel" + lap.pilotChannel +"\r\n");
+             
+             // params[1] baseID
+             // params[2] cameraIndex
+             // params[3] package id
+             // params[4] channel
+             
+             sentMessage("lapreceived:" + params[3] +"\r\n");
              return lap;
           } else {
             lap.numberOfPacket = Integer.parseInt(params[0]);

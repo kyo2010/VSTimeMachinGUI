@@ -123,5 +123,7 @@ public class ConnectionCOMPort implements SerialPortEventListener, DroneConectio
   public int getTimeOutForReconnect(){
     return 5;
   };
+  
+  public boolean needToAutoReconect(){ return true; };
 
 }

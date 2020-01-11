@@ -44,6 +44,7 @@ import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.MainlPannels.stage.StageTableData;
 import vs.time.kkv.connector.Race.RaceControlForm;
 import vs.time.kkv.connector.Race.RaceList;
+import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
 import vs.time.kkv.connector.Utils.KKVTreeTable.ListEditTools;
 import vs.time.kkv.connector.Utils.OSDetector;
 import vs.time.kkv.models.VS_RACE;
@@ -339,7 +340,12 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
   VS_REGISTRATION last_user = null;
 
   @Override
-  public void newTransponder(long transponder, VS_REGISTRATION user) {
+  public void newTransponder(long transponder, VS_REGISTRATION user, VSTM_LapInfo lap) {
+    if (lap!=null && lap.isPilotChannel){
+       activeTransponder.setText("Channel:"+lap.pilotChannel);
+       clearTransonderTimer.restart();
+       activeTransponder.setToolTipText("Last lap from channel : " + lap.pilotChannel);
+    }else{  
     activeTransponder.setVisible(true);
     this.transponder = transponder;
     String info = (user != null ? (user.VS_USER_NAME + " - ") : "") + mainForm.lastTranponderID;
@@ -347,6 +353,7 @@ public class RegistrationTab extends javax.swing.JPanel implements LastTranspond
     last_user = user;
     clearTransonderTimer.restart();
     activeTransponder.setToolTipText("Last Transponder ID : " + transponder);
+    }
   }
 
   Timer clearTransonderTimer = new Timer(5000, new ActionListener() {
