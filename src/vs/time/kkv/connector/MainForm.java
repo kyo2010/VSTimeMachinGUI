@@ -133,7 +133,8 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
   public final static String DEVICE_ARDUINO_CONTROL = "Manual checker";
   public final static String DEVICE_TINI_VIEW_PLUS = "TiniView Plus";
   public final static String DEVICE_VS_TIME_MACHINE_AND_ARDUINO = "VS Time & M.Checker";
-  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL, DEVICE_VS_TIME_MACHINE_AND_ARDUINO, DEVICE_TINI_VIEW_PLUS};
+  public final static String DEVICE_VS_TIME_MACHINE_AND_TINIVIEW = "VS Time & TiniView";
+  public final static String[] DEVICE_LIST = new String[]{DEVICE_VS_TIME_MACHINE, DEVICE_ARDUINO_CONTROL, DEVICE_VS_TIME_MACHINE_AND_ARDUINO, DEVICE_TINI_VIEW_PLUS, DEVICE_VS_TIME_MACHINE_AND_TINIVIEW};
   public final static String[] PILOT_TYPES = new String[]{"None-PRO", "PRO", "Freestyle"};
   public final static String[] PILOT_TYPES_NONE = new String[]{"None-PRO", "PRO", "Freestyle", "None"};
   public final static int PILOT_TYPE_NONE_INDEX = 3;
@@ -1248,12 +1249,11 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
 
         if (FORM_DEVICE.getSelectedItem().equals(DEVICE_TINI_VIEW_PLUS)) {
           String channels = VS_SETTING.getParam(con, "CHANNELS", "R1;R2;R5;R7");
-    
            staticIP = null;
-        if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
-          staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
-        };
-      vsTimeConnector = new TiniViewConnector(
+           if (VS_SETTING.getParam(con, "USE_STATIC_IP", "no").equalsIgnoreCase("yes")) {
+            staticIP = VS_SETTING.getParam(con, "STATIC_IP", "192.168.1.255");
+           };
+           vsTimeConnector = new TiniViewConnector(
                   new TiniViewSocketConnetion(this,
                           VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
                           staticIP,
@@ -1277,6 +1277,25 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
               System.out.println(e);
             }
           }
+        }
+        
+        if (FORM_DEVICE.getSelectedItem().equals(DEVICE_VS_TIME_MACHINE_AND_TINIVIEW)) {
+            DroneConnector vsTimeConnector2 = new TiniViewConnector(
+                  new TiniViewSocketConnetion(this,
+                          VS_SETTING.getParam(con, "WAN_CONNECTION", ""),
+                          staticIP,
+                          TiniViewSocketConnetion.PORT_FOR_LISTINIG,
+                          TiniViewSocketConnetion.PORT_FOR_SENDING));               
+                    
+            vsTimeConnector2.setSendListener(this);
+            try {
+              vsTimeConnector2.connect();
+              droneConnectors.add(vsTimeConnector2);
+            } catch (Exception e) {
+              jLabel3.setText(e.toString());
+              System.out.println(e);
+            }
+          
         }
       }
 
