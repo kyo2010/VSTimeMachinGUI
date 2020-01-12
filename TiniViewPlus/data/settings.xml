@@ -1,0 +1,20 @@
+<system>
+    <speechJpn>1</speechJpn>
+    <sysStat>0</sysStat>
+    <SHOW_MESSAGE>false</SHOW_MESSAGE>
+    <ENABLE_WEB_CAMERA>true</ENABLE_WEB_CAMERA>
+</system>
+<race>
+    <arMode>0</arMode>
+    <duraSecs>0</duraSecs>
+    <duraLaps>3</duraLaps>
+    <minLapTime>3</minLapTime>
+    <staggStart>0</staggStart>
+    <dispLapHist>1</dispLapHist>
+</race>
+<pilot>
+    <label_0>R2</label_0>
+    <label_1>R3</label_1>
+    <label_2>R5</label_2>
+    <label_3>R7</label_3>
+</pilot>

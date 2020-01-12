@@ -1,0 +1,10 @@
+ofxAruco
+ofxOpenCv
+ofxCv
+ofxJoystick
+ofxNetwork
+ofxOsc
+ofxPoco
+ofxTrueTypeFontUC
+ofxXmlSettings
+ofxZxing
