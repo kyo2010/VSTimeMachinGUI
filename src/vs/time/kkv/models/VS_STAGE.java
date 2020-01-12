@@ -21,6 +21,7 @@ import vs.time.kkv.connector.MainForm;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.GroupFactory;
 import vs.time.kkv.connector.MainlPannels.stage.GroupCreater.IGroupCreater;
 import vs.time.kkv.connector.MainlPannels.stage.StageTab;
+import vs.time.kkv.connector.connection.DroneConnector;
 import static vs.time.kkv.models.VS_REGISTRATION.dbControl;
 
 public class VS_STAGE {
@@ -395,6 +396,15 @@ public class VS_STAGE {
         //}else{
           //mainForm.speaker.speak();
         //}
+        
+        try {
+          for (DroneConnector dc : mainForm.droneConnectors) {
+            if (dc != null && dc.connected) {         
+              dc.lapRace(usr, lap); 
+            }
+          }
+        } catch (Exception ein) {
+        }
                 
         int lap2 = lap_for_sound.LAP;
         if (mainForm.activeRace.CLAC_HALF_LAP==1) lap2 = Math.round(lap2/2);

@@ -43,6 +43,9 @@ import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.connector.connection.DroneConection;
 import vs.time.kkv.connector.connection.VSTimeConnection.VSTimeConnector;
+import vs.time.kkv.models.VS_RACE_LAP;
+import vs.time.kkv.models.VS_STAGE_GROUP;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
  *
@@ -140,4 +143,23 @@ public abstract class DroneConnector {
     this.sendListener = sendListener;
     return this;
   }
+  
+  public void invate(VS_STAGE_GROUP invate_group){
+    
+  }
+  
+  public void runRace(VS_STAGE_GROUP invate_group){
+    
+  }
+  
+  public void startRace(VS_STAGE_GROUP group){
+  }
+  
+  public void finishRace(VS_STAGE_GROUP invate_group){
+    
+  }
+  
+  public void showMessage(String message){}
+  
+  public void lapRace(VS_STAGE_GROUPS pilot, VS_RACE_LAP lap){}
 }

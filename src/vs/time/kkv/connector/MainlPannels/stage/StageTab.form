@@ -156,9 +156,6 @@
               </Border>
             </Property>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="00:00"/>
-          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JButton" name="pdfButton">
           <Properties>

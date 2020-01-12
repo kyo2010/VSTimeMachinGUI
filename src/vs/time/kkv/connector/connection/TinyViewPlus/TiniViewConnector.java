@@ -36,6 +36,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import vs.time.kkv.connector.MainForm;
+import vs.time.kkv.connector.MainlPannels.stage.StageTab;
 import vs.time.kkv.connector.TimeMachine.VSColor;
 import vs.time.kkv.connector.TimeMachine.VSTM_ESPInfo;
 import vs.time.kkv.connector.TimeMachine.VSTM_LapInfo;
@@ -44,11 +45,16 @@ import vs.time.kkv.connector.connection.wan.ConnectionSocket;
 import vs.time.kkv.connector.connection.VSTimeMachineReciver;
 import vs.time.kkv.models.VS_SETTING;
 import vs.time.kkv.connector.connection.DroneConection;
+import vs.time.kkv.models.VS_RACE_LAP;
+import vs.time.kkv.models.VS_STAGE_GROUP;
+import vs.time.kkv.models.VS_STAGE_GROUPS;
 
 /**
  * @author kyo
  */
 public class TiniViewConnector extends DroneConnector {
+    
+  int message_id = 2000;  
         
   public TiniViewConnector(DroneConection transport){
     super(transport);
@@ -110,6 +116,12 @@ public class TiniViewConnector extends DroneConnector {
       } catch (Exception e) {
       }
     }
+  }
+  
+  public void sendMessageEx(String st){
+    try{  
+      sentMessage(st);
+    }catch(Exception e){}  
   }
 
   /**
@@ -207,96 +219,6 @@ public class TiniViewConnector extends DroneConnector {
     return null;
   }
 
-  @Override
-  public void clearTransponderSearchQueue() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public boolean isTransponderSeached(int trans_id) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void rfidLock(int key) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void rfidUnlock() throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setVSTMParams(String baseID, VSTM_ESPInfo i) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setPower(int powerIndex) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void getPower() throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void seachTransponder(int transponderID, int color) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setSensitivity(int sensivity) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setColor(int transponderID, int color) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setColorForTraficLight(int transponderID, VSColor color) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public VSTM_ESPInfo getVSTMParams(String baseID) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void setTime() throws SerialPortException, InterruptedException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void clear() throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void hello() throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void getInfo(String baseID) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public void sendflash(int TransID, String data) throws SerialPortException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-  
   public boolean supportSetTime(){ return false; };
    
    public boolean supportVSTimeMachineExtendMenu() {
@@ -307,8 +229,140 @@ public class TiniViewConnector extends DroneConnector {
     return false;
   }
 
-  ;
-   public boolean supportRFIDMode() {
+  public boolean supportRFIDMode() {
     return false;
+  }
+
+    @Override
+    public void clearTransponderSearchQueue() {
+    }
+
+    @Override
+    public boolean isTransponderSeached(int trans_id) {
+        return true;
+    }
+
+    @Override
+    public void rfidLock(int key) throws SerialPortException {
+    }
+
+    @Override
+    public void rfidUnlock() throws SerialPortException {
+    }
+
+    @Override
+    public void setVSTMParams(String baseID, VSTM_ESPInfo i) throws SerialPortException {
+    }
+
+    @Override
+    public void setPower(int powerIndex) throws SerialPortException {
+    }
+
+    @Override
+    public void getPower() throws SerialPortException {
+    }
+
+    @Override
+    public void seachTransponder(int transponderID, int color) throws SerialPortException {
+    }
+
+    @Override
+    public void setSensitivity(int sensivity) throws SerialPortException {
+    }
+
+    @Override
+    public void setColor(int transponderID, int color) throws SerialPortException {
+    }
+
+    @Override
+    public void setColorForTraficLight(int transponderID, VSColor color) throws SerialPortException {
+    }
+
+    @Override
+    public VSTM_ESPInfo getVSTMParams(String baseID) throws SerialPortException {
+        return null;
+    }
+
+    @Override
+    public void addBlinkTransponder(int transID, int color, VSColor gateColor, boolean isBlink) {
+    }
+
+    @Override
+    public void setTime() throws SerialPortException, InterruptedException {
+    }
+
+    @Override
+    public void clear() throws SerialPortException {
+    }
+
+    @Override
+    public void hello() throws SerialPortException {
+    }
+
+    @Override
+    public void getInfo(String baseID) throws SerialPortException {
+    }
+
+    @Override
+    public void sendflash(int TransID, String data) throws SerialPortException {
+    }
+    
+    @Override
+  public void invate(VS_STAGE_GROUP group){
+    try{
+      message_id++;  
+      sendMessageEx("invatieStart:"+message_id+","+ group.getCaption() +"\r\n");
+      for (VS_STAGE_GROUPS pilot : group.users){
+        message_id++;  
+        sendMessageEx("invatePilot:"+message_id+","+pilot.CHANNEL+","+pilot.PILOT+","+
+                pilot.gePhotoUrl()+","+pilot.color.colorname+
+                "\r\n");
+      }
+    }catch(Exception e){}  
+  }
+  
+  @Override
+  public void runRace(VS_STAGE_GROUP group){
+    try{ 
+      message_id++;
+      sendMessageEx("runRace:"+message_id+","+ group.getCaption() +","+ group.stage.LAPS +"\r\n");
+      for (VS_STAGE_GROUPS pilot : group.users){
+        message_id++;  
+        sendMessageEx("invatePilot:"+message_id+","+pilot.CHANNEL+","+pilot.PILOT+","+
+                pilot.gePhotoUrl()+","+pilot.color.colorname+
+                "\r\n");
+      }
+    }catch(Exception e){}  
+  }
+  
+  @Override
+  public void startRace(VS_STAGE_GROUP group){
+    try{ 
+      message_id++;
+      sendMessageEx("startRace:"+message_id+","+ group.getCaption() +","+ group.stage.LAPS +"\r\n");
+    }catch(Exception e){}  
+  }
+  
+  @Override
+  public void finishRace(VS_STAGE_GROUP group){
+    try{
+      message_id++;  
+      sendMessageEx("finishRace:"+message_id+","+ group.getCaption() +"\r\n");  
+    }catch(Exception e){}     
+  }
+  
+  @Override
+  public void showMessage(String message){
+    message_id++;   
+    sendMessageEx("showMessage:"+message_id+","+message+"\r\n");
+  }
+  
+  @Override
+  public void lapRace(VS_STAGE_GROUPS pilot, VS_RACE_LAP lap){
+    message_id++;
+    sendMessageEx("addLap:"+message_id+","+pilot.CHANNEL+","+pilot.PILOT+","+lap.LAP+","+
+             lap.TRANSPONDER_TIME+","+StageTab.getTimeIntervel(lap.TRANSPONDER_TIME,true)+
+            ","+lap.TIME_FROM_START+","+pilot.RACE_TIME+
+            "\r\n");   
   }
 }

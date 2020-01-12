@@ -646,7 +646,7 @@ public class StageTab extends javax.swing.JPanel {
         vsTimeConnector.setColorForTraficLight(mainForm.TRANS_TRAFIC_LIGHT, SVETOFOR_STOP);
       } catch (Exception e) {
       }
-    }
+    } 
 
     if (byTimer && mainForm.activeRace.ALLOW_TO_FINISH_LAP == 1) {
       raceTimerIsOver = true;
@@ -658,6 +658,15 @@ public class StageTab extends javax.swing.JPanel {
       mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().raceTimeIsOver());
       return;
     }
+    
+    try {
+      for (DroneConnector dc : mainForm.droneConnectors) {
+        if (dc != null && dc.connected) {         
+          dc.finishRace(mainForm.activeGroup);
+        }
+      }
+    } catch (Exception ein) {
+    }   
 
     // To show Table result for TV
     mainForm.lap_log.writeFile("---==  Stop Race  ==---;" + stage.CAPTION + " [" + stage.ID + "];Group;" + mainForm.activeGroup.GROUP_NUM);
@@ -2777,6 +2786,15 @@ public class StageTab extends javax.swing.JPanel {
       }
     }
     
+    try {
+      for (DroneConnector dc : mainForm.droneConnectors) {
+        if (dc != null && dc.connected) {         
+          dc.runRace(td.group);
+        }
+      }
+    } catch (Exception ein) {
+    }
+    
     mainForm.racePauseTime = 0;
     mainForm.pauseStart = 0;
     if (mainForm.activeRace.MAX_RACE_TIME>0){
@@ -2909,6 +2927,15 @@ public class StageTab extends javax.swing.JPanel {
               }
             }
 
+            try {
+              for (DroneConnector dc : mainForm.droneConnectors) {
+                if (dc != null && dc.connected) {         
+                  dc.startRace(mainForm.activeGroup);
+                }
+              }
+            } catch (Exception ein) {
+            }
+            
             new InfoForm(mainForm, "Go!");
             mainForm.beep.paly("beep");
 
@@ -3038,9 +3065,10 @@ public class StageTab extends javax.swing.JPanel {
       mainForm.speaker.speak(mainForm.speaker.getSpeachMessages().invatieGroup(td.group.GROUP_NUM, pilots));
     }
     try {
-      for (DroneConnector vsTimeConnector : mainForm.droneConnectors) {
-        if (vsTimeConnector != null && vsTimeConnector.connected) {
-          vsTimeConnector.setTime();
+      for (DroneConnector dc : mainForm.droneConnectors) {
+        if (dc != null && dc.connected) {
+          dc.setTime();
+          dc.invate(td.group);
         }
       }
     } catch (Exception ein) {

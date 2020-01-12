@@ -154,4 +154,9 @@ public class VS_STAGE_GROUP implements Transferable {
     }
   }
 ;
+
+    public String getCaption() {
+      return stage.CAPTION+" "+MainForm._mainForm.getLocaleString("Group")+" "+GROUP_NUM; //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
