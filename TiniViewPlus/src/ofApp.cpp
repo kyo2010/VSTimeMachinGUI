@@ -6,7 +6,7 @@
 #include <atlcomcli.h>
 #endif /* TARGET_WIN32 */
 
-#define EN_LANG "en"
+#define EN_LANG "en" 
 #define RU_LANG "ru"
 
 #include "vsAdapter.h"
@@ -16,8 +16,8 @@ static vscAdapter vsAdapter;
 /* ---------- variables ---------- */
 
 // Show OSD messages
-static bool SHOW_PILOT_INFO = true;
-static bool ENABLE_WEB_CAMERA = true;
+bool SHOW_PILOT_INFO = true;
+bool ENABLE_WEB_CAMERA = true;
 
 // system
 static int camCheckCount;
@@ -315,6 +315,10 @@ void setupMain() {
         camView[i].iconImage.load(ICON_FILE);
         camView[i].labelString = "Pilot" + ofToString(i + 1);
     }
+    if (cameraNum > 0) camView[0].channel = "R2";   
+    if (cameraNum > 1) camView[1].channel = "R3";
+    if (cameraNum > 2) camView[2].channel = "R5";
+    if (cameraNum > 3) camView[3].channel = "R7";
     loadPilotsLabel();
     setViewParams();
     for (int i = 0; i < cameraNum; i++) {
@@ -474,7 +478,7 @@ void ofApp::update() {
             if (anum == 0 && camView[i].enoughMarkers == true
                 && ((arLapMode == ARAP_MODE_LOOSE) || (arLapMode == ARAP_MODE_NORM && camView[i].foundMarkerNum == camView[i].foundValidMarkerNum))) {
                 
-                if (!SHOW_PILOT_INFO) vsAdapter.pilot_detected(i+1,camView[i].labelString);
+                if (!SHOW_PILOT_INFO) vsAdapter.pilot_detected(i+1,camView[i].labelString, camView[i].channel);
                 
                 float lap = elp - camView[i].prevElapsedSec;
                 if (camView[i].totalLaps >= (raceDuraLaps + (useStartGate == true ? 1 : 0))
@@ -975,7 +979,7 @@ void drawInfo() {
     }
     tcolor = &myColorLGray;
     
-    if ( SHOW_PILOT_INFO ){
+    if (SHOW_PILOT_INFO){
       // appinfo
       drawStringWithShadow(&myFontInfo1m, *tcolor, APP_VER, 10, y);
       // date/time
@@ -2186,7 +2190,8 @@ sayWin mySayWin[SPCH_SLOT_NUM];
 
 //--------------------------------------------------------------
 void speakLap(int camid, float sec, int num) {
-    //vsAdapter.pilot_detected(camid);
+    //vsAdapter.pilot_detected(camid);
+    
     if (camid < 1 || camid > cameraNum || sec == 0.0) {
         return;
     }
@@ -3481,6 +3486,8 @@ void toggleQrReader() {
 
 //--------------------------------------------------------------
 void processQrReader() {
+
+#ifndef NONE_USE_ZXING
     if (qrUpdCount == QR_CYCLE) {
         bool scanned = false;
         if (camView[qrCamIndex].qrScanned == false) {
@@ -3530,6 +3537,7 @@ void processQrReader() {
     if (count == cameraNum) {
         toggleQrReader(); // finished
     }
+#endif
 }
 
 //--------------------------------------------------------------

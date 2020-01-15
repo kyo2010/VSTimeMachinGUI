@@ -1,12 +1,18 @@
 #pragma once
 
+#define NONE_USE_ZXING
+
 #include <regex>
 #include "ofMain.h"
 #include "ofxTrueTypeFontUC.h"
 #include "ofxOsc.h"
 #include "ofxAruco.h"
 #include "highlyreliablemarkers.h"
+
+#ifndef NONE_USE_ZXING
 #include "ofxZxing.h"
+#endif
+
 #include "ofxJoystick.h"
 #include "ofxXmlSettings.h"
 #include "vsAdapter.h"

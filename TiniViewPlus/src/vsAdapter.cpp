@@ -108,11 +108,12 @@ void vscAdapter::init(int port_param){
     if (port_param!=-1) port = port_param;
 };
 
-void vscAdapter::pilot_detected(int pilotNum, string label){
+void vscAdapter::pilot_detected(int pilotNum, string label, string channel){
     ofLogNotice() << "pilot detected:" << pilotNum << " " << label;
     vscNetPackage pack;
     pack.camera_id = pilotNum;
-    pack.channel = label;
+    //pack.channel = label;
+    pack.channel = channel;
     pack.id = this->packageID;
     this->packageID++;
     netPackages.push_back(pack);

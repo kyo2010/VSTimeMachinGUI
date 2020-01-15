@@ -51,7 +51,7 @@ public:
     void start_server();
     void stop_server();
     void init(int port);
-    void pilot_detected(int pilotNum, string label);
+    void pilot_detected(int pilotNum, string label, string channel);
     void sendMessage ( string msg );
     void checkUDPmessage();
     void addReceivedMessage(long id);
