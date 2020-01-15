@@ -101,6 +101,7 @@ void vscAdapter::stop_server(){
       isStarted = false;
       udp_thread.stopThread();
       udpConnection.Close();
+      responseUdpConnection.Close();
     }
 };
 

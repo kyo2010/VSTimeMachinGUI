@@ -1,6 +1,11 @@
 #pragma once
 
-#define NONE_USE_ZXING
+
+#if _MSC_VER
+  // Visual Studio 2019
+  #define NONE_USE_ZXING
+  #define TARGET_WIN32
+#endif 
 
 #include <regex>
 #include "ofMain.h"

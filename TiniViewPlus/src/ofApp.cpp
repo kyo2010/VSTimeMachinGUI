@@ -2003,8 +2003,9 @@ string getUserLocaleName() {
     fgets(buf, 8, pipe);
     name = ofToString(buf);
     pclose(pipe);
-#endif /* TARGET_OSX */
+#endif /* TARGET_OSX */ 
 #ifdef TARGET_WIN32
+    // KKV !!!
     string org = ofToString(setlocale(LC_ALL, NULL));
     name = ofToString(setlocale(LC_ALL, ""));
     setlocale(LC_ALL, org.c_str());
