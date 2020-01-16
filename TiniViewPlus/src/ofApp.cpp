@@ -1247,8 +1247,9 @@ void keyPressedCamCheck() {
             vsAdapter.stop_server();
             ofExit();
         }
+    }else{
+      setupMain();
     }
-    setupMain();
 }
 
 //--------------------------------------------------------------
