@@ -102,17 +102,35 @@ void vscAdapter::stop_server(){
       udp_thread.stopThread();
       udpConnection.Close();
       responseUdpConnection.Close();
-    }
+    };
 };
 
 void vscAdapter::init(int port_param){
     if (port_param!=-1) port = port_param;
 };
 
+void vscAdapter::clearPackages(){
+    for (int i=0; i<MAX_PILOTS; i++){
+        lapHistLapTime[i] = 0;
+    }
+    netPackages.clear();
+}
+
 void vscAdapter::pilot_detected(int pilotNum, string label, string channel){
     ofLogNotice() << "pilot detected:" << pilotNum << " " << label;
+    
+    double time = ofGetElapsedTimef();
+    if ((time-3)<lapHistLapTime[pilotNum]){
+      ofLogNotice() << "skip lap for channel " << channel << ". 3 seconds timeout";
+      return;
+    }
+    
     vscNetPackage pack;
     pack.camera_id = pilotNum;
+    pack.time_at = time;
+    
+    lapHistLapTime[pilotNum] = time;
+
     //pack.channel = label;
     pack.channel = channel;
     pack.id = this->packageID;
@@ -154,8 +172,12 @@ void vscAdapter::checkUDPmessage(){
           for (int i = 0; i < netPackages.size(); i++) {
              if (netPackages[i].id==packgID){
                netPackages.erase(netPackages.begin() + i);
-               break;
-              }
+               //break;
+             }
+             if (netPackages[i].countNumberOfSend>=30){
+                  netPackages.erase(netPackages.begin() + i);
+                  //break;
+             }
            }
         }else if (command.command=="invatieStart"){
             long msgID = command.getLongParam(0);
@@ -170,6 +192,7 @@ void vscAdapter::checkUDPmessage(){
                     }
                 }
         }else if (command.command=="invatePilot"){
+           clearPackages();
         // 0 - msgID
         // 1 - channel
         // 2 - Pilot Name
@@ -181,6 +204,7 @@ void vscAdapter::checkUDPmessage(){
             invitationPilot(command.getParam(1),command.getParam(2),command.getParam(3),command.getParam(4));
            }
         }else if (command.command=="runRace"){
+            clearPackages();
             setCountLapsForRace(command.getLongParam(2));
             if (!isEnglish()) {
                 //setOverlayMessage("СТАРТ !");
@@ -227,7 +251,7 @@ void vscAdapter::checkUDPmessage(){
 
 void CServerThread::init(vscAdapter *adapter){
     //timer.setPeriodicEvent(1000000000); // this is 1 second in nanoseconds
-    timer.setPeriodicEvent(333000000); // this is 0.1 second in nanoseconds
+    timer.setPeriodicEvent(33300001); // this is 0.1 second in nanoseconds
     this->adapter =adapter;
     startThread();
 };
@@ -239,9 +263,13 @@ void CServerThread::threadedFunction() {
             if (!adapter->isStarted) break;
             // send package
             for (int i = 0; i < adapter->netPackages.size(); i++) {
+              if (adapter->netPackages[i].countNumberOfSend>30) continue;
+              adapter->netPackages[i].countNumberOfSend++;
+                
               adapter->sendMessage("lap:channel"+adapter->netPackages[i].channel+"," + to_string(adapter->programmID)+","+to_string(adapter->netPackages[i].camera_id)
                   +","+to_string(adapter->netPackages[i].id)
                   +","+adapter->netPackages[i].channel);
+                sleep(100);
             }
             
             loop++;

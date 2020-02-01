@@ -169,6 +169,7 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
         if (len >= 1 && data.substring(len - 2, len).equalsIgnoreCase("\n")) {
           data = data.substring(0, len - 1);
         };*/
+                    
           if (data != null && !data.equals("")) {
             String[] commands = data.split(":");
             String[] params = null;
@@ -183,6 +184,8 @@ public class TiniViewSocketConnetion extends Thread implements DroneConection {
               params = commands[1].split(",");
               lap = timeConnector.handleRequest(commands, params, crc8);
             };
+            long packageID = -1;
+                      
             if (receiver != null) {
               receiver.receiveData(data, commands, params, lap);
             }

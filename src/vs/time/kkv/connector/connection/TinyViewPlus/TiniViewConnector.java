@@ -154,6 +154,8 @@ public class TiniViewConnector extends DroneConnector {
     Thread.sleep(10000);
     connector.disconnect();
   }
+  
+  Set<Long> handledLaps = new TreeSet<Long>();
 
   @Override
   public VSTM_LapInfo handleRequest(String[] commands, String[] params, long crc8) throws SerialPortException {
@@ -180,6 +182,13 @@ public class TiniViewConnector extends DroneConnector {
              lap.isPilotChannel = true;
              lap.baseStationID = 0;
              lap.pilotChannel = params[0].substring(7);
+             
+             long packageID = -1;
+             try{
+                 packageID = Long.parseLong(params[3]);               
+             }catch(Exception e){
+             }
+             
              //System.out.print("Arduino push pilot numner : "+num);
              //sentMessage("lapreceived:channel" + lap.pilotChannel +"\r\n");
              
@@ -187,8 +196,12 @@ public class TiniViewConnector extends DroneConnector {
              // params[2] cameraIndex
              // params[3] package id
              // params[4] channel
-             
+                          
              sentMessage("lapreceived:" + params[3] +"\r\n");
+             
+             if (handledLaps.contains(packageID)) return null;
+             handledLaps.add(packageID);
+             
              return lap;
           } else {
             lap.numberOfPacket = Integer.parseInt(params[0]);

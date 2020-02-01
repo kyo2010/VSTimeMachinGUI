@@ -11,6 +11,8 @@
 #include "ofMain.h"
 #include "ofxUDPManager.h"
 
+#define MAX_PILOTS 10
+
 class vscListener{
 public:
     void start_race();
@@ -20,8 +22,10 @@ public:
 class vscNetPackage{
 public:
     int id;
+    int countNumberOfSend = 0;
     int camera_id;
     string channel;
+    float time_at;
     bool is_send = false;
 };
 class vscAdapter;
@@ -44,6 +48,7 @@ public:
     long time = 0;
     long programmID = 0;
     long packageID = 10000;
+    float lapHistLapTime[MAX_PILOTS];
     ofxUDPManager udpConnection;
     ofxUDPManager responseUdpConnection;
     vector<vscNetPackage> netPackages;
@@ -56,6 +61,7 @@ public:
     void checkUDPmessage();
     void addReceivedMessage(long id);
     bool messageIsReceived(long id);
+    void clearPackages();
 };
 
 

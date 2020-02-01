@@ -1166,6 +1166,7 @@ void keyPressedOverlayNone(int key) {
             popLapRecord(4);
         } else if (key=='s' || key =='S'){ // Q
             SHOW_PILOT_INFO = !SHOW_PILOT_INFO;
+            vsAdapter.clearPackages();
             if (SHOW_PILOT_INFO){
                 setOverlayMessage("Net Cheker Station : off");
             }else{

@@ -1413,6 +1413,7 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
     ports.removeAllItems();
     Pattern pattern = Pattern.compile("");
     Pattern pattern2 = null;
+    try{
     if (SerialNativeInterface.getOsType() == 3) {
       pattern = Pattern.compile("tty.*USB*");
       pattern2 = Pattern.compile("cu.*serial*");
@@ -1426,6 +1427,9 @@ public class MainForm extends javax.swing.JFrame implements VSTimeMachineReciver
       for (String portName : portNames2) {
         ports.addItem(portName);
       }
+    }
+    }catch(Exception e){
+      e.printStackTrace();
     }
     ports.addItem("WLAN");
 
